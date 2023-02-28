@@ -5,44 +5,71 @@ title: Supported Vehicle
 <head>
     <link href="{{ "/css/support-page.css" | relative_url }}" rel="stylesheet">
 </head>
+
 <script>
     async function load() {
-        const standard = document.getElementById("standard");
-        const semi_acc = document.getElementById("semi_acc");
+        const section = document.querySelector(".section-support");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
         const raw_resp = await fetch(remote);
         const resp = await raw_resp.json();
 
         resp.standard.forEach((vehicle) => {
-            const tr = document.createElement("tr");
-            td(tr, vehicle.brand);
-            td(tr, vehicle.model);
-            td(tr, vehicle.year);
-            td(tr, vehicle.variant);
-            td(tr, vehicle.acc_speed_range);
-            td(tr, vehicle.acc_stop_and_go ? "✔" : "✘");
-            td(tr, vehicle.lkc_speed_range);
-            td(tr, vehicle.lkc_torque);
-            standard.appendChild(tr);
-        });
+            const button = document.createElement("button");
+            button.classList.add("collapsible");
 
-        resp.semi_acc.forEach((vehicle) => {
-            const tr = document.createElement("tr");
-            td(tr, vehicle.brand);
-            td(tr, vehicle.model);
-            td(tr, vehicle.year);
-            td(tr, vehicle.variant);
-            td(tr, vehicle.lkc_torque);
-            semi_acc.appendChild(tr);
+	    let carLogo = document.createElement('img');
+	    carLogo.src = `/img/car_logo/${vehicle.brand}.png`;
+	    carLogo.style.maxWidth = '40px';
+            carLogo.style.maxHeight = '40px';
+            carLogo.style.margin = '10px';
+            button.insertBefore(carLogo, button.firstChild);
+	    
+	    const text = document.createTextNode(`${vehicle.brand} ${vehicle.model} ${vehicle.year}`);
+	    button.appendChild(text);
+ 
+            const content = document.createElement("div");
+            content.classList.add("content");
+		
+            const p = document.createElement("p");
+
+	    p.innerHTML = boldKeywords(`Supported variant(s) i.e. ${vehicle.variant}. KommuAssist upgrades your ${vehicle.brand} ${vehicle.model} with active lane keep control at speeds in range of ${vehicle.lkc_speed_range}km/h with a ${vehicle.lkc_torque} torque strength. As for adaptive cruise control, the speed range is ${vehicle.acc_speed_range} km/h.`, [vehicle.variant, vehicle.brand, vehicle.model, vehicle.lkc_speed_range, vehicle.lkc_torque, vehicle.acc_speed_range]);
+
+	    if (`${vehicle.acc_stop_and_go}` == 'true') {
+              const additional_text = document.createTextNode(` This vehicle includes stop-and-go feature.`);
+              p.appendChild(additional_text);
+	    }
+	    content.appendChild(p);
+
+
+            button.addEventListener("click", function() {
+    		this.classList.toggle("active");
+    		var content = this.nextElementSibling;
+    		if (content.style.overflow == "visible"){
+      			content.style.overflow = "hidden";
+      			content.style.maxHeight = "0px";
+    		} else {
+     			content.style.overflow = "visible";
+     			content.style.maxHeight = content.scrollHeight + "px";
+    		} 
+  	    });
+
+            section.appendChild(button);
+            section.appendChild(content);
         });
     }
-
+    
     window.onload = load;
 
-    function td(row, content) {
-        const td = document.createElement("td");
-        td.innerText = content;
-        row.appendChild(td);
+    function boldKeywords(string, keywords) {
+      let output = string;
+      keywords.forEach(keyword => {
+        const keywordRegex = new RegExp(keyword, 'g');
+        const keywordSpan = document.createElement('span');
+        keywordSpan.style.textDecoration = 'underline';
+        keywordSpan.innerText = keyword;
+        output = output.replace(keywordRegex, keywordSpan.outerHTML);
+      });
+      return output;
     }
 </script>
 <section class="section-support">
@@ -50,27 +77,8 @@ title: Supported Vehicle
         <h1 style="text-align: center;">
             Supported Vehicles
         </h1>
-    </div>
-    <div class="div-table">
-        <table class="table" style="text-align: center; ">
-            <thead>
-                <tr id="header-table-1">
-                    <th scope="col" rowspan="2">Brand</th>
-                    <th scope="col" rowspan="2">Model</th>
-                    <th scope="col" rowspan="2">Year</th>
-                    <th scope="col" rowspan="2">Variant</th>
-                    <th colspan="2">ACC</th>
-                    <th colspan="2">LKC</th>
-                </tr>
-                <tr >
-                    <th scope="col">Speed Range (km/h)</th>
-                    <th scope="col">Stop & Go</th>
-                    <th scope="col">Speed Range (km/h)</th>
-                    <th scope="col">Steering Torque</th>
-                </tr>
-
-            </thead>
-            <tbody id="standard"></tbody>
-        </table>
+	<p>
+ 	    If you don't see your car, it means that it is not currently supported. <a href="https://forms.gle/BUrnYRc63bkffAvm6" class="inline-hrefs">Fill this form</a> and let us have your car supported.
+	</p>
     </div>
 </section>

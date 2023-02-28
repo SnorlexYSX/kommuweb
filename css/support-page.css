@@ -1,79 +1,51 @@
-.table{
-    table-layout: fixed;
-    width: 1050px;
-    border: 1px solid black;
-    vertical-align: middle;
 
-}
-
-
-.div-table{
-    justify-content: center;
-    display: flex;
-    overflow:hidden;
-}
-
-td {
-    font-weight: 300;
-    border: 0.5px solid black;
-    padding:0px
+.collapsible {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-bottom: 3px solid white;
 }
 
-th {
-    border: 0.5px solid black;
-    vertical-align: middle;
-    font-weight: 800;
+.active, .collapsible:hover {
+  background-color: #555;
 }
 
-#header-table-1 :nth-child(1){
-    width: 100px;
-}
-#header-table-1 :nth-child(2){
-    width: 100px;
-}
-#header-table-1 :nth-child(3){
-    width: 100px;
+.collapsible:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
 }
 
-#header-table-1 :nth-child(4){
-    width: 100px;
+.active:after {
+  content: "\2212";
 }
 
-#header-table-1 :nth-child(5){
-    width: 175px;
-}
-
-#header-table-1 :nth-child(6){
-    width: 175px;
-}
-
-#header-table-2 :nth-child(1){
-    width: 150px;
-}
-#header-table-2 :nth-child(2){
-    width: 150px;
-}
-#header-table-2 :nth-child(3){
-    width: 150px;
-}
-
-#header-table-2 :nth-child(4){
-    width: 150px;
-}
-
-#header-table-2 :nth-child(5){
-    width: 150px;
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+  border-radius: 10px;
 }
 
 @media (max-width: 991px) {
-    .div-table{
-        display: block;
+    .collapsible {
+        width: 100%;
     }
 }
 
 @media (max-width: 1100px) {
-    .div-table{
-        display: block;
-        overflow:scroll;
+    .collapsible {
+        width: 100%;
     }
 }
