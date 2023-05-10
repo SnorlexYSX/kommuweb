@@ -7,6 +7,60 @@ stylesheet: products
         <  Back
     </a>
 </div> -->
+
+                       <!-- Modal -->
+                       <div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Buy with Atome</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form34">Name</label>
+                                    <input type="text" id="atomeName" class="form-control validate">
+                                  </div>
+                          
+                                  <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form29">Email</label>
+                                    <input type="email" id="atomeEmail" class="form-control validate">
+                                  </div>
+                          
+                                  <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                                    <input type="text" id="atomeMobile" class="form-control validate">
+                                  </div>
+                          
+                                  <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                                    <input type="text" id="atomeAddress1" class="form-control validate">
+                                  </div>
+
+                                  <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form8">Address (Line 2)</label>
+                                    <input type="text" id="atomeAddress2" class="form-control validate">
+                                  </div>
+
+                                  <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                                    <input type="text" id="atomePostcode" class="form-control validate">
+                                  </div>
+
+                                  <!-- <div class="md-form mb-2">
+                                    <label data-error="wrong" data-success="right" for="form32">Price</label>
+                                    <input type="text" id="atomePrice" class="form-control validate">
+                                  </div> -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-tertiary" id="atomeBtn">Buy Now</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
 <div class="row">
     <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
     <div class="col-lg-6 col-md-12 col-12 mb-4">
@@ -24,6 +78,9 @@ stylesheet: products
                     </div>
                     <div class="col-xl-6 col-lg-12 buyButtonDiv" style="text-align: left;">
                         <button class="btn btn-tertiary buy-btn" style="margin-bottom: 30px;">Buy</button>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;">Or click <button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold">here</button> to buy with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" >  (RM1166 x 3 payments)</p>
                     </div>
                 </div>
             </div>
@@ -89,6 +146,11 @@ stylesheet: products
                     <div class="col-xl-6 col-lg-12 buyButtonDiv" style="text-align: left;">
                         <button class="btn btn-tertiary buy-btn">Buy</button>
                     </div>
+                    
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;">Or click <button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold">here</button> to buy with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" >  (RM1166 x 3 payments)</p>
+                    </div>
+ 
                 </div>
             </div>
         </div>
@@ -122,7 +184,7 @@ stylesheet: products
 <script>
     const carSelectList = document.getElementsByClassName("car-select");
     const buyButton = document.getElementsByClassName("buy-btn");
-    
+    const atomeButton = document.getElementById("atomeBtn");
     async function load() {
         const selectedCar = new URLSearchParams(window.location.search).get("car");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
@@ -171,6 +233,30 @@ stylesheet: products
         params.append("car", carSelectList[1].value);
         params.append("price", "{{ page.product_id }}");
         const url = "https://api.kommu.ai/payment/begin?" + params.toString();
+        window.open(url, "_blank");
+    };
+
+    atomeButton.onclick = () => {
+        var atomeName = document.getElementById("atomeName").value;
+        var atomeEmail = document.getElementById("atomeEmail").value;
+        var atomeMobile = document.getElementById("atomeMobile").value;
+        var atomeAddress1 = document.getElementById("atomeAddress1").value;
+        var atomeAddress2 = document.getElementById("atomeAddress2").value;
+        var atomePostcode = document.getElementById("atomePostcode").value;
+        // var atomePrice = document.getElementById("atomePrice").value;
+
+        const params = new URLSearchParams();
+        params.append("name", atomeName);
+        params.append("email", atomeEmail);
+        params.append("mobile", atomeMobile);
+        params.append("address1", atomeAddress1);
+        params.append("address2", atomeAddress2);
+        params.append("postcode", atomePostcode);
+        // params.append("price", atomePrice);
+
+
+        const url = "https://gateway.kommu.ai/atome/begin?" + params.toString();
+        console.log(url)
         window.open(url, "_blank");
     };
 
