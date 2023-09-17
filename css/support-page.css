@@ -1,3 +1,8 @@
+.card { 
+    margin-bottom: 25px;
+    border-radius: 25px;
+}
+
 .table{
     table-layout: fixed;
     width: 1050px;
@@ -63,6 +68,12 @@ th {
 
 #header-table-2 :nth-child(5){
     width: 150px;
+}
+
+#support-car-video {
+    border-radius: 25px;
+    aspect-ratio: 16/9;
+
 }
 
 @media (max-width: 991px) {

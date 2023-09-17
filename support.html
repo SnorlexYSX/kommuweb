@@ -6,13 +6,17 @@ title: Supported Vehicle
     <link href="{{ "/css/support-page.css" | relative_url }}" rel="stylesheet">
 </head>
 <script>
+    var vehicleList = undefined ;
+
     async function load() {
+
+            //Table Loads
         const standard = document.getElementById("standard");
-        const semi_acc = document.getElementById("semi_acc");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
         const raw_resp = await fetch(remote);
         const resp = await raw_resp.json();
 
+        vehicleList = resp.standard;
         resp.standard.forEach((vehicle) => {
             const tr = document.createElement("tr");
             td(tr, vehicle.brand);
@@ -26,15 +30,18 @@ title: Supported Vehicle
             standard.appendChild(tr);
         });
 
-        resp.semi_acc.forEach((vehicle) => {
-            const tr = document.createElement("tr");
-            td(tr, vehicle.brand);
-            td(tr, vehicle.model);
-            td(tr, vehicle.year);
-            td(tr, vehicle.variant);
-            td(tr, vehicle.lkc_torque);
-            semi_acc.appendChild(tr);
+        //Interactive Car JSON
+        const carSelect = document.getElementById("car-select");
+
+
+        resp.standard.forEach((vehicle) => {
+            const option = document.createElement("option");
+            option.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
+            option.innerText = option.value;
+            carSelect.appendChild(option);
         });
+
+        loadVehicleInfo();
     }
 
     window.onload = load;
@@ -44,13 +51,72 @@ title: Supported Vehicle
         td.innerText = content;
         row.appendChild(td);
     }
+
+    function loadVehicleInfo() {
+        const carSelectValue = document.getElementById("car-select").value;
+        const carSelected = vehicleList.find((vehicle) => carSelectValue == `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`);
+       
+
+        const accSpeedRange = document.getElementById("acc-spd-rng-txt");
+        const accStopGo = document.getElementById("acc-sng-txt");
+        const lkaSpeedRange = document.getElementById("lka-spd-rng-txt");
+        const lkaSteerTorque = document.getElementById("lka-str-trq-txt");
+        const lkaAngle = document.getElementById("lka-ang-txt");
+        const carImage =  document.getElementById("support-car-img");
+        console.log(document.location.hostname + '/img/support/ativa.jpg')
+        console.log(carSelected);
+        accSpeedRange.innerText = `Speed Range: ${carSelected.acc_speed_range} km/h`;
+        accStopGo.innerText = `Stop & Go: ${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
+        lkaSpeedRange.innerText = `Speed Range: ${carSelected.lkc_speed_range} km/h`;
+        lkaSteerTorque.innerText = `Steering Torque:: ${carSelected.lkc_torque}`;
+        lkaAngle.innerText = `Angle: 15° - 40°`
+        carImage.src = `/img/support/${carSelected.model}.jpg`;
+    }
+
+
 </script>
+
+
+
 <section class="section-support">
     <div>
         <h1 style="text-align: center;">
             Supported Vehicles
         </h1>
     </div>
+    <div class="container">
+        <div class="row">
+        <div class="col-md-8 col-sm-12">
+            <select class="form-select" id="car-select" onchange="loadVehicleInfo()"> 
+            </select>
+            <img src="{{ "/img/support/ativa.jpg" | relative_url }}" id="support-car-img" style="width: 100%;background-color: white;">
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="card">
+                <iframe id="support-car-video" src="https://www.youtube.com/embed/0DLlI9zXH9U" allowfullscreen style="width: 100%;"></iframe>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">ACC</h5>
+                  <p class="card-text" id="acc-spd-rng-txt">Speed Range: Loading</p>
+                  <p class="card-text" id="acc-sng-txt">Stop & Go: Loading</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">LKA</h5>
+                  <p class="card-text" id="lka-spd-rng-txt">Speed Range: Loading</p>
+                  <p class="card-text" id="lka-str-trq-txt">Steering Torque: Loading</p>
+                  <p class="card-text" id="lka-ang-txt">Angle: Loading</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
     <div class="div-table">
         <table class="table" style="text-align: center; ">
             <thead>
@@ -73,4 +139,17 @@ title: Supported Vehicle
             <tbody id="standard"></tbody>
         </table>
     </div>
+    <div id="vehicle-support">
+        <div class="container">
+          <div class="row d-flex justify-content-center" style="padding-top: 50px;">
+            <h4 class="main-btm-support">Want us to support your vehicle model?</h4>
+            <h1 class="main-btm-support non-bold">To work with us to support your car, please fill in your details in the
+              form below.</h1>
+            <div class="text-center">
+              <a role="button" class="btn btn-secondary" href="https://forms.gle/BUrnYRc63bkffAvm6" target="_blank">Fill
+                Form</a>
+            </div>
+          </div>
+        </div>
+      </div>
 </section>

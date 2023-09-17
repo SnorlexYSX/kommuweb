@@ -31,6 +31,7 @@
     left: -9999px;
     right: -9999px;
     margin: auto;
+    background-color: black;
 }
 
 /* Special for bgvideo */
@@ -53,7 +54,6 @@
     left: 0;
     width: 100%;
     height: var(--height-video);
-
     animation-delay: 2s;
     animation-duration: 1s;
     animation-fill-mode: both;
@@ -117,7 +117,7 @@
     padding: 0px 25px;
 }
 
-@media(max-width:991px) {
+@media(max-width:833px) {
 
     .navbar-nav > li{
         padding: 10px 15px;
@@ -148,13 +148,23 @@ h6 {
 }
 
 .intro-header {
-    padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
-    padding-bottom: 50px;
+    /* padding-top: 50px;  */
+    /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     text-align: center;
     color: #f8f8f8;
+    width: 100%;
+    background-size: cover;
+}
+
+.intro-video {
+/* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
+    padding-bottom: 50px;
+    text-align: center;
+    color: black;
 
     background-size: cover;
 }
+
 
 .intro-message {
     position: relative;
@@ -309,6 +319,12 @@ h6 {
 
 }
 
+.btn-intro {
+    color: #4a80ec;
+    font-size: 22px;
+    padding: 0px;
+}
+
 @media(max-width:1499px) {
 
     #home > .container {
@@ -321,7 +337,7 @@ h6 {
 
 }
 
-@media(max-width:767px) {
+@media(max-width:833px) {
     .intro-message {
         padding-bottom: 15%;
     }
@@ -425,7 +441,7 @@ h6 {
 
 
 
-@media(max-width:767px) {
+@media(max-width:833px) {
     .banner h2 {
         margin: 0;
         font-size: 3em;

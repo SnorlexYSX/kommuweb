@@ -8,59 +8,230 @@ stylesheet: products
     </a>
 </div> -->
 
-                       <!-- Modal -->
-                       <div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Buy with Atome</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form34">Name</label>
-                                    <input type="text" id="atomeName" class="form-control validate">
-                                  </div>
-                          
-                                  <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form29">Email</label>
-                                    <input type="email" id="atomeEmail" class="form-control validate">
-                                  </div>
-                          
-                                  <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
-                                    <input type="text" id="atomeMobile" class="form-control validate">
-                                  </div>
-                          
-                                  <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
-                                    <input type="text" id="atomeAddress1" class="form-control validate">
-                                  </div>
+<!-- Modal -->
+<div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buy with Atome (RM 1166 x 3 months)</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="atomeForm" class="needs-validation" novalidate onsubmit="atomeSubmit();return false">
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form34">Name</label>
+                    <input type="text" id="atomeName" class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form29">Email</label>
+                    <input type="email" id="atomeEmail" class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                    <input type="number" id="atomeMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                    <input type="text" id="atomeAddress1" class="form-control validate" required>
+                </div>
 
-                                  <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form8">Address (Line 2)</label>
-                                    <input type="text" id="atomeAddress2" class="form-control validate">
-                                  </div>
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 2)</label>
+                    <input type="text" id="atomeAddress2" class="form-control validate" required>
+                </div>
 
-                                  <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
-                                    <input type="text" id="atomePostcode" class="form-control validate">
-                                  </div>
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                    <input type="number" id="atomePostcode" class="form-control validate" required>
+                </div>
 
-                                  <!-- <div class="md-form mb-2">
-                                    <label data-error="wrong" data-success="right" for="form32">Price</label>
-                                    <input type="text" id="atomePrice" class="form-control validate">
-                                  </div> -->
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-tertiary" id="atomeBtn">Buy Now</button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
+                <!-- <div class="md-form mb-2">
+                <label data-error="wrong" data-success="right" for="form32">Price</label>
+                <input type="text" id="atomePrice" class="form-control validate">
+                </div> -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-tertiary" id="atomeBtn">Buy Now</button>
+                </div>
+            </form>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fpx1Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buy with FPX (RM 290 x 12 months)</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fpx1Form" class="needs-validation" novalidate onsubmit="fpx1Submit();return false">
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form34">Name</label>
+                        <input type="text" id="fpx1Name" class="form-control validate" required>
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                        <input type="number" id="fpx1IC" min=100000000000 max=999999999999 class="form-control validate" required>
+                    </div>    
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form29">Email</label>
+                        <input type="email" id="fpx1Email" class="form-control validate" required>
+                    </div>
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                        <input type="number" id="fpx1Mobile" min=10000000 max=999999999999 class="form-control validate" required>
+                    </div>
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                        <input type="text" id="fpx1Address1" class="form-control validate" required>
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label for="form8">Address (Line 2) (Optional)</label>
+                        <input type="text" id="fpx1Address2" class="form-control">
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                        <input type="number" id="fpx1Postcode" class="form-control validate" required>
+                    </div>
+
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Bank</label>
+                        <select class="form-select" id="fpx1Bank">
+                            <option value="1">Affin Bank</option>
+                            <option value="2">Alliance Bank (Personal)</option>
+                            <option value="68">AGRONet</option>
+                            <option value="3">AmBank</option>
+                            <option value="8">CIMB Clicks</option>
+                            <option value="4">Bank Islam</option>
+                            <option value="5">Bank Rakyat</option>
+                            <option value="6">Bank Muamalat</option>
+                            <option value="7">BSN</option>
+                            <option value="9">Hong Leong Bank</option>
+                            <option value="10">HSBC Bank</option>
+                            <option value="11">KFH</option>
+                            <option value="12">Maybank2U</option>
+                            <option value="13">Maybank2E</option>
+                            <option value="14">OCBC Bank</option>
+                            <option value="15">Public Bank</option>
+                            <option value="16">RHB Bank</option>
+                            <option value="17">Standard Chartered</option>
+                            <option value="18">UOB Bank</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-tertiary" id="fpx1Btn">Buy Now</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fpx2Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buy with FPX (RM 194 x 18 months)</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="fpx2Form" class="needs-validation" novalidate onsubmit="fpx2Submit();return false">
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form34">Name</label>
+                    <input type="text" id="fpx2Name" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                    <input type="number" id="fpx2IC" min=100000000000 max=999999999999 class="form-control validate" required>
+                </div>    
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form29">Email</label>
+                    <input type="email" id="fpx2Email" class="form-control validate" required>
+                </div>
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                    <input type="number" id="fpx2Mobile" min=10000000 max=999999999999 class="form-control validate" required>
+                </div>
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                    <input type="text" id="fpx2Address1" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label for="form8">Address (Line 2) (Optional)</label>
+                    <input type="text" id="fpx2Address2" class="form-control">
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                    <input type="number" id="fpx2Postcode" class="form-control validate" required>
+                </div>
+
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Bank</label>
+                    <select class="form-select" id="fpx2Bank">
+                        <option value="1">Affin Bank</option>
+                        <option value="2">Alliance Bank (Personal)</option>
+                        <option value="68">AGRONet</option>
+                        <option value="3">AmBank</option>
+                        <option value="8">CIMB Clicks</option>
+                        <option value="4">Bank Islam</option>
+                        <option value="5">Bank Rakyat</option>
+                        <option value="6">Bank Muamalat</option>
+                        <option value="7">BSN</option>
+                        <option value="9">Hong Leong Bank</option>
+                        <option value="10">HSBC Bank</option>
+                        <option value="11">KFH</option>
+                        <option value="12">Maybank2U</option>
+                        <option value="13">Maybank2E</option>
+                        <option value="14">OCBC Bank</option>
+                        <option value="15">Public Bank</option>
+                        <option value="16">RHB Bank</option>
+                        <option value="17">Standard Chartered</option>
+                        <option value="18">UOB Bank</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-tertiary" id="fpx2Btn">Buy Now</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-tertiary" id="fpx2Btn">Buy Now</button>
+        </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
     <div class="col-lg-6 col-md-12 col-12 mb-4">
@@ -80,7 +251,12 @@ stylesheet: products
                         <button class="btn btn-tertiary buy-btn" style="margin-bottom: 30px;">Buy</button>
                     </div>
                     <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
-                        <p style="font-weight: normal;">Or click <button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold">here</button> to buy with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" >  (RM1166 x 3 payments)</p>
+                        <h5 style="font-weight: bold;">Instalment Options:</h5>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 1166 x 3 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 290 x 12 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 190 x 18 months)</p>
                     </div>
                 </div>
             </div>
@@ -146,9 +322,14 @@ stylesheet: products
                     <div class="col-xl-6 col-lg-12 buyButtonDiv" style="text-align: left;">
                         <button class="btn btn-tertiary buy-btn">Buy</button>
                     </div>
-                    
+
                     <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
-                        <p style="font-weight: normal;">Or click <button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold">here</button> to buy with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" >  (RM1166 x 3 payments)</p>
+                        <h5 style="font-weight: bold;">Instalment Options:</h5>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 1166 x 3 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 290 x 12 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 190 x 18 months)</p>
                     </div>
  
                 </div>
@@ -182,9 +363,13 @@ stylesheet: products
 </div>
 
 <script>
+
     const carSelectList = document.getElementsByClassName("car-select");
     const buyButton = document.getElementsByClassName("buy-btn");
     const atomeButton = document.getElementById("atomeBtn");
+    const fpx1Button = document.getElementById("fpx1Btn");
+    const fpx2Button = document.getElementById("fpx2Btn");
+
     async function load() {
         const selectedCar = new URLSearchParams(window.location.search).get("car");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
@@ -236,7 +421,18 @@ stylesheet: products
         window.open(url, "_blank");
     };
 
-    atomeButton.onclick = () => {
+    function atomeSubmit() {
+        var atomeForm = document.getElementById("atomeForm");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (atomeForm.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            atomeForm.classList.add('was-validated');
+            return false
+        }
         var atomeName = document.getElementById("atomeName").value;
         var atomeEmail = document.getElementById("atomeEmail").value;
         var atomeMobile = document.getElementById("atomeMobile").value;
@@ -259,6 +455,88 @@ stylesheet: products
         console.log(url)
         window.open(url, "_blank");
     };
+
+    function fpx1Submit()  {
+
+
+        var fpx1Form = document.getElementById("fpx1Form");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (fpx1Form.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            fpx1Form.classList.add('was-validated');
+            return false
+        }
+
+        var fpx1Name = document.getElementById("fpx1Name").value;
+        var fpx1IC = document.getElementById("fpx1IC").value;
+        var fpx1Email = document.getElementById("fpx1Email").value;
+        var fpx1Mobile = document.getElementById("fpx1Mobile").value;
+        var fpx1Address1 = document.getElementById("fpx1Address1").value;
+        var fpx1Address2 = document.getElementById("fpx1Address2").value;
+        var fpx1Postcode = document.getElementById("fpx1Postcode").value;
+        var fpx1Bank = document.getElementById("fpx1Bank").value;
+
+        const params = new URLSearchParams();
+        params.append("name", fpx1Name);
+        params.append("email", fpx1Email);
+        params.append("mobile", fpx1Mobile);
+        params.append("address1", fpx1Address1);
+        params.append("address2", fpx1Address2);
+        params.append("postcode", fpx1Postcode);
+        params.append("nric", fpx1IC);
+        params.append("bankname", fpx1Bank);
+        params.append("frequency", "12");
+
+
+        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
+    function fpx2Submit() {
+    
+
+        var fpx2Form = document.getElementById("fpx2Form");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (fpx2Form.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            fpx2Form.classList.add('was-validated');
+            return false
+        }
+
+        var fpx2Name = document.getElementById("fpx2Name").value;
+        var fpx2IC = document.getElementById("fpx2IC").value;
+        var fpx2Email = document.getElementById("fpx2Email").value;
+        var fpx2Mobile = document.getElementById("fpx2Mobile").value;
+        var fpx2Address1 = document.getElementById("fpx2Address1").value;
+        var fpx2Address2 = document.getElementById("fpx2Address2").value;
+        var fpx2Postcode = document.getElementById("fpx2Postcode").value;
+        var fpx2Bank = document.getElementById("fpx2Bank").value;
+
+        const params = new URLSearchParams();
+        params.append("name", fpx2Name);
+        params.append("email", fpx2Email);
+        params.append("mobile", fpx2Mobile);
+        params.append("address1", fpx2Address1);
+        params.append("address2", fpx2Address2);
+        params.append("postcode", fpx2Postcode);
+        params.append("nric", fpx2IC);
+        params.append("bankname", fpx2Bank);
+        params.append("frequency", "18");
+
+        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
 
     const includes = [            
             {% for incl in page.includes %}
@@ -434,6 +712,5 @@ smallImg[8].onclick = function(){
     smallImg[7].style.border = "0px";
     smallImg[8].style.border = "5px solid #33B9FF";
 }
-
 
 </script>

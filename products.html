@@ -3,76 +3,743 @@ layout: default
 title: Products | kommu.ai
 stylesheet: products
 ---
-<div class="container" id="productlocationizer">
-    <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
-    <h3 style = "text-align: center;">Find the right kit for your car:</h3><br>
-    <div class="row align-items-center">
-        <div class="col-lg-7 col-md-12 mb-4 text-center">
-            <select aria-label="Select your car model" class="form-select" id="localizer">
-            </select>
+<div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buy with Atome (RM 1166 x 3 months)</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="col-lg-5 col-md-12 mb-4 text-center">
-            <button class="btn btn-tertiary" id="localizerer">Search</button>
+        <div class="modal-body">
+            <form id="atomeForm" class="needs-validation" novalidate onsubmit="atomeSubmit();return false">
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form34">Name</label>
+                    <input type="text" id="atomeName" class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form29">Email</label>
+                    <input type="email" id="atomeEmail" class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                    <input type="number" id="atomeMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                </div>
+            
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                    <input type="text" id="atomeAddress1" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 2)</label>
+                    <input type="text" id="atomeAddress2" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                    <input type="number" id="atomePostcode" class="form-control validate" required>
+                </div>
+
+                <!-- <div class="md-form mb-2">
+                <label data-error="wrong" data-success="right" for="form32">Price</label>
+                <input type="text" id="atomePrice" class="form-control validate">
+                </div> -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-tertiary" id="atomeBtn">Buy Now</button>
+                </div>
+            </form>
+        </div>
+
         </div>
     </div>
-    <h1 class="mt-4 mb-4 text-center">Products</h1>
-        <div class="products">
-            {% for product in site.products %}
-            <div class="col md-6 sm-12 px-2" style="margin: 20px;">
-                <div class="card m-1" style="width: 19rem;">
-                    <a href="{{ product.url | relative_url }}"><img src="{{ "" | relative_url }}/img/products/{{product.key}}/1.png" class="card-img-top" alt="Image of {{ product.title }}" style="height: 12.5rem;"></a>
-                    
-                    <div class="card-body" style="height: 16rem">
-                        <div>
-                            <a href="{{ product.url | relative_url }}"><h5 class="card-title">{{ product.title }}</h5></a>
-                        </div>
-                        
-                        <div class="card-text">{{ product.description }}</div>
-                        <div style="text-align: center; margin-top:20px">
-                            <a href="{{ product.url | relative_url }}" class="btn btn-tertiary" style="position:absolute;bottom:20px;right:80px;">View</a>
-                        </div>
+</div>
+
+<div class="modal fade" id="fpx1Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buy with FPX (RM 290 x 12 months)</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fpx1Form" class="needs-validation" novalidate onsubmit="fpx1Submit();return false">
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form34">Name</label>
+                        <input type="text" id="fpx1Name" class="form-control validate" required>
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                        <input type="number" id="fpx1IC" min=100000000000 max=999999999999 class="form-control validate" required>
+                    </div>    
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form29">Email</label>
+                        <input type="email" id="fpx1Email" class="form-control validate" required>
+                    </div>
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                        <input type="number" id="fpx1Mobile" min=10000000 max=999999999999 class="form-control validate" required>
+                    </div>
+            
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                        <input type="text" id="fpx1Address1" class="form-control validate" required>
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label for="form8">Address (Line 2) (Optional)</label>
+                        <input type="text" id="fpx1Address2" class="form-control">
+                    </div>
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                        <input type="number" id="fpx1Postcode" class="form-control validate" required>
+                    </div>
+
+
+                    <div class="md-form mb-2">
+                        <label data-error="wrong" data-success="right" for="form32">Bank</label>
+                        <select class="form-select" id="fpx1Bank">
+                            <option value="1">Affin Bank</option>
+                            <option value="2">Alliance Bank (Personal)</option>
+                            <option value="68">AGRONet</option>
+                            <option value="3">AmBank</option>
+                            <option value="8">CIMB Clicks</option>
+                            <option value="4">Bank Islam</option>
+                            <option value="5">Bank Rakyat</option>
+                            <option value="6">Bank Muamalat</option>
+                            <option value="7">BSN</option>
+                            <option value="9">Hong Leong Bank</option>
+                            <option value="10">HSBC Bank</option>
+                            <option value="11">KFH</option>
+                            <option value="12">Maybank2U</option>
+                            <option value="13">Maybank2E</option>
+                            <option value="14">OCBC Bank</option>
+                            <option value="15">Public Bank</option>
+                            <option value="16">RHB Bank</option>
+                            <option value="17">Standard Chartered</option>
+                            <option value="18">UOB Bank</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-tertiary" id="fpx1Btn">Buy Now</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fpx2Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buy with FPX (RM 194 x 18 months)</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="fpx2Form" class="needs-validation" novalidate onsubmit="fpx2Submit();return false">
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form34">Name</label>
+                    <input type="text" id="fpx2Name" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                    <input type="number" id="fpx2IC" min=100000000000 max=999999999999 class="form-control validate" required>
+                </div>    
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form29">Email</label>
+                    <input type="email" id="fpx2Email" class="form-control validate" required>
+                </div>
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                    <input type="number" id="fpx2Mobile" min=10000000 max=999999999999 class="form-control validate" required>
+                </div>
+        
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form8">Address (Line 1)</label>
+                    <input type="text" id="fpx2Address1" class="form-control validate" required>
+                </div>
+
+                <div class="md-form mb-2">
+                    <label for="form8">Address (Line 2) (Optional)</label>
+                    <input type="text" id="fpx2Address2" class="form-control">
+                </div>
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                    <input type="number" id="fpx2Postcode" class="form-control validate" required>
+                </div>
+
+
+                <div class="md-form mb-2">
+                    <label data-error="wrong" data-success="right" for="form32">Bank</label>
+                    <select class="form-select" id="fpx2Bank">
+                        <option value="1">Affin Bank</option>
+                        <option value="2">Alliance Bank (Personal)</option>
+                        <option value="68">AGRONet</option>
+                        <option value="3">AmBank</option>
+                        <option value="8">CIMB Clicks</option>
+                        <option value="4">Bank Islam</option>
+                        <option value="5">Bank Rakyat</option>
+                        <option value="6">Bank Muamalat</option>
+                        <option value="7">BSN</option>
+                        <option value="9">Hong Leong Bank</option>
+                        <option value="10">HSBC Bank</option>
+                        <option value="11">KFH</option>
+                        <option value="12">Maybank2U</option>
+                        <option value="13">Maybank2E</option>
+                        <option value="14">OCBC Bank</option>
+                        <option value="15">Public Bank</option>
+                        <option value="16">RHB Bank</option>
+                        <option value="17">Standard Chartered</option>
+                        <option value="18">UOB Bank</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-tertiary" id="fpx2Btn">Buy Now</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-tertiary" id="fpx2Btn">Buy Now</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
+    <div class="col-lg-6 col-md-12 col-12 mb-4">
+        <div id="product-div-mobile" style="margin-top:20px">
+            <h1>KommuAssist1S</h1>
+            <br>
+            <h4 style="font-weight:300">RM 3,799</h4>
+    
+            <div>
+                <h4>Select your car model:</h4>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-12" style="max-width:350px;">
+                        <select aria-label="Select your car model" class="form-select mb-4 mt-2 car-select">
+                        </select>
+                    </div>
+                    <div class="col-xl-6 col-lg-12 buyButtonDiv" style="text-align: left;">
+                        <button class="btn btn-tertiary buy-btn" style="margin-bottom: 30px;">Buy</button>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <h5 style="font-weight: bold;">Instalment Options:</h5>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 1166 x 3 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 290 x 12 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 190 x 18 months)</p>
                     </div>
                 </div>
             </div>
-            <br><br>
-            {% endfor %}
         </div>
+
+        <img src="{{ "" | relative_url }}/img/products/standard/1.png" class = "img-fluid w-100" id= "MainImage"  style="margin-bottom: 10px;">
+        <div class="small-img-group" style="margin-bottom: 10px;">
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/1.png" width="100%" class="small-img" style="border-style: solid; border-color: #33B9FF; border-width: 5px;" >
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/2.png" width="100%" class="small-img">
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/3.png" width="100%" class="small-img">
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/4.png" width="100%" class="small-img">
+            </div>
+        </div>
+        <div class="small-img-group" >
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/5.png" width="100%" class="small-img">
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/6.png" width="100%" class="small-img">
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/7.png" width="100%" class="small-img">
+            </div>
+            <div class="small-img-col">
+                <img src="{{ "" | relative_url }}/img/products/standard/8.png" width="100%" class="small-img">
+            </div>
+        </div>
+        <br>
+        <div id="installation-div-pc">
+            <h4>
+                Installation:
+            </h4>
+            <h4 style="font-size:1rem; font-weight:300">
+                Perform 15 minutes self-installation following our video guide: 
+            </h4>
+            <br>
+            <div style="text-align: center;">
+                <iframe class="installationyoutube" src="https://www.youtube.com/embed/2EpnMwpINpE">
+                </iframe>    
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div id="product-div-pc">
+            <h1>KommuAssist1S</h1>
+            <br>
+            <h4 style="font-weight:300">RM 3,499</h4>
+    
+            <div>
+                <h4>Select your car model:</h4>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-12" style="max-width:350px;">
+                        <select aria-label="Select your car model" class="form-select mb-4 mt-2 car-select">
+                        </select>
+                    </div>
+                    <div class="col-xl-6 col-lg-12 buyButtonDiv" style="text-align: left;">
+                        <button class="btn btn-tertiary buy-btn">Buy</button>
+                    </div>
+
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <h5 style="font-weight: bold;">Instalment Options:</h5>
+                    </div>
+                    <div class="col-12 atomeButtonDiv" style="text-align: left;margin-top: 5px;">
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/atome.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 1166 x 3 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 290 x 12 months)</p>
+                        <p style="font-weight: normal;"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal" style="padding:0px;font-weight:bold"><p style="margin-bottom: 0px;"><u>Buy</u> with <img src="/img/icons/fpx.png" class="img-fluid" style="height:1.2em;" ></p></button> (RM 190 x 18 months)</p>
+                    </div>
+ 
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <p><h4>Active features&#58;</h4>
+            <ol class=\u0022ordered-list\u0022>
+                <li class=\u0022ordered-list-first\u0022>Adaptive Cruise Control</li>
+                <ol type=\u0022a\u0022>
+                    <li class=\u0022ordered-list-second\u0022>Traffic Jam Low Speed Follow** (brake down to 0km/h)</li>
+                    <li class=\u0022ordered-list-second\u0022>Traffic Jam Stop & Go** (auto departure in standstill traffic & hold brakes at 0km/h)</li>
+                </ol>
+                <br>
+                <li class=\u0022ordered-list-first\u0022>Active Lane Keep Control</li>
+                <ol type=\u0022a\u0022>
+                    <li class=\u0022ordered-list-second\u0022>
+                    Highway Cornering (actively tilt steering up to 30 - 90 degrees**)
+                    </li>
+                </ol>
+            </ol>
+            
+            <br>
+            
+            <h4>Passive features&#58;</h4>
+            <ol class=\u0022ordered-list\u0022>
+                <li class=\u0022ordered-list-first\u0022>Pre-collision Warning</li>
+                <li class=\u0022ordered-list-first\u0022>Lane Departure Warning</li>
+            </ol>
+            
+            <p class=\u0022product-disclaimer\u0022>** Availability depends on vehicle model, refer to supported car list
+            on website.</p></p>
+        <div>
+            <br><br>
+            <h4>What's in the box?</h4>
+            <div class="container">
+            <div class="row" id="includes">
+                <!-- <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+            </div>
+            <br><br>
+        </div>
+        <div id="installation-div-mobile">
+            <h4>
+                Installation:
+            </h4>
+            <h4 style="font-size:1rem; font-weight:300">
+                Perform 15 minutes self-installation following our video guide: 
+            </h4>
+            <br>
+            <div style="text-align: center;">
+                <iframe class="installationyoutube" src="https://www.youtube.com/embed/2EpnMwpINpE">
+                </iframe>    
+            </div>
+        </div>
+    </div>
 </div>
+
 <script>
-    const localizerer = document.getElementById("localizerer");
-    const localizer = document.getElementById("localizer");
+
+    const carSelectList = document.getElementsByClassName("car-select");
+    const buyButton = document.getElementsByClassName("buy-btn");
+    const atomeButton = document.getElementById("atomeBtn");
+    const fpx1Button = document.getElementById("fpx1Btn");
+    const fpx2Button = document.getElementById("fpx2Btn");
 
     async function load() {
+        const selectedCar = new URLSearchParams(window.location.search).get("car");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
         const resp = await (await fetch(remote)).json();
+        
+        
+        let list = resp.standard;
+        list.forEach((vehicle) => {
+            const option1 = document.createElement("option");
+            const option2 = document.createElement("option");
 
-        const product_urls = {
-        {% for product in site.products %}
-            {{ product.key }}: "{{ product.url | relative_url }}",
-        {% endfor %}
-        };
+            option1.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
+            option1.innerText = option1.value;
+            option1.selected = (selectedCar === option1.value);
 
-        []
-            .concat(
-                resp.standard.map(vehicle => ({
-                        label: `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`,
-                        key: "standard"
-                    }))
-                )
-            .sort((a, b) => { return b.label < a.label })
-            .forEach((item) => {
-                    const option = document.createElement("option");
-                    option.value = product_urls[item.key];
-                    option.innerText = item.label;
-                    localizer.appendChild(option);
-                });
+            option2.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
+            option2.innerText = option2.value;
+            option2.selected = (selectedCar === option2.value);
+
+            carSelectList[0].appendChild(option1);
+            carSelectList[1].appendChild(option2);
+        });
     }
 
     window.onload = load;
 
-    localizerer.onclick = () => {
-            const params = new URLSearchParams();
-            params.append("car", localizer.selectedOptions[0].innerText);
-            window.location.href = `${localizer.value}?${params.toString()}`;
-        };
+    buyButton[0].onclick = () => {
+        const params = new URLSearchParams();
+        params.append("car", carSelectList[0].value);
+        params.append("price", "price_1LQTmVCeqLEWrvVKiWU41V6P");
+        const url = "https://api.kommu.ai/payment/begin?" + params.toString();
+        window.open(url, "_blank");
+    };
+
+    buyButton[1].onclick = () => {
+        const params = new URLSearchParams();
+        params.append("car", carSelectList[1].value);
+        params.append("price", "price_1LQTmVCeqLEWrvVKiWU41V6P");
+        const url = "https://api.kommu.ai/payment/begin?" + params.toString();
+        window.open(url, "_blank");
+    };
+
+    function atomeSubmit() {
+        var atomeForm = document.getElementById("atomeForm");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (atomeForm.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            atomeForm.classList.add('was-validated');
+            return false
+        }
+        var atomeName = document.getElementById("atomeName").value;
+        var atomeEmail = document.getElementById("atomeEmail").value;
+        var atomeMobile = document.getElementById("atomeMobile").value;
+        var atomeAddress1 = document.getElementById("atomeAddress1").value;
+        var atomeAddress2 = document.getElementById("atomeAddress2").value;
+        var atomePostcode = document.getElementById("atomePostcode").value;
+        // var atomePrice = document.getElementById("atomePrice").value;
+
+        const params = new URLSearchParams();
+        params.append("name", atomeName);
+        params.append("email", atomeEmail);
+        params.append("mobile", atomeMobile);
+        params.append("address1", atomeAddress1);
+        params.append("address2", atomeAddress2);
+        params.append("postcode", atomePostcode);
+        // params.append("price", atomePrice);
+
+
+        const url = "https://gateway.kommu.ai/atome/begin?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
+    function fpx1Submit()  {
+
+
+        var fpx1Form = document.getElementById("fpx1Form");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (fpx1Form.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            fpx1Form.classList.add('was-validated');
+            return false
+        }
+
+        var fpx1Name = document.getElementById("fpx1Name").value;
+        var fpx1IC = document.getElementById("fpx1IC").value;
+        var fpx1Email = document.getElementById("fpx1Email").value;
+        var fpx1Mobile = document.getElementById("fpx1Mobile").value;
+        var fpx1Address1 = document.getElementById("fpx1Address1").value;
+        var fpx1Address2 = document.getElementById("fpx1Address2").value;
+        var fpx1Postcode = document.getElementById("fpx1Postcode").value;
+        var fpx1Bank = document.getElementById("fpx1Bank").value;
+
+        const params = new URLSearchParams();
+        params.append("name", fpx1Name);
+        params.append("email", fpx1Email);
+        params.append("mobile", fpx1Mobile);
+        params.append("address1", fpx1Address1);
+        params.append("address2", fpx1Address2);
+        params.append("postcode", fpx1Postcode);
+        params.append("nric", fpx1IC);
+        params.append("bankname", fpx1Bank);
+        params.append("frequency", "12");
+
+
+        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
+    function fpx2Submit() {
+    
+
+        var fpx2Form = document.getElementById("fpx2Form");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (fpx2Form.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            fpx2Form.classList.add('was-validated');
+            return false
+        }
+
+        var fpx2Name = document.getElementById("fpx2Name").value;
+        var fpx2IC = document.getElementById("fpx2IC").value;
+        var fpx2Email = document.getElementById("fpx2Email").value;
+        var fpx2Mobile = document.getElementById("fpx2Mobile").value;
+        var fpx2Address1 = document.getElementById("fpx2Address1").value;
+        var fpx2Address2 = document.getElementById("fpx2Address2").value;
+        var fpx2Postcode = document.getElementById("fpx2Postcode").value;
+        var fpx2Bank = document.getElementById("fpx2Bank").value;
+
+        const params = new URLSearchParams();
+        params.append("name", fpx2Name);
+        params.append("email", fpx2Email);
+        params.append("mobile", fpx2Mobile);
+        params.append("address1", fpx2Address1);
+        params.append("address2", fpx2Address2);
+        params.append("postcode", fpx2Postcode);
+        params.append("nric", fpx2IC);
+        params.append("bankname", fpx2Bank);
+        params.append("frequency", "18");
+
+        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
+
+    const includes = [            
+            {
+                desc:"KommuVision",
+            },{
+                desc:"KommuRelay",
+            },{
+                desc:"KommuPower",
+            },{
+                desc:"Vision Mount",
+            },{
+                desc:"Relay Harness",
+            },{
+                desc:"Long USB C-C 3.1 Cable",
+            },{
+                desc:"Short USB C-C 3.1 cable",
+            }
+           ];
+
+    const includesDiv = document.getElementById("includes");
+    const col1 = document.createElement("div");
+    for (const include of includes) {  
+        
+        col1.classList.add("col-md-6");
+        col1.classList.add("col-sm-12");
+
+        if  (includes.indexOf(include) <= 3 ) {
+            const feature1 = document.createElement("div");
+            const bullets1 = document.createElement("ul");
+            feature1.classList.add("row")
+
+            bullets1.textContent = include.desc ;
+            bullets1.style = "list-style-type:disc";
+            col1.appendChild(feature1)
+            feature1.appendChild(bullets1);
+          
+        }
+        
+    }
+    includesDiv.appendChild(col1);
+
+    const col2 = document.createElement("div");
+    for (const include of includes) {
+        
+        col2.classList.add("col-sm-6");
+        col2.classList.add("col-xs-12");
+        if  (includes.indexOf(include) > 3 ) {
+            const feature2 = document.createElement("div");
+            const bullets2 = document.createElement("ul");
+            feature2.classList.add("row")
+
+            bullets2.textContent = include.desc ;
+            bullets2.style = "list-style-type:disc";
+            col2.appendChild(feature2)
+            feature2.appendChild(bullets2);
+           
+        }
+    }
+    includesDiv.appendChild(col2);
+
+var mainImg = document.getElementById('MainImage');
+var smallImg = document.getElementsByClassName('small-img');
+
+// Disgusting codes. will refactor if i feel like it.
+smallImg[0].onclick = function(){
+    mainImg.src = smallImg[0].src;
+    
+    smallImg[0].style.border = "5px solid #33B9FF";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+
+}
+
+smallImg[1].onclick = function(){
+    mainImg.src = smallImg[1].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "5px solid #33B9FF";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+smallImg[2].onclick = function(){
+    mainImg.src = smallImg[2].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "5px solid #33B9FF";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+smallImg[3].onclick = function(){
+    mainImg.src = smallImg[3].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "5px solid #33B9FF";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+smallImg[4].onclick = function(){
+    mainImg.src = smallImg[4].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "5px solid #33B9FF";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+smallImg[5].onclick = function(){
+    mainImg.src = smallImg[5].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "5px solid #33B9FF";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+
+smallImg[6].onclick = function(){
+    mainImg.src = smallImg[6].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "5px solid #33B9FF";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "0px";
+}
+
+smallImg[7].onclick = function(){
+    mainImg.src = smallImg[7].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "5px solid #33B9FF";
+    smallImg[8].style.border = "0px";
+}
+
+smallImg[8].onclick = function(){
+    mainImg.src = smallImg[8].src;
+
+    smallImg[0].style.border = "0px";
+    smallImg[1].style.border = "0px";
+    smallImg[2].style.border = "0px";
+    smallImg[3].style.border = "0px";
+    smallImg[4].style.border = "0px";
+    smallImg[5].style.border = "0px";
+    smallImg[6].style.border = "0px";
+    smallImg[7].style.border = "0px";
+    smallImg[8].style.border = "5px solid #33B9FF";
+}
+
 </script>

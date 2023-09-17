@@ -1,11 +1,14 @@
 - label: Home
   url: /
-  
+
+- label: KommuAssist1S
+  url: /ka1s
+
 - label: Products
   url: /products
 
 - label: Supported Cars
   url: /support
 
-- label: About
-  url: /about
+- label: Kommunity
+  url: /kommunity
