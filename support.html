@@ -63,14 +63,12 @@ title: Supported Vehicle
         const lkaSteerTorque = document.getElementById("lka-str-trq-txt");
         const lkaAngle = document.getElementById("lka-ang-txt");
         const carImage =  document.getElementById("support-car-img");
-        console.log(document.location.hostname + '/img/support/ativa.jpg')
-        console.log(carSelected);
         accSpeedRange.innerText = `Speed Range: ${carSelected.acc_speed_range} km/h`;
         accStopGo.innerText = `Stop & Go: ${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
         lkaSpeedRange.innerText = `Speed Range: ${carSelected.lkc_speed_range} km/h`;
         lkaSteerTorque.innerText = `Steering Torque:: ${carSelected.lkc_torque}`;
         lkaAngle.innerText = `Angle: 15° - 40°`
-        carImage.src = `/img/support/${carSelected.model}.jpg`;
+        carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.jpg`;
     }
 
 
