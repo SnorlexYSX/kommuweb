@@ -60,7 +60,7 @@
     }
     
     .module-content {
-        height: 400px;
+        height: 375px;
     }
 
     .intro-header > .module-content {
@@ -68,6 +68,6 @@
     }
 
     .ka1s-section > .module-content > .unit-image-wrapper > .full-width-img {
-        width:800px;
+        width:750px;
     }
 }
