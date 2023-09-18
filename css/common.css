@@ -14,7 +14,7 @@
 .full-width-img {
     /* width:100%; */
     width: 1900px;
-    height:calc(1900px*1350/2400);
+    height:calc(1900px*1200/2400);
     overflow: hidden;
     left: 50%;
     transform: translateX(-50%);
@@ -26,7 +26,7 @@
     position:relative;
     box-sizing: border-box;
     display: block;
-    height:calc(1900px*1350/2400);
+    height:calc(1900px*1200/2400);
     overflow: hidden;
 }
 .intro-header > .module-content {
