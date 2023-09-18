@@ -2,12 +2,35 @@
 layout: default
 title: Kommunity
 ---
+<head>
+  <link href="{{ "/css/kommunity-page.css" | relative_url }}" rel="stylesheet">
+</head>
 <section id="about" class="content-section text-center" style="margin-left: 0px; margin-right: 0px;padding-left: 0px; padding-right: 0px;">
     <div class="row">
       <img src="{{ "" | relative_url }}/img/about/grafana.png">
     </div>
      <div class="row">
       <img src="{{ "" | relative_url }}/img/about/ugc.png">
+    </div>
+    <div class="container">
+
+    </div>
+    <div class="row kommunity-video-row">
+      <div class="card-container col-lg-4 col-md-12">
+        <video class="kommunity-video-card" playsinline loop autoplay muted>
+          <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
+        </video> 
+      </div>
+      <div class="card-container col-lg-4 col-md-12">
+        <video class="kommunity-video-card" playsinline loop autoplay muted>
+          <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
+        </video> 
+      </div>
+      <div class="card-container col-lg-4 col-md-12">
+        <video class="kommunity-video-card" playsinline loop autoplay muted>
+          <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+        </video> 
+      </div>
     </div>
   </div>
 </section>
