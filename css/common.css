@@ -50,7 +50,7 @@
 }
 @media(max-width:833px) {
     .full-width-img {
-        width:1300px;
+        width:1500px;
         height:auto;
     }
 
@@ -60,7 +60,7 @@
     }
     
     .module-content {
-        height: 500px;
+        height: 400px;
     }
 
     .intro-header > .module-content {
@@ -68,6 +68,6 @@
     }
 
     .ka1s-section > .module-content > .unit-image-wrapper > .full-width-img {
-        width:900px;
+        width:800px;
     }
 }
