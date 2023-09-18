@@ -177,4 +177,5 @@ a:active { text-decoration: none; }
 .ka1s-section {
     width: 100vw;
     background-color:black;
+    overflow:hidden;
 }
