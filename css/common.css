@@ -1,6 +1,6 @@
 .unit-image-wrapper {
     z-index: 1;
-    overflow: visible;
+    overflow: hidden;
     -webkit-box-flex: 1;
     flex-grow: 1;
     position: absolute;
@@ -41,19 +41,20 @@
     transform: translateX(-50%);
     position: absolute;
 }
-
 @media(max-width:833px) {
-    .full-width-img {
-        overflow: hidden;
+     .full-width-img {
         width:1500px;
         height:auto;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+    }
+    
+}
+@media(max-width:833px) {
+    .full-width-img {
+        width:1300px;
+        height:auto;
     }
 
     .unit-image-wrapper {
-        overflow: hidden;
         align-items: center;
         justify-content: center;
     }
