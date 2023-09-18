@@ -21,8 +21,8 @@
 @media (max-width: 768px) {
     .kommunity-video-row {
         background-color: black;
-        margin-left: 150px;
-        margin-right: 150px;
+        margin-left: calc(100vw / 10);
+        margin-right: calc(100vw / 10);
         padding-bottom: 50px;
     }
 
