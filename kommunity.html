@@ -3,34 +3,52 @@ layout: default
 title: Kommunity
 ---
 <head>
+  <link href="{{ "/css/common.css" | relative_url }}" rel="stylesheet">
   <link href="{{ "/css/kommunity-page.css" | relative_url }}" rel="stylesheet">
 </head>
 <section id="about" class="content-section text-center" style="margin-left: 0px; margin-right: 0px;padding-left: 0px; padding-right: 0px;">
-    <div class="row">
-      <img src="{{ "" | relative_url }}/img/about/grafana.png">
+  <div class="module-content">
+    <div class="unit-image-wrapper">
+        <img class="full-width-img" src="{{ "" | relative_url }}/img/about/grafana.png" vertical-align="middle"
+        display="inline-block">
     </div>
-     <div class="row">
-      <img src="{{ "" | relative_url }}/img/about/ugc.png">
+  </div>  
+  <div class="row card-video-row" style="text-align: left;">
+    <h1 class="main-text" style="color: white;">
+      Only possible with end-to-end model training, with a community.
+    </h1>
+    <h2  class="sub-text" style="color: gray;">
+      Cruise anywhere, anytime
+    </h2>
+  </div>
+  <div class="row card-video-row">
+    <div class="card-container col-lg-4 col-md-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
+      </video> 
     </div>
-    <div class="container">
-
+    <div class="card-container col-lg-4 col-md-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
+      </video> 
     </div>
-    <div class="row kommunity-video-row">
-      <div class="card-container col-lg-4 col-md-12">
-        <video class="kommunity-video-card" playsinline loop autoplay muted>
-          <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
-        </video> 
-      </div>
-      <div class="card-container col-lg-4 col-md-12">
-        <video class="kommunity-video-card" playsinline loop autoplay muted>
-          <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
-        </video> 
-      </div>
-      <div class="card-container col-lg-4 col-md-12">
-        <video class="kommunity-video-card" playsinline loop autoplay muted>
-          <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
-        </video> 
-      </div>
+    <div class="card-container col-lg-4 col-md-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+      </video> 
     </div>
+  </div>
+  <div class="row card-video-row" style="text-align: left;">
+    <h2 class="main-text" style="color: white;">
+     Join us.       
+      <a href="https://discord.com/invite/DTTuP6zYsf?fbclid=IwAR3BAt1PYlQlyAOhOu6og32cLGjc7ZXEAuxMSYcvDmRacECUfcP5UVuWxlA_aem_AQERWoChcZxExqN2N1zwEbagQzRdy95joVfYi_-tvH-PBzGnd1IzP7u8dUYsbuiljjA&mibextid=Zxz2cZ" 
+      target="_blank" style="display: inline-block; height: 44px;" >
+        <img src="{{ "" | relative_url }}/img/icons/discord.png" style="height: 44px;">
+      </a>    
+      <a href="https://www.facebook.com/groups/kommu.official/" 
+      target="_blank" style="display: inline-block; height: 100%">
+        <img src="{{ "" | relative_url }}/img/icons/fb.png" style="height: 44px;">
+      </a>
+    </h2>
   </div>
 </section>

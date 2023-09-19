@@ -23,9 +23,9 @@ stylesheet: asdf
       <div class="row">
         <p>Early Bird: RM3,399</p>
       </div> -->
-      <div class="row" style="margin-top:360px; padding: 0px;">
+      <div class="row" id="margin-top-intro-btns"style="padding: 0px;">
         <div class="col-6">
-          <a role="button" class="btn btn-intro" href="{{ "/products" | relative_url }}">Order Now ></a>
+          <a role="button" class="btn btn-intro" href="{{ "/products" | relative_url }}" target="_blank">Order Now ></a>
         </div>
         <div class="col-6">
           <a role="button" class="btn btn-intro"
@@ -39,6 +39,9 @@ stylesheet: asdf
     </div> -->
   </div> 
 </section>
+<div class="container" style="height: 12px; background-color: white;">
+
+</div>
 <section class="intro-video">
   <div class = "module-content">
     <div id="bgvideo">
@@ -111,21 +114,30 @@ stylesheet: asdf
       </div>
     </div>
   </div>-->
-  <section class="intro-header">
-  <div class = "module-content">
+  <div class = "module-content" style="margin-bottom: 75px;">
     <div class="unit-image-wrapper">
       <img class="full-width-img" src="{{ "" | relative_url }}/img/main/compare.png" vertical-align="middle"
       display="inline-block">
     </div>
   </div>
-  </section>
-    <section class="intro-header">
-  <div class = "module-content">
-    <div class="unit-image-wrapper">
-      <img class="full-width-img" src="{{ "" | relative_url }}/img/main/featured.png" vertical-align="middle"
-      display="inline-block">
+  <div class="row card-video-row">
+    <h1 class="main-text">
+      Featured in.
+    </h1>
+    <h2  class="sub-text" style="color: gray;">
+      Learn more.
+    </h2>
+  </div>
+  <div class="row card-video-row">
+    <div class="card-container col-lg-4 col-md-12">
+      <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png"></a>    
+    </div>
+    <div class="card-container col-lg-4 col-md-12">
+      <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png"></a>
+    </div>
+    <div class="card-container col-lg-4 col-md-12">
+      <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png"></a>
     </div>
   </div>
-  </section>
 </section>
 

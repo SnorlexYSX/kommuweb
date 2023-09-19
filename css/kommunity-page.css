@@ -1,33 +1,6 @@
-.kommunity-video-card{
-    width: 100%;
-    border-radius: 10px;
-}
-
-.kommunity-video-row {
-    background-color: black;
-    margin-left: calc(100vw / 3.9);
-    margin-right: calc(100vw / 3.9);
-}
-
-.card-container {
-    padding: 0 calc(100vw / 190);
-}
 
 #about {
     background-color: black;
     overflow: hidden;
 }
 
-@media (max-width: 768px) {
-    .kommunity-video-row {
-        background-color: black;
-        margin-left: calc(100vw / 10);
-        margin-right: calc(100vw / 10);
-        padding-bottom: 50px;
-    }
-
-    .card-container {
-        padding-bottom: 50px;
-
-    }
-}

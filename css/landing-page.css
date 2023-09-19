@@ -7,6 +7,7 @@
 #home * {
     z-index: 1;
 }
+
 :root {
     /* CSS variable for body's width */
     --width-video: 100vw;
@@ -170,6 +171,7 @@ h6 {
     color: #f8f8f8;
     width: 100%;
     background-size: cover;
+    background-color: #000000;
 }
 
 .intro-video {
@@ -337,6 +339,7 @@ h6 {
 }
 
 
+
 .btn-secondary:hover{
     background-color: #4a80ec;
     border-color: #4a80ec;
@@ -345,8 +348,19 @@ h6 {
 
 }
 
+#margin-top-intro-btns {
+    margin-top:270px;
+}
+
 .btn-intro {
     color: #4a80ec;
+    font-size: 22px;
+    padding: 0px;
+}
+
+.btn-intro:hover {
+    color: white;
+    text-decoration: underline;
     font-size: 22px;
     padding: 0px;
 }
@@ -385,6 +399,15 @@ h6 {
 
     .intro-divider {
         width: 100%;
+    }
+
+    #margin-top-intro-btns {
+        margin-top:215px;
+    }
+    
+    .btn-intro {
+        font-size: 19px;
+        padding: 0px;
     }
 }
 

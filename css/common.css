@@ -29,28 +29,52 @@
     height:calc(1900px*1200/2400);
     overflow: hidden;
 }
-.intro-header > .module-content {
-    height:calc(1900px*1200/2400);
-}
 
 .intro-header > .module-content > .unit-image-wrapper > .full-width-img{
     width: 1900px;
-    height:calc(1900px*1200/2400);
+    height:calc(1900px*1746/4320);
     overflow: hidden;
     left: 50%;
     transform: translateX(-50%);
     position: absolute;
 }
+
+.intro-header > .module-content {
+    height:calc(1900px*1746/4320);
+}
+
+.video-card{
+    width: 100%;
+    border-radius: 25px;
+}
+
+.card-video-row {
+    background-color: transparent;
+    margin-left: calc((100vw - 900px) / 2);
+    margin-right: calc((100vw - 900px) / 2);
+    padding-bottom: 50px;
+}
+
+.card-container {
+    padding: 0 calc(100vw / 190);
+}
+
 @media(max-width:1200px) {
      .full-width-img {
         width:1500px;
         height:auto;
     }
+
+    .module-content {
+        height:750px;
+    }
     
 }
+
 @media(max-width:833px) {
     .full-width-img {
-        width:1200px;
+        /* width:1200px; */
+        width:750px;
         height:auto;
     }
 
@@ -63,11 +87,35 @@
         height: 375px;
     }
 
+    .intro-header > .module-content > .unit-image-wrapper > .full-width-img{
+        width: 1500px;
+        height:calc(1500px*1746/4320);
+        overflow: hidden;
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+    }
+    
     .intro-header > .module-content {
-        height: calc(1900px*1200/2400);
+        height:calc(1500px*1746/4320);
+    }
+    
+    /* .ka1s-section > .module-content > .unit-image-wrapper > .full-width-img {
+        width:750px;
+    } */
+}
+
+
+@media (max-width: 992px) {
+    .card-video-row {
+        background-color: black;
+        margin-left: calc(100vw / 10);
+        margin-right: calc(100vw / 10);
+        padding-bottom: 50px;
     }
 
-    .ka1s-section > .module-content > .unit-image-wrapper > .full-width-img {
-        width:750px;
+    .card-container {
+        padding-bottom: 50px;
+
     }
 }
