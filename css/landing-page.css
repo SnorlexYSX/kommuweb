@@ -123,14 +123,6 @@
         padding: 10px 15px;
     }
 
-@media(max-width:1200px) {
-
-    .h1 > h1 {
-    font-size: calc(2rem + 1.5vw);
-}
-    
-}
-
 body,
 html {
     width: 100%;
@@ -151,6 +143,22 @@ h6 {
 .lead {
     font-size: 18px;
     font-weight: 400;
+}
+
+@media(min-width:1200px) {
+
+    h1 {
+    font-size: 4rem;
+}
+    
+}
+
+@media(min-width:400px) {
+
+    h1 {
+    font-size: calc(2rem + 1.5vw);
+}
+    
 }
 
 .intro-header {
