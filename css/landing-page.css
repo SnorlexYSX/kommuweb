@@ -139,6 +139,7 @@ h5,
 h6 {
     font-family: "GlacialIndifference-Regular",sans-serif;
     font-weight: 800;
+    color: #000000;
 }
 
 .lead {
@@ -214,6 +215,7 @@ h6 {
     font-style: normal;
     font-weight: 300;
     text-align: center;
+    color: #717273;
 }
 
 .main-featured {
@@ -526,6 +528,7 @@ p.copyright {
     font-size: 1.25rem;
     text-align:center;
     font-weight: 300;
+    color: #717273;
 }
 
 .about-paragraph > a {
