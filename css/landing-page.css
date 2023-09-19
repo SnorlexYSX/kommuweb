@@ -146,18 +146,18 @@ h6 {
     font-weight: 400;
 }
 
-@media(min-width:1200px) {
-
-.h1, h1 {
-    font-size: 4rem;
-}
-    
-}
-
 @media(min-width:400px) {
 
 .h1, h1 {
     font-size: calc(2rem + 1.5vw);
+}
+    
+}
+
+@media(min-width:1200px) {
+
+.h1, h1 {
+    font-size: 4rem;
 }
     
 }
