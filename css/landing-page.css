@@ -210,6 +210,14 @@ h6 {
     font-size: 1.875rem;
 }
 
+@media(max-width:800px) {
+
+.main-description.h1, h1 {
+    font-size: 1.5rem;
+}
+    
+}
+
 .main-description > p{
     font-size: 1.25rem;
     font-style: normal;
@@ -530,6 +538,8 @@ p.copyright {
     text-align:center;
     font-weight: 300;
     color: #717273;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .about-paragraph > a {
