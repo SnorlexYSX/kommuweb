@@ -30,12 +30,12 @@
     overflow: hidden;
 }
 .intro-header > .module-content {
-    height:calc(1900px*582/1440);
+    height:calc(1900px*1200/2400);
 }
 
 .intro-header > .module-content > .unit-image-wrapper > .full-width-img{
     width: 1900px;
-    height:calc(1900px*582/1440);
+    height:calc(1900px*1200/2400);
     overflow: hidden;
     left: 50%;
     transform: translateX(-50%);
@@ -64,7 +64,7 @@
     }
 
     .intro-header > .module-content {
-        height: calc(1900px*582/1440);
+        height: calc(1900px*1200/2400);
     }
 
     .ka1s-section > .module-content > .unit-image-wrapper > .full-width-img {
