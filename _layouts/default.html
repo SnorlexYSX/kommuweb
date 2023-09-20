@@ -1,5 +1,25 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        @font-face { 
+        font-family: Glacial Indifference-Regular; 
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Regular.otf" | relative_url }}) format("opentype");
+        font-weight: normal; 
+        }
+        
+        @font-face { 
+        font-family: Glacial Indifference-Bold; 
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Bold.otf" | relative_url }}) format("opentype");
+        font-weight: bold; 
+        }
+        
+        
+        /* h1,h2,h3,h4,h5,p,span,body {font-family: 'Glacial Indifference-Regular'!important;} */
+    </style>
 	{% include head.html %}
 
 	<body class="d-flex flex-column h-100">

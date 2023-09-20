@@ -3,7 +3,6 @@
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
-
 #home * {
     z-index: 1;
 }
@@ -138,7 +137,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "GlacialIndifference-Regular",sans-serif;
+    font-family: "Glacial Indifference-Regular";
     font-weight: 800;
     color: #000000;
 }
@@ -546,7 +545,6 @@ p.copyright {
     src: url({{ "/css/fonts/Raleway-Regular.ttf" | relative_url }});
     font-weight: normal; 
 }
-    
 
 .non-bold {
     font-weight: 300;

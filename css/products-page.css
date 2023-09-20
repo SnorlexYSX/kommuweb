@@ -29,6 +29,11 @@
 .small-img-col{
     flex-basis: 23%;
     cursor: pointer;
+    padding: 0.2vw;
+}
+
+.small-img{
+    border-radius: 1vw;
 }
 
 #productlocationizer {
@@ -38,10 +43,55 @@
     border-radius: 5px;
 }
 
+h1 {
+    font-size: calc(1rem + 1.5vw);
+    font-family: "Glacial Indifference-Bold";
+}
+
 h3 {
     font-size: 1.875rem;
 }
 
+.disc-header {
+    font-size: 18px;
+    font-family: "Glacial Indifference-Bold";
+    color: #717273;
+}
+
+.disc-content {
+    font-size: 16px;
+    color: #717273;
+
+}
+
+.itb-main-text{
+    font-size: 42px;
+    font-family: "Glacial Indifference-Bold";
+    color: #86868B;
+}
+.itb-header{
+    font-size: 28px;
+    font-family: "Glacial Indifference-Bold";
+}
+
+.itb-content{
+    font-size: 16px;
+    color:#717273;
+    margin-bottom: 5px;
+}
+.itb-item{
+    font-size: 24px;
+    font-family: "Glacial Indifference-Bold";
+    color:#717273;
+    margin-bottom: 20px;
+}
+
+.card-itb {
+    background-color: #F5F5F7;
+    padding: 15px 30px;
+    border-radius: 30px;
+    margin-bottom: 25px;
+}
 
 .products {
     display: flex;
@@ -117,23 +167,12 @@ a:active { text-decoration: none; }
     height: calc(100vw/2.25*(9/16)); 
     border-radius: 25px;
 }
-
-#installation-div-pc{
-    display:block
+.modal-dialog {
+    max-width: 80%; 
+    background-color: #f5f5f7; 
+    border-radius: 50px; 
+    padding: 50px;
 }
-
-#installation-div-mobile{
-    display:none
-}
-
-#product-div-pc {
-    display:block
-}
-
-#product-div-mobile {
-    display:none
-}
-
 
 @media (max-width: 991px) {
     #localizer {
@@ -155,24 +194,15 @@ a:active { text-decoration: none; }
         height: calc(100vw*0.75*9/16); 
         border-radius: 25px;
     }
-
-    #installation-div-pc{
-        display:none
-    }
-
-    #installation-div-mobile{
-        display:block
-    }
-    
-    #product-div-pc {
-        display:none
-    }
-    
-    #product-div-mobile {
-        display:block
-    }
 }
 
+@media (max-width: 833px) {
+    .modal-dialog {
+        max-width: 100%;
+        padding:50px 10px;
+    }
+
+}
 
 .ka1s-section {
     width: 100vw;

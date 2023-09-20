@@ -2,6 +2,7 @@
 layout: default
 title: Supported Vehicle
 ---
+
 <head>
     <link href="{{ "/css/support-page.css" | relative_url }}" rel="stylesheet">
 </head>
@@ -63,11 +64,11 @@ title: Supported Vehicle
         const lkaSteerTorque = document.getElementById("lka-str-trq-txt");
         const lkaAngle = document.getElementById("lka-ang-txt");
         const carImage =  document.getElementById("support-car-img");
-        accSpeedRange.innerText = `Speed Range: ${carSelected.acc_speed_range} km/h`;
-        accStopGo.innerText = `Stop & Go: ${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
-        lkaSpeedRange.innerText = `Speed Range: ${carSelected.lkc_speed_range} km/h`;
-        lkaSteerTorque.innerText = `Steering Torque:: ${carSelected.lkc_torque}`;
-        lkaAngle.innerText = `Angle: 15° - 40°`
+        accSpeedRange.innerText = `${carSelected.acc_speed_range} km/h`;
+        accStopGo.innerText = `${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
+        lkaSpeedRange.innerText = `${carSelected.lkc_speed_range} km/h`;
+        lkaSteerTorque.innerText = `${carSelected.lkc_torque}`;
+        lkaAngle.innerText = `15° - 40°`
         carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.jpg`;
     }
 
@@ -75,39 +76,52 @@ title: Supported Vehicle
 </script>
 
 
-
 <section class="section-support">
-    <div>
-        <h1 style="text-align: center;">
-            Supported Vehicles
-        </h1>
-    </div>
     <div class="container">
         <div class="row">
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-6 col-sm-12">
+            <h1 style="text-align:start; margin-bottom: 25px;">
+                Supported vehicle
+            </h1>
             <select class="form-select" id="car-select" onchange="loadVehicleInfo()"> 
             </select>
             <img src="{{ "/img/support/ativa.jpg" | relative_url }}" id="support-car-img" style="width: 100%;background-color: white;">
         </div>
-        <div class="col-md-4 col-sm-12">
-            <div class="card">
+        <div class="col-md-6 col-sm-12">
+            <!-- <div class="card">
                 <iframe id="support-car-video" src="https://www.youtube.com/embed/0DLlI9zXH9U" allowfullscreen style="width: 100%;"></iframe>
-            </div>
+            </div> -->
             <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">ACC</h5>
-                  <p class="card-text" id="acc-spd-rng-txt">Speed Range: Loading</p>
-                  <p class="card-text" id="acc-sng-txt">Stop & Go: Loading</p>
+                  <h2 class="card-title">Adaptive Cruise Control</h2>
+                  <p class="card-subtitle">(auto gas & brake)</p>
+                  <p class="card-description">Speed range: <span class="card-data" id="acc-spd-rng-txt">Loading</span></p>
+                  <p class="card-description">Stop and go: <span class="card-data" id="acc-sng-txt">Loading</span></p>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">LKA</h5>
-                  <p class="card-text" id="lka-spd-rng-txt">Speed Range: Loading</p>
-                  <p class="card-text" id="lka-str-trq-txt">Steering Torque: Loading</p>
-                  <p class="card-text" id="lka-ang-txt">Angle: Loading</p>
+                  <h2 class="card-title">Lane Keep Assist</h2>
+                  <p class="card-subtitle">(auto lane centering & cornering)</p>
+                  <p class="card-description">Speed range: <span class="card-data" id="lka-spd-rng-txt">Loading</span></p>
+                  <p class="card-description">Steering torque: <span class="card-data" id="lka-str-trq-txt">Loading</span></p>
+                  <p class="card-description">Max steering angle: <span class="card-data" id="lka-ang-txt">Loading</span></p>
                 </div>
             </div>
+            <a href="{{ "/products" | relative_url }}">
+                <div class="card" style="background-color: black;">
+                    <div class="container card-body" style="padding:30px;">
+                        <div class="row">
+                            <div class="col-5">
+                                <p style="color: white; margin-bottom: 0px;">View pricing</p>
+                            </div>
+                            <div class="col-7" style=" display:flex;justify-content:right;">
+                                <p style="color: orangered;justify-content:right;margin-bottom: 0px;display: inline;">New <span style="color: white;">KommuAssist 1s</span></p> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
     </div>
