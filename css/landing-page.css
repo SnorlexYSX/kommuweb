@@ -97,7 +97,7 @@
 
 }
 #vehicle-support {
-    background: black;
+    background: #F5F5F7;
     color:white;
     margin: 0px;
     padding-bottom: 50px;
@@ -242,7 +242,7 @@ h6 {
 }
 
 .main-btm-support{
-    margin:50px 0px 25px 0px;
+    margin:0px 0px 30px 0px;
 }
 
 .main-btm-description {
