@@ -108,6 +108,14 @@
     margin-bottom: 25px;
 }
 
+.card-itb-2 {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 30px;
+    margin-bottom: 25px;
+    border: 2px solid #F5F5F7
+}
+
 .products {
     display: flex;
     flex-wrap: wrap;
