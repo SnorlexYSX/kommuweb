@@ -2,7 +2,10 @@
     margin-top:850px;
     z-index: 2;
 }
-
+#margin-top-ka1s-btns-2 {
+    margin-top:800px;
+    z-index: 2;
+}
 .btn-order {
     height:80px;
     line-height:75px;
@@ -14,7 +17,9 @@
     #margin-top-ka1s-btns {
         margin-top:670px;
     }
-
+    #margin-top-ka1s-btns-2 {
+        margin-top:630px;
+    }
     .btn-order {
         height:60px;
         line-height:60px;
@@ -27,7 +32,9 @@
     #margin-top-ka1s-btns {
         margin-top:335px;
     }
-
+    #margin-top-ka1s-btns-2 {
+        margin-top:315px;
+    }
     .btn-order {
         height:30px;
         line-height:30px;
