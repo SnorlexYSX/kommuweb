@@ -9,6 +9,7 @@
 .buy-btn{
     line-height: 5;
     border: 1px solid transparent;
+    background-color:transparent;
 }
 
 .btn-tertiary{
