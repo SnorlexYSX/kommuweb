@@ -45,7 +45,7 @@
 
 .h1 {
     font-size: calc(1rem + 1.5vw);
-    font-family: "Glacial Indifference-Bold";
+    font-family: "GlacialIndifference-Bold";
 }
 
 .h3 {
@@ -54,7 +54,7 @@
 
 .disc-header {
     font-size: 18px;
-    font-family: "Glacial Indifference-Bold";
+    font-family: "GlacialIndifference-Bold";
     color: #717273;
 }
 
@@ -65,25 +65,30 @@
 }
 
 .itb-main-text{
-    font-size: 42px;
-    font-family: "Glacial Indifference-Bold";
+    font-size: 2.5rem;
+    font-family: "GlacialIndifference-Bold";
     color: #86868B;
+    margin-top: 1rem;
+    margin-left: 1.3rem;
 }
 .itb-header{
     font-size: 28px;
-    font-family: "Glacial Indifference-Bold";
+    font-family: "GlacialIndifference-Bold";
+    margin-top: 1rem;
 }
 
 .itb-content{
     font-size: 16px;
     color:#717273;
     margin-bottom: 5px;
+    font-family: GlacialIndifference-Regular;
+    font-weight: 300;
 }
 .itb-item{
     font-size: 24px;
-    font-family: "Glacial Indifference-Bold";
+    font-family: "GlacialIndifference-Bold";
     color:#717273;
-    margin-bottom: 20px;
+    margin-top: 25px;
 }
 
 .card-itb {
