@@ -48,7 +48,7 @@ title: Supported Vehicle
         accStopGo.innerText = `${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
         lkaSpeedRange.innerText = `${carSelected.lkc_speed_range} km/h`;
         lkaSteerTorque.innerText = `${carSelected.lkc_torque}`;
-        lkaAngle.innerText = `${carSelected.max_steering_angle}°`
+        lkaAngle.innerText = `${carSelected.max_steering_angle}`
         carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.jpg`;
     }
 
