@@ -11,25 +11,11 @@ title: Supported Vehicle
 
     async function load() {
 
-            //Table Loads
-        const standard = document.getElementById("standard");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
         const raw_resp = await fetch(remote);
         const resp = await raw_resp.json();
 
         vehicleList = resp.standard;
-        resp.standard.forEach((vehicle) => {
-            const tr = document.createElement("tr");
-            td(tr, vehicle.brand);
-            td(tr, vehicle.model);
-            td(tr, vehicle.year);
-            td(tr, vehicle.variant);
-            td(tr, vehicle.acc_speed_range);
-            td(tr, vehicle.acc_stop_and_go ? "✔" : "✘");
-            td(tr, vehicle.lkc_speed_range);
-            td(tr, vehicle.lkc_torque);
-            standard.appendChild(tr);
-        });
 
         //Interactive Car JSON
         const carSelect = document.getElementById("car-select");
@@ -46,12 +32,6 @@ title: Supported Vehicle
     }
 
     window.onload = load;
-
-    function td(row, content) {
-        const td = document.createElement("td");
-        td.innerText = content;
-        row.appendChild(td);
-    }
 
     function loadVehicleInfo() {
         const carSelectValue = document.getElementById("car-select").value;
