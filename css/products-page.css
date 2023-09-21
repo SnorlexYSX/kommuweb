@@ -2,6 +2,11 @@
     width: 95%!important;
 }
 
+.col-2 {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 .form-select{
     font-family: GlacialIndifference-Regular;
 }
