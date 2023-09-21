@@ -2,6 +2,10 @@
     width: 95%!important;
 }
 
+.fomr-select{
+    font-family: GlacialIndifference-Regular;
+}
+
 .buy-btn{
     border: 1px solid transparent;
     background-color:transparent;
