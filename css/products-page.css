@@ -219,6 +219,12 @@ a:active { text-decoration: none; }
 
 }
 
+@media (min-width: 1200px)
+.col-xl-6 {
+    flex: 0 0 auto;
+    width: 75%;
+}
+
 .ka1s-section {
     width: 100vw;
     background-color:black;
