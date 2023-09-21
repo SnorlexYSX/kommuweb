@@ -24,13 +24,13 @@
 .card-title { 
     text-align: start;
     font-family: "Glacial Indifference-Bold";
-    font-size: calc(1.3rem + .9vw);
+    font-size: calc(1.3rem + .7vw);
 }
 .card-subtitle { 
     text-align: start;
     color: #717273;
     margin-bottom: 25px;
-    font-size: calc(0.5rem + .45vw);
+    font-size: 1rem;
 }
 
 .card-description { 
@@ -38,13 +38,13 @@
     color: #717273;
     margin-bottom: 15px;
     font-family: "Glacial Indifference-Bold";
-    font-size: calc(0.5rem + .8vw);
+    font-size: 1rem;
 
 }
 
 .card-data { 
     font-family: "Glacial Indifference-Regular";
-    font-size: calc(0.4rem + .6vw);
+    font-size: 1rem;
 }
 
 h1 {
