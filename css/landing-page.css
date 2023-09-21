@@ -115,6 +115,7 @@
 
 .navbar-nav > li{
     padding: 0px 25px;
+    font-family: GlacialIndifference-Regular;
 }
 
 @media(max-width:833px) {
@@ -230,6 +231,7 @@ h6 {
     font-weight: 300;
     text-align: center;
     color: #717273;
+    font-family: GlacialIndifference-Regular;
 }
 
 .main-featured {
@@ -260,6 +262,7 @@ h6 {
     font-size: 1.875rem;
     display: inline;
     color: #ffffff;
+    font-family: GlacialIndifference-Regular;
 }
 
 .footer-inline-link {
@@ -282,6 +285,7 @@ h6 {
     text-decoration: none; 
     color: white;
     margin: 25px 0px;
+    font-family: GlacialIndifference-Regular;
 }
 
 .footer-buttons > a:hover {
@@ -289,13 +293,14 @@ h6 {
     font-weight: 500;
     text-decoration: underline; 
     color: white;
+    font-family: GlacialIndifference-Regular;
 }
 
 .main-btm-description > p{
     font-size: 1.25rem;
     font-style: normal;
     font-weight: 300;
- 
+    font-family: GlacialIndifference-Regular;
 }
 
 .main-btm-img {
@@ -360,6 +365,7 @@ h6 {
     color: #4a80ec;
     font-size: 22px;
     padding: 0px;
+    font-family: GlacialIndifference-Regular;
 }
 
 .btn-intro:hover {
@@ -566,6 +572,7 @@ p.copyright {
     color: #717273;
     padding-left: 2rem;
     padding-right: 2rem;
+    font-family: GlacialIndifference-Regular;
 }
 
 .about-paragraph > a {
