@@ -12,6 +12,11 @@
     font-size:25px;
 }
 
+.ka1s-section {
+    background-color:black;
+    overflow-x: hidden;
+}
+
 @media(max-width:1200px) {
     
     #margin-top-ka1s-btns {

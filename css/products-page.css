@@ -204,6 +204,17 @@ a:active { text-decoration: none; }
     padding: 50px;
 }
 
+
+.modal-close-btn {
+    justify-content: end;
+    display: grid;
+    position: absolute;
+    top: 15px;
+    right: 50px;
+    z-index: 2;
+}
+
+
 @media (max-width: 991px) {
     #localizer {
         align-self: center;
@@ -244,6 +255,19 @@ a:active { text-decoration: none; }
         padding:50px 10px;
     }
 
+    .br-mobile-thin{
+        display: none;
+    }
+    
+
+}
+
+@media (max-width: 575.98px) { 
+
+    .modal-close-btn {
+        right: 10px;
+
+    }
 }
 
 @media (min-width: 1200px)
@@ -252,8 +276,3 @@ a:active { text-decoration: none; }
     width: 75%;
 }
 
-.ka1s-section {
-    width: 100vw;
-    background-color:black;
-    overflow:hidden;
-}
