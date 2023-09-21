@@ -34,6 +34,10 @@
     background-color: black;
 }
 
+#bgvideo-logo {
+    width: 20%; 
+    margin:75px;
+}
 /* Special for bgvideo */
 @media(max-width:1945px){
     
@@ -557,7 +561,15 @@ h6 {
         padding: 0px 30px 0px 30px;
         margin: 10px 0px 10px 0px;
     }
-
+    
+    #bgvideo-logo {
+        width: 40%; 
+        margin:25px;
+    }
+    #bgvideo-text {
+        font-size: 18px;
+        padding: 0px 10px;
+    }
 }
 
 footer {
