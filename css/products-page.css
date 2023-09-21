@@ -2,12 +2,7 @@
     width: 95%!important;
 }
 
-.btn{
-    line-height: 5;
-}
-
 .buy-btn{
-    line-height: 5;
     border: 1px solid transparent;
     background-color:transparent;
 }
@@ -209,6 +204,11 @@ a:active { text-decoration: none; }
         display: inline;
     }
 
+    .btn{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    
     .buy-btn {
         display: inline;
     }
