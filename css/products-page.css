@@ -52,6 +52,11 @@
     font-size: 1.875rem;
 }
 
+.p {
+    font-family: GlacialIndifference-Regular;
+    font-weight: 300;
+}
+
 .disc-header {
     font-size: 18px;
     font-family: "GlacialIndifference-Bold";
