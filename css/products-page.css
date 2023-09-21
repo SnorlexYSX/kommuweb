@@ -1,3 +1,11 @@
+.btn{
+    line-height: 5;
+}
+
+.buy-btn{
+    line-height: 5;
+}
+
 .btn-tertiary{
     background-color: black;
     color: white;
