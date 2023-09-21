@@ -209,8 +209,8 @@ a:active { text-decoration: none; }
     justify-content: end;
     display: grid;
     position: absolute;
-    top: 15px;
-    right: 50px;
+    top: -25px;
+    right: 0px;
     z-index: 2;
 }
 
@@ -265,14 +265,13 @@ a:active { text-decoration: none; }
 @media (max-width: 575.98px) { 
 
     .modal-close-btn {
-        right: 10px;
-
+        top: -35px;
     }
 }
 
-@media (min-width: 1200px)
+/* @media (min-width: 1200px)
 .col-xl-6 {
     flex: 0 0 auto;
     width: 75%;
 }
-
+ */

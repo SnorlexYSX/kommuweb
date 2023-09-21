@@ -5,11 +5,11 @@ stylesheet: products
 ---
 <div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-close-btn">
-            <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
-        </div> 
-        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
 
+        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
             <div class="row">
                 <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
                     <h2>Order now. Ship in 4-8 weeks.</h2>
@@ -79,7 +79,7 @@ stylesheet: products
         
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
-                            <input type="number" id="atomeIC" min=100000000000 max=999999999999 class="form-control validate" required>
+                            <input type="number" id="atomeIC" min=100000000000 max=999999999999 class="form-control">
                         </div>    
                 
                         <div class="md-form mb-2">
@@ -147,10 +147,11 @@ stylesheet: products
 
 <div class="modal fade" id="fpx1Modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-close-btn">
-            <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
-        </div> 
+
         <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
             <div class="row">
                 <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
                     <h2>Order now. Ship in 4-8 weeks.</h2>
@@ -287,10 +288,11 @@ stylesheet: products
 
 <div class="modal fade" id="fpx2Modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-close-btn">
-            <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
-        </div> 
+
         <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
             <div class="row">
                 <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
                     <h2>Order now. Ship in 4-8 weeks.</h2>
@@ -495,7 +497,7 @@ stylesheet: products
             <div class="card-itb-2">
                 <h2 style="color: #86868B">Select car model harness:</h2>
                     <div class="col-xl-6 col-lg-12" style="max-width:1000px;">
-                        <select aria-label="Select car model harness" class="form-select mb-4 mt-2 car-select">
+                        <select aria-label="Select car model harness" class="form-select mb-4 mt-2" id="car-select">
                         </select>
                     </div>
             </div>
@@ -531,7 +533,7 @@ stylesheet: products
 </div>
 <script>
 
-    const carSelectList = document.getElementsByClassName("car-select");
+    const carSelectList = document.getElementById("car-select");
     const buyButton = document.getElementsByClassName("buy-btn");
     const atomeButton = document.getElementById("atomeBtn");
     const fpx1Button = document.getElementById("fpx1Btn");
@@ -551,7 +553,7 @@ stylesheet: products
             option1.innerText = option1.value;
             option1.selected = (selectedCar === option1.value);
 
-            carSelectList[0].appendChild(option1);
+            carSelectList.appendChild(option1);
         });
     }
 
@@ -583,7 +585,7 @@ stylesheet: products
         var atomeAddress1 = document.getElementById("atomeAddress1").value;
         var atomeAddress2 = document.getElementById("atomeAddress2").value;
         var atomePostcode = document.getElementById("atomePostcode").value;
-        // var atomeCarType =
+        var atomeCarType = document.getElementById("car-select").value;
         // var atomePrice = document.getElementById("atomePrice").value;
 
         const params = new URLSearchParams();
@@ -593,6 +595,7 @@ stylesheet: products
         params.append("address1", atomeAddress1);
         params.append("address2", atomeAddress2);
         params.append("postcode", atomePostcode);
+        params.append("harness", atomeCarType);
         // params.append("price", atomePrice);
 
 
@@ -624,6 +627,7 @@ stylesheet: products
         var fpx1Address2 = document.getElementById("fpx1Address2").value;
         var fpx1Postcode = document.getElementById("fpx1Postcode").value;
         var fpx1Bank = document.getElementById("fpx1Bank").value;
+        var fpx1CarType = document.getElementById("car-select").value;
 
         const params = new URLSearchParams();
         params.append("name", fpx1Name);
@@ -635,6 +639,7 @@ stylesheet: products
         params.append("nric", fpx1IC);
         params.append("bankname", fpx1Bank);
         params.append("frequency", "12");
+        params.append("harness", fpx1CarType);
 
 
         const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
@@ -665,6 +670,7 @@ stylesheet: products
         var fpx2Address2 = document.getElementById("fpx2Address2").value;
         var fpx2Postcode = document.getElementById("fpx2Postcode").value;
         var fpx2Bank = document.getElementById("fpx2Bank").value;
+        var fpx2CarType = document.getElementById("car-select").value;
 
         const params = new URLSearchParams();
         params.append("name", fpx2Name);
@@ -676,6 +682,7 @@ stylesheet: products
         params.append("nric", fpx2IC);
         params.append("bankname", fpx2Bank);
         params.append("frequency", "18");
+        params.append("harness", fpx2CarType);
 
         const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
         console.log(url)
