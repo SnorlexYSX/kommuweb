@@ -12,7 +12,7 @@
 }
 
 .btn-tertiary{
-    background-color: black;
+    background-color: #0077ED;
     color: white;
     border-radius: 50px;
     font-size: 18px;
@@ -20,7 +20,7 @@
     line-height: 50px;
     padding: 0px 50px;
     width: max-content;
-    font-family: "Raleway", Sans-serif;
+    font-family: "GlacialIndifference-Regular", Sans-serif;
     border-color: black;
     text-align: center;
     outline: none;
@@ -29,8 +29,6 @@
 .btn-tertiary:hover{
     background-color: white;
     color: black;
-    text-decoration: underline;
-
 }
 
 .small-img-group{
