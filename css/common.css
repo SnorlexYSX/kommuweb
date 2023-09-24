@@ -59,6 +59,11 @@
     padding: 0 calc(100vw / 190);
 }
 
+.phone-card-slides {
+    display: none;
+}
+
+
 @media(max-width:1200px) {
      .full-width-img {
         width:1500px;
@@ -117,5 +122,16 @@
     .card-container {
         padding-bottom: 50px;
 
+    }
+}
+
+
+@media (max-width: 768px) {
+    .phone-card-slides{
+        display: block;
+    }
+
+    .non-phone-card-slides {
+        display: none;
     }
 }

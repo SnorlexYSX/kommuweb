@@ -22,18 +22,56 @@ title: Kommunity
       Cruise anywhere, anytime
     </h2>
   </div>
-  <div class="row card-video-row">
-    <div class="card-container col-lg-4 col-md-12">
+  <div id="kommunityCarousel" class="carousel phone-card-slides slide" style="margin-bottom: 75px;">
+    <div class="carousel-indicators" style="z-index: 2; margin-bottom: 0px;">
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+    </div>
+    <!-- <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#kommunityCarousel" data-bs-slide="prev" style="color: black;">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#kommunityCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button> -->
+  </div>
+  <div class="row card-video-row non-phone-card-slides">
+    <div class="card-container col-md-4 col-sm-12">
       <video class="video-card" playsinline loop autoplay muted>
         <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
       </video> 
     </div>
-    <div class="card-container col-lg-4 col-md-12">
+    <div class="card-container col-md-4 col-sm-12">
       <video class="video-card" playsinline loop autoplay muted>
         <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
       </video> 
     </div>
-    <div class="card-container col-lg-4 col-md-12">
+    <div class="card-container col-md-4 col-sm-12">
       <video class="video-card" playsinline loop autoplay muted>
         <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
       </video> 

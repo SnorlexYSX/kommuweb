@@ -135,17 +135,54 @@ stylesheet: asdf
       Learn more.
     </h2>
   </div>
-  <div class="row card-video-row" style="margin-bottom: 0px; background-color:white;">
-    <div class="card-container col-lg-4 col-md-12">
+  <div id="landingCarousel" class="carousel phone-card-slides slide" style="margin-bottom: 75px;">
+    <div class="carousel-indicators" style="z-index: 2; margin-bottom: 0px;">
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-card-container">
+          <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png">
+          </a>    
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png">
+          </a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png">
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="prev" style="color: black;">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button> -->
+  </div>
+  <div class="row card-video-row non-phone-card-slides" style="margin-bottom: 0px; background-color:white;">
+    <div class="card-container col-md-4 col-sm-12">
       <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png"></a>    
     </div>
-    <div class="card-container col-lg-4 col-md-12">
+    <div class="card-container col-md-4 col-sm-12">
       <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png"></a>
     </div>
-    <div class="card-container col-lg-4 col-md-12">
+    <div class="card-container col-md-4 col-sm-12">
       <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png"></a>
     </div>
-  </div>
   </section>
 </section>
 

@@ -658,3 +658,8 @@ p.copyright {
     color: black;
     text-decoration: underline;
 }
+
+.carousel-card-container {
+    margin-left: calc(100vw / 10);
+    margin-right: calc(100vw / 10);
+}
