@@ -63,7 +63,15 @@
     display: none;
 }
 
+.carousel-indicators > button {
+    border-radius: 50%;
+    width: 10px !important; 
+    height: 10px !important; 
 
+}
+.carousel-indicators {
+    bottom: -35px !important;
+}
 @media(max-width:1200px) {
      .full-width-img {
         width:1500px;

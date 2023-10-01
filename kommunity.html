@@ -7,12 +7,30 @@ title: Kommunity
   <link href="{{ "/css/kommunity-page.css" | relative_url }}" rel="stylesheet">
 </head>
 <section id="about" class="content-section text-center" style="margin-left: 0px; margin-right: 0px;padding-left: 0px; padding-right: 0px;">
-  <div class="module-content">
+
+  <div class="card-video-row" style="margin-top: 25px;">
+    <h1 style="color: white; text-align: left;">Kommunity.</h1>
+    <h2 style="color: #86868B; text-align: left;">In the last 30 days.</h2>
+  </div>
+  <div class="card-video-row" style="padding-bottom: 0px;">
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/5X0pzUWIk/kommumap?orgId=2&panelId=2" id="iframe-grafana-map-pc">
+    </iframe>
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/wIsTYUWIk/kommumap-mobile?orgId=2&panelId=2" id="iframe-grafana-map-mobile">
+    </iframe>
+  </div>
+  <div class="card-video-row">
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/oZ4Rt8WIk/kommustats?orgId=2&panelId=2" id="iframe-grafana-stats">
+    </iframe>
+  </div>  
+  <!-- <div class="module-content">
     <div class="unit-image-wrapper">
         <img class="full-width-img" src="{{ "" | relative_url }}/img/about/grafana.png" vertical-align="middle"
         display="inline-block">
     </div>
-  </div>
+  </div> -->
   <br><br>
   <div class="row card-video-row" style="text-align: left;">
     <h1 class="main-text" style="color: white;">

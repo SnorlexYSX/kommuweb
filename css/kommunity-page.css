@@ -4,3 +4,39 @@
     overflow: hidden;
 }
 
+#iframe-grafana-map-pc {
+    width: 100%;
+    height: calc(100vw/2.25*(9/16));
+}
+
+#iframe-grafana-stats {
+    width: 100%;
+    height: calc(100vw/4.25*(9/16));
+}
+
+#iframe-grafana-map-mobile {
+    display: none;
+}
+
+@media(max-width:833px) {
+
+    #iframe-grafana-map-pc {
+        display: none;
+    }
+
+    #iframe-grafana-map-mobile {
+        display: block;
+        width: 100%;
+        height: calc(120vw*(9/16));
+    }
+
+
+    #iframe-grafana-stats {
+        width: 100%;
+        height: calc(100vw/2.25*(9/16));
+    }
+    
+    .card-video-row{
+        padding-bottom: 10px;
+    }
+}
