@@ -393,6 +393,10 @@ h6 {
     margin-top:270px;
 }
 
+#margin-top-video-btns {
+    margin-top:500px;
+}
+
 .btn-intro {
     color: #4a80ec;
     font-size: 22px;
@@ -445,6 +449,10 @@ h6 {
 
     #margin-top-intro-btns {
         margin-top:215px;
+    }
+
+    #margin-top-video-btns {
+        margin-top:180px;
     }
     
     .btn-intro {
