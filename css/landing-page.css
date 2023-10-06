@@ -37,7 +37,7 @@
 #bgvideo-logo {
     width: 20%; 
     margin:20px;
-    margin-top:70px;
+    margin-top:200px;
 }
 /* Special for bgvideo */
 @media(max-width:1945px){
