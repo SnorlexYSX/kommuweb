@@ -1,0 +1,361 @@
+---
+layout: default
+title: Accessories
+---
+
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
+            <div class="row">
+                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                    <div class="row">
+                        <div class = "col-md-6 col-sm-12">
+                            <h2>Shopping Cart</h2>
+                        </div>
+                        <div class = "col-md-6 col-sm-12">
+                            <button onClick="emptyCart()" class="btn btn-tertiary" data-bs-dismiss="modal">Empty Cart</button>
+                        </div>
+                       
+                    </div>
+                    <div id="cartBody">
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Shipping to Malaysia</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p>Free</p>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Total due now</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p id="cartTotal">RM 0.00</p>
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <h2>Customer information.</h2>
+                    </div>
+                    <form id="cartForm" class="needs-validation" novalidate onsubmit="submitCart();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form34">Name</label>
+                            <input type="text" id="cartName" class="form-control validate" required>
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                            <input type="number" id="cartIC" min=100000000000 max=999999999999 class="form-control validate" required>
+                        </div>    
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form29">Email</label>
+                            <input type="email" id="cartEmail" class="form-control validate" required>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                            <input type="number" id="cartMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form8">Address</label>
+                            <input type="text" id="cartAddress1" class="form-control validate" required>
+                        </div>
+        
+                        <div class="md-form mb-2">  
+                            <input type="text" id="cartAddress2" class="form-control">
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                            <input type="number" id="cartPostcode" class="form-control validate" required>
+                        </div>
+        
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Bank</label>
+                            <select class="form-select" id="cartBank">
+                                <option value="ABB0233">Affin Bank</option>
+                                <option value="ABMB0212">Alliance Bank (Personal)</option>
+                                <option value="AGRO01">AGRONet</option>
+                                <option value="AMBB0209">AmBank</option>
+                                <option value="BCBB0235">CIMB Clicks</option>
+                                <option value="BIMB0340">Bank Islam</option>
+                                <option value="BKRM0602">Bank Rakyat</option>
+                                <option value="BMMB0341">Bank Muamalat</option>
+                                <option value="BSN0601">BSN</option>
+                                <option value="HLB0224">Hong Leong Bank</option>
+                                <option value="HSBC0223">HSBC Bank</option>
+                                <option value="KFH0346">KFH</option>
+                                <option value="MB2U0227">Maybank2U</option>
+                                <option value="MBB0228">Maybank2E</option>
+                                <option value="OCBC0229">OCBC Bank</option>
+                                <option value="PBB0233">Public Bank</option>
+                                <option value="RHB0218">RHB Bank</option>
+                                <option value="SCB0216">Standard Chartered</option>
+                                <option value="UOB0226">UOB Bank</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-tertiary" id="cartBtn">Check Out</button>
+                            <p style="font-size: 9px;">
+                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="container">
+        <div id="viewCartRow" class="row" style="justify-content: center; text-align: center; display:none">
+            <div class="col">
+                <button class="btn btn-tertiary" id="viewCartBtn" data-bs-toggle="modal" data-bs-target="#cartModal">View Cart</button>
+            </div>
+        </div>
+        <div class="row">
+            <h1>Accessories</h1>
+        </div>
+        <div id="product-item-container" class="row">
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+	var productItem = [{
+			productName: "Relay",
+			price: "1.00",
+			photoSrc: '{{ "" | relative_url }}/img/products/standard/3.png'
+		},
+		{
+			productName: "Mount",
+			price: "2.00",
+			photoSrc: '{{ "" | relative_url }}/img/products/standard/5.png'
+		},
+		{
+			productName: "Power",
+			price: "3.00",
+			photoSrc: '{{ "" | relative_url }}/img/products/standard/4.png'
+		}];
+	showProductGallery(productItem);
+    refreshCartHtml();
+});
+
+function showProductGallery(product) {
+	//Iterate javascript shopping cart array
+	var productHTML = "";
+	product.forEach(function(item) {
+		productHTML += 
+        '<div class="col-md-3 col-sm-12 px-2" style="margin: 20px;">' +
+            '<div class="card m-1 product-item" style="width: 19rem;">' +
+                '<img src="'+ item.photoSrc + '" class="card-img-top productimage" style="height: 12.5rem;">' +
+                '<div class="card-body" style="height: 16rem"><div><h5 class="card-title productname">' + item.productName + '</h5></div>' + 
+                    '<div class=row>' +
+                        '<div class="card-text price col-md-6 col-sm-12">RM <span>' + item.price +'</span></div>' +
+                        '<div class="input-group-btn col-md-6 col-sm-12">' +
+                            '<button class="btn btn-default" onclick="counterDown(this)"><span>-</span></button>' +
+                            '<input disabled type="number" class="form-control product-quantity" value="1" style="display:inline; width:45%"/>' +
+                            '<button class="btn btn-default" onclick="counterUp(this)"><span>+</span></button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="text-align: center; margin-top:20px">' + 
+                        '<div class="btn btn-tertiary" onclick=addToCart(this) style="position:center;bottom:20px;">Add to Cart</div>' + 
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+	});
+	$('#product-item-container').html(productHTML);
+}
+
+
+function addToCart(element) {
+	var productParent = $(element).closest('div.product-item');
+
+	var price = $(productParent).find('.price span').text();
+	var productName = $(productParent).find('.productname').text();
+	var quantity = $(productParent).find('.product-quantity').val();
+    var productImage = $(productParent).find('.productimage').attr('src');
+
+	var cartItem = {
+		productName: productName,
+		price: price,
+		quantity: quantity,
+        productImage: productImage,
+	};
+	var cartItemJSON = JSON.stringify(cartItem);
+
+	var cartArray = new Array();
+	// If javascript shopping cart session is not empty
+	if (sessionStorage.getItem('shopping-cart')) {
+		cartArray = JSON.parse(sessionStorage.getItem('shopping-cart'));
+	}
+	cartArray.push(cartItemJSON);
+
+	var cartJSON = JSON.stringify(cartArray);
+	sessionStorage.setItem('shopping-cart', cartJSON);
+	refreshCartHtml();
+}
+
+function emptyCart() {
+	if (sessionStorage.getItem('shopping-cart')) {
+		// Clear JavaScript sessionStorage by index
+		sessionStorage.removeItem('shopping-cart');
+		refreshCartHtml();
+	}
+}
+
+function refreshCartHtml() {
+	var cartRowHTML = "";
+	var itemCount = 0;
+	var grandTotal = 0;
+
+	var price = 0;
+	var quantity = 0;
+	var subTotal = 0;
+    
+    var viewCartRow = document.getElementById("viewCartRow");
+
+    if (!sessionStorage.getItem('shopping-cart')) {
+        viewCartRow.style.display = "none";
+        return
+    }
+
+    viewCartRow.style.display = "block";
+    var shoppingCart = JSON.parse(sessionStorage.getItem('shopping-cart'));
+    itemCount = shoppingCart.length;
+
+    //Iterate javascript shopping cart array
+    shoppingCart.forEach(function(item) {
+        var cartItem = JSON.parse(item);
+        price = parseFloat(cartItem.price);
+        quantity = parseInt(cartItem.quantity);
+        subTotal = price * quantity;
+
+        cartRowHTML += '<div class="row">' +
+            '<div class="col-2"><img src="' + cartItem.productImage + '" class = "img-fluid" style="border-radius:0.5rem"></div>' +
+            '<div class="col-6"><p>' + cartItem.productName + ' x ' + quantity + '</p></div>'+
+            '<div class="col-4" style="justify-content: end; display: grid;"><p>RM ' + subTotal.toFixed(2) + '</p></div>'+			
+            "</div>" + "<hr>";
+
+        grandTotal += subTotal;
+    });
+	
+
+	$('#cartBody').html(cartRowHTML);
+	$('#cartTotal').text("RM " + grandTotal.toFixed(2));
+}
+
+
+function submitCart() {
+    var itemCount = 0;
+	var grandTotal = 0;
+
+	var price = 0;
+	var quantity = 0;
+	var subTotal = 0;
+
+    if (sessionStorage.getItem('shopping-cart')) {
+		var shoppingCart = JSON.parse(sessionStorage.getItem('shopping-cart'));
+		itemCount = shoppingCart.length;
+
+
+		//Iterate javascript shopping cart array
+		shoppingCart.forEach(function(item) {
+			var cartItem = JSON.parse(item);
+			price = parseFloat(cartItem.price);
+			quantity = parseInt(cartItem.quantity);
+			subTotal = price * quantity
+			grandTotal += subTotal;
+		});
+	
+    
+    var cartForm = document.getElementById("cartForm");
+    // Loop over them and prevent submission
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (cartForm.checkValidity() === false) {
+        event.stopPropagation();
+        event.preventDefault();
+        cartForm.classList.add('was-validated');
+        return false
+    }
+
+    var cartName = document.getElementById("cartName").value;
+    var cartIC = document.getElementById("cartIC").value;
+    var cartEmail = document.getElementById("cartEmail").value;
+    var cartMobile = document.getElementById("cartMobile").value;
+    var cartAddress1 = document.getElementById("cartAddress1").value;
+    var cartAddress2 = document.getElementById("cartAddress2").value;
+    var cartPostcode = document.getElementById("cartPostcode").value;
+    var cartBank = document.getElementById("cartBank").value;
+
+    const params = new URLSearchParams();
+    params.append("name", cartName);
+    params.append("email", cartEmail);
+    params.append("mobile", cartMobile);
+    params.append("address1", cartAddress1);
+    params.append("address2", cartAddress2);
+    params.append("postcode", cartPostcode);
+    params.append("nric", cartIC);
+    params.append("bankname", cartBank);
+    params.append("amount", grandTotal);
+
+    const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
+    console.log(url)
+    window.open(url, "_blank");
+    }
+};
+
+function counterUp(element) {
+
+    var productParent = $(element).closest('div.product-item');
+    var quantityInput = $(productParent).find('.product-quantity');
+    var quantity = quantityInput.val();
+
+    quantity = parseInt(quantity) + 1;
+    if (quantity >= 10) {
+        quantity = 10;
+    }
+    quantityInput.val(quantity);
+}
+function counterDown(element) {
+    var productParent = $(element).closest('div.product-item');
+    var quantityInput = $(productParent).find('.product-quantity');
+    var quantity = quantityInput.val();
+
+    quantity = parseInt(quantity) - 1;
+    if (quantity <= 1) {
+        quantity = 1;
+    }
+    quantityInput.val(quantity);
+
+}
+</script>

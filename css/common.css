@@ -72,6 +72,10 @@
 .carousel-indicators {
     bottom: -35px !important;
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
 @media(max-width:1200px) {
      .full-width-img {
         width:1500px;

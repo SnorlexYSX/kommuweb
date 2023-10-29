@@ -1,3 +1,6 @@
+# Deprecated. Easier to manually add these in navigation.html since we have dropdowns for store
+
+
 - label: Home
   url: /
 

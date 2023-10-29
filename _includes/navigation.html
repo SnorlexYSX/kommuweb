@@ -7,11 +7,25 @@
 
         <div class="collapse navbar-collapse justify-content-center" id="navbar">
             <ul class="navbar-nav justify-content-center">
-                {% for nav in site.data.navs %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ nav.url | relative_url }}">{{ nav.label }}</a>
+                    <a class="nav-link" href="{{ "/" | relative_url }}">Home</a>
                 </li>
-                {% endfor %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/ka1s" | relative_url }}">KommuAssist 1s</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Store</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{ "/products" | relative_url }}">Product</a>
+                        <a class="dropdown-item" href="{{ "/accessories" | relative_url }}">Accessories</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/support" | relative_url }}">Supported Cars</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/kommunity" | relative_url }}">Kommunity</a>
+                </li>
             </ul>
         </div>
     </div>
