@@ -597,6 +597,7 @@ stylesheet: products
         params.append("postcode", atomePostcode);
         params.append("harness", atomeCarType);
         // params.append("price", atomePrice);
+        localStorage.setItem("customerName", atomeName);
 
 
         const url = "https://gateway.kommu.ai/atome/begin?" + params.toString();
@@ -640,7 +641,7 @@ stylesheet: products
         params.append("bankname", fpx1Bank);
         params.append("frequency", "12");
         params.append("harness", fpx1CarType);
-
+        localStorage.setItem("customerName", fpx1Name);
 
         const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
         console.log(url)
@@ -683,6 +684,7 @@ stylesheet: products
         params.append("bankname", fpx2Bank);
         params.append("frequency", "18");
         params.append("harness", fpx2CarType);
+        localStorage.setItem("customerName", fpx2Name);
 
         const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
         console.log(url)
