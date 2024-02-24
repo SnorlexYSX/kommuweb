@@ -78,8 +78,8 @@ stylesheet: products
                         </div>
         
                         <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
-                            <input type="number" id="atomeIC" min=100000000 max=999999999999 class="form-control">
+                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
+                            <input type="number" id="atomeIC" min=100000000 max=999999999999 class="form-control" required>
                         </div>    
                 
                         <div class="md-form mb-2">
@@ -98,7 +98,7 @@ stylesheet: products
                         </div>
         
                         <div class="md-form mb-2">  
-                            <input type="text" id="atomeAddress2" class="form-control validate" required>
+                            <input type="text" id="atomeAddress2" class="form-control validate">
                         </div>
         
                         <div class="md-form mb-2">
@@ -107,7 +107,7 @@ stylesheet: products
                         </div>
         
         
-                        <div class="md-form mb-2">
+                        <!-- <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Bank</label>
                             <select class="form-select" id="atomeBank">
                                 <option value="1">Affin Bank</option>
@@ -130,7 +130,7 @@ stylesheet: products
                                 <option value="17">Standard Chartered</option>
                                 <option value="18">UOB Bank</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-tertiary" id="atomeBtn">Place Order</button>
                             <p style="font-size: 9px;">
@@ -220,7 +220,7 @@ stylesheet: products
                         </div>
         
                         <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
                             <input type="number" id="fpx1IC" min=100000000 max=999999999999 class="form-control validate" required>
                         </div>    
                 
@@ -361,7 +361,7 @@ stylesheet: products
                         </div>
         
                         <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">IC (without -)</label>
+                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
                             <input type="number" id="fpx2IC" min=100000000 max=999999999999 class="form-control validate" required>
                         </div>    
                 
@@ -426,7 +426,125 @@ stylesheet: products
         </div>
     </div>
 </div>
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
 
+        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
+            <div class="row">
+                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                    <h2>Order now. Ship in 1 week.</h2>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="{{ "" | relative_url }}/img/products/placeorder.png" class = "img-fluid" style="border-radius:0.5rem">
+                        </div>
+                        <div class="col-6">
+                            <p>KommuAssist 1s</p>
+                        </div>
+                        <div class="col-4" style="justify-content: end; display: grid;">
+                            <p>RM3,799.00</p>
+                        </div> 
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Due now </p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p>RM3,799</p>
+                        </div> 
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">                    
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Shipping to Malaysia</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p>Free</p>
+                        </div> 
+                    </div>
+                    <p id="delivery-paragraph">Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Total due now</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p>RM3,799</p>
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <h2>Customer information.</h2>
+                    </div>
+                    <form id="otpForm" class="needs-validation" novalidate onsubmit="otpSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form34">Name</label>
+                            <input type="text" id="otpName" class="form-control validate" required>
+                        </div>
+               
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form29">Email</label>
+                            <input type="email" id="otpEmail" class="form-control validate" required>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                            <input type="number" id="otpMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form8">Address</label>
+                            <input type="text" id="otpAddress1" class="form-control validate" required>
+                        </div>
+        
+                        <div class="md-form mb-2">  
+                            <input type="text" id="otpAddress2" class="form-control">
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                            <input type="number" id="otpPostcode" class="form-control validate" required>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" id="otpCountry">
+                                <option value="MY">Malaysia</option>
+                                <option value="AUS">Australia</option>
+                                <option value="IND">Indonesia</option>
+                                <option value="SG">Singapore</option>
+                            </select>
+                        </div>
+    
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-tertiary" id="otpBtn">Place Order</button>
+                            <p style="font-size: 9px;">
+                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="row" style="margin-top:20px">
@@ -510,7 +628,7 @@ stylesheet: products
                         <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal"><img src="{{ "" | relative_url }}/img/products/pm1.png" class = "img-fluid"></button></div>
                         <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal"><img src="{{ "" | relative_url }}/img/products/pm2.png" class = "img-fluid"></button></div>
                         <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal"><img src="{{ "" | relative_url }}/img/products/pm3.png" class = "img-fluid"></button></div>
-                        <div class="col-3"><button class="btn buy-btn"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#otpModal"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
                     </div>
             </div>
         </div>
@@ -580,6 +698,7 @@ stylesheet: products
             return false
         }
         var atomeName = document.getElementById("atomeName").value;
+        var atomeIC = document.getElementById("atomeIC").value;
         var atomeEmail = document.getElementById("atomeEmail").value;
         var atomeMobile = document.getElementById("atomeMobile").value;
         var atomeAddress1 = document.getElementById("atomeAddress1").value;
@@ -595,12 +714,14 @@ stylesheet: products
         params.append("address1", atomeAddress1);
         params.append("address2", atomeAddress2);
         params.append("postcode", atomePostcode);
+        params.append("nric", atomeIC);
+        params.append("frequency", "3");
         params.append("harness", atomeCarType);
         // params.append("price", atomePrice);
         localStorage.setItem("customerName", atomeName);
 
 
-        const url = "https://gateway.kommu.ai/atome/begin?" + params.toString();
+        const url = "https://gateway.kommu.ai/curlec/3mth?" + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
@@ -690,6 +811,47 @@ stylesheet: products
         console.log(url)
         window.open(url, "_blank");
     };
+
+    function otpSubmit() {
+        var otpForm = document.getElementById("otpForm");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (otpForm.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            otpForm.classList.add('was-validated');
+            return false
+        }
+        var otpName = document.getElementById("otpName").value;
+        var otpEmail = document.getElementById("otpEmail").value;
+        var otpMobile = document.getElementById("otpMobile").value;
+        var otpAddress1 = document.getElementById("otpAddress1").value;
+        var otpAddress2 = document.getElementById("otpAddress2").value;
+        var otpPostcode = document.getElementById("otpPostcode").value;
+        var otpCountry = document.getElementById("otpCountry").value;
+        var otpCarType = document.getElementById("car-select").value;
+        // var otpPrice = document.getElementById("otpPrice").value;
+
+        const params = new URLSearchParams();
+        params.append("name", otpName);
+        params.append("email", otpEmail);
+        params.append("mobile", otpMobile);
+        params.append("address1", otpAddress1);
+        params.append("address2", otpAddress2);
+        params.append("postcode", otpPostcode);
+        params.append("country", otpCountry);
+        params.append("harness", otpCarType);
+        // params.append("price", otpPrice);
+        localStorage.setItem("customerName", otpName);
+
+
+        const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
 
 var mainImg = document.getElementById('MainImage');
 var smallImg = document.getElementsByClassName('small-img');
