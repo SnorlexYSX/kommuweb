@@ -249,7 +249,7 @@ stylesheet: products
                         </div>
         
         
-                        <div class="md-form mb-2">
+                        <!-- <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Bank</label>
                             <select class="form-select" id="fpx1Bank">
                                 <option value="1">Affin Bank</option>
@@ -272,7 +272,7 @@ stylesheet: products
                                 <option value="17">Standard Chartered</option>
                                 <option value="18">UOB Bank</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-tertiary" id="fpx1Btn">Place Order</button>
                             <p style="font-size: 9px;">
@@ -390,7 +390,7 @@ stylesheet: products
                         </div>
         
         
-                        <div class="md-form mb-2">
+                        <!-- <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Bank</label>
                             <select class="form-select" id="fpx2Bank">
                                 <option value="1">Affin Bank</option>
@@ -413,7 +413,7 @@ stylesheet: products
                                 <option value="17">Standard Chartered</option>
                                 <option value="18">UOB Bank</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-tertiary" id="fpx2Btn">Place Order</button>
                             <p style="font-size: 9px;">
@@ -721,7 +721,7 @@ stylesheet: products
         localStorage.setItem("customerName", atomeName);
 
 
-        const url = "https://gateway.kommu.ai/curlec/3mth?" + params.toString();
+        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
@@ -748,7 +748,7 @@ stylesheet: products
         var fpx1Address1 = document.getElementById("fpx1Address1").value;
         var fpx1Address2 = document.getElementById("fpx1Address2").value;
         var fpx1Postcode = document.getElementById("fpx1Postcode").value;
-        var fpx1Bank = document.getElementById("fpx1Bank").value;
+        // var fpx1Bank = document.getElementById("fpx1Bank").value;
         var fpx1CarType = document.getElementById("car-select").value;
 
         const params = new URLSearchParams();
@@ -764,7 +764,7 @@ stylesheet: products
         params.append("harness", fpx1CarType);
         localStorage.setItem("customerName", fpx1Name);
 
-        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
@@ -791,7 +791,7 @@ stylesheet: products
         var fpx2Address1 = document.getElementById("fpx2Address1").value;
         var fpx2Address2 = document.getElementById("fpx2Address2").value;
         var fpx2Postcode = document.getElementById("fpx2Postcode").value;
-        var fpx2Bank = document.getElementById("fpx2Bank").value;
+        // var fpx2Bank = document.getElementById("fpx2Bank").value;
         var fpx2CarType = document.getElementById("car-select").value;
 
         const params = new URLSearchParams();
@@ -807,7 +807,8 @@ stylesheet: products
         params.append("harness", fpx2CarType);
         localStorage.setItem("customerName", fpx2Name);
 
-        const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        // const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
+        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
