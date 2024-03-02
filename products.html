@@ -105,7 +105,12 @@ stylesheet: products
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="atomePostcode" class="form-control validate" required>
                         </div>
-        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" disabled>
+                                <option value="MY">Malaysia</option>
+                            </select>
+                        </div>
         
                         <!-- <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Bank</label>
@@ -247,7 +252,12 @@ stylesheet: products
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="fpx1Postcode" class="form-control validate" required>
                         </div>
-        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" disabled>
+                                <option value="MY">Malaysia</option>
+                            </select>
+                        </div>
         
                         <!-- <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Bank</label>
@@ -388,6 +398,12 @@ stylesheet: products
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="fpx2Postcode" class="form-control validate" required>
                         </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" disabled>
+                                <option value="MY">Malaysia</option>
+                            </select>
+                        </div>
         
         
                         <!-- <div class="md-form mb-2">
@@ -453,7 +469,7 @@ stylesheet: products
                             <p>Due now </p>
                         </div>
                         <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM3,799</p>
+                            <p>RM3,799.00</p>
                         </div> 
                     </div>
                     <br>
@@ -473,20 +489,20 @@ stylesheet: products
                     <br class="br-mobile-thin">                    
                     <div class="row">
                         <div class="col-6">
-                            <p>Shipping to Malaysia</p>
+                            <p id="otpShippingText">Shipping to Malaysia</p>
                         </div>
                         <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>Free</p>
+                            <p id="otpShippingRate">Free</p>
                         </div> 
                     </div>
-                    <p id="delivery-paragraph">Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
+                    <p id="otpDeliveryParagraph">Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
                     <hr>
                     <div class="row">
                         <div class="col-6">
                             <p>Total due now</p>
                         </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM3,799</p>
+                        <div class="col-6" style="justify-content: end; display: grid;" id="otpFinalTotal">
+                            <p>RM3,799.00</p>
                         </div> 
                     </div>
                 </div>
@@ -525,7 +541,7 @@ stylesheet: products
                         </div>
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
-                            <select class="form-select" id="otpCountry">
+                            <select class="form-select" id="otpCountry" onChange="updateShippingRate()">
                                 <option value="MY">Malaysia</option>
                                 <option value="AUS">Australia</option>
                                 <option value="IND">Indonesia</option>
@@ -653,10 +669,24 @@ stylesheet: products
 <script>
 
     const carSelectList = document.getElementById("car-select");
-    const buyButton = document.getElementsByClassName("buy-btn");
+    //const buyButton = document.getElementsByClassName("buy-btn");
     const atomeButton = document.getElementById("atomeBtn");
     const fpx1Button = document.getElementById("fpx1Btn");
     const fpx2Button = document.getElementById("fpx2Btn");
+    const productPrice = 3799;
+    var finalOtpAmount = 3799;
+    const shippingRate = {
+            MY: "0.00",
+            AUS: "245.00",
+            IND: "172.50",
+            SG: "230.00",
+        }
+    const countries = {
+        MY: "Malaysia",
+        AUS: "Australia",
+        IND: "Indonesia",
+        SG: "Singapore",
+    }
 
     async function load() {
         const selectedCar = new URLSearchParams(window.location.search).get("car");
@@ -678,13 +708,13 @@ stylesheet: products
 
     window.onload = load;
 
-    buyButton[0].onclick = () => {
-        const params = new URLSearchParams();
-        params.append("car", carSelectList[0].value);
-        params.append("price", "price_1O3k6zCeqLEWrvVKVN97NETE");
-        const url = "https://api.kommu.ai/payment/begin?" + params.toString();
-        window.open(url, "_blank");
-    };
+    // buyButton[0].onclick = () => {
+    //     const params = new URLSearchParams();
+    //     params.append("car", carSelectList[0].value);
+    //     params.append("price", "price_1O3k6zCeqLEWrvVKVN97NETE");
+    //     const url = "https://api.kommu.ai/payment/begin?" + params.toString();
+    //     window.open(url, "_blank");
+    // };
 
     function atomeSubmit() {
         var atomeForm = document.getElementById("atomeForm");
@@ -816,6 +846,8 @@ stylesheet: products
 
     function otpSubmit() {
         var otpForm = document.getElementById("otpForm");
+
+
         // Loop over them and prevent submission
         event.stopPropagation();
         event.preventDefault();
@@ -834,6 +866,8 @@ stylesheet: products
         var otpPostcode = document.getElementById("otpPostcode").value;
         var otpCountry = document.getElementById("otpCountry").value;
         var otpCarType = document.getElementById("car-select").value;
+        var otpShippingRate = shippingRate[otpCountry];
+        
         // var otpPrice = document.getElementById("otpPrice").value;
 
         const params = new URLSearchParams();
@@ -845,67 +879,80 @@ stylesheet: products
         params.append("postcode", otpPostcode);
         params.append("country", otpCountry);
         params.append("harness", otpCarType);
-        // params.append("price", otpPrice);
+        params.append("shippingrate", otpShippingRate);
+        params.append("amount", finalOtpAmount);
         localStorage.setItem("customerName", otpName);
-
 
         const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
 
+    function updateShippingRate(){
+        var otpCountry = document.getElementById("otpCountry").value;
+        finalOtpAmount = productPrice + parseFloat(shippingRate[otpCountry]);
+        document.getElementById("otpShippingText").innerText = "Ship to " + countries[otpCountry];
+        document.getElementById("otpShippingRate").innerText = "RM" + shippingRate[otpCountry];
+        document.getElementById("otpFinalTotal").innerText = "RM" + finalOtpAmount.toFixed(2);
+        document.getElementById("otpDeliveryParagraph").hidden = true;
+        if (otpCountry == "MY") {
+            document.getElementById("otpShippingRate").innerText = "Free";
+            document.getElementById("otpDeliveryParagraph").hidden = false;
+        }
+    }
 
-var mainImg = document.getElementById('MainImage');
-var smallImg = document.getElementsByClassName('small-img');
 
-// Disgusting codes. will refactor if i feel like it.
-smallImg[0].onclick = function(){
-    mainImg.src = smallImg[0].src;
-    
-    smallImg[0].style.border = "5px solid #33B9FF";
-    smallImg[1].style.border = "0px";
-    smallImg[2].style.border = "0px";
-    smallImg[3].style.border = "0px";
-    smallImg[4].style.border = "0px";
-}
+    var mainImg = document.getElementById('MainImage');
+    var smallImg = document.getElementsByClassName('small-img');
 
-smallImg[1].onclick = function(){
-    mainImg.src = smallImg[1].src;
+    // Disgusting codes. will refactor if i feel like it.
+    smallImg[0].onclick = function(){
+        mainImg.src = smallImg[0].src;
+        
+        smallImg[0].style.border = "5px solid #33B9FF";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
 
-    smallImg[0].style.border = "0px";
-    smallImg[1].style.border = "5px solid #33B9FF";
-    smallImg[2].style.border = "0px";
-    smallImg[3].style.border = "0px";
-    smallImg[4].style.border = "0px";
-}
-smallImg[2].onclick = function(){
-    mainImg.src = smallImg[2].src;
+    smallImg[1].onclick = function(){
+        mainImg.src = smallImg[1].src;
 
-    smallImg[0].style.border = "0px";
-    smallImg[1].style.border = "0px";
-    smallImg[2].style.border = "5px solid #33B9FF";
-    smallImg[3].style.border = "0px";
-    smallImg[4].style.border = "0px";
-}
-smallImg[3].onclick = function(){
-    mainImg.src = smallImg[3].src;
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "5px solid #33B9FF";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
+    smallImg[2].onclick = function(){
+        mainImg.src = smallImg[2].src;
 
-    smallImg[0].style.border = "0px";
-    smallImg[1].style.border = "0px";
-    smallImg[2].style.border = "0px";
-    smallImg[3].style.border = "5px solid #33B9FF";
-    smallImg[4].style.border = "0px";
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "5px solid #33B9FF";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
+    smallImg[3].onclick = function(){
+        mainImg.src = smallImg[3].src;
 
-}
-smallImg[4].onclick = function(){
-    mainImg.src = smallImg[4].src;
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "5px solid #33B9FF";
+        smallImg[4].style.border = "0px";
 
-    smallImg[0].style.border = "0px";
-    smallImg[1].style.border = "0px";
-    smallImg[2].style.border = "0px";
-    smallImg[3].style.border = "0px";
-    smallImg[4].style.border = "5px solid #33B9FF";
+    }
+    smallImg[4].onclick = function(){
+        mainImg.src = smallImg[4].src;
 
-}
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "5px solid #33B9FF";
+
+    }
 
 </script>
