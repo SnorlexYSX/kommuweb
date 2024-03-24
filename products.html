@@ -880,7 +880,7 @@ stylesheet: products
         params.append("country", otpCountry);
         params.append("harness", otpCarType);
         params.append("shippingrate", otpShippingRate);
-        params.append("amount", finalOtpAmount);
+        params.append("amount", finalOtpAmount.toFixed(2));
         localStorage.setItem("customerName", otpName);
 
         const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
