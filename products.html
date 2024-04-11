@@ -880,7 +880,7 @@ stylesheet: products
         params.append("address1", otpAddress1);
         params.append("address2", otpAddress2);
         params.append("postcode", otpPostcode);
-        params.append("country", otpCountry);
+        params.append("country", countries[otpCountry]);
         params.append("harness", otpCarType);
         params.append("shippingrate", otpShippingRate);
         params.append("amount", finalOtpAmount.toFixed(2));
