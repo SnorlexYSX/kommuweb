@@ -870,6 +870,7 @@ stylesheet: products
         var otpCountry = document.getElementById("otpCountry").value;
         var otpCarType = document.getElementById("car-select").value;
         var otpShippingRate = shippingRate[otpCountry];
+        var otpDevicePrice = productPrice;
         
         // var otpPrice = document.getElementById("otpPrice").value;
 
@@ -884,6 +885,7 @@ stylesheet: products
         params.append("harness", otpCarType);
         params.append("shippingrate", otpShippingRate);
         params.append("amount", finalOtpAmount.toFixed(2));
+        params.append("deviceprice", otpDevicePrice.toFixed(2));
         localStorage.setItem("customerName", otpName);
 
         const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
