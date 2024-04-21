@@ -3,12 +3,12 @@ layout: default
 title: Products | kommu.ai
 stylesheet: products
 ---
-<div class="modal fade" id="atomeModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="instalmentModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
 
         <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
             <div class="modal-close-btn">
-                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px" id="closeInstalmentModal">X</button>
             </div> 
             <div class="row">
                 <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
@@ -21,309 +21,16 @@ stylesheet: products
                             <p>KommuAssist 1s</p>
                         </div>
                         <div class="col-4" style="justify-content: end; display: grid;">
-                            <p>RM3,799.00</p>
+                            <p id="instalmentCurrentPrice">RM3,799.00</p>
                         </div> 
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-6">
-                            <p>Due now <br><span>RM1,266.33/mo. x 3 mo.</span></p>
+                            <p>Due now <br><span><span class="monthlyInstalmentPrice">RM211.06</span>/mo. x <span id="instalmentMonth">18</span> mo.</span></p>
                         </div>
                         <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM1,266.33</p>
-                        </div> 
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Shipping to Malaysia</p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>Free</p>
-                        </div> 
-                    </div>
-                    <p>Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
-                    <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Total due now</p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM1,266.33</p>
-                        </div> 
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <div class="row">
-                        <h2>Customer information.</h2>
-                    </div>
-                    <form id="atomeForm" class="needs-validation" novalidate onsubmit="atomeSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form34">Name</label>
-                            <input type="text" id="atomeName" class="form-control validate" required>
-                        </div>
-        
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
-                            <input type="number" id="atomeIC" min=100000000 max=999999999999 class="form-control" required>
-                        </div>    
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form29">Email</label>
-                            <input type="email" id="atomeEmail" class="form-control validate" required>
-                        </div>
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
-                            <input type="number" id="atomeMobile" min=10000000 max=999999999999 class="form-control validate" required>
-                        </div>
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form8">Address</label>
-                            <input type="text" id="atomeAddress1" class="form-control validate" required>
-                        </div>
-        
-                        <div class="md-form mb-2">  
-                            <input type="text" id="atomeAddress2" class="form-control validate">
-                        </div>
-        
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
-                            <input type="number" id="atomePostcode" class="form-control validate" required>
-                        </div>
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Country</label>
-                            <select class="form-select" disabled>
-                                <option value="MY">Malaysia</option>
-                            </select>
-                        </div>
-        
-                        <!-- <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Bank</label>
-                            <select class="form-select" id="atomeBank">
-                                <option value="1">Affin Bank</option>
-                                <option value="2">Alliance Bank (Personal)</option>
-                                <option value="68">AGRONet</option>
-                                <option value="3">AmBank</option>
-                                <option value="8">CIMB Clicks</option>
-                                <option value="4">Bank Islam</option>
-                                <option value="5">Bank Rakyat</option>
-                                <option value="6">Bank Muamalat</option>
-                                <option value="7">BSN</option>
-                                <option value="9">Hong Leong Bank</option>
-                                <option value="10">HSBC Bank</option>
-                                <option value="11">KFH</option>
-                                <option value="12">Maybank2U</option>
-                                <option value="13">Maybank2E</option>
-                                <option value="14">OCBC Bank</option>
-                                <option value="15">Public Bank</option>
-                                <option value="16">RHB Bank</option>
-                                <option value="17">Standard Chartered</option>
-                                <option value="18">UOB Bank</option>
-                            </select>
-                        </div> -->
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-tertiary" id="atomeBtn">Place Order</button>
-                            <p style="font-size: 9px;">
-                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="fpx1Modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-
-        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
-            <div class="modal-close-btn">
-                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
-            </div> 
-            <div class="row">
-                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
-                    <h2>Order now. Ship in 1 week.</h2>
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="{{ "" | relative_url }}/img/products/placeorder.png" class = "img-fluid" style="border-radius:0.5rem">
-                        </div>
-                        <div class="col-6">
-                            <p>KommuAssist 1s</p>
-                        </div>
-                        <div class="col-4" style="justify-content: end; display: grid;">
-                            <p>RM3,799.00</p>
-                        </div> 
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Due now <br><span>RM316.58/mo. x 12 mo.</span></p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM316.58</p>
-                        </div> 
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <br class="br-mobile-thin">
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Shipping to Malaysia</p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>Free</p>
-                        </div> 
-                    </div>
-                    <p>Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
-                    <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Total due now</p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM316.58</p>
-                        </div> 
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <div class="row">
-                        <h2>Customer information.</h2>
-                    </div>
-                    <form id="fpx1Form" class="needs-validation" novalidate onsubmit="fpx1Submit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form34">Name</label>
-                            <input type="text" id="fpx1Name" class="form-control validate" required>
-                        </div>
-        
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
-                            <input type="number" id="fpx1IC" min=100000000 max=999999999999 class="form-control validate" required>
-                        </div>    
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form29">Email</label>
-                            <input type="email" id="fpx1Email" class="form-control validate" required>
-                        </div>
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
-                            <input type="number" id="fpx1Mobile" min=10000000 max=999999999999 class="form-control validate" required>
-                        </div>
-                
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form8">Address</label>
-                            <input type="text" id="fpx1Address1" class="form-control validate" required>
-                        </div>
-        
-                        <div class="md-form mb-2">  
-                            <input type="text" id="fpx1Address2" class="form-control">
-                        </div>
-        
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
-                            <input type="number" id="fpx1Postcode" class="form-control validate" required>
-                        </div>
-                        <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Country</label>
-                            <select class="form-select" disabled>
-                                <option value="MY">Malaysia</option>
-                            </select>
-                        </div>
-        
-                        <!-- <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Bank</label>
-                            <select class="form-select" id="fpx1Bank">
-                                <option value="1">Affin Bank</option>
-                                <option value="2">Alliance Bank (Personal)</option>
-                                <option value="68">AGRONet</option>
-                                <option value="3">AmBank</option>
-                                <option value="8">CIMB Clicks</option>
-                                <option value="4">Bank Islam</option>
-                                <option value="5">Bank Rakyat</option>
-                                <option value="6">Bank Muamalat</option>
-                                <option value="7">BSN</option>
-                                <option value="9">Hong Leong Bank</option>
-                                <option value="10">HSBC Bank</option>
-                                <option value="11">KFH</option>
-                                <option value="12">Maybank2U</option>
-                                <option value="13">Maybank2E</option>
-                                <option value="14">OCBC Bank</option>
-                                <option value="15">Public Bank</option>
-                                <option value="16">RHB Bank</option>
-                                <option value="17">Standard Chartered</option>
-                                <option value="18">UOB Bank</option>
-                            </select>
-                        </div> -->
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-tertiary" id="fpx1Btn">Place Order</button>
-                            <p style="font-size: 9px;">
-                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="fpx2Modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-
-        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
-            <div class="modal-close-btn">
-                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
-            </div> 
-            <div class="row">
-                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
-                    <h2>Order now. Ship in 1 week.</h2>
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="{{ "" | relative_url }}/img/products/placeorder.png" class = "img-fluid" style="border-radius:0.5rem">
-                        </div>
-                        <div class="col-6">
-                            <p>KommuAssist 1s</p>
-                        </div>
-                        <div class="col-4" style="justify-content: end; display: grid;">
-                            <p>RM3,799.00</p>
-                        </div> 
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <p>Due now <br><span>RM211.06/mo. x 18 mo.</span></p>
-                        </div>
-                        <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM211.06</p>
+                            <p class="monthlyInstalmentPrice">RM211.06</p>
                         </div> 
                     </div>
                     <br>
@@ -356,7 +63,7 @@ stylesheet: products
                             <p>Total due now</p>
                         </div>
                         <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM211.06</p>
+                            <p class="monthlyInstalmentPrice">RM211.06</p>
                         </div> 
                     </div>
                 </div>
@@ -364,39 +71,39 @@ stylesheet: products
                     <div class="row">
                         <h2>Customer information.</h2>
                     </div>
-                    <form id="fpx2Form" class="needs-validation" novalidate onsubmit="fpx2Submit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                    <form id="instalmentForm" class="needs-validation" novalidate onsubmit="instalmentSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form34">Name</label>
-                            <input type="text" id="fpx2Name" class="form-control validate" required>
+                            <input type="text" id="instalmentName" class="form-control validate" required>
                         </div>
         
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
-                            <input type="number" id="fpx2IC" min=100000000 max=999999999999 class="form-control validate" required>
+                            <input type="number" id="instalmentIC" min=100000000 max=999999999999 class="form-control validate" required>
                         </div>    
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form29">Email</label>
-                            <input type="email" id="fpx2Email" class="form-control validate" required>
+                            <input type="email" id="instalmentEmail" class="form-control validate" required>
                         </div>
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
-                            <input type="number" id="fpx2Mobile" min=10000000 max=999999999999 class="form-control validate" required>
+                            <input type="number" id="instalmentMobile" min=10000000 max=999999999999 class="form-control validate" required>
                         </div>
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form8">Address</label>
-                            <input type="text" id="fpx2Address1" class="form-control validate" required>
+                            <input type="text" id="instalmentAddress1" class="form-control validate" required>
                         </div>
         
                         <div class="md-form mb-2">  
-                            <input type="text" id="fpx2Address2" class="form-control">
+                            <input type="text" id="instalmentAddress2" class="form-control">
                         </div>
         
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
-                            <input type="number" id="fpx2Postcode" class="form-control validate" required>
+                            <input type="number" id="instalmentPostcode" class="form-control validate" required>
                         </div>
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
@@ -405,33 +112,20 @@ stylesheet: products
                             </select>
                         </div>
         
-        
                         <!-- <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form32">Bank</label>
-                            <select class="form-select" id="fpx2Bank">
-                                <option value="1">Affin Bank</option>
-                                <option value="2">Alliance Bank (Personal)</option>
-                                <option value="68">AGRONet</option>
-                                <option value="3">AmBank</option>
-                                <option value="8">CIMB Clicks</option>
-                                <option value="4">Bank Islam</option>
-                                <option value="5">Bank Rakyat</option>
-                                <option value="6">Bank Muamalat</option>
-                                <option value="7">BSN</option>
-                                <option value="9">Hong Leong Bank</option>
-                                <option value="10">HSBC Bank</option>
-                                <option value="11">KFH</option>
-                                <option value="12">Maybank2U</option>
-                                <option value="13">Maybank2E</option>
-                                <option value="14">OCBC Bank</option>
-                                <option value="15">Public Bank</option>
-                                <option value="16">RHB Bank</option>
-                                <option value="17">Standard Chartered</option>
-                                <option value="18">UOB Bank</option>
-                            </select>
+                            <label data-error="wrong" data-success="right" for="form32">Promo Code</label>
+                            <div class="row">
+                                <div class="col-9">
+                                    <input type="text" id="instalmentPromoInput" class="form-control validate">
+                                </div>
+                                <div class="col-3 p-0">
+                                    <button type="button" class="btn btn-tertiary" id="instalmentPromoBtn" style="line-height: 0px; font-size: 15px; height: 38px; padding-left: 20px;padding-right: 20px;">Verify</button>
+                                </div>
+                            </div>
                         </div> -->
+
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-tertiary" id="fpx2Btn">Place Order</button>
+                            <button type="submit" class="btn btn-tertiary" id="instalmentBtn">Place Order</button>
                             <p style="font-size: 9px;">
                                 By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
                             </p>
@@ -442,6 +136,7 @@ stylesheet: products
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
 
@@ -643,9 +338,9 @@ stylesheet: products
                     <h6>Continue with your preferred payment option:</h6>
                     <h6 class="disc-content">Instalment options are only available for Malaysians. Both debit card and credit card are accepted.</h6>
                     <div class="row">
-                        <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx2Modal"><img src="{{ "" | relative_url }}/img/products/pm1.png" class = "img-fluid"></button></div>
-                        <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#fpx1Modal"><img src="{{ "" | relative_url }}/img/products/pm2.png" class = "img-fluid"></button></div>
-                        <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#atomeModal"><img src="{{ "" | relative_url }}/img/products/pm3.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="visa18Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm1.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="visa12Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm2.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="visa3Btn"  data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm3.png" class = "img-fluid"></button></div>
                         <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#otpModal"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
                     </div>
             </div>
@@ -668,13 +363,24 @@ stylesheet: products
     </div>
 </div>
 <script>
-
+    const visaUrl = "https://gateway.kommu.ai/curlec/visa?";
     const carSelectList = document.getElementById("car-select");
-    //const buyButton = document.getElementsByClassName("buy-btn");
-    const atomeButton = document.getElementById("atomeBtn");
-    const fpx1Button = document.getElementById("fpx1Btn");
-    const fpx2Button = document.getElementById("fpx2Btn");
+
+    const instalmentButton = document.getElementById("instalmentButton");
+
+    const visa18Btn = document.getElementById("visa18Btn");
+    const visa12Btn = document.getElementById("visa12Btn");
+    const visa3Btn = document.getElementById("visa3Btn");
+    const instalmentModal = document.getElementById("instalmentModal");
+
     const productPrice = 3799;
+    const subscriptionCurlec3 = 25293637;
+    const subscriptionCurlec12 = 25252608;
+    const subscriptionCurlec18 = 25252653;
+
+    var currentSubscription = subscriptionCurlec18;
+    var currentDuration = 18;
+    var monthlyPayment = 198.28;
     var finalOtpAmount = 3799;
     const shippingRate = {
             MY: "0.00",
@@ -719,134 +425,77 @@ stylesheet: products
     //     window.open(url, "_blank");
     // };
 
-    function atomeSubmit() {
-        var atomeForm = document.getElementById("atomeForm");
+
+    visa18Btn.onclick = function() {updateInstalmentModal(18,productPrice,subscriptionCurlec18);};
+    visa12Btn.onclick = function() {updateInstalmentModal(12,productPrice,subscriptionCurlec12);};
+    visa3Btn.onclick = function() {updateInstalmentModal(3,productPrice,subscriptionCurlec3);};
+
+    function updateInstalmentModal(month, totalPrice, subscription) {
+        var instalmentPrice = document.getElementsByClassName("monthlyInstalmentPrice");
+        currentSubscription = subscription;
+        currentDuration = month;
+        monthlyPayment = (totalPrice/month)
+        document.getElementById("instalmentMonth").innerHTML = month;
+        document.getElementById("instalmentCurrentPrice").innerHTML = "RM " + totalPrice.toFixed(2);
+        for (var i = 0; i < instalmentPrice.length; i++) {
+            instalmentPrice[i].innerHTML = "RM " + monthlyPayment.toFixed(2);
+        }
+    }
+
+    // var instalmentPromoBtn = document.getElementById("instalmentPromoBtn");
+
+    // instalmentPromoBtn.onclick = function instalmentPromoBtn(){
+
+    //     var instalmentPromoInput = document.getElementById("instalmentPromoInput");
+
+    //     if (instalmentPromoInput.value == "MAEPS") {
+    //         updateInstalmentModal(20,123,12345)
+    //     }
+
+    // }
+
+    function instalmentSubmit()  {
+
+
+        var instalmentForm = document.getElementById("instalmentForm");
         // Loop over them and prevent submission
         event.stopPropagation();
         event.preventDefault();
 
-        if (atomeForm.checkValidity() === false) {
+        if (instalmentForm.checkValidity() === false) {
             event.stopPropagation();
             event.preventDefault();
-            atomeForm.classList.add('was-validated');
-            return false
-        }
-        var atomeName = document.getElementById("atomeName").value;
-        var atomeIC = document.getElementById("atomeIC").value;
-        var atomeEmail = document.getElementById("atomeEmail").value;
-        var atomeMobile = document.getElementById("atomeMobile").value;
-        var atomeAddress1 = document.getElementById("atomeAddress1").value;
-        var atomeAddress2 = document.getElementById("atomeAddress2").value;
-        var atomePostcode = document.getElementById("atomePostcode").value;
-        var atomeCarType = document.getElementById("car-select").value;
-        // var atomePrice = document.getElementById("atomePrice").value;
-
-        const params = new URLSearchParams();
-        params.append("name", atomeName);
-        params.append("email", atomeEmail);
-        params.append("mobile", atomeMobile);
-        params.append("address1", atomeAddress1);
-        params.append("address2", atomeAddress2);
-        params.append("postcode", atomePostcode);
-        params.append("nric", atomeIC);
-        params.append("frequency", "3");
-        params.append("harness", atomeCarType);
-        // params.append("price", atomePrice);
-        params.append("amount", productPrice.toFixed(2));
-        localStorage.setItem("customerName", atomeName);
-
-
-        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
-        console.log(url)
-        window.open(url, "_blank");
-    };
-
-    function fpx1Submit()  {
-
-
-        var fpx1Form = document.getElementById("fpx1Form");
-        // Loop over them and prevent submission
-        event.stopPropagation();
-        event.preventDefault();
-
-        if (fpx1Form.checkValidity() === false) {
-            event.stopPropagation();
-            event.preventDefault();
-            fpx1Form.classList.add('was-validated');
+            instalmentForm.classList.add('was-validated');
             return false
         }
 
-        var fpx1Name = document.getElementById("fpx1Name").value;
-        var fpx1IC = document.getElementById("fpx1IC").value;
-        var fpx1Email = document.getElementById("fpx1Email").value;
-        var fpx1Mobile = document.getElementById("fpx1Mobile").value;
-        var fpx1Address1 = document.getElementById("fpx1Address1").value;
-        var fpx1Address2 = document.getElementById("fpx1Address2").value;
-        var fpx1Postcode = document.getElementById("fpx1Postcode").value;
-        // var fpx1Bank = document.getElementById("fpx1Bank").value;
-        var fpx1CarType = document.getElementById("car-select").value;
+        var instalmentName = document.getElementById("instalmentName").value;
+        var instalmentIC = document.getElementById("instalmentIC").value;
+        var instalmentEmail = document.getElementById("instalmentEmail").value;
+        var instalmentMobile = document.getElementById("instalmentMobile").value;
+        var instalmentAddress1 = document.getElementById("instalmentAddress1").value;
+        var instalmentAddress2 = document.getElementById("instalmentAddress2").value;
+        var instalmentPostcode = document.getElementById("instalmentPostcode").value;
+        var instalmentCarType = document.getElementById("car-select").value;
 
         const params = new URLSearchParams();
-        params.append("name", fpx1Name);
-        params.append("email", fpx1Email);
-        params.append("mobile", fpx1Mobile);
-        params.append("address1", fpx1Address1);
-        params.append("address2", fpx1Address2);
-        params.append("postcode", fpx1Postcode);
-        params.append("nric", fpx1IC);
-        // params.append("bankname", fpx1Bank);
-        params.append("frequency", "12");
-        params.append("harness", fpx1CarType);
+        params.append("name", instalmentName);
+        params.append("email", instalmentEmail);
+        params.append("mobile", instalmentMobile);
+        params.append("address1", instalmentAddress1);
+        params.append("address2", instalmentAddress2);
+        params.append("postcode", instalmentPostcode);
+        params.append("nric", instalmentIC);
+        // params.append("bankname", instalmentBank);
+        params.append("duration", currentDuration);
+        params.append("subscription",currentSubscription);
+        params.append("harness", instalmentCarType);
         params.append("amount", productPrice.toFixed(2));
+        params.append("monthlyPayment", monthlyPayment.toFixed(2));
 
-        localStorage.setItem("customerName", fpx1Name);
+        localStorage.setItem("customerName", instalmentName);
 
-        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
-        console.log(url)
-        window.open(url, "_blank");
-    };
-
-    function fpx2Submit() {
-    
-
-        var fpx2Form = document.getElementById("fpx2Form");
-        // Loop over them and prevent submission
-        event.stopPropagation();
-        event.preventDefault();
-
-        if (fpx2Form.checkValidity() === false) {
-            event.stopPropagation();
-            event.preventDefault();
-            fpx2Form.classList.add('was-validated');
-            return false
-        }
-
-        var fpx2Name = document.getElementById("fpx2Name").value;
-        var fpx2IC = document.getElementById("fpx2IC").value;
-        var fpx2Email = document.getElementById("fpx2Email").value;
-        var fpx2Mobile = document.getElementById("fpx2Mobile").value;
-        var fpx2Address1 = document.getElementById("fpx2Address1").value;
-        var fpx2Address2 = document.getElementById("fpx2Address2").value;
-        var fpx2Postcode = document.getElementById("fpx2Postcode").value;
-        // var fpx2Bank = document.getElementById("fpx2Bank").value;
-        var fpx2CarType = document.getElementById("car-select").value;
-
-        const params = new URLSearchParams();
-        params.append("name", fpx2Name);
-        params.append("email", fpx2Email);
-        params.append("mobile", fpx2Mobile);
-        params.append("address1", fpx2Address1);
-        params.append("address2", fpx2Address2);
-        params.append("postcode", fpx2Postcode);
-        params.append("nric", fpx2IC);
-        // params.append("bankname", fpx2Bank);
-        params.append("frequency", "18");
-        params.append("harness", fpx2CarType);
-        params.append("amount", productPrice.toFixed(2));
-        localStorage.setItem("customerName", fpx2Name);
-
-        // const url = "https://gateway.kommu.ai/curlec/begin?" + params.toString();
-        const url = "https://gateway.kommu.ai/curlec/visa?" + params.toString();
+        const url = visaUrl + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
