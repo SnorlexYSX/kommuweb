@@ -112,20 +112,20 @@ stylesheet: products
                             </select>
                         </div>
         
-                        <!-- <div class="md-form mb-2">
+                        <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Promo Code</label>
                             <div class="row">
-                                <div class="col-9">
+                                <div class="col-8 m-0">
                                     <input type="text" id="instalmentPromoInput" class="form-control validate">
                                 </div>
-                                <div class="col-3 p-0">
+                                <div class="col-2 p-0">
                                     <button type="button" class="btn btn-tertiary" id="instalmentPromoBtn" style="line-height: 0px; font-size: 15px; height: 38px; padding-left: 20px;padding-right: 20px;">Verify</button>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-tertiary" id="instalmentBtn">Place Order</button>
+                            <button type="submit" class="btn btn-tertiary" id="instalmentSubmitBtn">Place Order</button>
                             <p style="font-size: 9px;">
                                 By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
                             </p>
@@ -155,7 +155,7 @@ stylesheet: products
                             <p>KommuAssist 1s</p>
                         </div>
                         <div class="col-4" style="justify-content: end; display: grid;">
-                            <p>RM3,799.00</p>
+                            <p class="otpCurrentPrice">RM3,799.00</p>
                         </div> 
                     </div>
                     <hr>
@@ -164,7 +164,7 @@ stylesheet: products
                             <p>Due now </p>
                         </div>
                         <div class="col-6" style="justify-content: end; display: grid;">
-                            <p>RM3,799.00</p>
+                            <p class="otpCurrentPrice">RM3,799.00</p>
                         </div> 
                     </div>
                     <br>
@@ -196,8 +196,8 @@ stylesheet: products
                         <div class="col-6">
                             <p>Total due now</p>
                         </div>
-                        <div class="col-6" style="justify-content: end; display: grid;" id="otpFinalTotal">
-                            <p>RM3,799.00</p>
+                        <div class="col-6" style="justify-content: end; display: grid;" >
+                            <p id="otpFinalTotal">RM3,799.00</p>
                         </div> 
                     </div>
                 </div>
@@ -236,7 +236,7 @@ stylesheet: products
                         </div>
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
-                            <select class="form-select" id="otpCountry" onChange="updateShippingRate()">
+                            <select class="form-select" id="otpCountry" onChange="updateOtpModal()">
                                 <option value="MY">Malaysia</option>
                                 <option value="AUS">Australia</option>
                                 <option value="IND">Indonesia</option>
@@ -244,9 +244,19 @@ stylesheet: products
                                 <option value="TH">Thailand</option>
                             </select>
                         </div>
-    
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Promo Code</label>
+                            <div class="row">
+                                <div class="col-8 m-0">
+                                    <input type="text" id="otpPromoInput" class="form-control validate">
+                                </div>
+                                <div class="col-2 p-0">
+                                    <button type="button" class="btn btn-tertiary" id="otpPromoBtn" style="line-height: 0px; font-size: 15px; height: 38px; padding-left: 20px;padding-right: 20px;">Verify</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-tertiary" id="otpBtn">Place Order</button>
+                            <button type="submit" class="btn btn-tertiary" id="otpSubmitBtn">Place Order</button>
                             <p style="font-size: 9px;">
                                 By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
                             </p>
@@ -341,7 +351,7 @@ stylesheet: products
                         <div class="col-3"><button class="btn" id="visa18Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm1.png" class = "img-fluid"></button></div>
                         <div class="col-3"><button class="btn" id="visa12Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm2.png" class = "img-fluid"></button></div>
                         <div class="col-3"><button class="btn" id="visa3Btn"  data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm3.png" class = "img-fluid"></button></div>
-                        <div class="col-3"><button class="btn" data-bs-toggle="modal" data-bs-target="#otpModal"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="otpBtn"    data-bs-toggle="modal" data-bs-target="#otpModal"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
                     </div>
             </div>
         </div>
@@ -373,21 +383,32 @@ stylesheet: products
     const visa3Btn = document.getElementById("visa3Btn");
     const instalmentModal = document.getElementById("instalmentModal");
 
+    const otpBtn = document.getElementById("otpBtn");
+
+
     const productPrice = 3799;
     const subscriptionCurlec3 = 25293637;
     const subscriptionCurlec12 = 25252608;
     const subscriptionCurlec18 = 25252653;
 
+    const promoCode = "MAS2024";
+    const promoProductPrice = 3610;
+    const subscriptionPromo3 = 26617811;
+    const subscriptionPromo12 = 26617790;
+    const subscriptionPromo18 = 26617801;
+
+
     var currentSubscription = subscriptionCurlec18;
     var currentDuration = 18;
     var monthlyPayment = 198.28;
+    var currentOtpPrice = productPrice;
     var finalOtpAmount = 3799;
     const shippingRate = {
             MY: "0.00",
-            AUS: "257.50",
-            IND: "181.50",
-            SG: "241.50",
-            TH: "210.00",
+            AUS: "422.73",
+            IND: "209.99",
+            SG: "245.63",
+            TH: "209.99",
         }
     const countries = {
         MY: "Malaysia",
@@ -429,7 +450,11 @@ stylesheet: products
     visa18Btn.onclick = function() {updateInstalmentModal(18,productPrice,subscriptionCurlec18);};
     visa12Btn.onclick = function() {updateInstalmentModal(12,productPrice,subscriptionCurlec12);};
     visa3Btn.onclick = function() {updateInstalmentModal(3,productPrice,subscriptionCurlec3);};
-
+    otpBtn.onclick = function() {
+        currentOtpPrice = productPrice;
+        updateOtpModal();
+    };
+    
     function updateInstalmentModal(month, totalPrice, subscription) {
         var instalmentPrice = document.getElementsByClassName("monthlyInstalmentPrice");
         currentSubscription = subscription;
@@ -442,17 +467,53 @@ stylesheet: products
         }
     }
 
-    // var instalmentPromoBtn = document.getElementById("instalmentPromoBtn");
+    function updateOtpModal() {
+        
+        var otpPriceDisplay = document.getElementsByClassName("otpCurrentPrice");
+        var otpCountry = document.getElementById("otpCountry").value;
+        for (var i = 0; i < otpPriceDisplay.length; i++) {
+            otpPriceDisplay[i].innerHTML = "RM " + currentOtpPrice.toFixed(2);
+        }
 
-    // instalmentPromoBtn.onclick = function instalmentPromoBtn(){
+        finalOtpAmount = currentOtpPrice + parseFloat(shippingRate[otpCountry]);
+        document.getElementById("otpShippingText").innerText = "Ship to " + countries[otpCountry];
+        document.getElementById("otpShippingRate").innerText = "RM" + shippingRate[otpCountry];
+        document.getElementById("otpFinalTotal").innerText = "RM" + finalOtpAmount.toFixed(2);
+        document.getElementById("otpDeliveryParagraph").hidden = true;
+        if (otpCountry == "MY") {
+            document.getElementById("otpShippingRate").innerText = "Free";
+            document.getElementById("otpDeliveryParagraph").hidden = false;
+        }
+    }
 
-    //     var instalmentPromoInput = document.getElementById("instalmentPromoInput");
+    var instalmentPromoBtn = document.getElementById("instalmentPromoBtn");
+    var otpPromoBtn = document.getElementById("otpPromoBtn");
 
-    //     if (instalmentPromoInput.value == "MAEPS") {
-    //         updateInstalmentModal(20,123,12345)
-    //     }
+    instalmentPromoBtn.onclick = function(){
+        var instalmentPromoInput = document.getElementById("instalmentPromoInput");
+        if (instalmentPromoInput.value != promoCode) {
+            return
+        }
+        var currentModalMonth = document.getElementById("instalmentMonth").innerHTML;
+        if (currentModalMonth == "3") {
+            updateInstalmentModal(currentModalMonth,promoProductPrice,subscriptionPromo3)
+        } else if (currentModalMonth == "12") {
+            updateInstalmentModal(currentModalMonth,promoProductPrice,subscriptionPromo12)
+        } else if (currentModalMonth == "18") { 
+            updateInstalmentModal(currentModalMonth,promoProductPrice,subscriptionPromo18)
+        }
+    }
 
-    // }
+    otpPromoBtn.onclick = function(){
+        var otpPromoInput = document.getElementById("otpPromoInput");
+        if (otpPromoInput.value != promoCode) {
+            return
+        }
+
+        currentOtpPrice = promoProductPrice;
+        updateOtpModal();
+    }
+
 
     function instalmentSubmit()  {
 
@@ -545,19 +606,6 @@ stylesheet: products
         console.log(url)
         window.open(url, "_blank");
     };
-
-    function updateShippingRate(){
-        var otpCountry = document.getElementById("otpCountry").value;
-        finalOtpAmount = productPrice + parseFloat(shippingRate[otpCountry]);
-        document.getElementById("otpShippingText").innerText = "Ship to " + countries[otpCountry];
-        document.getElementById("otpShippingRate").innerText = "RM" + shippingRate[otpCountry];
-        document.getElementById("otpFinalTotal").innerText = "RM" + finalOtpAmount.toFixed(2);
-        document.getElementById("otpDeliveryParagraph").hidden = true;
-        if (otpCountry == "MY") {
-            document.getElementById("otpShippingRate").innerText = "Free";
-            document.getElementById("otpDeliveryParagraph").hidden = false;
-        }
-    }
 
 
     var mainImg = document.getElementById('MainImage');
