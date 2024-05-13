@@ -218,7 +218,7 @@ stylesheet: products
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
-                            <input type="number" id="otpMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                            <input type="number" id="otpMobile" min=10000000 max=999999999999999 class="form-control validate" required>
                         </div>
                 
                         <div class="md-form mb-2">
@@ -242,6 +242,7 @@ stylesheet: products
                                 <option value="IND">Indonesia</option>
                                 <option value="SG">Singapore</option>
                                 <option value="TH">Thailand</option>
+                                <option value="UK">United Kingdom</option>
                             </select>
                         </div>
                         <div class="md-form mb-2">
@@ -409,6 +410,7 @@ stylesheet: products
             IND: "209.99",
             SG: "245.63",
             TH: "209.99",
+            UK: "395.00",
         }
     const countries = {
         MY: "Malaysia",
@@ -416,6 +418,7 @@ stylesheet: products
         IND: "Indonesia",
         SG: "Singapore",
         TH: "Thailand",
+        UK: "United Kingdom",
     }
 
     async function load() {
