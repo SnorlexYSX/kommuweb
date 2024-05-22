@@ -400,6 +400,7 @@ stylesheet: products
 
 
     var currentSubscription = subscriptionCurlec18;
+    var currentInstalmentPrice = productPrice;
     var currentDuration = 18;
     var monthlyPayment = 198.28;
     var currentOtpPrice = productPrice;
@@ -461,6 +462,7 @@ stylesheet: products
     function updateInstalmentModal(month, totalPrice, subscription) {
         var instalmentPrice = document.getElementsByClassName("monthlyInstalmentPrice");
         currentSubscription = subscription;
+        currentInstalmentPrice = totalPrice;
         currentDuration = month;
         monthlyPayment = (totalPrice/month)
         document.getElementById("instalmentMonth").innerHTML = month;
@@ -554,7 +556,7 @@ stylesheet: products
         params.append("duration", currentDuration);
         params.append("subscription",currentSubscription);
         params.append("harness", instalmentCarType);
-        params.append("amount", productPrice.toFixed(2));
+        params.append("amount", currentInstalmentPrice.toFixed(2));
         params.append("monthlyPayment", monthlyPayment.toFixed(2));
 
         localStorage.setItem("customerName", instalmentName);
