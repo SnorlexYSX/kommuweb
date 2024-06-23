@@ -375,6 +375,7 @@ stylesheet: products
 </div>
 <script>
     const visaUrl = "https://gateway.kommu.ai/curlec/visa?";
+    const otpUrl = "https://gateway.kommu.ai/curlec/otp?";
     const carSelectList = document.getElementById("car-select");
 
     const instalmentButton = document.getElementById("instalmentButton");
@@ -388,12 +389,16 @@ stylesheet: products
 
 
     const productPrice = 3799;
-    const subscriptionCurlec3 = 25293637;
-    const subscriptionCurlec12 = 25252608;
-    const subscriptionCurlec18 = 25252653;
+    const subscriptionCurlec3 = "plan_OQHSbSwfch5AGw";
+    const subscriptionCurlec12 = "plan_OLkOD0mGLBHUlb";
+    const subscriptionCurlec18 = "plan_OLltDcnwctR2vw";
 
-    const promoCode = "KAOFF300";
-    const promoProductPrice = 3499;
+    // const subscriptionCurlec3 = "plan_OQHSbSwfch5AGw";
+    // const subscriptionCurlec12 = "plan_OLkOD0mGLBHUlb";
+    // const subscriptionCurlec18 = "plan_OLltDcnwctR2vw";
+
+    const promoCode = "NOPROMONOW";
+    const promoProductPrice = 3799;
     const subscriptionPromo3 = 26617811;
     const subscriptionPromo12 = 26617790;
     const subscriptionPromo18 = 26617801;
@@ -607,7 +612,7 @@ stylesheet: products
         params.append("deviceprice", otpDevicePrice.toFixed(2));
         localStorage.setItem("customerName", otpName);
 
-        const url = "https://gateway.kommu.ai/curlec/otp?" + params.toString();
+        const url = otpUrl + params.toString();
         console.log(url)
         window.open(url, "_blank");
     };
