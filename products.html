@@ -97,7 +97,7 @@ stylesheet: products
                             <input type="text" id="instalmentAddress1" class="form-control validate" required>
                         </div>
         
-                        <div class="md-form mb-2">  
+                        <div class="md-form mb-2" style="display: none;">  
                             <input type="text" id="instalmentAddress2" class="form-control">
                         </div>
         
@@ -109,6 +109,13 @@ stylesheet: products
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
                             <select class="form-select" disabled>
                                 <option value="MY">Malaysia</option>
+                            </select>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label for="form32">Installation</label>
+                            <select class="form-select" id="instalmentInstallation">
+                                <option value="HQ-Installation">Install at Kommu HQ</option>
+                                <option value="Shipping">Ship to Address</option>
                             </select>
                         </div>
         
@@ -226,7 +233,7 @@ stylesheet: products
                             <input type="text" id="otpAddress1" class="form-control validate" required>
                         </div>
         
-                        <div class="md-form mb-2">  
+                        <div class="md-form mb-2" style="display: none;">  
                             <input type="text" id="otpAddress2" class="form-control">
                         </div>
         
@@ -234,6 +241,7 @@ stylesheet: products
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="otpPostcode" class="form-control validate" required>
                         </div>
+                        
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
                             <select class="form-select" id="otpCountry" onChange="updateOtpModal()">
@@ -245,6 +253,14 @@ stylesheet: products
                                 <option value="UK">United Kingdom</option>
                             </select>
                         </div>
+                        <div class="md-form mb-2">
+                            <label for="form32">Installation</label>
+                            <select class="form-select"  id="otpInstallation">
+                                <option value="HQ-Installation">Install at Kommu HQ</option>
+                                <option value="Shipping" id="instalmentInstallation">Ship to Address</option>
+                            </select>
+                        </div>
+        
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Promo Code</label>
                             <div class="row">
@@ -396,6 +412,12 @@ stylesheet: products
     // const subscriptionCurlec3 = "plan_OQHSbSwfch5AGw";
     // const subscriptionCurlec12 = "plan_OLkOD0mGLBHUlb";
     // const subscriptionCurlec18 = "plan_OLltDcnwctR2vw";
+
+    const promoCodeDict = {
+        "KEAN100":{"oneOff": 3699, "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih","subscriptionCurlec18": "plan_OelWMNXUriFkBW"}, 
+        "TING100":{"oneOff": 3699, "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih","subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "PAYDAY189":{"oneOff": 3799, "subscriptionCurlec3": "EXPIRED", "subscriptionCurlec12": "EXPIRED","subscriptionCurlec18": "EXPIRED"}
+    }
 
     const promoCode = "PAYDAY189";
     const promoProductPrice = 3610;
