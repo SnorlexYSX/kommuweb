@@ -75,26 +75,41 @@ stylesheet: products
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form34">Name</label>
                             <input type="text" id="instalmentName" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide your name.
+                            </div>
                         </div>
         
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
                             <input type="number" id="instalmentIC" min=100000000 max=999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid IC.
+                            </div>
                         </div>    
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form29">Email</label>
                             <input type="email" id="instalmentEmail" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
                         </div>
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
                             <input type="number" id="instalmentMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid phone number.
+                            </div>
                         </div>
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form8">Address</label>
                             <input type="text" id="instalmentAddress1" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid address.
+                            </div>
                         </div>
         
                         <div class="md-form mb-2" style="display: none;">  
@@ -104,12 +119,23 @@ stylesheet: products
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="instalmentPostcode" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a postcode.
+                            </div>
                         </div>
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Country</label>
                             <select class="form-select" disabled>
                                 <option value="MY">Malaysia</option>
                             </select>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right">Harness</label>
+                            <select class="form-select" id="instalmentHarness" required>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select your car model.
+                            </div>
                         </div>
                         <div class="md-form mb-2">
                             <label for="form32">Installation</label>
@@ -217,23 +243,35 @@ stylesheet: products
                     </div>
                     <form id="otpForm" class="needs-validation" novalidate onsubmit="otpSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
                         <div class="md-form mb-2">
-                            <label data-error="wrong" data-success="right" for="form34">Name</label>
+                            <label data-error="wrong" data-succes="right" for="form34">Name</label>
                             <input type="text" id="otpName" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide your name.
+                            </div>
                         </div>
                
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form29">Email</label>
                             <input type="email" id="otpEmail" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
                         </div>
-                
+
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
                             <input type="number" id="otpMobile" min=10000000 max=999999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid phone number.
+                            </div>
                         </div>
                 
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form8">Address</label>
                             <input type="text" id="otpAddress1" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid address.
+                            </div>
                         </div>
         
                         <div class="md-form mb-2" style="display: none;">  
@@ -243,6 +281,9 @@ stylesheet: products
                         <div class="md-form mb-2">
                             <label data-error="wrong" data-success="right" for="form32">Postcode</label>
                             <input type="number" id="otpPostcode" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a postcode.
+                            </div>
                         </div>
                         
                         <div class="md-form mb-2">
@@ -255,6 +296,14 @@ stylesheet: products
                                 <option value="TH">Thailand</option>
                                 <option value="UK">United Kingdom</option>
                             </select>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right">Harness</label>
+                            <select class="form-select" id="otpHarness" required>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select your car model.
+                            </div>
                         </div>
                         <div class="md-form mb-2">
                             <label for="form32">Installation</label>
@@ -360,7 +409,7 @@ stylesheet: products
             <div class="card-itb-2">
                 <h2 style="color: #86868B">Select car model harness:</h2>
                     <div class="col-xl-6 col-lg-12" style="max-width:1000px;">
-                        <select aria-label="Select car model harness" class="form-select mb-4 mt-2" id="car-select">
+                        <select aria-label="Select car model harness" class="form-select mb-4 mt-2" id="car-select" onchange="updateCarSelects()">
                         </select>
                     </div>
             </div>
@@ -399,6 +448,9 @@ stylesheet: products
     const visaUrl = "https://gateway.kommu.ai/curlec/visa?";
     const otpUrl = "https://gateway.kommu.ai/curlec/otp?";
     const carSelectList = document.getElementById("car-select");
+    const instalmentCarList = document.getElementById("instalmentHarness");
+    const otpCarList = document.getElementById("otpHarness");
+
 
     const instalmentButton = document.getElementById("instalmentButton");
 
@@ -431,6 +483,8 @@ stylesheet: products
     var monthlyPayment = 198.28;
     var currentOtpPrice = productPrice;
     var finalOtpAmount = 3799;
+    var currentCarSelected = "";
+
     const shippingRate = {
             MY: "0.00",
             AUS: "422.73",
@@ -449,20 +503,35 @@ stylesheet: products
     }
 
     async function load() {
-        const selectedCar = new URLSearchParams(window.location.search).get("car");
         const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
         const resp = await (await fetch(remote)).json();
         
         
         let list = resp.standard;
+        const placeholderOption = document.createElement("option");
+        placeholderOption.innerText = "Please select a car model";
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        placeholderOption.value = "";
+
+        const otpPlaceholder = placeholderOption.cloneNode(true);
+        const instalmentPlaceholder = placeholderOption.cloneNode(true);
+        
+        otpPlaceholder.selected = true;
+        instalmentPlaceholder.selected = true;
+        carSelectList.appendChild(placeholderOption);
+        instalmentCarList.appendChild(instalmentPlaceholder);
+        otpCarList.appendChild(otpPlaceholder);
+
         list.forEach((vehicle) => {
             const option1 = document.createElement("option");
 
             option1.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
             option1.innerText = option1.value;
-            option1.selected = (selectedCar === option1.value);
-
+            
             carSelectList.appendChild(option1);
+            instalmentCarList.appendChild(option1.cloneNode(true));
+            otpCarList.appendChild(option1.cloneNode(true));
         });
     }
 
@@ -563,7 +632,7 @@ stylesheet: products
     
     function instalmentSubmit()  {
 
-
+ 
         var instalmentForm = document.getElementById("instalmentForm");
         // Loop over them and prevent submission
         event.stopPropagation();
@@ -583,7 +652,7 @@ stylesheet: products
         var instalmentAddress1 = document.getElementById("instalmentAddress1").value;
         var instalmentAddress2 = document.getElementById("instalmentAddress2").value;
         var instalmentPostcode = document.getElementById("instalmentPostcode").value;
-        var instalmentCarType = document.getElementById("car-select").value;
+        var instalmentCarType = document.getElementById("instalmentHarness").value;
         var instalmentInstallation = document.getElementById("instalmentInstallation").value;
 
 
@@ -644,7 +713,7 @@ stylesheet: products
         var otpAddress2 = document.getElementById("otpAddress2").value;
         var otpPostcode = document.getElementById("otpPostcode").value;
         var otpCountry = document.getElementById("otpCountry").value;
-        var otpCarType = document.getElementById("car-select").value;
+        var otpCarType = document.getElementById("otpHarness").value;
         var otpShippingRate = shippingRate[otpCountry];
         var otpDevicePrice = currentOtpPrice;
         var otpInstallation = document.getElementById("otpInstallation").value;
@@ -725,6 +794,11 @@ stylesheet: products
         smallImg[3].style.border = "0px";
         smallImg[4].style.border = "5px solid #33B9FF";
 
+    }
+
+    function updateCarSelects() {
+        instalmentCarList.value = carSelectList.value;
+        otpCarList.value = carSelectList.value;
     }
 
 </script>
