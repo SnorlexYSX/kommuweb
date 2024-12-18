@@ -53,7 +53,7 @@ title: Payment Successful!
     const params = new URLSearchParams();
     params.append("name", customerName);
     params.append("origin", originValue);
-    const url = "https://gateway.kommu.ai/survey?" + params.toString();
+    const url = "https://aws.kommu.ai/survey?" + params.toString();
     console.log(url);
 
     postSurvey(url);
