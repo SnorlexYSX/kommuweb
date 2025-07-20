@@ -11,7 +11,7 @@
                     <a class="nav-link" href="{{ "/" | relative_url }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ "/ka1s" | relative_url }}">KommuAssist 1s</a>
+                    <a class="nav-link" href="{{ "/ka1s" | relative_url }}">KommuAssist</a>
                 </li>
                 <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Store</a>
@@ -21,7 +21,7 @@
                     </div>
                 </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ "/products" | relative_url }}">Product</a>
+                    <a class="nav-link" href="{{ "/store" | relative_url }}">Store</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ "/support" | relative_url }}">Supported Cars</a>
@@ -30,6 +30,52 @@
                     <a class="nav-link" href="{{ "/kommunity" | relative_url }}">Kommunity</a>
                 </li>
             </ul>
+                <button onclick="toggleCart()" class="relative text-white">
+                🛒
+                <span id="cartCount" class="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    0
+                </span>
+                </button>
+                <select id="localeSelector" class="bg-black text-white border border-white px-2 py-1 text-sm rounded ml-4">
+                    <option value="en-MY">🇲🇾 MYR</option>
+                    <option value="en-US">🇺🇸 USD</option>
+                </select>
         </div>
     </div>
 </nav>
+<script>
+  const localeSelector = document.getElementById("localeSelector");
+  if (localeSelector) {
+    const saved = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    localeSelector.value = saved;
+    localeSelector.addEventListener("change", (e) => {
+      localStorage.setItem("preferredLocale", e.target.value);
+      location.reload(); // Or manually trigger UI update
+    });
+  }
+function getCurrencyCode(locale) {
+  const country = locale.split("-")[1] || "US";
+  const currencyMap = {
+    MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
+  };
+  return currencyMap[country] || "USD";
+}
+
+function getFormatter(locale) {
+  const currency = getCurrencyCode(locale);
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2
+  });
+}
+
+function formatPrice(prices) {
+  const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+  const currency = getCurrencyCode(locale);
+  const formatter = getFormatter(locale);
+  const price = prices[currency] || prices["USD"] || 0;
+  return formatter.format(price);
+}
+
+</script>

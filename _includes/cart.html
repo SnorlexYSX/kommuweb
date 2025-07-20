@@ -1,0 +1,186 @@
+<!-- Cart Drawer -->
+<div id="cartDrawer" class="fixed right-0 top-0 w-80 max-h-screen bg-gray-800 shadow-lg p-6 hidden z-50 overflow-y-auto pt-16">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-white">Your Cart</h2>
+    <button onclick="closeCart()" class="text-white">✕</button>
+  </div>
+  <div id="cartItems"></div>
+  <div class="mt-6 text-center">
+    <button onclick="goToCheckoutFromCart()" class="bg-blue-500 w-full py-2 rounded text-white">Checkout</button>
+  </div>
+</div>
+
+<!-- Accessory Modal -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+  <div class="bg-gray-900 p-6 rounded-lg w-full max-w-4xl relative">
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="md:w-1/2">
+        <img id="modalImage" src="" class="w-full h-64 object-contain rounded bg-gray-800">
+      </div>
+      <div class="md:w-1/2">
+        <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>
+        <p id="modalPrice" class="text-sm text-gray-400 mb-4"></p>
+        <p class="font-semibold text-white mb-1">Description</p>
+        <p id="modalDesc" class="text-sm text-gray-300 mb-4"></p>
+        <p class="font-semibold text-white mb-1">Included:</p>
+        <ol id="modalIncludes" class="list-disc list-inside space-y-1"></ol>
+        <button id="modalAddBtn" class="bg-blue-500 px-6 py-2 rounded text-white">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Logic -->
+<script>
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function getCurrencyCode(locale) {
+    const country = locale.split("-")[1] || "US";
+    const currencyMap = {
+      MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
+    };
+    return currencyMap[country] || "USD";
+  }
+
+  function getFormatter(locale) {
+    const currency = getCurrencyCode(locale);
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2
+    });
+  }
+
+  function formatPrice(prices) {
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+    const price = prices[currency] || prices["USD"] || 0;
+    return formatter.format(price);
+  }
+
+  function addToCart(product) {
+    const existingIndex = cart.findIndex(i => i.name === product.name);
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    } else {
+      product.quantity = 1;
+      cart.push(product);
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+    document.getElementById('cartDrawer').classList.remove('hidden');
+    closeModal();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+  }
+
+  function updateQuantity(index, change) {
+    if (!cart[index].quantity) cart[index].quantity = 1;
+    const newQty = cart[index].quantity + change;
+    if (newQty >= 1) {
+      cart[index].quantity = newQty;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+      updateCartCount();
+    }
+  }
+
+  function renderCart() {
+    const container = document.getElementById('cartItems');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      if (!item.quantity) item.quantity = 1;
+      const priceValue = item.prices?.[currency] || item.prices?.USD || 0;
+      total += priceValue * item.quantity;
+
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-4 text-white py-2 border-b border-gray-700';
+      const minusBtn = item.quantity === 1
+        ? '<button disabled class="px-2 text-white opacity-30 cursor-not-allowed">−</button>'
+        : `<button onclick="updateQuantity(${index}, -1)" class="px-2 text-white">−</button>`;
+      div.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
+        <div class="flex-1">
+          <div class="text-white">${item.name}</div>
+          <div class="text-sm text-gray-400">${formatter.format(priceValue)}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          ${minusBtn}
+          <span class="text-sm text-white">${item.quantity}</span>
+          <button onclick="updateQuantity(${index}, 1)" class="px-2 text-white">+</button>
+          <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-red-500">🗑️</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    const summary = document.createElement('div');
+    summary.className = 'text-white text-right mt-4';
+    summary.innerHTML = `<strong>Subtotal:</strong> ${formatter.format(total)}`;
+    container.appendChild(summary);
+
+    const note = document.createElement('div');
+    note.className = 'text-xs text-gray-400 mt-2';
+    note.textContent = 'Customs duties and import taxes for international orders are not included and may be charged separately by your local authorities.';
+    container.appendChild(note);
+  }
+
+  function openModal(item) {
+    document.getElementById('modal').classList.remove('hidden');
+    document.getElementById('modalImage').src = item.image;
+    document.getElementById('modalTitle').textContent = item.name;
+    document.getElementById('modalPrice').textContent = formatPrice(item.prices);
+    document.getElementById('modalDesc').textContent = item.description;
+    document.getElementById('modalIncludes').innerHTML = item.includes
+      .filter(i => typeof i === 'string' && i.trim() !== '')
+      .map(i => `<li>${i}</li>`)
+      .join('');
+    document.getElementById('modalAddBtn').onclick = () => addToCart(item);
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.add('hidden');
+  }
+
+  function closeCart() {
+    document.getElementById('cartDrawer').classList.add('hidden');
+  }
+
+  function toggleCart() {
+    const drawer = document.getElementById('cartDrawer');
+    drawer.classList.toggle('hidden');
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    const count = (cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const badge = document.getElementById('cartCount');
+    if (badge) badge.textContent = count;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCart();
+    updateCartCount();
+  });
+
+  function goToCheckoutFromCart() {
+    localStorage.removeItem("fromProductPage");
+    window.location.href = "/checkout";
+  }
+</script>
