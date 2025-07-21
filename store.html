@@ -3,10 +3,12 @@ layout: default
 title: Store
 ---
 <script>
+const BASEURL = "{{ site.baseurl }}";
 
 function openModal(item) {
+
   document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('modalImage').src = item.image;
+  document.getElementById('modalImage').src = `${BASEURL}/${item.image}`;
   document.getElementById('modalTitle').textContent = item.name;
   document.getElementById('modalPrice').textContent = formatPrice(item.prices);
   document.getElementById('modalDesc').textContent = item.description;
@@ -41,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- Hero -->
 <section class="flex justify-center py-16 px-4">
-  <div class="bg-gray-900 rounded-lg p-8 max-w-3xl w-full text-center">
+  <div class="bg-card rounded-lg p-8 max-w-3xl w-full text-center">
     <h1 class="text-4xl font-bold mb-4 text-white">KommuAssist 2.0</h1>
     <img src="{{ "" | relative_url }}/img/products/device/1.png" width="100%" class="mb-4">
     <p class="mb-4 text-white">RM3,699 or RM150/month with rent-to-own</p>
@@ -65,8 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
             image: "{{ item.image }}",
             description: "{{ item.description }}",
             includes: {{ item.includes | jsonify }}
-          })' class="product-card bg-gray-900 p-4 rounded-lg text-center cursor-pointer" data-prices='{{ item.prices | jsonify }}'>
-            <img src="{{ item.image }}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 bg-gray-700 rounded">
+          })' class="product-card bg-card p-4 rounded-lg text-center cursor-pointer" data-prices='{{ item.prices | jsonify }}'>
+            <img src="{{ item.image }}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
             <div class="font-semibold text-white">{{ item.name }}</div>
             <div class="text-sm text-gray-400 product-price">Loading...</div>
           </div>
@@ -77,12 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <!-- Accessory Modal -->
-<div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 p-6 rounded-lg w-full max-w-4xl relative">
+<div id="modal" class="fixed inset-0 bg-card bg-opacity-70 flex items-center justify-center z-50 hidden">
+  <div class="bg-card p-6 rounded-lg w-full max-w-4xl relative">
     <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
     <div class="flex flex-col md:flex-row gap-6">
       <div class="md:w-1/2">
-        <img id="modalImage" src="" class="w-full h-64 object-contain rounded bg-gray-800">
+        <img id="modalImage" src="" class="w-full h-64 object-contain rounded">
       </div>
       <div class="md:w-1/2">
         <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>

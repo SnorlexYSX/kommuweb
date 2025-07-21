@@ -11,10 +11,22 @@
     <link href="{{ "/css/bootstrap.min.css" | relative_url }}" rel="stylesheet">
 
     <!-- Tailwind CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-    <!-- Custom CSS TODO: split by page sometime later?-->
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            colors: {
+            card: {
+                DEFAULT: '#1b1b1b',
+            },
+            highlight: '#fffbcc',
+            }
+        }
+        }
+    }
+    </script>
     <!-- <link href="{{ "" | relative_url }}/css/{{ page.stylesheet}}-page.css" rel="stylesheet"> -->
     <link href="{{ "/css/common.css" | relative_url }}" rel="stylesheet">
     <link href="{{ "/css/landing-page.css" | relative_url }}" rel="stylesheet">

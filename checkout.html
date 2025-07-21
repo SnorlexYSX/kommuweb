@@ -15,27 +15,27 @@ title: Checkout
     <div class="text-white space-y-6">
       <div>
         <label class="block text-sm font-semibold mb-1">First Name</label>
-        <input type="text" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="Your name">
+        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="Your name">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">Email</label>
-        <input type="email" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="you@email.com">
+        <input type="email" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="you@email.com">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">Contact number</label>
-        <input type="text" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="+60...">
+        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="+60...">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">Street Address</label>
-        <input type="text" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="Street, City, State, etc">
+        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="Street, City, State, etc">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">Postcode</label>
-        <input type="text" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="Postal code">
+        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="Postal code">
       </div>
       <div>
         <label class="block text-sm font-semibold mb-1">Country</label>
-        <input type="text" class="w-full bg-gray-900 border border-gray-700 px-4 py-3 rounded" placeholder="Country">
+        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded" placeholder="Country">
       </div>
 
       <!-- Product Selection Summary if fromProductPage -->
@@ -57,11 +57,14 @@ title: Checkout
   </div>
 
   <!-- Summary Footer -->
-  <div class="mt-12 bg-gray-900 p-6 rounded-lg text-white grid md:grid-cols-3 gap-6 items-center">
+  <div class="mt-12 bg-card p-6 pb-0 rounded-lg text-white grid md:grid-cols-3 gap-6 items-center">
     <div>
       <p class="text-sm font-semibold">Welcome to Kommunity.</p>
       <p class="text-sm text-gray-400">Cruise with intelligence.</p>
+      <img src="{{ "/img/products/device/1.png" | relative_url }}" alt="Product Preview" class="justify-end w-64 h-auto">
+
     </div>
+
     <div class="text-sm">
       <p><strong>Shipping</strong></p>
       <p class="text-gray-400">Local Shipping – RM10<br>International Shipping – Thailand RM395</p>
@@ -111,23 +114,32 @@ title: Checkout
     const priceValue = item.prices?.[currency] || item.prices?.USD || 0;
 
     const card = document.createElement("div");
-    card.className = "bg-gray-800 flex justify-between items-center px-4 py-3 rounded";
+    card.className = "flex items-center gap-4 p-3 rounded bg-black";
+
+    const imgWrapper = document.createElement("div");
+    imgWrapper.className = "bg-card p-2 rounded-lg";
+    const img = document.createElement("img");
+    img.src = item.image;
+    img.alt = item.name;
+    img.className = "w-16 h-16 object-contain";
+    imgWrapper.appendChild(img);
 
     const details = document.createElement("div");
-    details.className = "text-left";
+    details.className = "flex-1";
     const title = document.createElement("p");
     title.className = "text-sm font-semibold";
     title.innerText = item.name;
     const desc = document.createElement("p");
     desc.className = "text-xs text-gray-400";
-    desc.innerText = item.desc || "";
+    desc.innerText = item.description || "";
     const price = document.createElement("p");
-    price.className = "text-sm font-medium";
+    price.className = "text-sm font-medium text-right";
     price.innerText = formatter.format(priceValue);
 
     details.appendChild(title);
     details.appendChild(desc);
 
+    card.appendChild(imgWrapper);
     card.appendChild(details);
     card.appendChild(price);
     cartContainer.appendChild(card);
@@ -139,4 +151,5 @@ title: Checkout
   const formatter = getFormatter(locale);
   subtotalDisplay.innerText = formatter.format(subtotal);
   totalDueDisplay.innerText = formatter.format(subtotal + 10);
+
 </script>
