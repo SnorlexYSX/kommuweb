@@ -16,7 +16,7 @@
     <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
     <div class="flex flex-col md:flex-row gap-6">
       <div class="md:w-1/2">
-        <img id="modalImage" src="" class="w-full h-64 object-contain rounded bg-gray-800">
+        <img id="cartModalImage" src="" class="w-full h-64 object-contain rounded bg-gray-800">
       </div>
       <div class="md:w-1/2">
         <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>
@@ -33,6 +33,7 @@
 
 <!-- Cart Logic -->
 <script>
+  const BASEURL = "{{ site.baseurl }}";
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
   function getCurrencyCode(locale) {
@@ -143,7 +144,7 @@
 
   function openModal(item) {
     document.getElementById('modal').classList.remove('hidden');
-    document.getElementById('modalImage').src = item.image;
+    document.getElementById('cartModalImage').src = item.image;
     document.getElementById('modalTitle').textContent = item.name;
     document.getElementById('modalPrice').textContent = formatPrice(item.prices);
     document.getElementById('modalDesc').textContent = item.description;
