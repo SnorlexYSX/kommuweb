@@ -7,7 +7,7 @@ const BASEURL = "{{ site.baseurl }}";
 function openModal(item) {
 
   document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('modalImage').src = `${BASEURL}/${item.image}`;
+  document.getElementById('modalImage').src = `${BASEURL}${item.image}`;
   document.getElementById('modalTitle').textContent = item.name;
   document.getElementById('modalPrice').textContent = formatPrice(item.prices);
   document.getElementById('modalDesc').textContent = item.description;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "{{ item.description }}",
             includes: {{ item.includes | jsonify }}
           })' class="product-card bg-card p-4 rounded-lg text-center cursor-pointer" data-prices='{{ item.prices | jsonify }}'>
-            <img src="{{ item.image | relative-url}}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
+            <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
             <div class="font-semibold text-white">{{ item.name }}</div>
             <div class="text-sm text-gray-400 product-price">Loading...</div>
           </div>
