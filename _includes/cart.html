@@ -144,6 +144,6 @@
 
   function goToCheckoutFromCart() {
     localStorage.removeItem("fromProductPage");
-    window.location.href = "/checkout";
+    window.location.href = "{{ '/kommunity' | relative_url }}";
   }
 </script>
