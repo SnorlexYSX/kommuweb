@@ -6,7 +6,7 @@ title: Store
 function openModal(item) {
 
   document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('modalImage').src = `${BASEURL + item.image}`;
+  document.getElementById('modalImage').src = `${BASEURL}${item.image}`;
   document.getElementById('modalTitle').textContent = item.name;
   document.getElementById('modalPrice').textContent = formatPrice(item.prices);
   document.getElementById('modalDesc').textContent = item.description;
