@@ -65,3 +65,15 @@
   - Mount with adhesive
   - Electrostatic sticker
   - Alcohol wipes
+
+- name: Harness Set
+  prices:
+    MYR: 129.00
+    USD: 29.00
+  category: Others
+  image: /img/products/accessories/sample.png
+  description: Mount to setup KA2 device onto windshield...
+  includes:
+  - Mount with adhesive
+  - Electrostatic sticker
+  - Alcohol wipes
