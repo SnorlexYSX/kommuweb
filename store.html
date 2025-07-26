@@ -50,13 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <!-- Accessories -->
-<section class="px-6">
+<section class="px-20">
+
   <h2 class="text-2xl font-semibold mb-6 text-white">Shop Accessories</h2>
 
   {% assign categories = "Hardware,Cables & connectors,Others" | split: "," %}
   {% for category in categories %}
     <h3 class="text-xl font-bold mt-8 mb-4 text-white">{{ category }}</h3>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4">
       {% for item in site.data.products %}
         {% if item.category == category %}
           <div onclick='openModal({
@@ -80,18 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
 <div id="modal" class="fixed inset-0 bg-card bg-opacity-70 flex items-center justify-center z-50 hidden">
   <div class="bg-card p-6 rounded-lg w-full max-w-4xl relative">
     <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
-    <div class="flex flex-col md:flex-row gap-6">
+    <div class="flex flex-col md:flex-row md:items-center  gap-6">
       <div class="md:w-1/2">
         <img id="modalImage" src="" class="w-full h-64 object-contain rounded">
       </div>
       <div class="md:w-1/2">
         <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>
         <p id="modalPrice" class="text-sm text-gray-400 mb-4"></p>
-        <p class="font-semibold text-white mb-1">Description</p>
-        <p id="modalDesc" class="text-sm text-gray-300 mb-4"></p>
+        <p class="text-white mb-1">Description</p>
+        <p id="modalDesc" class="font-normal text-sm text-gray-300 mb-4"></p>
         <p class="font-semibold text-white mb-1">Included:</p>
-        <ol id="modalIncludes" class="list-disc list-inside space-y-1 text-white"></ol>
-        <button id="modalAddBtn" class="bg-blue-500 px-6 py-2 rounded text-white">Add to Cart</button>
+        <ol id="modalIncludes" class="font-normal list-disc list-inside space-y-1 text-white mb-6"></ol>
+        <button id="modalAddBtn" class="block mx-auto bg-blue-500 px-6 py-2 rounded text-white">Add to Cart</button>
       </div>
     </div>
   </div>

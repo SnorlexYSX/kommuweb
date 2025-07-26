@@ -56,92 +56,78 @@ title: Supported Vehicle
 </script>
 
 
-<section class="section-support">
-    <div class="container">
-        <div class="row">
-        <div class="col-md-6 col-sm-12">
-            <h1 style="text-align:start; margin-bottom: 25px;">
-                Supported vehicle
-            </h1>
-            <select class="form-select" id="car-select" onchange="loadVehicleInfo()"> 
-            </select>
-            <img src="{{ "/img/support/ativa.jpg" | relative_url }}" id="support-car-img" style="width: 100%;background-color: white;">
-        </div>
-        <div class="col-md-6 col-sm-12">
-            <!-- <div class="card">
-                <iframe id="support-car-video" src="https://www.youtube.com/embed/0DLlI9zXH9U" allowfullscreen style="width: 100%;"></iframe>
-            </div> -->
-            <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title">Adaptive Cruise Control</h2>
-                  <p class="card-subtitle">(auto gas & brake)</p>
-                  <p class="card-description">Speed range: <span class="card-data" id="acc-spd-rng-txt">Loading</span></p>
-                  <p class="card-description">Stop and go: <span class="card-data" id="acc-sng-txt">Loading</span></p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title">Lane Keep Assist</h2>
-                  <p class="card-subtitle">(auto lane centering & cornering)</p>
-                  <p class="card-description">Speed range: <span class="card-data" id="lka-spd-rng-txt">Loading</span></p>
-                  <p class="card-description">Steering torque: <span class="card-data" id="lka-str-trq-txt">Loading</span></p>
-                  <p class="card-description">Max steering angle: <span class="card-data" id="lka-ang-txt">Loading</span></p>
-                </div>
-            </div>
-            <a href="{{ "/products" | relative_url }}">
-                <div class="card" style="background-color: black;">
-                    <div class="container card-body" style="padding:30px;">
-                        <div class="row">
-                            <div class="col-5">
-                                <p style="color: white; margin-bottom: 0px;">View pricing</p>
-                            </div>
-                            <div class="col-7" style=" display:flex;justify-content:right;">
-                                <p style="color: orangered;justify-content:right;margin-bottom: 0px;display: inline;"><span style="font-size:0.8rem">New </span><span style="color: white;">KommuAssist 1s</span></p> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
+<section class="py-12">
+  <div class="max-w-6xl mx-auto px-4 space-y-6">
+    <!-- Full‑width header + shorter, centered dropdown -->
+    <div class="space-y-2">
+    <h1 class="text-3xl font-bold text-white">Supported vehicle</h1>
+    <select
+        id="car-select"
+        class="bg-card border border-gray-700 rounded-lg px-4 py-3 text-white
+            w-64 md:w-1/2 lg:w-1/3 max-w-md"
+        onchange="loadVehicleInfo()"
+    >
+        <!-- options populated by JS -->
+    </select>
     </div>
 
-
-
-
-    <!--div class="div-table">
-        <table class="table" style="text-align: center; ">
-            <thead>
-                <tr id="header-table-1">
-                    <th scope="col" rowspan="2">Brand</th>
-                    <th scope="col" rowspan="2">Model</th>
-                    <th scope="col" rowspan="2">Year</th>
-                    <th scope="col" rowspan="2">Variant</th>
-                    <th colspan="2">ACC</th>
-                    <th colspan="2">LKC</th>
-                </tr>
-                <tr >
-                    <th scope="col">Speed Range (km/h)</th>
-                    <th scope="col">Stop & Go</th>
-                    <th scope="col">Speed Range (km/h)</th>
-                    <th scope="col">Steering Torque</th>
-                </tr>
-
-            </thead>
-            <tbody id="standard"></tbody>
-        </table>
-</div-->
-    <div id="vehicle-support">
-        <div class="container">
-          <div class="row d-flex justify-content-center" style="padding-top: 40px;">
-            <h2 class="main-btm-support" style="color: black;">Want us to support your vehicle model?</h2>
-            <h4 class="main-btm-support non-bold" style="color: #86868B;">To work with us to support your car, please fill in your details in the
-              form below.</h4>
-            <div class="text-center">
-              <a role="button" style="font-family: GlacialIndifference-Regular" class="btn btn-secondary" href="https://forms.gle/BUrnYRc63bkffAvm6" target="_blank">Fill
-                Form</a>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">    
+        <div class="md:col-span-8 space-y-6">
+            <div class="bg-card rounded-xl overflow-hidden">
+                <img
+                id="support-car-img"
+                src="{{ '/img/support/ativa.jpg' | relative_url }}"
+                alt="Selected vehicle"
+                class="w-full h-auto object-cover"
+                >
             </div>
-          </div>
         </div>
-      </div>
+
+        <div class="md:col-span-4 space-y-4">
+
+            <div class="bg-card p-6 rounded-2xl">
+                <h2 class="text-lg font-semibold text-white mb-1">Support</h2>
+                <p class="text-sm text-gray-300 font-normal">
+                bukapilot will work with all packages and trims of this car.
+                </p>
+            </div>
+
+            <div class="bg-card p-6 rounded-2xl">
+                <h2 class="text-lg font-semibold text-white mb-1">Autocruise</h2>
+                <p class="text-sm text-gray-300">
+                <span class="font-semibold">Speed:</span>
+                <span id="acc-spd-rng-txt" class="font-normal">Loading</span>
+                </p>
+                <p class="text-sm text-gray-300">
+                <span class="font-semibold">Stop & go:</span>
+                <span id="acc-sng-txt" class="font-normal">Loading</span>
+                </p>
+            </div>
+
+            <div class="bg-card p-6 rounded-2xl">
+                <h2 class="text-lg font-semibold text-white mb-1">Autosteer</h2>
+                <p class="text-sm text-gray-300">
+                <span class="font-semibold">Speed:</span>
+                <span id="lka-spd-rng-txt" class="font-normal">Loading</span>
+                </p>
+                <p class="text-sm text-gray-300">
+                <span class="font-semibold">Steering force:</span>
+                <span id="lka-str-trq-txt" class="font-normal">Loading</span>
+                </p>
+                <p class="text-sm text-gray-300">
+                <span class="font-semibold">Max steering angle:</span>
+                <span id="lka-ang-txt" class="font-normal">Loading</span>
+                </p>
+            </div>
+
+            <div class="bg-card p-6 rounded-2xl">
+                <h2 class="text-lg font-semibold text-white mb-1">Note</h2>
+                <p class="text-sm text-gray-300 font-normal">
+                By default, this car will use the stock Adaptive Cruise Control (ACC) for longitudinal control. If the Driver Support Unit (DSU) is disconnected, openpilot ACC will replace stock ACC.
+                </p>
+            </div>
+
+        </div>
+    </div>
+  </div>
 </section>

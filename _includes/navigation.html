@@ -30,21 +30,55 @@
 
 <script>
   const localeSelector = document.getElementById("localeSelector");
-  if (localeSelector) {
-    const saved = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-    localeSelector.value = saved;
-    localeSelector.addEventListener("change", (e) => {
-      localStorage.setItem("preferredLocale", e.target.value);
-      location.reload(); // Or manually trigger UI update
-    });
+
+  // 1. Lookup country via a free IP‑geolocation endpoint
+  async function detectCountryCode() {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      if (!res.ok) throw new Error("geo lookup failed");
+      const { country_code } = await res.json();
+      return country_code;               // e.g. "MY", "US", "GB"
+    } catch {
+      return null;
+    }
   }
-function getCurrencyCode(locale) {
-  const country = locale.split("-")[1] || "US";
-  const currencyMap = {
-    MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
-  };
-  return currencyMap[country] || "USD";
-}
+
+  // 2. Build a locale from browser language + geolocated country
+  async function getGeoLocale() {
+    const saved = localStorage.getItem("preferredLocale");
+    if (saved) return saved;
+
+    const browserLang = navigator.language.split("-")[0] || "en";
+    const geoCC = await detectCountryCode();    
+    const locale = geoCC 
+      ? `${browserLang}-${geoCC}`
+      : navigator.language || "en-US";
+
+    localStorage.setItem("preferredLocale", locale);
+    return locale;
+  }
+
+  // 3. Apply it
+  (async () => {
+    if (!localeSelector) return;
+    const locale = await getGeoLocale();
+    localeSelector.value = locale;
+
+    // 4. On manual change, override and reload
+    localeSelector.addEventListener("change", e => {
+      localStorage.setItem("preferredLocale", e.target.value);
+      location.reload();
+    });
+  })();
+
+
+  function getCurrencyCode(locale) {
+    const country = locale.split("-")[1] || "US";
+    const currencyMap = {
+      MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
+    };
+    return currencyMap[country] || "USD";
+  }
 
 function getFormatter(locale) {
   const currency = getCurrencyCode(locale);

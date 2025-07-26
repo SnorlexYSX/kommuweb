@@ -47,11 +47,6 @@
     font-size: 1rem;
 }
 
-h1 {
-    font-size: calc(1rem + 1.5vw);
-    font-family: "Glacial Indifference-Bold";
-}
-
 .table{
     table-layout: fixed;
     width: 1050px;
