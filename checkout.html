@@ -14,28 +14,40 @@ title: Checkout
     <!-- Left Form Fields -->
     <div class="text-white space-y-6">
       <div>
-        <label class="block text-sm font-semibold mb-1">First Name</label>
-        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutName" class="block text-sm font-semibold mb-1">First Name</label>
+        <input id="checkoutName" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+      </div>
+      <div id="checkoutICGroup" class="hidden">
+        <label for="checkoutIC" class="block text-sm font-semibold mb-1">
+          Malaysian IC No. (without –)
+        </label>
+        <input id="checkoutIC" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" pattern="\d{12}" required
+        >
       </div>
       <div>
-        <label class="block text-sm font-semibold mb-1">Email</label>
-        <input type="email" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutEmail" class="block text-sm font-semibold mb-1">Email</label>
+        <input id="checkoutEmail" type="email" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
       </div>
       <div>
-        <label class="block text-sm font-semibold mb-1">Contact number</label>
-        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutMobile" class="block text-sm font-semibold mb-1">Contact number</label>
+        <input id="checkoutMobile" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
       </div>
       <div>
-        <label class="block text-sm font-semibold mb-1">Street Address</label>
-        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutAddress" class="block text-sm font-semibold mb-1">Street Address</label>
+        <input id="checkoutAddress" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
       </div>
       <div>
-        <label class="block text-sm font-semibold mb-1">Postcode</label>
-        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutPostcode" class="block text-sm font-semibold mb-1">Postcode</label>
+        <input id="checkoutPostcode" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
       </div>
       <div>
-        <label class="block text-sm font-semibold mb-1">Country</label>
-        <input type="text" class="w-full bg-black border-1 border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutCountry" class="block text-sm font-semibold mb-1">Country</label>
+        <input id="checkoutCountry" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+      </div>
+      <div id="checkoutPromoGroup" class="mt-4">
+        <label for="checkoutPromoInput" class="block text-sm font-semibold mb-1">Promo code</label>
+        <input id="checkoutPromoInput" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded">
+        <p id="checkoutPromoValidity" class="text-yellow-400 mt-1" hidden></p>
       </div>
     </div>
 
@@ -97,6 +109,29 @@ title: Checkout
     selections = JSON.parse(selectionsRaw);
   }
 
+  // only show IC when user is RTO
+  const icGroup = document.getElementById("checkoutICGroup");
+  const icInput = document.getElementById("checkoutIC");
+  if (
+    isFromProduct &&
+    selections.payment &&
+    selections.payment.toLowerCase().includes("rent-to-own")
+  ) {
+    icGroup.classList.remove("hidden");
+    icInput.required = true;
+  } else {
+    icGroup.classList.add("hidden");
+    icInput.required = false;
+  }
+
+  const promoGroup = document.getElementById("checkoutPromoGroup");
+  if (isFromProduct) {
+    promoGroup.classList.remove("hidden");
+  } else {
+    promoGroup.classList.add("hidden");
+  }
+
+
   if (isFromProduct && Object.keys(selections).length) {
     heading.innerText    = "Your new KommuAssist";
     document.getElementById("checkoutCartSection").style.display = "none";
@@ -120,7 +155,7 @@ title: Checkout
       <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
       <div class="mt-6 flex justify-center">
         <button
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
           onclick="goToPayment()"
         >
           Continue to Payment
@@ -151,7 +186,7 @@ title: Checkout
         <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
         <div class="flex justify-center">
           <button
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-xl"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
             onclick="goToPayment()"
           >
             Continue to Payment
@@ -220,4 +255,63 @@ title: Checkout
   subtotalDisplay.innerText = formatter.format(subtotal);
   totalDueDisplay.innerText = formatter.format(subtotal);
 });
+
+
+const visaUrl = "https://aws.kommu.ai/curlec/visa?";
+const otpUrl = "https://aws.kommu.ai/curlec/otp?";
+const shippingRate   = { MY:0.00, TH:209.99, SG:245.63, AU:422.73 };
+const countries      = { MY:"Malaysia", TH:"Thailand", SG:"Singapore", AU:"Australia" };
+
+function checkoutSubmit() {
+  const requiredIds = [
+    "checkoutName",
+    "checkoutIC",
+    "checkoutEmail",
+    "checkoutMobile",
+    "checkoutAddress",
+    "checkoutPostcode",
+    "checkoutCountry"
+  ];
+  for (let id of requiredIds) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      alert("Please fill out all required fields.");
+      el.focus();
+      return;
+    }
+  }
+
+  const name     = document.getElementById("checkoutName").value.trim();
+  const ic       = document.getElementById("checkoutIC").value.trim();
+  const email    = document.getElementById("checkoutEmail").value.trim();
+  const mobile   = document.getElementById("checkoutMobile").value.trim();
+  const addr1    = document.getElementById("checkoutAddress").value.trim();
+  const postcode = document.getElementById("checkoutPostcode").value.trim();
+  const country  = document.getElementById("checkoutCountry").value.trim().toUpperCase();
+  const ship     = parseFloat(shippingRate[country]||0);
+
+  // 3) pricing & promo (unchanged)…
+  //    …[your existing promo & subtotal logic here]…
+
+  // 4) build & redirect
+  const params = new URLSearchParams({
+    name,
+    ic,                  // added
+    email,
+    mobile,
+    address1: addr1,
+    address2: addr2,
+    postcode,
+    country: countries[country]||country,
+    promoCode,           // from your promo logic
+    deviceprice: devicePrice.toFixed(2),
+    shippingrate: ship.toFixed(2),
+    amount: total.toFixed(2)
+  });
+
+  window.open(checkoutUrl + params.toString(), "_blank");
+}
+
+
+
 </script>

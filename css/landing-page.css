@@ -164,8 +164,7 @@ html {
 }
 
 body,
-h1,
-h2 {
+h1{
     font-family: "GlacialIndifference-Bold";
     font-weight: 800;
     color: #000000;

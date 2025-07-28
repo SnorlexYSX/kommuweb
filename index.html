@@ -1,188 +1,175 @@
 ---
-layout: landing
+layout: default
 title: Kommu - Revolutionalizing Self-Driving
-stylesheet: asdf
 ---
-<section id="home">
-<section class="intro-header">
-  <div class = "module-content">
-    <div class="unit-image-wrapper">
-      <img class="full-width-img" src="{{ "" | relative_url }}/img/main/index-1.png" vertical-align="middle"
-      display="inline-block">
-    </div>
-    <div class="container" style="width:325px; height:410px;display: grid;">
-      <!-- <div class="row">
-        <p>New</p>
-      </div>
-      <div class="row">
-        <p>KommuAssist1S</p>
-      </div>
-      <div class="row">
-        <p>RM3,799</p>
-      </div>
-      <div class="row">
-        <p>Early Bird: RM3,399</p>
-      </div> -->
-      <div class="row" id="margin-top-intro-btns"style="padding: 0px;">
-        <div class="col-6">
-          <a role="button" class="btn btn-intro" href="{{ "/products" | relative_url }}" target="_blank">Order Now ></a>
-        </div>
-        <div class="col-6">
-          <a role="button" class="btn btn-intro"
-            href="{{ "/ka1s" | relative_url }}" target="_blank">Learn More ></a>
-        </div>
-      </div>
-    </div>
-    <br>
-    <!-- <div id="intro-button-row" class="container">
 
-    </div> -->
-  </div> 
-</section>
-<section class="intro-video">
-  <div class = "module-content" id="module-content-video">
-    <div id="bgvideo">
-      <video id=videoplayer playsinline loop autoplay muted>
-        <source src={{ "/assets/ytvid.mp4" | relative_url }}>
-      </video> 
-    </div>
-    <div id="bgvideo-overlay">
-      <img id="bgvideo-logo" src="{{ "" | relative_url }}/img/kommu-logo.png" class="img-fluid bgvideo-logo" vertical-align="middle" >
-      <h2 class="bgvideo-text" id="bgvideo-text" style="color: white; font-family: GlacialIndifference-Regular; font-weight:300">
-        Everyone can own a self-driving vehicle
-      </h2>
-      <a role="button" class="btn btn-secondary btn-order" style="margin-top: 20px;" href="https://calendly.com/kommuassist/test-drive" target="_blank">Test Drive Now</a>
-    </div>
-
-  </div>
-</section>
-<section style="background-color: #ffffff;">
-<div class="container" style="
-    margin-top: 25px;
-    margin-bottom: 25px;
-    background-color: #ffffff;
-">
-  <br>
-    <div>
-      <h1 style="text-align: center;">What is KommuAssist?</h1>
-    </div>
-    <div class="row">
-      <div class="main-description col-lg-4 col-md-12">
-        <img src="{{ "" | relative_url }}/img/main/LKA.png" width="25%" vertical-align="middle" display="inline-block">
-        <h1>Lane Keep Control</h1>
-        <p>Actively controls steering to keep vehicle centered in lane for enhanced safety and driving convenience.</p>
-      </div>
-      <div class="main-description col-lg-4 col-md-12">
-        <img src="{{ "" | relative_url }}/img/main/ACC.png" width="25%" vertical-align="middle" display="inline-block">
-        <h1>Adaptive Cruise Control</h1>
-        <p>Maintains a following distance from lead car or cruise at set speed to help relieve fatigue during long hour
-          drives.</p>
-      </div>
-      <div class="main-description col-lg-4 col-md-12">
-        <img src="{{ "" | relative_url }}/img/main/SNG.png" width="25%" vertical-align="middle" display="inline-block">
-        <h1>Stop and Go</h1>
-        <p>Holds brakes at standstill traffic and auto-departs when lead car moves; relaxes your legs and ease
-          frustrations.</p>
-      </div>
-    </div>
-  </div>
-  <br>
-  <div class="container" style="
-    margin-top: 25px;
-    margin-bottom: 25px;
-">
-    <h1 style="text-align: center;">Driven by bukapilot</h1>
-    <br />
-    <p class="about-paragraph"> <a href = "https://github.com/kommuai/bukapilot">bukapilot</a> is built upon an open source driving agent named <a href = "https://github.com/commaai/openpilot">openpilot</a>, which will be
-      supported by Malaysian ourselves. The software enables level 2 autonomous driving functionalities including
-      longitudinal and lateral driver assistance. bukapilot will be trained upon Malaysia road data; providing a
-      smoother and safer driving experience for everyone in Malaysia.</p>
-    <br />
-  </div>
-    <br>
-  <!--div id="featured-container">
-    <div class="container" >
-      <div>
-        <h1 style="text-align: center; padding-top: 40px;">Featured In</h1>
-      </div>
-      <div class="row">
-        <div class="main-featured col-lg-4 col-md-12">
-          <img src="{{ "" | relative_url }}/img/main/Mg3hub.png" width="30%" vertical-align="middle"
-            display="inline-block">
-        </div>
-        <div class="main-featured col-lg-4 col-md-12">
-          <img src="{{ "" | relative_url }}/img/main/NTIS.png" width="30%" vertical-align="middle"
-            display="inline-block">
-        </div>
-        <div class="main-featured col-lg-4 col-md-12">
-          <img src="{{ "" | relative_url }}/img/main/Paultan.png" width="30%" vertical-align="middle"
-            display="inline-block">
-        </div>
-      </div>
-    </div>
-  </div>-->
-  <div class = "module-content" style="margin-bottom: 75px; background-color:white;">
-    <div class="unit-image-wrapper">
-      <img class="full-width-img" src="{{ "" | relative_url }}/img/main/compare.png" vertical-align="middle"
-      display="inline-block">
-    </div>
-  </div>
-  <div class="row card-video-row" style="margin-bottom: 0px; background-color:white;">
-    <h1 class="main-text">
-      Featured in.
+<section id="home" class="relative h-screen overflow-hidden">
+  <video
+    class="absolute inset-0 w-full h-full object-cover"
+    autoplay muted loop playsinline
+    src="{{ "/assets/ytvid.mp4" | relative_url }}"
+  ></video>
+  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 md:pb-40 text-center px-4">
+    <h1 class="text-4xl md:text-5xl font-bold text-white">
+      Elevate your driving experience with L2+ ADAS
     </h1>
-    <h2  class="sub-text" style="color: #86868B;">
-      Learn more.
-    </h2>
+    <p class="mt-3 text-lg text-gray-300 font-medium">
+      Drive smarter and safer with KommuAssist
+    </p>
+    <div class="mt-6 space-x-6">
+      <a
+        href="{{ '/store' | relative_url }}"
+        class="text-blue-500 hover:underline font-medium"
+      >Buy Now ›</a>
+      <a
+        href="{{ '/ka2' | relative_url }}"
+        class="text-blue-500 hover:underline font-medium"
+      >Learn More ›</a>
+    </div>
   </div>
-  <div id="landingCarousel" class="carousel phone-card-slides slide carousel-dark" style="margin-bottom: 75px;"  data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-indicators" style="z-index: 2; margin-bottom: 0px;">
-      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <div class="carousel-card-container">
-          <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank">
-            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png">
-          </a>    
-        </div>
-      </div>
-      <div class="carousel-item">
-        <div class="carousel-card-container">
-          <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank">
-            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png">
-          </a>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <div class="carousel-card-container">
-          <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank">
-            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png">
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="prev" style="color: black;">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button> -->
-  </div>
-  <div class="row card-video-row non-phone-card-slides" style="margin-bottom: 0px; background-color:white;">
-    <div class="card-container col-md-4 col-sm-12">
-      <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png"></a>    
-    </div>
-    <div class="card-container col-md-4 col-sm-12">
-      <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png"></a>
-    </div>
-    <div class="card-container col-md-4 col-sm-12">
-      <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png"></a>
-    </div>
-  </section>
 </section>
 
+
+<section class="py-20 bg-black">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-lg text-gray-300 font-medium">Hardware</h2>
+    <h1 class="text-3xl font-bold text-white mt-2 mb-4">KommuAssist 2.0</h1>
+    <p class="text-gray-300 mb-8">
+      Whole new level of edge computing with 6 TOPS NPU and 3× automotive‑grade cameras. Designed for reliability, built for AI.
+    </p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="rounded-lg p-4">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">RK3588 at the core.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          On-device neural processing. 6 TOPS NPU acceleration for real‑time vision inference.
+        </p>
+      </div>
+
+      <div class="rounded-lg p-4">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">3× automotive cameras.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          Synchronized wide‑angle and long range perception built for automotive‑grade vision.
+        </p>
+      </div>
+
+      <div class="rounded-lg p-4">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">Cool by design.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          CNC-machined aluminum unibody doubles as a passive heatsink for sustained performance.
+        </p>
+      </div>
+
+      <div class="rounded-lg p-4">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">Mounts like magic.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          Magnetic mount for effortless installation and release. Snap and go.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-20 bg-black">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-lg text-gray-300 font-medium">Software</h2>
+    <h1 class="text-3xl font-bold text-white mt-2 mb-4">bukapilot v10</h1>
+    <p class="text-sm text-gray-300 mb-8 font-normal">
+      bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="bg-none rounded-lg p-4 text-center">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="ADAS driving agent" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">ADAS driving agent.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          End‑to‑end neural. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
+        </p>
+      </div>
+
+      <div class="bg-none rounded-lg p-4 text-center">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Understands the road" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">Understands the road.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          Smart enough to spot traffic lights, expand lanes, and safely change lanes.
+        </p>
+      </div>
+
+      <div class="bg-none rounded-lg p-4 text-center">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Driven by community" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">Driven by community.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
+        </p>
+      </div>
+
+      <div class="bg-none rounded-lg p-4 text-center">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Safety‑focused" class="w-full mb-4 rounded">
+        <h4 class="text-lg font-semibold text-white">Safety‑focused.</h4>
+        <p class="text-sm text-white mt-2 font-normal">
+          Designed with ISO 26262 in mind and supports NHTSA‑grade features.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- COMPATIBILITY -->
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="bg-card rounded-2xl p-12 text-center text-white space-y-6">
+      <h3 class="text-4xl font-bold text-white">KommuAssist is compatible with these car models.</h3>
+      <a
+        href="{{ '/support' | relative_url }}"
+        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-3xl"
+      >Check Car Models</a>
+      <div class="mt-8 grid grid-cols-3 gap-8 place-items-center">
+        <!-- logos -->
+        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="h-30">
+        <img src="{{ '/img/main/proton.png'  | relative_url }}" alt="Proton"  class="h-30">
+        <img src="{{ '/img/main/honda.png'   | relative_url }}" alt="Honda"   class="h-30">
+        <img src="{{ '/img/main/toyota.png'  | relative_url }}" alt="Toyota"  class="h-30">
+        <img src="{{ '/img/main/byd.png'     | relative_url }}" alt="BYD"     class="h-30">
+        <img src="{{ '/img/main/hyundai.png' | relative_url }}" alt="Hyundai" class="h-30">
+        <img src="{{ '/img/main/lexus.png'   | relative_url }}" alt="Lexus"   class="h-30">
+      </div>
+      <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-left text-sm">
+        <div>
+          <p class="font-semibold">Perodua</p>
+          <p class="text-white font-normal">Axia (2022–2024 A/T)<br>Myvi (2022–2024 A/T)</p>
+        </div>
+        <div>
+          <p class="font-semibold">Proton</p>
+          <p class="text-white font-normal">X50 (2019–2024 Flagship)<br>X70 (2019–2024 Flagship)</p>
+        </div>
+        <div>
+          <p class="font-semibold">Honda</p>
+          <p class="text-white font-normal">Civic (2016–2024 V, E, Sensing)<br>City (2020–2024 V, E, Sensing)</p>
+        </div>
+        <div>
+          <p class="font-semibold">Toyota</p>
+          <p class="text-white font-normal">Hilux (2010–2024 A/T)<br>Vios (2018–2024 A/T)</p>
+        </div>
+        <div>
+          <p class="font-semibold">BYD</p>
+          <p class="text-white font-normal">Atto 3 (2022–2024 A/T)<br>Yuan (2022–2024 A/T)</p>
+        </div>
+        <div>
+          <p class="font-semibold">Hyundai</p>
+          <p class="text-white font-normal">Kona (2018–2024 A/T)<br>Tucson (2015–2024 A/T)</p>
+        </div>
+        <div>
+          <p class="font-semibold">Lexus</p>
+          <p class="text-white font-normal">UX (2019–2024 A/T)<br>NX (2014–2024 A/T)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
