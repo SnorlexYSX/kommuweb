@@ -1,0 +1,25 @@
+# Shipping Rates (in each currency)
+
+- code: MY
+  name: Malaysia
+  rates:
+    MYR: 0.00
+    USD: 0.00
+
+- code: TH
+  name: Thailand
+  rates:
+    MYR: 209.99
+    USD: 0.00
+
+- code: SG
+  name: Singapore
+  rates:
+    MYR: 245.63
+    USD: 0.00
+
+- code: AU
+  name: Australia
+  rates:
+    MYR: 422.73
+    USD: 0.00

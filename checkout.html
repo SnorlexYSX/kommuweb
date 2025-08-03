@@ -42,7 +42,11 @@ title: Checkout
       </div>
       <div>
         <label for="checkoutCountry" class="block text-sm font-semibold mb-1">Country</label>
-        <input id="checkoutCountry" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <select id="checkoutCountry" class="w-full bg-black border border-gray-700 px-4 py-3 rounded text-white" required>
+          {% for entry in site.data.shipping %}
+            <option value="{{ entry.code }}">{{ entry.name }}</option>
+          {% endfor %}
+        </select>
       </div>
       <div id="checkoutPromoGroup" class="mt-4">
         <label for="checkoutPromoInput" class="block text-sm font-semibold mb-1">Promo code</label>
@@ -88,207 +92,318 @@ title: Checkout
 </section>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-  const selectionsRaw = localStorage.getItem("checkoutSelections");
-
-  const cartSection = document.getElementById("checkoutCartSection");
-  const formGrid = document.getElementById("checkoutGrid");
-  const cartContainer = document.getElementById("checkoutCartItems");
-  const subtotalDisplay = document.getElementById("checkoutCartSubtotal");
-  const col2 = document.getElementById("summaryCol2");
-  const col3 = document.getElementById("summaryCol3");
-  const heading    = document.getElementById("summaryHeading");
-
-
-  const isFromProduct = localStorage.getItem("fromProductPage") === "true";
-
-  let subtotal = 0;
-  let selections = {};
-  if (isFromProduct && selectionsRaw) {
-    selections = JSON.parse(selectionsRaw);
-  }
-
-  // only show IC when user is RTO
-  const icGroup = document.getElementById("checkoutICGroup");
-  const icInput = document.getElementById("checkoutIC");
-  if (
-    isFromProduct &&
-    selections.payment &&
-    selections.payment.toLowerCase().includes("rent-to-own")
-  ) {
-    icGroup.classList.remove("hidden");
-    icInput.required = true;
-  } else {
-    icGroup.classList.add("hidden");
-    icInput.required = false;
-  }
-
-  const promoGroup = document.getElementById("checkoutPromoGroup");
-  if (isFromProduct) {
-    promoGroup.classList.remove("hidden");
-  } else {
-    promoGroup.classList.add("hidden");
-  }
-
-
-  if (isFromProduct && Object.keys(selections).length) {
-    heading.innerText    = "Your new KommuAssist";
-    document.getElementById("checkoutCartSection").style.display = "none";
-    document.getElementById("checkoutGrid").classList.remove("md:grid-cols-2");
-
-    col2.innerHTML = `
-      <div>
-        <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
-        <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
-        <p class="text-sm text-gray-300 font-medium">${selections.sim}</p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-2 text-white">Installation</h3>
-        <p class="text-sm text-gray-300 font-medium">${selections.install}</p>
-      </div>
-    `;
-
-    col3.innerHTML = `
-      <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
-      <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
-      <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
-      <div class="mt-6 flex justify-center">
-        <button
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
-          onclick="goToPayment()"
-        >
-          Continue to Payment
-        </button>
-      </div>
-    `;
-
-    // clear the flags so a refresh doesn't re-show it
-    localStorage.removeItem("fromProductPage");
-    localStorage.removeItem("checkoutSelections");
-
-  } else {
-    // → STORE/CART PAGE SUMMARY
-
-    col2.innerHTML = `
-      <div>
-        <h3 class="text-xl font-bold mb-2 text-white">Shipping</h3>
-        <p class="text-sm text-gray-300 font-normal">
-          Local Shipping - RM10<br>
-          International Shipping - Thailand RM395
-        </p>
-      </div>
-    `;
-
-    col3.innerHTML = `
-      <div>
-        <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
-        <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
-        <div class="flex justify-center">
-          <button
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
-            onclick="goToPayment()"
-          >
-            Continue to Payment
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  cartItems.forEach(item => {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-    const currency = getCurrencyCode(locale);
-    const formatter = getFormatter(locale);
-
-    const unitPrice = item.prices?.[currency] ?? item.prices?.USD ?? 0;
-    const qty       = item.quantity ?? 1;
-    const itemTotal = unitPrice * qty;
-
-    const card = document.createElement("div");
-    card.className = "flex items-center gap-4 p-3 rounded bg-black";
-
-    const imgWrapper = document.createElement("div");
-    imgWrapper.className = "bg-card p-2 rounded-lg";
-    const img = document.createElement("img");
-    img.src = item.image;
-    img.alt = item.name;
-    img.className = "w-16 h-16 object-contain";
-    imgWrapper.appendChild(img);
-
-    // details
-    const details = document.createElement("div");
-    details.className = "flex-1";
-    const title = document.createElement("p");
-    title.className = "text-sm font-semibold";
-    title.innerText = item.name;
-    const quantityP = document.createElement("p");
-    quantityP.className = "text-xs text-gray-400";
-    quantityP.innerText = `Qty: ${qty}`;
-    const desc = document.createElement("p");
-    desc.className = "text-xs text-gray-400";
-    desc.innerText = item.description || "";
-
-    details.appendChild(title);
-    details.appendChild(quantityP);
-    details.appendChild(desc);
-
-    // price
-    const priceEl = document.createElement("p");
-    priceEl.className = "text-sm font-medium text-right";
-    priceEl.innerText = formatter.format(itemTotal);
-
-    // assemble
-    card.appendChild(imgWrapper);
-    card.appendChild(details);
-    card.appendChild(priceEl);
-    cartContainer.appendChild(card);
-
-    // accumulate
-    subtotal += itemTotal;
-  });
-
+  const shippingConfig = {{ site.data.shipping | jsonify }};
   const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+  const currency = getCurrencyCode(locale);
   const formatter = getFormatter(locale);
-  const totalDueDisplay = document.getElementById("totalDue");
 
-  subtotalDisplay.innerText = formatter.format(subtotal);
-  totalDueDisplay.innerText = formatter.format(subtotal);
-});
+  document.addEventListener("DOMContentLoaded", () => {
+    const cartItems      = JSON.parse(localStorage.getItem("cart")) || [];
+    const selectionsRaw  = sessionStorage.getItem("checkoutSelections");
+    const isFromProduct  = sessionStorage.getItem("fromProductPage") === "true";
+
+    const cartSection     = document.getElementById("checkoutCartSection");
+    const formGrid        = document.getElementById("checkoutGrid");
+    const cartContainer   = document.getElementById("checkoutCartItems");
+    const subtotalDisplay = document.getElementById("checkoutCartSubtotal");
+    const col2            = document.getElementById("summaryCol2");
+    const col3            = document.getElementById("summaryCol3");
+    const heading         = document.getElementById("summaryHeading");
+
+    const icGroup    = document.getElementById("checkoutICGroup");
+    const icInput    = document.getElementById("checkoutIC");
+    const promoGroup = document.getElementById("checkoutPromoGroup");
+
+    let subtotal = 0;
+    let selections = {};
+    if (isFromProduct && selectionsRaw) {
+      selections = JSON.parse(selectionsRaw);
+    }
+
+    // only show IC when user is RTO
+    if (
+      isFromProduct &&
+      selections.payment &&
+      selections.payment.toLowerCase().includes("rent-to-own")
+    ) {
+      icGroup.classList.remove("hidden");
+      icInput.required = true;
+    } else {
+      icGroup.classList.add("hidden");
+      icInput.required = false;
+    }
+
+    if (isFromProduct) {
+      promoGroup.classList.remove("hidden");
+    } else {
+      promoGroup.classList.add("hidden");
+    }
+    
+    // set default country based on user locale
+    const countryInput = document.getElementById("checkoutCountry");
+    const defaultCode = locale.split('-')[1]?.toUpperCase() || 'MY';
+    countryInput.value = defaultCode;
+    countryInput.addEventListener("change", updateTotalDue);
+
+    // compute shipping cost for default country (product page summary)
+    const defaultCountryCode = countryInput.value.trim().toUpperCase();
+    const productShipEntry = shippingConfig.find(e => e.code === defaultCountryCode) || {};
+    const productShipCost  = parseFloat(productShipEntry.rates?.[currency] || 0);
+
+    if (isFromProduct && Object.keys(selections).length) {
+
+      const payLower = (selections.payment || "").toLowerCase();
+      const instLower = (selections.install || "").toLowerCase();
+      const allowCountry = payLower.includes("one-off") && instLower.includes("self-installation");
+
+      if (allowCountry) {
+        countryInput.disabled = false;
+      } else {
+        countryInput.value = 'MY';
+        countryInput.value = defaultCode;
+        countryInput.disabled = true;
+      }
+      heading.innerText    = "Your new KommuAssist";
+      document.getElementById("checkoutCartSection").style.display = "none";
+      document.getElementById("checkoutGrid").classList.remove("md:grid-cols-2");
+
+      col2.innerHTML = `
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
+          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
+          <p class="text-sm text-gray-300 font-medium">${selections.sim}</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">Installation</h3>
+          <p class="text-sm text-gray-300 font-medium">
+            ${selections.install} - ${formatter.format(productShipCost)}
+          </p>
+        </div>
+      `;
+
+      if (defaultCountryCode === 'MY') {
+        col3.innerHTML = `
+          <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
+          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
+          <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
+          <div class="mt-6 flex justify-center">
+            <button
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
+              onclick="checkoutSubmit()"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        `;
+      } else {
+      col3.innerHTML = `
+          <div>
+            <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
+            <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
+            <div class="flex justify-center">
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                onclick="checkoutSubmit()"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+    } else {
+      // → STORE/CART PAGE SUMMARY
+      let shippingText;
+
+      countryInput.value = defaultCode;
+      countryInput.disabled = false;
+      if (defaultCode === "MY") {
+        shippingText = "Local Shipping – Free";
+      } else {
+        shippingText = `International Shipping – ${productShipEntry.name} ${formatter.format(productShipCost)}`;
+      }
+
+      col2.innerHTML = `
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">Shipping</h3>
+          <p class="text-sm text-gray-300 font-normal">
+            ${shippingText}
+          </p>
+        </div>
+      `;
+
+      col3.innerHTML = `
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
+          <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
+          <div class="flex justify-center">
+            <button
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+              onclick="checkoutSubmit()"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    cartItems.forEach(item => {
+
+
+      const unitPrice = item.prices?.[currency] ?? item.prices?.USD ?? 0;
+      const qty       = item.quantity ?? 1;
+      const itemTotal = unitPrice * qty;
+
+      const card = document.createElement("div");
+      card.className = "flex items-center gap-4 p-3 rounded bg-black";
+
+      const imgWrapper = document.createElement("div");
+      imgWrapper.className = "bg-card p-2 rounded-lg";
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.name;
+      img.className = "w-16 h-16 object-contain";
+      imgWrapper.appendChild(img);
+
+      // details
+      const details = document.createElement("div");
+      details.className = "flex-1";
+      const title = document.createElement("p");
+      title.className = "text-sm font-semibold";
+      title.innerText = item.name;
+      const quantityP = document.createElement("p");
+      quantityP.className = "text-xs text-gray-400";
+      quantityP.innerText = `Qty: ${qty}`;
+      const desc = document.createElement("p");
+      desc.className = "text-xs text-gray-400";
+      desc.innerText = item.description || "";
+
+      details.appendChild(title);
+      details.appendChild(quantityP);
+      details.appendChild(desc);
+
+      // price
+      const priceEl = document.createElement("p");
+      priceEl.className = "text-sm font-medium text-right";
+      priceEl.innerText = formatter.format(itemTotal);
+
+      // assemble
+      card.appendChild(imgWrapper);
+      card.appendChild(details);
+      card.appendChild(priceEl);
+      cartContainer.appendChild(card);
+
+      // accumulate
+      subtotal += itemTotal;
+    });
+
+    subtotalDisplay.innerText = formatter.format(subtotal);
+
+    function updateTotalDue() {
+      const countryCode = countryInput.value.trim().toUpperCase();
+      const totalDueDisplay = document.getElementById("totalDue");
+
+      // find the matching shipping entry
+      const entry = shippingConfig.find(e => e.code === countryCode) || {};
+      const shipCost = parseFloat(entry.rates?.[currency] || 0);
+
+      // update shipping column
+      const countryName = entry.name || countryCode;
+      if (countryCode === "MY") {
+        shippingText = "Local Shipping – Free";
+      } else {
+        shippingText = `International Shipping – ${entry.name} ${formatter.format(shipCost)}`;
+      }
+
+      if (isFromProduct) {
+        col2.innerHTML = `
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
+          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
+          <p class="text-sm text-gray-300 font-medium">${selections.sim}</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2 text-white">Installation</h3>
+          <p class="text-sm text-gray-300 font-medium">
+            ${selections.install} - ${shippingText}
+          </p>
+        </div>
+        `;
+        
+        if (countryCode === 'MY') {
+        col3.innerHTML = `
+            <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
+            <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
+            <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
+            <div class="mt-6 flex justify-center">
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
+                onclick="checkoutSubmit()"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          `;
+        } else {
+        col3.innerHTML = `
+            <div>
+              <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
+              <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${formatter.format(subtotal + shipCost)}</p>
+              <div class="flex justify-center">
+                <button
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                  onclick="checkoutSubmit()"
+                >
+                  Continue to Payment
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+
+        totalDueDisplay.innerText = formatter.format(subtotal + shipCost);
+        col2.innerHTML = `
+          <div>
+            <h3 class="text-xl font-bold mb-2 text-white">Shipping</h3>
+            <p class="text-sm text-gray-300 font-normal">
+              ${shippingText}
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    updateTotalDue();
+  });
 
 
 const visaUrl = "https://aws.kommu.ai/curlec/visa?";
 const otpUrl = "https://aws.kommu.ai/curlec/otp?";
-const shippingRate   = { MY:0.00, TH:209.99, SG:245.63, AU:422.73 };
-const countries      = { MY:"Malaysia", TH:"Thailand", SG:"Singapore", AU:"Australia" };
 
 function checkoutSubmit() {
-  const requiredIds = [
-    "checkoutName",
-    "checkoutIC",
-    "checkoutEmail",
-    "checkoutMobile",
-    "checkoutAddress",
-    "checkoutPostcode",
-    "checkoutCountry"
-  ];
-  for (let id of requiredIds) {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      alert("Please fill out all required fields.");
-      el.focus();
-      return;
-    }
-  }
-
   const name     = document.getElementById("checkoutName").value.trim();
   const ic       = document.getElementById("checkoutIC").value.trim();
   const email    = document.getElementById("checkoutEmail").value.trim();
   const mobile   = document.getElementById("checkoutMobile").value.trim();
-  const addr1    = document.getElementById("checkoutAddress").value.trim();
+  const addr     = document.getElementById("checkoutAddress").value.trim();
   const postcode = document.getElementById("checkoutPostcode").value.trim();
-  const country  = document.getElementById("checkoutCountry").value.trim().toUpperCase();
-  const ship     = parseFloat(shippingRate[country]||0);
+  const country  = document.getElementById("checkoutCountry").value.trim();
+  if (!name||!email||!mobile||!addr||!postcode||!country
+      || (document.getElementById("checkoutIC").required && !ic)) {
+    alert("Please fill out all required fields.");
+    return;
+  }
+
+  const entry = shippingConfig.find(e => e.code === country) || {};
+  const ship = parseFloat(entry.rates?.[currency] || 0);
+  const sub  = parseFloat(
+    document.getElementById("checkoutCartSubtotal")
+            .innerText.replace(/[^\d.]/g,"")
+  );
+  const total = sub + ship;
 
   // 3) pricing & promo (unchanged)…
   //    …[your existing promo & subtotal logic here]…
@@ -296,22 +411,26 @@ function checkoutSubmit() {
   // 4) build & redirect
   const params = new URLSearchParams({
     name,
-    ic,                  // added
+    ic,                  
     email,
     mobile,
-    address1: addr1,
-    address2: addr2,
+    address1: addr,
     postcode,
-    country: countries[country]||country,
-    promoCode,           // from your promo logic
-    deviceprice: devicePrice.toFixed(2),
+    country: entry.name || country,
+    promoCode: document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "",          
+    deviceprice: sub.toFixed(2),
     shippingrate: ship.toFixed(2),
     amount: total.toFixed(2)
   });
 
-  window.open(checkoutUrl + params.toString(), "_blank");
+  window.open(otpUrl + params.toString(), "_blank");
 }
 
+// Clear product-page flags when the user refreshes or closes the page
+window.addEventListener('beforeunload', () => {
+  sessionStorage.removeItem('fromProductPage');
+  sessionStorage.removeItem('checkoutSelections');
+});
 
 
 </script>

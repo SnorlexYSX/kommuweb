@@ -119,7 +119,7 @@ title: Buy KommuAssist 2
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
           class="installBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
-          data-summary="Self-installation - Free shipping"
+          data-summary="Self-installation"
         > 
           <div>
             <p class="font-medium">Self-installation</p>
@@ -302,11 +302,11 @@ title: Buy KommuAssist 2
     const btn = document.getElementById('checkoutBtn');
     btn.value = JSON.stringify(selections);
 
-    localStorage.setItem('checkoutSelections', btn.value);
+    sessionStorage.setItem('checkoutSelections', btn.value);
 
     const checkoutURL = `{{ '/checkout' | relative_url }}`;
 
-    localStorage.setItem('fromProductPage', 'true');
+    sessionStorage.setItem('fromProductPage', 'true');
     window.location.href = checkoutURL;
   }
 </script>
