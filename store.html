@@ -12,9 +12,39 @@ function openModal(item) {
   document.getElementById('modalDesc').textContent = item.description;
   document.getElementById('modalIncludes').innerHTML = item.includes
     .filter(i => typeof i === 'string' && i.trim() !== '')
-    .map(i => `<li>${i}</li>`) 
+    .map(i => `<li>${i}</li>`)
     .join('');
   document.getElementById('modalAddBtn').onclick = () => addToCart(item);
+
+  // Populate or hide vehicle dropdown
+  const ddContainer = document.getElementById('modalDropdownContainer');
+  const ddSelect    = document.getElementById('modalDropdown');
+  if (item.dropdown && item.dropdown.source) {
+    // set dynamic label
+    document.getElementById('modalDropdownLabel').innerText = item.dropdown.title || 'Select';
+    ddContainer.classList.remove('hidden');
+    ddSelect.innerHTML = '';
+    fetch(item.dropdown.source)
+      .then(res => res.json())
+      .then(data => {
+        (data[item.dropdown.list_key] || []).forEach(entry => {
+          const opt = document.createElement('option');
+          opt.value = item.dropdown.value_template
+            .replace(/\{\{\s*brand\s*\}\}/g, entry.brand)
+            .replace(/\{\{\s*model\s*\}\}/g, entry.model)
+            .replace(/\{\{\s*year\s*\}\}/g, entry.year)
+            .replace(/\{\{\s*variant\s*\}\}/g, entry.variant)
+            .trim();
+          opt.text = opt.value;
+          ddSelect.appendChild(opt);
+        });
+      });
+  } else {
+    // hide and clear dropdown
+    ddContainer.classList.add('hidden');
+    document.getElementById('modalDropdownLabel').innerText = '';
+    ddSelect.innerHTML = '';
+  }
 }
 
 function closeModal() {
@@ -66,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             image: "{{ item.image }}",
             description: "{{ item.description }}",
             includes: {{ item.includes | jsonify }}
+            ,dropdown: {{ item.dropdown | jsonify }}
           })' class="product-card bg-card p-4 rounded-lg text-center cursor-pointer" data-prices='{{ item.prices | jsonify }}'>
             <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
             <div class="font-semibold text-white">{{ item.name }}</div>
@@ -88,6 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="md:w-1/2">
         <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>
         <p id="modalPrice" class="text-sm text-gray-400 mb-4"></p>
+        <div id="modalDropdownContainer" class="mb-4 hidden">
+          <label id="modalDropdownLabel" for="modalDropdown" class="block font-semibold text-white mb-1"></label>
+          <select id="modalDropdown" class="w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-normal"></select>
+        </div>
         <p class="text-white mb-1">Description</p>
         <p id="modalDesc" class="font-normal text-sm text-gray-300 mb-4"></p>
         <p class="font-semibold text-white mb-1">Included:</p>

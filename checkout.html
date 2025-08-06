@@ -384,46 +384,111 @@ const visaUrl = "https://aws.kommu.ai/curlec/visa?";
 const otpUrl = "https://aws.kommu.ai/curlec/otp?";
 
 function checkoutSubmit() {
+  const fromProduct   = sessionStorage.getItem('fromProductPage') === 'true';
+  const selectionsRaw = sessionStorage.getItem('checkoutSelections');
+  const selections    = selectionsRaw ? JSON.parse(selectionsRaw) : {};
+  const useVisa       = fromProduct && selections.payment && selections.payment.toLowerCase().includes('rent-to-own');
+
+  // common form values
   const name     = document.getElementById("checkoutName").value.trim();
   const ic       = document.getElementById("checkoutIC").value.trim();
   const email    = document.getElementById("checkoutEmail").value.trim();
   const mobile   = document.getElementById("checkoutMobile").value.trim();
-  const addr     = document.getElementById("checkoutAddress").value.trim();
+  const addr1    = document.getElementById("checkoutAddress").value.trim();
+  const addr2    = "";
   const postcode = document.getElementById("checkoutPostcode").value.trim();
-  const country  = document.getElementById("checkoutCountry").value.trim();
-  if (!name||!email||!mobile||!addr||!postcode||!country
-      || (document.getElementById("checkoutIC").required && !ic)) {
+  const country  = document.getElementById("checkoutCountry").value.trim().toUpperCase();
+
+  // basic validation
+  if (!name || !email || !mobile || !addr1 || !postcode || !country ||
+      (document.getElementById("checkoutIC").required && !ic)) {
     alert("Please fill out all required fields.");
     return;
   }
 
+  // calculate subtotal and shipping
+  const subText = document.getElementById("checkoutCartSubtotal").innerText.replace(/[^\d.]/g,"");
+  const promoCode        = document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "";
+  const devicePrice = parseFloat(subText) || 0;
   const entry = shippingConfig.find(e => e.code === country) || {};
-  const ship = parseFloat(entry.rates?.[currency] || 0);
-  const sub  = parseFloat(
-    document.getElementById("checkoutCartSubtotal")
-            .innerText.replace(/[^\d.]/g,"")
-  );
-  const total = sub + ship;
+  const ship  = parseFloat(entry.rates?.[currency] || 0);
 
-  // 3) pricing & promo (unchanged)…
-  //    …[your existing promo & subtotal logic here]…
+  // build params & redirect
+  if (useVisa) {
+    // rent-to-own → Visa URL
+    const duration         = 36;
+    const subscriptionId   = "plan_QyljeG4K1bOoHG";
+    const monthlyPayment   = (devicePrice / duration).toFixed(2);
+    const visaItems = [{
+      sim:         selections.sim || "",
+      tradeIn:     selections.tradeIn || ""
+    }];
 
-  // 4) build & redirect
-  const params = new URLSearchParams({
+
+    const params = new URLSearchParams();
+    params.append("name",             name);
+    params.append("email",            email);
+    params.append("mobile",           mobile);
+    params.append("address1",         addr1);
+    params.append("address2",         addr2);
+    params.append("postcode",         postcode);
+    params.append("nric",             ic);
+    params.append("duration",         duration);
+    params.append("subscription",     subscriptionId);
+    params.append("harness",          selections.model || "");
+    params.append("amount",           devicePrice.toFixed(2));
+    params.append("monthlyPayment",   monthlyPayment);
+    params.append("installation",     selections.install || "");
+    params.append("promoCode",        promoCode);
+    params.append("deviceProperties", JSON.stringify(visaItems));
+
+    sessionStorage.setItem("customerName", name);
+    
+    window.open(visaUrl + params.toString(), "_blank");
+    return;
+  }
+
+  // default: One-time payment → OTP URL
+  const total = devicePrice + ship;
+  let lineItems;
+
+
+  const otpParams = new URLSearchParams({
     name,
-    ic,                  
+    ic,
     email,
     mobile,
-    address1: addr,
+    address1: addr1,
+    address2: addr2,
     postcode,
     country: entry.name || country,
-    promoCode: document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "",          
-    deviceprice: sub.toFixed(2),
+    deviceprice:  devicePrice.toFixed(2),
     shippingrate: ship.toFixed(2),
-    amount: total.toFixed(2)
+    amount:       total.toFixed(2),
+    promoCode
   });
+  if (fromProduct) {
+    const deviceProps = {
+      sim:     selections.sim || "",
+      tradeIn: selections.tradeIn || ""
+    };
+    otpParams.append("deviceProperties", JSON.stringify(deviceProps));
+  }else {
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    lineItems = cartItems.map(i => ({
+      name:      i.name,
+      quantity:  i.quantity || 1,
+      unitPrice: (i.prices[currency]||i.prices.USD).toFixed(2)
+    }));
+  }
+  // Always append cart items when present
+  if (lineItems.length) {
+    otpParams.append("items", JSON.stringify(lineItems));
+  }
+ 
 
-  window.open(otpUrl + params.toString(), "_blank");
+  sessionStorage.setItem("customerName", name);
+  window.open(otpUrl + otpParams.toString(), "_blank");
 }
 
 // Clear product-page flags when the user refreshes or closes the page

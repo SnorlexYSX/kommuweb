@@ -5,6 +5,7 @@
     USD: 949.00
 
 
+
 - name: Harness Set
   prices:
     MYR: 129.00
@@ -16,6 +17,11 @@
   - Mount with adhesive
   - Electrostatic sticker
   - Alcohol wipes
+  dropdown:
+    title: Select Harness
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
 
 - name: KA2 Mount
   prices:
