@@ -34,6 +34,12 @@
   - Mount with adhesive
   - Electrostatic sticker
   - Alcohol wipes
+  dropdown:
+    title: Select Mount Degree
+    source:
+    - 2 degree
+    - 4 degree
+    list_key: "standard"
 
 - name: T Shirt
   prices:
