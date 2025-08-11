@@ -19,7 +19,7 @@
   - Alcohol wipes
   dropdown:
     title: Select Harness
-    placeholder: "Car model"
+    placeholder: Car model
     source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
     value_template: "{{brand}} {{model}} {{year}} {{variant}}"
@@ -36,12 +36,11 @@
   - Electrostatic sticker
   - Alcohol wipes
   dropdown:
-    title: Select Mount Degree
-    placeholder: "Mount degree"
-    source:
-    - "2 degree"
-    - "4 degree"
+    title: Select Mount
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
 
 - name: T Shirt
   prices:
