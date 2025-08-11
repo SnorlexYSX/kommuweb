@@ -19,6 +19,7 @@
   - Alcohol wipes
   dropdown:
     title: Select Harness
+    placeholder: "Car model"
     source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
     value_template: "{{brand}} {{model}} {{year}} {{variant}}"
@@ -36,9 +37,10 @@
   - Alcohol wipes
   dropdown:
     title: Select Mount Degree
+    placeholder: "Mount degree"
     source:
-    - 2 degree
-    - 4 degree
+    - "2 degree"
+    - "4 degree"
     list_key: "standard"
 
 - name: T Shirt
