@@ -81,12 +81,10 @@ title: Checkout
 
     <!-- Col 2: placeholder for either product summary or shipping -->
     <div id="summaryCol2" class="space-y-6">
-      <!-- will be filled by JS -->
     </div>
 
     <!-- Col 3: placeholder for either payment summary+CTA or total due-->
     <div id="summaryCol3">
-      <!-- will be filled by JS -->
     </div>
   </div>
 </section>
@@ -100,7 +98,23 @@ title: Checkout
   document.addEventListener("DOMContentLoaded", () => {
     const cartItems      = JSON.parse(localStorage.getItem("cart")) || [];
     const selectionsRaw  = sessionStorage.getItem("checkoutSelections");
-    const isFromProduct  = sessionStorage.getItem("fromProductPage") === "true";
+    let isFromProduct  = sessionStorage.getItem("fromProductPage") === "true";
+
+    // Resolve source of checkout view
+    const urlParams = new URLSearchParams(location.search);
+    const modeParam = urlParams.get('mode') || urlParams.get('src'); // allow ?mode=cart or ?src=cart
+    if (modeParam === 'cart') {
+      isFromProduct = false;
+      sessionStorage.setItem('fromProductPage', 'false');
+    } else if (modeParam === 'product') {
+      isFromProduct = true;
+      sessionStorage.setItem('fromProductPage', 'true');
+    } else {
+      // Heuristic: if both product-selection persisted and cart has items, prefer cart flow
+      if (isFromProduct && cartItems && cartItems.length > 0) {
+        isFromProduct = false;
+      }
+    }
 
     const cartSection     = document.getElementById("checkoutCartSection");
     const formGrid        = document.getElementById("checkoutGrid");
@@ -119,6 +133,19 @@ title: Checkout
     if (isFromProduct && selectionsRaw) {
       selections = JSON.parse(selectionsRaw);
     }
+    
+
+    // Force one-off + Stripe for non-MYR currencies
+    const isNonMYRCurrency = (currency || '').toUpperCase() !== 'MYR';
+    if (isNonMYRCurrency && isFromProduct) {
+      selections.payment = "One-off payment";
+      // ensure IC is hidden & not required
+      icGroup.classList.add("hidden");
+      icInput.required = false;
+      // persist locked selection
+      sessionStorage.setItem("checkoutSelections", JSON.stringify(selections));
+    }
+
 
     // only show IC when user is RTO
     if (
@@ -278,7 +305,7 @@ title: Checkout
       quantityP.innerText = `Qty: ${qty}`;
       const desc = document.createElement("p");
       desc.className = "text-xs text-gray-400";
-      desc.innerText = item.description || "";
+      desc.innerText = item.selection || "";
 
       details.appendChild(title);
       details.appendChild(quantityP);
@@ -382,12 +409,21 @@ title: Checkout
 
 const visaUrl = "https://aws.kommu.ai/curlec/visa?";
 const otpUrl = "https://aws.kommu.ai/curlec/otp?";
+const stripeUrl = "https://aws.kommu.ai/stripe/checkout?";
 
 function checkoutSubmit() {
-  const fromProduct   = sessionStorage.getItem('fromProductPage') === 'true';
+  let fromProduct   = sessionStorage.getItem('fromProductPage') === 'true';
+  const _urlParams = new URLSearchParams(location.search);
+  const _modeParam = _urlParams.get('mode') || _urlParams.get('src');
+  if (_modeParam === 'cart') fromProduct = false;
+  else if (_modeParam === 'product') fromProduct = true;
+  else if (fromProduct && (JSON.parse(localStorage.getItem('cart') || '[]')).length > 0) fromProduct = false;
   const selectionsRaw = sessionStorage.getItem('checkoutSelections');
   const selections    = selectionsRaw ? JSON.parse(selectionsRaw) : {};
-  const useVisa       = fromProduct && selections.payment && selections.payment.toLowerCase().includes('rent-to-own');
+  let useVisa = fromProduct && selections.payment && selections.payment.toLowerCase().includes('rent-to-own');
+  if ((currency || '').toUpperCase() !== 'MYR') {
+    useVisa = false; // force non-RTO
+  }
 
   // common form values
   const name     = document.getElementById("checkoutName").value.trim();
@@ -424,7 +460,6 @@ function checkoutSubmit() {
       tradeIn:     selections.tradeIn || ""
     }];
 
-
     const params = new URLSearchParams();
     params.append("name",             name);
     params.append("email",            email);
@@ -443,7 +478,6 @@ function checkoutSubmit() {
     params.append("deviceProperties", JSON.stringify(visaItems));
 
     sessionStorage.setItem("customerName", name);
-    
     window.open(visaUrl + params.toString(), "_blank");
     return;
   }
@@ -462,6 +496,7 @@ function checkoutSubmit() {
     address2: addr2,
     postcode,
     country: entry.name || country,
+    currency: (currency || 'MYR'),
     deviceprice:  devicePrice.toFixed(2),
     shippingrate: ship.toFixed(2),
     amount:       total.toFixed(2),
@@ -473,29 +508,23 @@ function checkoutSubmit() {
       tradeIn: selections.tradeIn || ""
     };
     otpParams.append("deviceProperties", JSON.stringify(deviceProps));
-  }else {
+  } else {
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
     lineItems = cartItems.map(i => ({
       name:      i.name,
       quantity:  i.quantity || 1,
-      unitPrice: (i.prices[currency]||i.prices.USD).toFixed(2)
+      unitPrice: (i.prices[currency]||i.prices.USD).toFixed(2),
+      subcategory: i.selection
     }));
   }
   // Always append cart items when present
-  if (lineItems.length) {
+  if (lineItems && lineItems.length) {
     otpParams.append("items", JSON.stringify(lineItems));
   }
- 
 
   sessionStorage.setItem("customerName", name);
-  window.open(otpUrl + otpParams.toString(), "_blank");
+  const targetUrl = ((currency || '').toUpperCase() !== 'MYR') ? stripeUrl : otpUrl;
+  window.open(targetUrl + otpParams.toString(), "_blank");
 }
-
-// Clear product-page flags when the user refreshes or closes the page
-window.addEventListener('beforeunload', () => {
-  sessionStorage.removeItem('fromProductPage');
-  sessionStorage.removeItem('checkoutSelections');
-});
-
 
 </script>

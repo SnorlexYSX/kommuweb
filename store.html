@@ -14,8 +14,12 @@ function openModal(item) {
     .filter(i => typeof i === 'string' && i.trim() !== '')
     .map(i => `<li>${i}</li>`)
     .join('');
-  document.getElementById('modalAddBtn').onclick = () => addToCart(item);
-
+  document.getElementById('modalAddBtn').onclick = function() {
+    const selEl = document.getElementById('modalDropdown');
+    const selection = selEl ? selEl.value : '';
+    addToCart({ ...item, selection });
+    closeModal();
+  };
   // Populate or hide vehicle dropdown
   const ddContainer = document.getElementById('modalDropdownContainer');
   const ddSelect    = document.getElementById('modalDropdown');

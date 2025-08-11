@@ -1,10 +1,11 @@
 <!-- Cart Drawer -->
-<div id="cartDrawer" class="fixed right-0 top-0 w-80 max-h-screen bg-card shadow-lg p-6 hidden z-50 overflow-y-auto pt-16">
+<div id="cartDrawer" class="fixed right-0 top-0 max-h-screen bg-card shadow-lg p-6 hidden z-50 overflow-y-auto pt-16 inline-block" style="width:auto">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-bold text-white">Your Cart</h2>
     <button onclick="closeCart()" class="text-white">✕</button>
   </div>
-  <div id="cartItems"></div>
+  <div id="cartRows" class="flex flex-col w-max"></div>
+  <div id="cartNote"></div>
   <div class="mt-6 text-center">
     <button onclick="goToCheckoutFromCart()" class="bg-blue-500 w-full py-2 rounded text-white">Checkout</button>
   </div>
@@ -52,7 +53,6 @@
     renderCart();
     updateCartCount();
     document.getElementById('cartDrawer').classList.remove('hidden');
-    closeModal();
   }
 
   function removeFromCart(index) {
@@ -74,31 +74,33 @@
   }
 
   function renderCart() {
-    const container = document.getElementById('cartItems');
-    if (!container) return;
-    container.innerHTML = '';
+    const rows = document.getElementById('cartRows');
+    const noteContainer = document.getElementById('cartNote');
+    if (!rows || !noteContainer) return;
+    rows.innerHTML = '';
+    noteContainer.innerHTML = '';
 
     const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
     const currency = getCurrencyCode(locale);
     const formatter = getFormatter(locale);
 
     let total = 0;
-    console.log(BASEURL)
     cart.forEach((item, index) => {
       if (!item.quantity) item.quantity = 1;
       const priceValue = item.prices?.[currency] || item.prices?.USD || 0;
       total += priceValue * item.quantity;
 
       const div = document.createElement('div');
-      div.className = 'flex items-center gap-4 text-white py-2 border-b border-gray-700';
+      div.className = 'flex items-center gap-4 text-white py-2 border-b border-gray-700 w-max';
       const minusBtn = item.quantity === 1
         ? '<button disabled class="px-2 text-white opacity-30 cursor-not-allowed">−</button>'
         : `<button onclick="updateQuantity(${index}, -1)" class="px-2 text-white">−</button>`;
       div.innerHTML = `
         <img src="${BASEURL}${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
-        <div class="flex-1">
-          <div class="text-white">${item.name}</div>
-          <div class="text-sm text-gray-400">${formatter.format(priceValue)}</div>
+        <div class="w-max">
+          <div class="text-white whitespace-nowrap">${item.name}</div>
+          ${item.selection ? `<div class="text-xs text-gray-400 whitespace-nowrap">${item.selection}</div>` : ''}
+          <div class="text-sm text-gray-400 whitespace-nowrap">${formatter.format(priceValue)}</div>
         </div>
         <div class="flex items-center gap-2">
           ${minusBtn}
@@ -107,18 +109,21 @@
           <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-red-500">🗑️</button>
         </div>
       `;
-      container.appendChild(div);
+      rows.appendChild(div);
     });
 
     const summary = document.createElement('div');
     summary.className = 'text-white text-right mt-4';
     summary.innerHTML = `<strong>Subtotal:</strong> ${formatter.format(total)}`;
-    container.appendChild(summary);
+    rows.appendChild(summary);
 
     const note = document.createElement('div');
-    note.className = 'text-xs text-gray-400 mt-2';
+    note.className = 'text-xs text-gray-400 mt-2 break-words whitespace-normal max-w-full';
     note.textContent = 'Customs duties and import taxes for international orders are not included and may be charged separately by your local authorities.';
-    container.appendChild(note);
+    note.style.wordBreak = 'break-word';
+    noteContainer.appendChild(note);
+
+    adjustCartWidth();
   }
 
   function closeCart() {
@@ -129,6 +134,7 @@
     const drawer = document.getElementById('cartDrawer');
     drawer.classList.toggle('hidden');
     updateCartCount();
+    if (!drawer.classList.contains('hidden')) adjustCartWidth();
   }
 
   function updateCartCount() {
@@ -140,10 +146,28 @@
   document.addEventListener('DOMContentLoaded', () => {
     renderCart();
     updateCartCount();
+    adjustCartWidth();
   });
 
+  window.addEventListener('resize', adjustCartWidth);
+
   function goToCheckoutFromCart() {
-    localStorage.removeItem("fromProductPage");
-    window.location.href = "{{ '/checkout' | relative_url }}";
+    // Mark navigation as coming from Cart (not Product)
+    sessionStorage.setItem('fromProductPage', 'false');
+    // Also force the cart mode via URL so checkout overrides any stale state
+    window.location.href = "{{ '/checkout' | relative_url }}?mode=cart";
+  }
+
+  function adjustCartWidth() {
+    const drawer = document.getElementById('cartDrawer');
+    const rows = document.getElementById('cartRows');
+    if (!drawer || !rows) return;
+    requestAnimationFrame(() => {
+      const styles = getComputedStyle(drawer);
+      const padL = parseFloat(styles.paddingLeft) || 0;
+      const padR = parseFloat(styles.paddingRight) || 0;
+      const target = rows.offsetWidth + padL + padR;
+      drawer.style.width = `${Math.max(260, Math.ceil(target))}px`;
+    });
   }
 </script>
