@@ -1,15 +1,15 @@
 - name: KommuAssist2
   category: Device
   prices:
-    MYR: 3999.00
-    USD: 949.00
+    MYR: 1.00
+    USD: 1.00
 
 
 
 - name: Harness Set
   prices:
-    MYR: 129.00
-    USD: 29.00  
+    MYR: 1.00
+    USD: 1.00  
   category: Hardware
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -25,8 +25,8 @@
 
 - name: KA2 Mount
   prices:
-    MYR: 29.00
-    USD: 9.00
+    MYR: 1.00
+    USD: 1.00
   category: Hardware
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -37,8 +37,8 @@
 
 - name: T Shirt
   prices:
-    MYR: 1290.00
-    USD: 329.00
+    MYR: 1.00
+    USD: 1.00
   category: Others
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -49,8 +49,8 @@
   
 - name: Harness Set
   prices:
-    MYR: 129.00
-    USD: 29.00
+    MYR: 1.00
+    USD: 1.00
   category: Cables & connectors
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -62,8 +62,8 @@
   
 - name: Harness Set
   prices:
-    MYR: 129.00
-    USD: 29.00
+    MYR: 1.00
+    USD: 1.00
   category: Others
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -74,8 +74,8 @@
 
 - name: Harness Set
   prices:
-    MYR: 129.00
-    USD: 29.00
+    MYR: 1.00
+    USD: 1.00
   category: Others
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...

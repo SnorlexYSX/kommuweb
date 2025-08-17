@@ -5,126 +5,1426 @@ stylesheet: products
 ---
 <head>
     <link href="{{ "/css/ka1s.css" | relative_url }}" rel="stylesheet">
+    <style>
+      /* --- Performance meters --- */
+.perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#eaeaea; }
+.perf-group { margin-top: 1.5rem; }
+.perf-group h4 { font-family: GlacialIndifference-Bold; margin: 1.25rem 0 0.75rem; font-weight: 500; font-size: 1.2rem; color:#fff; }
+
+.meter-row {
+  display:grid;
+  grid-template-columns: var(--meter-label-col, minmax(160px, 220px)) 1fr; /* label width */
+  gap: .35rem var(--meter-gap, .85rem); /* space between label and bar */
+  align-items:center;
+  margin: .35rem 0 .95rem; /* a bit more vertical breathing room */
+}
+.meter-label { font-family: GlacialIndifference-Bold; font-size: .9rem; opacity:.9; white-space:nowrap; text-align:left; }
+.meter-anno  { font-size: .85rem; opacity:.8; white-space:nowrap; }
+  .meter-track { grid-column: 2 / 3; position:relative; height:4px; background:transparent; border-radius:999px; overflow:visible; }
+  .meter-fill  { position:absolute; inset:0 auto 0 0; width:0%; background:rgba(255,255,255,.9); box-shadow:0 0 12px rgba(255,255,255,.25); border-radius:999px; }
+
+  .meter-tip {
+    position:absolute;
+    top:50%;
+    left:0%;
+    transform: translate(var(--meter-tip-gap, 10px), -50%); /* space between bar end and text */
+    display:flex;
+    gap:.25rem;
+    align-items:baseline;
+    white-space:nowrap;
+    pointer-events:none;
+  }
+  .meter-tip .meter-value { font-weight:500; font-size:0.85rem; color:#b2b2b2; }
+  .meter-tip .meter-units { font-weight:500; font-size:0.85rem; color:#b2b2b2; }
+
+/* subtle tick for end value */
+
+.meter-tick { grid-column: 2 / 3; height: 0; position: relative; }
+.meter-tick::after { content:""; position:absolute; right:0; top:-6px; width:2px; height:16px; background:rgba(255,255,255,.25); border-radius:1px; }
+
+/* --- Responsive tweaks: ensure bars are visible on small screens --- */
+.meter-track { min-width: 140px; } /* never collapse to zero */
+
+@media (max-width: 768px){
+  /* Give the bar more of the row on small screens */
+  #perfMeters{ 
+    --meter-label-col: minmax(110px, 38vw);
+    --meter-gap: .6rem; 
+    --meter-tip-gap: 12px;
+  }
+  .meter-row{ 
+    grid-template-columns: var(--meter-label-col, minmax(110px, 38vw)) 1fr; 
+    gap: .4rem .75rem;
+  }
+  .perf-group h4{ font-size: 1.05rem; }
+  .meter-label{ font-size: .85rem; }
+  .meter-tip .meter-value, 
+  .meter-tip .meter-units{ font-size: .8rem; }
+}
+
+@media (max-width: 420px){
+  #perfMeters{ 
+    --meter-label-col: minmax(96px, 44vw); 
+    --meter-gap: .55rem; 
+    --meter-tip-gap: 10px;
+  }
+  .meter-row{ grid-template-columns: var(--meter-label-col, minmax(96px, 44vw)) 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .meter-fill { transition:none !important; }
+}
+      /* Hero section with purple background image */
+      .btn-order {
+            height:50px;
+            line-height:50px;
+            font-size:25px;
+            padding: 0px 35px;
+        }
+
+      .s1-hero {
+        position: relative;
+        min-height: 120vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url('{{ "/img/ka1s/s1_bg.webp" | relative_url }}') center/cover no-repeat;
+      }
+      .s1-hero .unit-image-wrapper {
+        width: 100%;
+        display: grid;
+        place-items: center;
+        padding: 6rem 0 3rem;
+      }
+      .s1-video,
+      .s2-video {
+        width: min(1200px, 92vw);
+        height: auto;
+        display: block;
+      }
+      /* Ensure following blocks have space to let scroll logic breathe */
+      .ka1s-section .module-content + .module-content {
+        margin-top: 4rem;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .s1-video, .s2-video { animation: none !important; }
+      }
+      .section-copy {
+        max-width: 900px;
+        margin: 2.5rem auto 0;
+        padding: 0 1.25rem;
+        color: #eaeaea;
+        text-align: left;
+      }
+      .section-copy--center { text-align: center; }
+      .ka-heading-xl {
+        font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
+        line-height: 1.15;
+        font-weight: 700;
+        margin: 0.5rem 0 0.75rem;
+      }
+      .ka-heading-lg {
+        font-size: clamp(1.5rem, 2.2vw + 0.8rem, 2.25rem);
+        line-height: 1.2;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        letter-spacing: 0.2px;
+      }
+      .ka-heading-md {
+        font-size: clamp(1.25rem, 1.5vw + 0.8rem, 1.75rem);
+        line-height: 1.25;
+        font-weight: 500;
+        margin: 0.25rem 0 0.5rem;
+      }
+      .ka-subcopy {
+        margin: 3rem 0;
+        color: #b2b2b2;
+        font-family: GlacialIndifference-Bold;
+      }
+      .ka-subcopy span {
+        font-family: GlacialIndifference-Bold;
+      }
+      /* Fix stacking so text isn't covered by videos */
+      .module-content { position: relative; }
+      .unit-image-wrapper { position: relative; z-index: 0; }
+      video.scroll-video,
+      .s1-video,
+      .s2-video {
+        position: relative;
+        z-index: 0;
+        pointer-events: none; /* let clicks pass through video to buttons/links */
+      }
+      .section-copy {
+        position: relative;
+        z-index: 5; /* above video */
+      }
+      /* Optional: ensure order buttons stay above */
+      .btn-order { position: relative; z-index: 6; }
+
+.section-eyebrow {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #b2b2b2;
+  margin: 0 0 0.5rem 0; /* left-aligned */
+  text-align: left;
+}
+
+.section-title {
+  font-family: GlacialIndifference-Bold;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  font-weight: lighter;
+  margin-top: 0.25rem;
+  color: #fff;
+  text-align: left;
+}
+
+.safety-section {
+  max-width: 1100px;
+  margin: 4rem auto 3rem;
+  padding: 0 1rem;
+  color: #eaeaea;
+}
+
+.performance-section {
+  max-width: 1100px;
+  margin: 4rem auto 3rem;
+  padding: 0 1rem;
+  color: #eaeaea;
+}
+
+
+.safety-video-wrap {
+  display: grid;
+  place-items: center;
+  margin: 1.25rem 0 0.75rem;
+}
+.safety-video {
+  width: min(1100px, 92vw);
+  height: auto;
+  max-height: 62vh;
+  display: block;
+  border-radius: 16px;
+  background: #000;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+}
+
+/* Tabs under the safety video */
+.safety-tabs { margin: 0.75rem auto 0; text-align:center; }
+.safety-tablist {
+  --tabline-gap: 8px;
+  --tabline-pad: 40px;
+  display: flex;
+  width: max-content;
+  gap: 5rem;
+  justify-content: center;
+  margin: 0.75rem auto 0.5rem;
+  padding: 0 var(--tabline-pad) var(--tabline-gap);
+  position: relative;
+  max-width: 92vw;          
+  box-sizing: border-box;   
+}
+
+/* Perception tabs (night / rain / sun) */
+.perception-tablist {
+  --tabline-gap: 8px;
+  --tabline-pad: 8rem;   
+  display: flex;
+  width: max-content;
+  gap: 15rem;        
+  justify-content: center;
+  margin: 0.75rem auto 0.5rem;
+  padding: 0 var(--tabline-pad) var(--tabline-gap);
+  position: relative;
+  max-width: 92vw;
+  box-sizing: border-box;
+}
+
+
+.safety-tablist::before,.perception-tablist::before {        /* gray baseline span computed from first↔last tab */
+  content: "";
+  position: absolute;
+  left: var(--base-left, 0);
+  width: var(--base-width, 100%);
+  bottom: 0;
+  height: 2px;
+  background: #b2b2b2;
+}
+
+.safety-tablist::after, .perception-tablist::after {         /* white active segment that follows the active tab */
+  content: "";
+  position: absolute;
+  left: var(--active-left, 0);
+  width: var(--active-width, 0);
+  bottom: 0;
+  height: 2px;
+  background: #fff;
+  transition: left .22s ease, width .22s ease, transform .22s ease;
+  pointer-events: none;
+}
+.safety-tab {
+  background: transparent;
+  border: none;
+  color: #b2b2b2;            /* default text color */
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  padding: 0.35rem 0.25rem;
+  position: relative;
+  transition: color .2s ease;
+}
+.safety-tab[aria-selected="true"],
+.safety-tab.is-active { color: #fff; }
+/* no ::after on the button — underline is drawn by the tablist */
+.safety-panel {
+  text-align: center;
+  color: #d6d6d6;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 980px;
+  margin: 0.75rem auto 0;
+  font-weight: 100;
+}
+/* Tabs responsiveness: smaller gaps/padding on narrow screens */
+@media (max-width: 900px){
+  .safety-tablist{ gap: 3rem; --tabline-pad: 28px; }
+  .safety-tab{ font-size: 1rem; }
+}
+@media (max-width: 720px){
+  .safety-tablist{ gap: 1.75rem; --tabline-pad: 16px; }
+  .safety-tab{ font-size: .95rem; }
+}
+@media (max-width: 480px){
+  .safety-tablist{ gap: 1.25rem; --tabline-pad: 12px; }
+  .safety-tab{ font-size: .9rem; }
+}
+
+@media (max-width: 900px){
+  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+}
+@media (max-width: 720px){
+  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+}
+@media (max-width: 480px){
+  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+}
+      /* Full-bleed sticky frame section */
+        .frame-section {
+        position: relative;
+        min-height: 300vh;            /* more scroll room for the pin */
+        overflow: visible;            /* avoid ancestor clipping of sticky */
+        }
+
+        .frame-sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;             /* fallback clip */
+        overflow: clip;               /* modern clip to viewport box */
+        display: grid;
+        place-items: center;
+        background: #000;
+        /* contain: layout paint size;  -- removed for WebKit sticky correctness */
+        /* will-change: transform;      -- not needed for sticky */
+        z-index: 2;
+        }
+
+        .frame-container {
+          position: relative;             /* centered by .frame-sticky grid */
+          width: min(1000px, 92vw);       /* final framed size */
+          aspect-ratio: 16 / 9;           /* match your design; adjust if needed */
+          overflow: hidden;
+          border-radius: 16px;
+          background: #000;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+          transform-origin: center center;
+          will-change: transform;
+          z-index: 1;
+          pointer-events: none;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+        .frame-media {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transform: none; /* container handles scale */
+          z-index: 0;
+        }
+
+        /* Top text that fades/slides in while the image shrinks */
+        .frame-text {
+        position: absolute;
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 1100px;
+        width: min(92vw, 1100px);
+        text-align: left;
+        z-index: 5; /* above media */
+        pointer-events: none; /* no accidental selection while scrolling */
+        }
+
+        .frame-text h2,
+        .frame-text p {
+        color: #fff;
+        margin: 0;
+        }
+
+        .frame-text h2 { 
+        font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+        line-height: 1.15;
+        font-weight: 800;
+        }
+        .frame-text p {
+        margin-top: .6rem;
+        opacity: .9;
+        }
+
+        /* Headline lines that animate from centered → top-left */
+        .frame-headline {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          display: grid;
+          gap: 0.25rem;
+          text-align: center;
+          z-index: 6;
+          pointer-events: none;
+          width: min(92vw, 1100px);
+          max-width: 1100px;
+          opacity: 1; /* always visible from start */
+          min-width: 280px; /* avoids text wrap jitter on small screens */
+        }
+        .frame-headline .line {
+          display: block;
+          color: #fff;
+          font-weight: 800;
+          line-height: 1.05;
+        }
+        .frame-headline .line1 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        .frame-headline .line2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        .frame-headline .line3 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        /* 5-row caption that docks above the frame and reveals after shrink */
+        .frame-caption {
+        position: absolute;
+        left: 50%;                 /* JS will reposition; safe default */
+        top: 10vh;
+        transform: translate(-50%, -50%);
+        display: grid;
+        row-gap: 0.35rem;
+        z-index: 7;
+        pointer-events: none;
+        width: min(92vw, 1100px);
+        max-width: 1100px;
+        text-align: left;
+        }
+        .frame-caption .cap-line {
+          line-height: 1.15;
+          opacity: 0;                  /* revealed via JS scroll */
+          transform: translateY(6px);
+          margin: 0;
+        }
+        /* Big H2: 3 Automotive Cameras. */
+        .frame-caption .cap-line:nth-child(2) {
+          color: #fff;
+
+          font-size: clamp(1.6rem, 3.3vw, 2.25rem);
+          font-weight: 800;
+        }
+        /* Line 3 + 4: smaller bold */
+        .frame-caption .cap-line:nth-child(3),
+        .frame-caption .cap-line:nth-child(4) {
+          color: #fff;
+          font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+          font-weight: 800;
+          margin-top: 0.25rem;
+        }
+        /* Descriptive sentence under heading */
+        .frame-caption .cap-line:nth-child(5) {
+          font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+          font-weight: 600;
+          opacity: 0; /* revealed via JS */
+          margin-top: 0.6rem;
+          color: #fff;
+
+        }
+
+        /* Spacing between sticky section and tabs */
+        #perception-zoom + .perception-tabs { margin-top: 0.35rem; }
+
+        /* --- Perception tabs styles --- */
+        .perception-tabs { 
+          max-width: 900px; 
+          margin: 0.75rem auto 1.75rem; 
+          padding: 0 1rem; 
+          color: #eaeaea;
+        }
+        .perception-tabs .perception-tablist { margin: 0.25rem auto 0.35rem; }
+        .tabs-wrap { width: 100%; }
+        .perception-tabs .tabs-wrap { text-align: center; }
+        .tablist { 
+          display: flex; 
+          gap: 1rem; 
+          justify-content: center; 
+          margin: 1.25rem auto 0.75rem; 
+        }
+        .tab-btn {
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.14);
+          color: #eaeaea;
+          padding: 0.5rem 1rem;
+          border-radius: 10px;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+          cursor: pointer;
+        }
+        .tab-btn.is-active { 
+          border-color: #cc2b2b;             /* Kommu red highlight */
+          box-shadow: 0 0 0 1px rgba(204,43,43,0.25) inset;
+        }
+        .tab-panel { 
+          margin-top: 1rem; 
+          text-align: center; 
+          color: #d6d6d6;
+          font-size: 0.95rem;
+          line-height: 1.5;
+        }
+        .tab-panel p { margin: 0.5rem 0 0; font-weight:100;}
+
+        /* prevent wrap jitter on small screens */
+        .frame-headline { min-width: 280px; }
+
+.ports-section {
+  position: relative;
+  max-width: 1100px;
+  margin: 4rem auto 5rem;
+  padding: 0 1rem;
+  color: #eaeaea;
+  min-height: 260vh; /* enough scroll room to reveal all labels */
+  padding-bottom: 0;
+}
+/* Tighten subtext spacing in Ports section */
+.ports-section .ka-subcopy {
+  margin: 0.75rem 0 5rem;
+}
+
+.ports-section .section-content {
+  padding-bottom: 0.5rem;  /* keep text snug to image */
+}
+/* Sticky viewport for Ports so image/labels stay while scrolling */
+.ports-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden; /* use clip if you prefer */
+  display: grid;
+  grid-template-rows: auto 1fr; /* header then image area */
+  align-items: start;            /* stop vertical centering */
+  justify-items: center;         /* keep centered horizontally */
+  padding-top: 0.25rem;          /* small breathing room below header */
+  z-index: 1;
+}
+
+.ports-sub {
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 600;
+  opacity: 0.9;
+  margin-top: 0.75rem;
+  max-width: 920px;
+}
+.ports-figure {
+  display: grid;
+  place-items: center;
+  align-self: start;            /* anchor image area to top */
+  margin: 0.25rem 0 0;          /* tighter gap under subtext */
+}
+.ports-header { 
+  align-self: start; 
+  width: min(1100px, 92vw);
+}
+
+/* Add more breathing room between title and subcopy */
+.ports-header h2 {
+  margin-bottom: 1.5rem; /* increase if needed */
+}
+
+/* Add more space between subcopy and image */
+.ports-header p {
+  margin-bottom: 2rem; /* tweak this value */
+}
+.ports-image {
+  width: min(1100px, 92vw);
+  height: auto;
+  border-radius: 16px; /* match other sections */
+  display: block;
+}
+        /* ensure general stacking still behaves with videos */
+        .module-content { position: relative; }
+        .unit-image-wrapper { position: relative; z-index: 0; }
+      /* --- Ports labels overlay & animation --- */
+.ports-stage { position: relative; width: min(1100px, 92vw); }
+.ports-figure { position: relative; }
+.ports-overlay { position: absolute; inset: 0; pointer-events: none; }
+.port-label {
+  position: absolute;
+  color: #eaeaea;
+  font-weight: 500;                /* thinner */
+  font-size: clamp(0.8rem, 1.2vw, 1.0rem);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.35); /* lighter shadow */
+  opacity: 0;
+  text-align: center;             /* NEW: center multi-line text */
+  transform: translateY(8px); /* center block horizontally, keep lift */
+  transition: opacity .45s ease, transform .45s ease;
+  --gap: 8px; /* NEW: default space between text and line */
+}
+.port-label.in { opacity: 1; transform: translateY(0); }
+/* connector line */
+  .port-label::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 1px;                              /* thinner */
+    background: rgba(255,255,255,0.5);        /* slightly lighter */
+    transform: translateX(-50%);
+  }
+  /* top labels get line downwards — start below full text block */
+  .port-label.top::after { 
+    top: calc(100% + var(--gap, 8px)); 
+    height: var(--line, 48px); 
+  }
+  /* bottom labels get line upwards — start above full text block */
+  .port-label.bottom::after { 
+    bottom: calc(100% + var(--gap, 8px)); 
+    height: var(--line, 72px); 
+  }
+    </style>
 </head>
 <section class="ka1s-section">
-    <div class="module-content">
+    <div class="module-content s1-hero">
         <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-1.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-        <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
-            <div class="row" id="margin-top-ka1s-btns"style="padding: 0px;">
-              <div class="col-6">
-                <a role="button" class="btn btn-secondary btn-order" id="" href="{{ "/products" | relative_url }}" target="_blank">Order Now</a>
-              </div>
+            <h2 class="ka-heading-md text-white">KommuAssist 2.</h2>
+            <h1 class="ka-heading-xl text-white">Built for Smarter Journey.</h1>
+            <video
+              class="s1-video scroll-video"
+              src="{{ "/assets/ka_ani_s1.webm" | relative_url }}"
+              playsinline
+              autoplay
+              muted
+              data-autoplay="true"
+              data-play-once="true"
+              aria-label="KommuAssist unit rotating on purple glow background"
+            ></video>
+            <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
+              <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
+              <p class="text-white font-medium" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
+              <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it never obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-2.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-3.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-4.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-5.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-6.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-7.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-8.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>    
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-9.png" vertical-align="middle"
-            display="inline-block">
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <video class="full-width-img" playsinline loop autoplay muted>
-                <source src={{ "/assets/ka1s-10.mp4" | relative_url }}>
-            </video> 
-        </div>
-    </div>
-    <div class="module-content">
-        <div class="unit-image-wrapper">
-            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-11.png" vertical-align="middle"
-            display="inline-block">
             <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
-                <div class="row" id="margin-top-ka1s-btns-2"style="padding: 0px;">
+                <div class="row" id="margin-top-ka1s-btns" style="padding: 0px;">
                   <div class="col-6">
-                    <a role="button" class="btn btn-secondary btn-order" id="" href="{{ "/products" | relative_url }}" target="_blank">Order Now</a>
                   </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
+<section class="performance-section" id="performance">
+  <div class="performance-header">
+    <div class="section-eyebrow">Performance</div>
+    <h2 class="section-title">Stronger. Faster.</h2>
+  </div>
+  <div class="module-content">
+    <video
+      class="s2-video scroll-video"
+      src="{{ "/assets/ka_ani_s2.webm" | relative_url }}"
+      playsinline
+      autoplay
+      muted
+      data-autoplay="true"
+      data-play-once="true"
+      aria-label="KommuAssist unit performance highlight animation"
+    ></video>
+    <p class="ka-subcopy font-bold text-left">Powered by <span class="text-white">Rockchip RK3588</span>. Whole new level of edge computing with <span class="text-white">6 TOPS NPU</span> - more room to handle larger AI models effortlessly. Run end-to-end neural networks with <span class="text-white">3-5 million parameters</span>, all while drawing just 
+10 watts of efficient power.</p>
+    <div class="perf-meters" id="perfMeters" style="--meter-label-col: minmax(125px, 145px); --meter-gap: 0.1rem; --meter-tip-gap: 20px;">
+      <div class="perf-group" aria-label="Throughput">
+        <h4>7.5x faster than KA1 and KA1s</h4>
+        <div class="meter-row" data-units="TOPS">
+          <div class="meter-label">Rockchip RK3588</div>
+          <div class="meter-track">
+            <div class="meter-fill" data-pct="100" data-target="6"></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+          </div>
+        </div>
+        <div class="meter-row" data-units="TOPS">
+          <div class="meter-label">Snapdragon 821</div>
+          <div class="meter-track">
+            <div class="meter-fill" data-pct="13.333" data-target="0.8"></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="perf-group" aria-label="Efficiency">
+        <h4>15x more power-efficient than KA1 and KA1s</h4>
+        <div class="meter-row" data-units="TOPS/W">
+          <div class="meter-label">Rockchip RK3588</div>
+          <div class="meter-track">
+            <div class="meter-fill" data-pct="100" data-target="0.6"></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/W</span></div>
+          </div>
+        </div>
+        <div class="meter-row" data-units="TOPS/W">
+          <div class="meter-label">Snapdragon 821</div>
+          <div class="meter-track">
+            <div class="meter-fill" data-pct="6.667" data-target="0.04"></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/W</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SAFETY (tabs + looped video) -->
+<section class="safety-section" id="safety">
+  <div class="safety-header">
+    <div class="section-eyebrow">Safety</div>
+    <h2 class="section-title">Safety First. Always.</h2>
+  </div>
+
+  <div class="safety-video-wrap">
+    <video class="safety-video" id="safetyVideo"
+           src="{{ '/assets/ka_safety_attn.webm' | relative_url }}"
+           autoplay muted loop playsinline
+           aria-label="Safety feature animation">
+    </video>
+  </div>
+
+  <div class="safety-tabs">
+    <div class="safety-tablist" role="tablist" aria-label="Safety features">
+      <button class="safety-tab" id="safety-tab-attn"  role="tab" aria-selected="true"  aria-controls="safety-panel-attn">Driver Attentiveness Monitoring</button>
+      <button class="safety-tab" id="safety-tab-failsafe" role="tab" aria-selected="false" aria-controls="safety-panel-failsafe">Fail-Safe Response</button>
+      <button class="safety-tab" id="safety-tab-steer" role="tab" aria-selected="false" aria-controls="safety-panel-steer">Steering Limit</button>
+    </div>
+
+    <div id="safety-panel-attn" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-attn">
+      <p>Using an infrared driver-facing camera, KommuAssist 2 tracks eye movement, head position, and facial cues in real time. If signs of distraction or drowsiness are detected, the system issues audible and visual alerts to bring attention back to the road.</p>
+    </div>
+    <div id="safety-panel-failsafe" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-failsafe" hidden>
+      <p>Continuous self-diagnostics monitor device temperature, camera health, and processing stability. In the event of a critical fault, KommuAssist 2 triggers a fail-safe mode, disabling only its autonomous functions while leaving all manual driving controls fully operational.</p>
+    </div>
+    <div id="safety-panel-steer" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-steer" hidden>
+      <p>When the system approaches its maximum steering capability during cornering, an audio warning alerts the driver to take over the wheel, ensuring smooth control and avoiding abrupt disengagements.</p>
+    </div>
+  </div>
+</section>
+<!-- Full-bleed cockpit section that shrinks into the page frame -->
+<section class="frame-section" id="perception-zoom" data-scale-to="1.00" data-text-in="0.20" data-overscan="0.05">
+<div class="frame-sticky">
+    <div class="frame-container">
+        <img
+        class="frame-media"
+        src="{{ '/img/ka1s/s4_night.png' | relative_url }}"
+        alt="KommuAssist driving scene – in-cabin night view"
+        loading="lazy"
+        />
+    </div>
+
+    <!-- Top text that starts centered (3 lines) and ends left-aligned above the image -->
+    <div class="frame-text frame-headline" aria-hidden="false">
+      <span class="line line1">3 Automotive Cameras.</span>
+      <span class="line line2">2 on the road.</span>
+      <span class="line line3">1 in-cabin.</span>
+    </div>
+    <!-- 5-row caption that appears above the image post-shrink -->
+    <div class="frame-text frame-caption" aria-hidden="false">
+        <span class="cap-line section-eyebrow">PERCEPTION</span>
+        <span class="cap-line section-title">3 Automotive Cameras.</span>
+        <span class="cap-line">2 on the road.</span>
+        <span class="cap-line">1 in-cabin.</span>
+        <span class="cap-line">Precision-tuned for full lane coverage, driver monitoring, and low-light visibility.</span>
+    </div>
+</div>
 
 </section>
+<!-- Perception tabs -->
+<section class="perception-tabs" aria-labelledby="perception-tabs-title">
+  <div class="tabs-wrap">
+    <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
+      <button class="safety-tab" role="tab" aria-selected="true"  aria-controls="tab-panel-night" id="tab-night">Night</button>
+      <button class="safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain"  id="tab-rain">Rain</button>
+      <button class="safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun"   id="tab-sun">Sun</button>
+    </div>
+    <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="tab-panel is-active">
+      <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from pulsing headlights or traffic lights.</p>
+    </div>
+    <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="tab-panel" hidden>
+      <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses clear with wiper action and defogging.</p>
+    </div>
+    <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="tab-panel" hidden>
+      <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still provides usable vision for control.</p>
+    </div>
+  </div>
+</section>
+<!-- PORTS & CONNECTIVITY (static image) -->
+<section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
+  <div class="ports-sticky">
+    <div class="ports-header">
+    <div class="section-eyebrow">Ports and Connectivity</div>
+    <h2 class="section-title">Seamless Plug-and-Play Integration.</h2>
+    <p class="ka-subcopy">
+      Equipped with <span class="text-white">LTE, GPS, Wi-Fi, Bluetooth and local storage</span>, this unit is engineered
+      for low-latency connection with KommuAI app, ensuring seamless data exchange and
+      control between devices.
+    </p>
+  </div>
+
+  <figure class="ports-figure">
+    <div class="ports-stage">
+      <img
+        class="ports-image"
+        src="{{ '/img/ka1s/s5.png' | relative_url }}"
+        alt="KommuAssist ports and labels: GPS, Wi-Fi & Bluetooth, Speaker, Nano SIM, MicroSD, Diagnostic USB-C, 12V USB-C"
+        loading="lazy"
+      />
+      <div class="ports-overlay" aria-hidden="true">
+<!-- Top labels -->
+<span class="port-label top" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00" data-anchor-y="28">GPS</span>
+<span class="port-label top" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi &amp; Bluetooth</span>
+<span class="port-label top" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
+<!-- Bottom labels -->
+<span class="port-label bottom" style="left: 32%; bottom: 5%; " data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
+<span class="port-label bottom" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
+<span class="port-label bottom" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">
+    Diagnostic<br><span>USB‑C</span>
+</span>
+<span class="port-label bottom" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">
+  12V USB‑C<br><span>(from Relay)</span>
+</span>
+      </div>
+    </div>
+  </figure>
+  </div>
+</section>
 <script>
-    const localizerer = document.getElementById("localizerer");
-    const localizer = document.getElementById("localizer");
+  (function(){
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const vids = Array.from(document.querySelectorAll("video.scroll-video"));
 
-    async function load() {
-        const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
-        const resp = await (await fetch(remote)).json();
+    // IntersectionObserver to pause/resume on viewport entry/exit
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const v = e.target;
+        const wantsAutoplay = v.dataset.autoplay === "true";
+        if (!wantsAutoplay || reduceMotion) return;
 
-        const product_urls = {
-        {% for product in site.products %}
-            {{ product.key }}: "{{ product.url | relative_url }}",
-        {% endfor %}
-        };
+        if (e.isIntersecting) {
+          // If play-once and we already finished, do nothing
+          if (v.dataset.playOnce === "true" && v.dataset.played === "true") return;
+          v.muted = true;
+          v.playsInline = true;
+          v.play().catch(()=>{});
+        } else {
+          // Pause when out of view unless it's the hero (keeps page quiet when scrolled away)
+          if (!v.dataset.playOnce || v.dataset.played !== "true") {
+            v.pause();
+          }
+        }
+      });
+    }, { threshold: 0.25 });
 
-        []
-            .concat(
-                resp.standard.map(vehicle => ({
-                        label: `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`,
-                        key: "standard"
-                    }))
-                )
-            .sort((a, b) => { return b.label < a.label })
-            .forEach((item) => {
-                    const option = document.createElement("option");
-                    option.value = product_urls[item.key];
-                    option.innerText = item.label;
-                    localizer.appendChild(option);
-                });
+    vids.forEach(v => {
+      if (!reduceMotion && v.dataset.autoplay === "true") io.observe(v);
+      // Mark as played when it ends (for play-once videos)
+      v.addEventListener("ended", () => {
+        if (v.dataset.playOnce === "true") {
+          v.dataset.played = "true";
+          v.pause();
+        }
+      });
+    });
+
+    // If tab is hidden, pause all to avoid background playback
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) vids.forEach(v => { if (!v.paused) v.pause(); });
+    }, { passive: true });
+  })();
+
+(() => {
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  /* ---------- helpers ---------- */
+  // progress 0..1 for a sticky section:
+  // 0 when its top hits the top of the viewport (pin start),
+  // 1 when the bottom reaches the bottom of the viewport (pin end).
+  function sectionProgress(sectionEl) {
+    const rect = sectionEl.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const pin = Math.max(1, rect.height - vh);   // how long it's pinned
+    const scrolled = clamp(-rect.top, 0, pin);   // distance since pin start
+    return clamp(scrolled / pin, 0, 1);
+  }
+
+  /* ---------- scale + reveal logic ---------- */
+  const frames = Array.from(document.querySelectorAll('.frame-section'));
+  let ticking = false;
+
+  function updateFrames() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    for (const s of frames) {
+      const p = sectionProgress(s); // 0..1
+      const eased = Math.min(1, Math.max(0, p * p * (3 - 2 * p))); // smoothstep
+      s.dataset.progress = p.toFixed(3);
+      const container = s.querySelector('.frame-container');
+      const img  = s.querySelector('.frame-media');
+      const text = s.querySelector('.frame-text');
+      if (!container) continue;
+
+      const baseW = parseFloat(container.dataset.baseW || "0") || container.offsetWidth || container.clientWidth || 1;
+      const baseH = parseFloat(container.dataset.baseH || "0") || container.offsetHeight || container.clientHeight || 1;
+      // Use the container's *layout* size (ignores transform) and cache it to avoid feedback loops
+      let baseWCache = parseFloat(container.dataset.baseW || "0");
+      let baseHCache = parseFloat(container.dataset.baseH || "0");
+      if (!baseWCache || !baseHCache) {
+        baseWCache = container.offsetWidth || container.clientWidth || 1;
+        baseHCache = container.offsetHeight || container.clientHeight || 1;
+        container.dataset.baseW = String(baseWCache);
+        container.dataset.baseH = String(baseHCache);
+      }
+      const overscan = parseFloat(s.dataset.overscan || "0.00");
+      const scaleFrom = Math.max(window.innerWidth / baseWCache, window.innerHeight / baseHCache) * (1 + overscan);
+      const scaleTo   = parseFloat(s.dataset.scaleTo   || "1.00");
+      // scale the container so it zooms in/out
+      const scale = scaleFrom + (scaleTo - scaleFrom) * eased;
+      // Push the framed image slightly lower so the caption has room above it
+      const offsetVH = 6; // shift container down by ~6vh (tweakable)
+      const offsetPx = (window.innerHeight * offsetVH) / 100;
+        // --- Headline: fixed in center, fades away ---
+        const headline = s.querySelector('.frame-headline');
+        if (headline) {
+        // Always centered in the viewport
+        headline.style.left = (window.innerWidth / 2) + 'px';
+        headline.style.top  = (window.innerHeight / 2) + 'px';
+        headline.style.transform = 'translate(-50%, -50%)';
+        headline.style.textAlign = 'center';
+
+        // Fade out as shrink progresses (slightly faster than linear)
+        const headOpacity = clamp(1 - eased * 1.2, 0, 1);
+        headline.style.opacity = headOpacity.toFixed(3);
+
+        // Keep line sizes steady
+        const l1 = headline.querySelector('.line1');
+        const l2 = headline.querySelector('.line2');
+        const l3 = headline.querySelector('.line3');
+        l1 && (l1.style.transform = 'none');
+        l2 && (l2.style.transform = 'none');
+        l3 && (l3.style.transform = 'none');
+        }
+
+        // --- Caption: 5 rows appear above the *current scaled* frame ---
+        const caption = s.querySelector('.frame-caption');
+        if (caption) {
+        // Ensure we have the container's base (unscaled) size cached
+        let baseW = parseFloat(container.dataset.baseW || '0');
+        let baseH = parseFloat(container.dataset.baseH || '0');
+        if (!baseW || !baseH) {
+            baseW = container.offsetWidth || container.clientWidth || 1;
+            baseH = container.offsetHeight || container.clientHeight || 1;
+            container.dataset.baseW = String(baseW);
+            container.dataset.baseH = String(baseH);
+        }
+
+        // Compute where the scaled frame currently sits
+        const gap = Math.max(100, Math.round(baseH * 0.03)); // larger, responsive clearance above image
+        const currHeight = baseH * scale;
+        const currWidth  = baseW * scale;
+        const currLeft   = (window.innerWidth  - currWidth)  / 2;
+        const currTop    = (window.innerHeight - currHeight) / 2 - gap + offsetPx;
+
+        // Position the caption aligned to the left edge of the current frame
+        caption.style.left = currLeft + 'px';
+        caption.style.top  = currTop  + 'px';
+        caption.style.transform = 'translate(0%, -100%)';
+        caption.style.width = baseW + 'px';
+        caption.style.textAlign = 'left';
+
+        // Staggered reveal after shrink is well underway
+        const start = 0.62;      // when the reveal begins
+        const step  = 0.07;      // spacing between each line's reveal
+        const lines = Array.from(caption.querySelectorAll('.cap-line'));
+        lines.forEach((el, i) => {
+            const t0 = start + step * i;                // reveal threshold per line
+            const t  = clamp((eased - t0) / 0.12, 0, 1); // 0..1 ramp over ~12% progress
+            el.style.opacity = t.toFixed(3);
+            el.style.transform = `translateY(${(1 - t) * 6}px)`;
+        });
+        }
+
+      if (text && !text.style.opacity) {
+        text.style.opacity = "0";
+      }
+
+      container.style.transform = `translateY(${offsetPx}px) scale(${scale})`;
+      if (img) img.style.transform = ""; // container owns the scale now
+
+      if (text && !text.classList.contains('frame-headline')) {
+        // text fade/slide: start showing at data-text-in (default 0.25)
+        const tIn = parseFloat(s.dataset.textIn ?? '0.25');
+        const tp = clamp((eased - tIn) / (1 - tIn), 0, 1);
+        text.style.opacity = tp.toFixed(3);
+        const y = (1 - tp) * -20;
+        text.style.transform = `translateX(-50%) translateY(${y}px)`;
+      }
+      s.dataset.scaleFrom = scaleFrom.toFixed(3);
+      s.dataset.scaleTo = scaleTo.toFixed(3);
+      s.dataset.scale = scale.toFixed(3);
+
+      // Smoothly reduce sticky height as we approach the end of the pin,
+      // but do NOT change section min-height; only visually reduce gap by pulling up the next section.
+      const baseMinVH = 300;   // tall at start to provide scroll runway (unchanged)
+      const stickyStartVH = 100; // sticky viewport height at start (vh)
+      const stickyEndVH   = 85;  // end height (gentler)
+
+      // Spread the shrink over a longer range and ease it to feel slower
+      const shrinkStart = 0.60; // begin easing earlier
+      const shrinkEnd   = 1.00; // finish right at the end
+      const rawShrink = clamp((p - shrinkStart) / (shrinkEnd - shrinkStart), 0, 1);
+      const tShrink = rawShrink * rawShrink * (3 - 2 * rawShrink); // smoothstep easing
+
+      // Lerp helper
+      const lerp = (a, b, t) => a + (b - a) * t;
+
+      // Only shrink the sticky viewport height smoothly.
+      const sticky = s.querySelector('.frame-sticky');
+      if (sticky) {
+        const hVH = lerp(stickyStartVH, stickyEndVH, tShrink);
+        sticky.style.height = hVH + 'vh';
+      }
+
+      // Visually reduce the gap to the next section without changing layout
+      // by translating the next element upward as the sticky shrinks.
+      const nextEl = s.nextElementSibling;
+      if (nextEl) {
+        const isPerceptionTabs = nextEl.classList.contains('perception-tabs');
+        const liftPx = isPerceptionTabs ? 80 : 160; // gentler lift for tabs so they don’t tuck under
+        const y = -(liftPx * tShrink);
+        nextEl.style.transform = `translateY(${y}px)`;
+        nextEl.style.willChange = 'transform';
+        nextEl.style.position = 'relative';
+        if (isPerceptionTabs) nextEl.style.zIndex = 3; // ensure tabs render above the sticky frame
+      }
+    }
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateFrames();
+        ticking = false;
+      });
+    }
+  }
+
+  // init
+  updateFrames();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+    // --- Perception tabs: swap image + copy ---
+  const section = document.getElementById('perception-zoom');
+  const img = section?.querySelector('.frame-media');
+  const tabWrap = document.querySelector('.perception-tabs .tabs-wrap');
+  if (!tabWrap) return;
+
+  const tabs = Array.from(tabWrap.querySelectorAll('[role="tab"]'));
+  const panels = {
+    night: document.getElementById('tab-panel-night'),
+    rain:  document.getElementById('tab-panel-rain'),
+    sun:   document.getElementById('tab-panel-sun')
+  };
+  const imgSrc = {
+    night: '{{ "/img/ka1s/s4_night.png" | relative_url }}',
+    rain:  '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',  
+    sun:   '{{ "/img/ka1s/s4_glare.png"   | relative_url }}' 
+  };
+
+  function activate(name){
+    tabs.forEach(btn => {
+      const isActive = btn.id === `tab-${name}`;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.tabIndex = isActive ? 0 : -1;
+    });
+    Object.entries(panels).forEach(([key, el]) => {
+      const active = key === name;
+      if (!el) return;
+      el.hidden = !active;
+      el.classList.toggle('is-active', active);
+    });
+    if (img && imgSrc[name]) {
+      img.src = imgSrc[name];
+    }
+    // Update Perception underline segment after ARIA state changes
+    (function positionPerceptionUnderline(){
+      const tablist = document.querySelector('.perception-tabs .perception-tablist');
+      if (!tablist) return;
+      const active = tablist.querySelector('.safety-tab[aria-selected="true"]');
+      if (!active) return;
+      const cs    = getComputedStyle(tablist);
+      const gapPx = parseFloat(cs.gap) || 0;
+      const extend = gapPx * 0.5; // match Safety behavior
+      const base  = tablist.getBoundingClientRect();
+      const rect  = active.getBoundingClientRect();
+      let left  = (rect.left  - base.left) - extend;
+      let right = (rect.right - base.left) + extend;
+      left  = Math.max(0, left);
+      right = Math.min(base.width, right);
+      const width = Math.max(0, right - left);
+      tablist.style.setProperty('--active-left',  `${Math.round(left)}px`);
+      tablist.style.setProperty('--active-width', `${Math.round(width)}px`);
+    })();
+  }
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.id.replace('tab-', '');
+      activate(name);
+    });
+    btn.addEventListener('keydown', (e) => {
+      const idx = tabs.indexOf(btn);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = tabs[(idx + 1) % tabs.length];
+        next.focus(); next.click();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+        prev.focus(); prev.click();
+      }
+    });
+  });
+
+  // default
+  activate('night');
+
+  // --- Perception tabs: underline baseline + active segment (reuse Safety logic) ---
+  (function initPerceptionUnderline(){
+    const tablist = document.querySelector('.perception-tabs .perception-tablist');
+    if (!tablist) return;
+    const tabs = Array.from(tablist.querySelectorAll('.safety-tab[role="tab"]'));
+
+    function px(n){ return `${Math.round(n)}px`; }
+    function positionBaseline(){
+      if (tabs.length === 0) return;
+      const first = tabs[0];
+      const last  = tabs[tabs.length - 1];
+      const cs    = getComputedStyle(tablist);
+      const gapPx = parseFloat(cs.gap) || 0;
+      const extend = gapPx * 0.5; // match Safety behavior
+      const baseRect = tablist.getBoundingClientRect();
+      const f = first.getBoundingClientRect();
+      const l = last.getBoundingClientRect();
+      let left  = (f.left - baseRect.left) - extend;
+      let right = (l.right - baseRect.left) + extend;
+      left  = Math.max(0, left);
+      right = Math.min(baseRect.width, right);
+      tablist.style.setProperty('--base-left',  px(left));
+      tablist.style.setProperty('--base-width', px(Math.max(0, right - left)));
+    }
+    function positionActive(){
+      const active = tablist.querySelector('.safety-tab[aria-selected="true"]');
+      if (!active) return;
+      const cs    = getComputedStyle(tablist);
+      const gapPx = parseFloat(cs.gap) || 0;
+      const extend = gapPx * 0.5;
+      const base  = tablist.getBoundingClientRect();
+      const rect  = active.getBoundingClientRect();
+      let left  = (rect.left  - base.left) - extend;
+      let right = (rect.right - base.left) + extend;
+      left  = Math.max(0, left);
+      right = Math.min(base.width, right);
+      const width = Math.max(0, right - left);
+      tablist.style.setProperty('--active-left',  px(left));
+      tablist.style.setProperty('--active-width', px(width));
     }
 
-    window.onload = load;
+    // Hook into the existing Perception tab activation
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => { setTimeout(positionActive, 0); });
+      btn.addEventListener('keydown', () => { setTimeout(positionActive, 0); });
+    });
+        
+    // Initial layout + resize adjustments
+    positionBaseline();
+    positionActive();
+    const ro2 = new ResizeObserver(() => { positionBaseline(); positionActive(); });
+    ro2.observe(tablist);
+    window.addEventListener('resize', () => { positionBaseline(); positionActive(); }, { passive: true });
+  })();
 
-    localizerer.onclick = () => {
-            const params = new URLSearchParams();
-            params.append("car", localizer.selectedOptions[0].innerText);
-            window.location.href = `${localizer.value}?${params.toString()}`;
-        };
+    // --- Safety tabs: swap looped video + copy ---
+    (function initSafetyTabs(){
+      const video = document.getElementById('safetyVideo');
+      const tabs = Array.from(document.querySelectorAll('.safety-tablist [role="tab"]'));
+      const panels = {
+        attn:     document.getElementById('safety-panel-attn'),
+        failsafe: document.getElementById('safety-panel-failsafe'),
+        steer:    document.getElementById('safety-panel-steer')
+      };
+      const sources = {
+        attn:     '{{ "/assets/ka_ani_s3_1.webm" | relative_url }}',
+        failsafe: '{{ "/assets/ka_ani_s3_2.webm" | relative_url }}',
+        steer:    '{{ "/assets/ka_ani_s3_3.webm" | relative_url }}'
+      };
+      if (!video || tabs.length === 0) return;
+
+      const tablist = document.querySelector('.safety-tablist');
+      function px(n){ return `${Math.round(n)}px`; }
+      function positionBaseline(){
+        const tablist = document.querySelector('.safety-tablist');
+        if (!tablist) return;
+        const btns = Array.from(tablist.querySelectorAll('.safety-tab'));
+        if (btns.length === 0) return;
+        const first = btns[0];
+        const last  = btns[btns.length - 1];
+        const cs    = getComputedStyle(tablist);
+        const gapPx = parseFloat(cs.gap) || 0;
+        const extend = gapPx * 0.5;
+        const baseRect = tablist.getBoundingClientRect();
+        const f = first.getBoundingClientRect();
+        const l = last.getBoundingClientRect();
+        let left  = (f.left - baseRect.left) - extend;
+        let right = (l.right - baseRect.left) + extend;
+        // clamp to tablist box
+        left  = Math.max(0, left);
+        right = Math.min(baseRect.width, right);
+        tablist.style.setProperty('--base-left',  px(left));
+        tablist.style.setProperty('--base-width', px(Math.max(0, right - left)));
+      }
+      function positionActiveUnderline(){
+        const tablist = document.querySelector('.safety-tablist');
+        if (!tablist) return;
+        const active = tablist.querySelector('.safety-tab[aria-selected="true"]');
+        if (!active) return;
+        const cs    = getComputedStyle(tablist);
+        const gapPx = parseFloat(cs.gap) || 0;
+        const extend = gapPx * 0.5;
+        const base  = tablist.getBoundingClientRect();
+        const rect  = active.getBoundingClientRect();
+        let left  = (rect.left  - base.left) - extend;
+        let right = (rect.right - base.left) + extend;
+        left  = Math.max(0, left);
+        right = Math.min(base.width, right);
+        const width = Math.max(0, right - left);
+        tablist.style.setProperty('--active-left',  px(left));
+        tablist.style.setProperty('--active-width', px(width));
+      }
+
+      function activate(name){
+        tabs.forEach(btn => {
+          const active = btn.id === `safety-tab-${name}`;
+          btn.setAttribute('aria-selected', String(active));
+        });
+        Object.entries(panels).forEach(([key, el]) => {
+          if (!el) return;
+          const active = key === name;
+          el.hidden = !active;
+        });
+        const src = sources[name];
+        if (src && video.getAttribute('src') !== src) {
+          video.pause();
+          video.setAttribute('src', src);
+          video.load();
+          video.play().catch(()=>{});
+        }
+        positionActiveUnderline();
+      }
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => activate(btn.id.replace('safety-tab-','')));
+        btn.addEventListener('keydown', (e) => {
+          const i = tabs.indexOf(btn);
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const next = tabs[(i + 1) % tabs.length]; next.focus(); next.click();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prev = tabs[(i - 1 + tabs.length) % tabs.length]; prev.focus(); prev.click();
+          }
+        });
+      });
+
+        // default
+        activate('attn');
+        positionBaseline();
+        positionActiveUnderline();
+
+        // keep underline/baseline aligned on size & font/layout changes
+        const ro1 = new ResizeObserver(() => { positionBaseline(); positionActiveUnderline(); });
+        const tablistEl1 = document.querySelector('.safety-tablist');
+        if (tablistEl1) ro1.observe(tablistEl1);
+        window.addEventListener('resize', () => { positionBaseline(); positionActiveUnderline(); }, { passive: true });
+        setTimeout(() => { positionBaseline(); positionActiveUnderline(); }, 0); // after initial layout
+    })();
+    // --- Ports labels entrance (ordered, tunable, scroll‑linked) ---
+    (function initPortsLabels(){
+      const section = document.getElementById('ports');
+      if (!section) return;
+      const overlay = section.querySelector('.ports-overlay');
+      if (!overlay) return;
+
+      const labels = Array.from(overlay.querySelectorAll('.port-label'))
+        .sort((a,b) => (parseInt(a.dataset.order||'0',10) - parseInt(b.dataset.order||'0',10)));
+
+      const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+      const ease  = (t) => t*t*(3-2*t); // smoothstep
+
+      // Section-level timing controls (in progress units 0..1)
+      function getTiming(){
+        const start = parseFloat(section.dataset.start || '0.05'); // when first label begins
+        const step  = parseFloat(section.dataset.step  || '0.1'); // spacing between labels
+        const ramp  = parseFloat(section.dataset.ramp  || '0.1'); // duration per label
+        return { start, step, ramp };
+      }
+
+      function progress(){
+        // Reuse the same pinned progress helper used for Perception
+        // 0 when the Ports section pins, 1 when it unpins
+        return sectionProgress(section);
+      }
+
+      function render(){
+        const p = ease(progress());
+        const { start, step, ramp } = getTiming();
+        const overlayRect = overlay.getBoundingClientRect();
+
+        labels.forEach((el, i) => {
+          // --- Scroll reveal opacity/offset ---
+          const customDelay = parseFloat(el.dataset.delay || '0');
+          const t0 = start + i * step + customDelay;               // reveal threshold
+          const t  = clamp((p - t0) / ramp, 0, 1);                 // 0..1 within [t0, t0+ramp]
+          el.style.opacity   = t.toFixed(3);
+          el.style.transform = `translateY(${(1 - t) * 8}px)`;
+          if (t > 0.999) el.classList.add('in');
+
+          // --- Responsive connector length to hit anchor Y (if provided) ---
+          const anchorAttr = el.dataset.anchorY; // percent of overlay height (0-100)
+          if (anchorAttr) {
+            const anchorPct = parseFloat(anchorAttr);
+            if (!Number.isNaN(anchorPct)) {
+              const anchorY = overlayRect.top + (overlayRect.height * (anchorPct > 1 ? anchorPct/100 : anchorPct));
+              const gapPx = (() => {
+                const s = getComputedStyle(el).getPropertyValue('--gap');
+                const n = parseFloat(s);
+                return Number.isNaN(n) ? 8 : n;
+              })();
+              const r = el.getBoundingClientRect();
+              let dist;
+              if (el.classList.contains('top')) {
+                const labelBottom = r.top + r.height; // bottom of text box
+                dist = anchorY - labelBottom - gapPx;
+              } else { // bottom label: line goes upward
+                const labelTop = r.top;               // top of text box
+                dist = labelTop - anchorY - gapPx;
+              }
+              el.style.setProperty('--line', Math.max(0, Math.round(dist)) + 'px');
+            }
+          }
+        });
+      }
+
+      render();
+      window.addEventListener('scroll', render, { passive: true });
+      window.addEventListener('resize', render, { passive: true });
+
+      // Expose a tiny live‑tuning hook in DevTools: window.portsTiming({start,step,ramp})
+      window.portsTiming = (cfg={}) => {
+        if (cfg.start != null) section.dataset.start = cfg.start;
+        if (cfg.step  != null) section.dataset.step  = cfg.step;
+        if (cfg.ramp  != null) section.dataset.ramp  = cfg.ramp;
+        render();
+      };
+    })();
+  // --- Performance meters animation ---
+  (function initPerfMeters(){
+    const wrap = document.getElementById('perfMeters');
+    if (!wrap) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    const rows = Array.from(wrap.querySelectorAll('.meter-row'));
+    let played = false;
+
+    function ease(t){ return t*t*(3-2*t); }
+
+    function animate(){
+      const dur = 1400; // ms
+      const t0 = performance.now();
+      function frame(now){
+        const k = Math.min(1, (now - t0) / dur);
+        const e = ease(k);
+        rows.forEach(row => {
+          const fill = row.querySelector('.meter-fill');
+          const pct  = parseFloat(fill.dataset.pct || '0');
+          const maxPct = parseFloat(row.dataset.maxpct || '80'); // cap end at 80% by default
+          const capPct = Math.min(pct, maxPct);
+          const wPct = e * capPct;                 // current width % (capped)
+          fill.style.width = wPct + '%';
+
+          // Update value text
+          const target  = parseFloat(fill.dataset.target || '0');
+          const valSpan = row.querySelector('.meter-value');
+          valSpan.textContent = (Math.round(target * e * 100) / 100).toString();
+          const unitSpan = row.querySelector('.meter-units');
+          unitSpan.textContent = row.dataset.units || '';
+
+          // Tether the tip to the end of the bar, pinned exactly at the bar end (capped)
+          const tip = row.querySelector('.meter-tip');
+          if (tip){
+            // Pin the tip exactly at the bar end (capped), then offset by CSS --meter-tip-gap
+            const endPct = Math.min(wPct, capPct);
+            tip.style.left = endPct + '%';
+          }
+        });
+        if (k < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (played) return;
+        if (e.isIntersecting){
+          played = true;
+          if (!reduce) animate();
+          else {
+            // jump to end state for reduced motion
+            rows.forEach(row => {
+              const fill = row.querySelector('.meter-fill');
+              const pct  = parseFloat(fill.dataset.pct || '0');
+              const maxPct = parseFloat(row.dataset.maxpct || '80');
+              const capPct = Math.min(pct, maxPct);
+              fill.style.width = capPct + '%';
+              const valSpan = row.querySelector('.meter-value');
+              const target  = parseFloat(fill.dataset.target || '0');
+              valSpan.textContent = target.toString();
+              const tip = row.querySelector('.meter-tip');
+              if (tip){ tip.style.left = capPct + '%'; }
+            });
+          }
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    io.observe(wrap);
+  })();
+})();
 </script>
