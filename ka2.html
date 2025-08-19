@@ -137,12 +137,19 @@ stylesheet: products
         margin: 0.25rem 0 0.5rem;
       }
       .ka-subcopy {
+        font-size: clamp(1.5rem, 1.5vw + 0.8rem, 1.5rem);
         margin: 3rem 0;
         color: #b2b2b2;
         font-family: GlacialIndifference-Bold;
       }
       .ka-subcopy span {
         font-family: GlacialIndifference-Bold;
+      }
+      .ka-secondaryText {
+        font-size: clamp(1.25rem, 1.5vw + 0.8rem, 1.25rem);
+        margin: 0;
+        color: #f1f1f1;
+        font-weight: 300;
       }
       /* Fix stacking so text isn't covered by videos */
       .module-content { position: relative; }
@@ -625,7 +632,7 @@ stylesheet: products
             ></video>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
               <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
-              <p class="text-white font-medium" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
+              <p class="text-white font-medium ka-secondaryText" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
               <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it never obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
             <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
