@@ -613,15 +613,44 @@ stylesheet: products
             <h2 class="ka-heading-md text-white">KommuAssist 2.</h2>
             <h1 class="ka-heading-xl text-white">Built for Smarter Journey.</h1>
             <video
+              id="s1Video"
               class="s1-video scroll-video"
-              src="{{ "/assets/ka_ani_s1.webm" | relative_url }}"
               playsinline
               autoplay
               muted
+              preload="metadata"
               data-autoplay="true"
               data-play-once="true"
               aria-label="KommuAssist unit rotating on purple glow background"
-            ></video>
+            >
+              <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
+            </video>
+            <script>
+              (function(){
+                var v = document.getElementById('s1Video');
+                if (!v) return;
+                // Real Safari detection (excludes Chrome on iOS/macOS)
+                var ua = navigator.userAgent;
+                var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+                var sources = isSafari
+                  ? [
+                      { src: "{{ "/assets/ka_ani_s1.mp4" | relative_url }}", type: "video/mp4" },
+                      { src: "{{ "/assets/ka_ani_s1.webm" | relative_url }}", type: "video/webm" }
+                    ]
+                  : [
+                      { src: "{{ "/assets/ka_ani_s1.webm" | relative_url }}", type: "video/webm" },
+                      { src: "{{ "/assets/ka_ani_s1.mp4" | relative_url }}", type: "video/mp4" }
+                    ];
+                // Clear any existing <source> children (safety)
+                while (v.firstChild) v.removeChild(v.firstChild);
+                sources.forEach(function(s){
+                  var el = document.createElement('source');
+                  el.src = s.src; el.type = s.type; v.appendChild(el);
+                });
+                // Load after sources are appended
+                try { v.load(); } catch(e) {}
+              })();
+            </script>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
               <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
               <p class="text-white font-medium" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
@@ -644,14 +673,18 @@ stylesheet: products
   <div class="module-content">
     <video
       class="s2-video scroll-video"
-      src="{{ "/assets/ka_ani_s2.webm" | relative_url }}"
       playsinline
       autoplay
       muted
+      preload="metadata"
       data-autoplay="true"
       data-play-once="true"
       aria-label="KommuAssist unit performance highlight animation"
-    ></video>
+    >
+      <source src="{{ "/assets/ka_ani_s2.webm" | relative_url }}" type="video/webm">
+      <source src="{{ "/assets/ka_ani_s2.mp4" | relative_url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
     <p class="ka-subcopy font-bold text-left">Powered by <span class="text-white">Rockchip RK3588</span>. Whole new level of edge computing with <span class="text-white">6 TOPS NPU</span> - more room to handle larger AI models effortlessly. Run end-to-end neural networks with <span class="text-white">3-5 million parameters</span>, all while drawing just 
 10 watts of efficient power.</p>
     <div class="perf-meters" id="perfMeters" style="--meter-label-col: minmax(125px, 145px); --meter-gap: 0.1rem; --meter-tip-gap: 20px;">
@@ -701,7 +734,7 @@ stylesheet: products
 
   <div class="safety-video-wrap">
     <video class="safety-video" id="safetyVideo"
-           src="{{ '/assets/ka_safety_attn.webm' | relative_url }}"
+           src="{{ '/assets/ka_ani_s3_1.webm' | relative_url }}"
            autoplay muted loop playsinline
            aria-label="Safety feature animation">
     </video>

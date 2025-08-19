@@ -91,9 +91,61 @@ title: Checkout
 
 <script>
   const shippingConfig = {{ site.data.shipping | jsonify }};
+  const products = {{ site.data.products | jsonify }};
   const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
   const currency = getCurrencyCode(locale);
   const formatter = getFormatter(locale);
+
+  // Global helpers so both DOM init and checkoutSubmit can use them
+  function getDevicePriceByCurrency(curr) {
+    try {
+      const dev = (products || []).find(p => (p.name||"").toLowerCase() === "kommuassist2");
+      if (!dev) return 0;
+      const prices = dev.prices || {};
+      // Accept curr in any case, fallback to USD
+      const ccy = (curr || '').toUpperCase();
+      const val = prices[ccy] ?? prices.USD ?? 0;
+      return parseFloat(val) || 0;
+    } catch (e) { return 0; }
+  }
+
+  function computePlan() {
+    const ccy = (currency || '').toUpperCase();
+    const nonMYR = ccy !== 'MYR';
+    const isFromProduct = sessionStorage.getItem('fromProductPage') === 'true';
+    const selectionsRaw = sessionStorage.getItem('checkoutSelections');
+    const selections = (isFromProduct && selectionsRaw) ? JSON.parse(selectionsRaw) : {};
+    const plan = { provider: '', locks: {}, mode: isFromProduct ? 'product' : 'cart' };
+
+    if (isFromProduct) {
+      const wantsRTO = (selections.payment||'').toLowerCase().includes('rent-to-own');
+      if (!nonMYR && !wantsRTO) {
+        // 1) product • MYR • one-off • device
+        plan.provider = 'curlec-otp';
+        plan.locks = { country: 'MY', icRequired: false };
+      } else if (!nonMYR && wantsRTO) {
+        // 2) product • MYR • RTO • device
+        plan.provider = 'curlec-sub';
+        plan.locks = { country: 'MY', icRequired: true, forceNoSim: true, forceNoTradeIn: true };
+      } else {
+        // 3) product • non-MYR • any • device
+        plan.provider = 'stripe';
+        plan.locks = { icRequired: false, forceOneOff: true, forceNoSim: true, forceNoTradeIn: true, forceSelfInstall: true };
+      }
+    } else {
+      // CART FLOWS (accessories-only here)
+      if (ccy === 'MYR') {
+        // 4) cart • MYR • accessories-only
+        plan.provider = 'curlec-otp';
+        plan.locks = { hidePromo: true, country: 'MY' };
+      } else {
+        // 5) cart • non-MYR • accessories-only
+        plan.provider = 'stripe';
+        plan.locks = { hidePromo: true };
+      }
+    }
+    return plan;
+  }
 
   document.addEventListener("DOMContentLoaded", () => {
     const cartItems      = JSON.parse(localStorage.getItem("cart")) || [];
@@ -101,6 +153,22 @@ title: Checkout
     let isFromProduct  = sessionStorage.getItem("fromProductPage") === "true";
 
     // Resolve source of checkout view
+
+    function applyLocks(plan) {
+      const ctry = document.getElementById('checkoutCountry');
+      if (plan.locks.country) { ctry.value = plan.locks.country; ctry.disabled = true; } else { ctry.disabled = false; }
+      if (plan.locks.icRequired) { icGroup.classList.remove('hidden'); icInput.required = true; } else { icGroup.classList.add('hidden'); icInput.required = false; }
+      if (plan.locks.hidePromo) { promoGroup.classList.add('hidden'); } else { promoGroup.classList.remove('hidden'); }
+
+      // Force selection strings for product flow
+      if (isFromProduct) {
+        if (plan.locks.forceOneOff) { selections.payment = 'One-off purchase'; }
+        if (plan.locks.forceNoSim) { selections.sim = 'Use my own SIM card'; }
+        if (plan.locks.forceNoTradeIn) { selections.tradeIn = 'No Trade-in'; }
+        if (plan.locks.forceSelfInstall) { selections.install = 'Self-installation'; }
+        sessionStorage.setItem('checkoutSelections', JSON.stringify(selections));
+      }
+    }
     const urlParams = new URLSearchParams(location.search);
     const modeParam = urlParams.get('mode') || urlParams.get('src'); // allow ?mode=cart or ?src=cart
     if (modeParam === 'cart') {
@@ -135,16 +203,10 @@ title: Checkout
     }
     
 
-    // Force one-off + Stripe for non-MYR currencies
+    // Compute plan and apply locks
     const isNonMYRCurrency = (currency || '').toUpperCase() !== 'MYR';
-    if (isNonMYRCurrency && isFromProduct) {
-      selections.payment = "One-off payment";
-      // ensure IC is hidden & not required
-      icGroup.classList.add("hidden");
-      icInput.required = false;
-      // persist locked selection
-      sessionStorage.setItem("checkoutSelections", JSON.stringify(selections));
-    }
+    const plan = computePlan();
+    applyLocks(plan);
 
 
     // only show IC when user is RTO
@@ -170,6 +232,8 @@ title: Checkout
     const countryInput = document.getElementById("checkoutCountry");
     const defaultCode = locale.split('-')[1]?.toUpperCase() || 'MY';
     countryInput.value = defaultCode;
+    // Enforce plan country lock immediately
+    if (plan.locks.country) { countryInput.value = plan.locks.country; countryInput.disabled = true; }
     countryInput.addEventListener("change", updateTotalDue);
 
     // compute shipping cost for default country (product page summary)
@@ -412,18 +476,24 @@ const otpUrl = "https://aws.kommu.ai/curlec/otp?";
 const stripeUrl = "https://aws.kommu.ai/stripe/checkout?";
 
 function checkoutSubmit() {
-  let fromProduct   = sessionStorage.getItem('fromProductPage') === 'true';
+  var fromProduct   = false;
   const _urlParams = new URLSearchParams(location.search);
   const _modeParam = _urlParams.get('mode') || _urlParams.get('src');
-  if (_modeParam === 'cart') fromProduct = false;
-  else if (_modeParam === 'product') fromProduct = true;
-  else if (fromProduct && (JSON.parse(localStorage.getItem('cart') || '[]')).length > 0) fromProduct = false;
+  if ((_modeParam === 'product') || (sessionStorage.getItem('fromProductPage') === 'true'))  fromProduct = true; 
   const selectionsRaw = sessionStorage.getItem('checkoutSelections');
   const selections    = selectionsRaw ? JSON.parse(selectionsRaw) : {};
-  let useVisa = fromProduct && selections.payment && selections.payment.toLowerCase().includes('rent-to-own');
-  if ((currency || '').toUpperCase() !== 'MYR') {
-    useVisa = false; // force non-RTO
-  }
+
+  // Plan calculation for submission (recompute with latest selections)
+  const plan = (function(){
+    const sRaw = sessionStorage.getItem('checkoutSelections');
+    const s = sRaw ? JSON.parse(sRaw) : {};
+    return (function(sel){
+      // reuse computePlan with current selections
+      return computePlan();
+    })(s);
+  })();
+
+  const useVisa = (plan.provider === 'curlec-sub');
 
   // common form values
   const name     = document.getElementById("checkoutName").value.trim();
@@ -444,17 +514,24 @@ function checkoutSubmit() {
 
   // calculate subtotal and shipping
   const subText = document.getElementById("checkoutCartSubtotal").innerText.replace(/[^\d.]/g,"");
-  const promoCode        = document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "";
-  const devicePrice = parseFloat(subText) || 0;
+  const promoCode = document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "";
+  let devicePrice = 0;
+  if (fromProduct) {
+    devicePrice = getDevicePriceByCurrency((currency||'USD'));
+  } else {
+    devicePrice = parseFloat(subText) || 0;
+  }
   const entry = shippingConfig.find(e => e.code === country) || {};
   const ship  = parseFloat(entry.rates?.[currency] || 0);
 
   // build params & redirect
   if (useVisa) {
     // rent-to-own → Visa URL
-    const duration         = 36;
-    const subscriptionId   = "plan_QyljeG4K1bOoHG";
-    const monthlyPayment   = (devicePrice / duration).toFixed(2);
+    selections.sim = 'Use my own SIM card';
+    selections.tradeIn = 'No Trade-in';
+    const duration = 36;
+    const subscriptionId = (products.find(p => (p.name||"").toLowerCase()==="kommuassist2")?.subscription?.id) || "";
+    const monthlyPayment = (devicePrice / duration).toFixed(2);
     const visaItems = [{
       sim:         selections.sim || "",
       tradeIn:     selections.tradeIn || ""
@@ -476,16 +553,17 @@ function checkoutSubmit() {
     params.append("installation",     selections.install || "");
     params.append("promoCode",        promoCode);
     params.append("deviceProperties", JSON.stringify(visaItems));
+    params.append("country",           "Malaysia");
+    params.append("currency",          "MYR");
 
     sessionStorage.setItem("customerName", name);
     window.open(visaUrl + params.toString(), "_blank");
     return;
   }
 
-  // default: One-time payment → OTP URL
+  // default: One-time payment → OTP or Stripe URL
   const total = devicePrice + ship;
   let lineItems;
-
 
   const otpParams = new URLSearchParams({
     name,
@@ -523,7 +601,29 @@ function checkoutSubmit() {
   }
 
   sessionStorage.setItem("customerName", name);
-  const targetUrl = ((currency || '').toUpperCase() !== 'MYR') ? stripeUrl : otpUrl;
+
+  let targetUrl = otpUrl;
+  if (plan.provider === 'stripe') targetUrl = stripeUrl;
+  if (plan.provider === 'curlec-otp') targetUrl = otpUrl;
+
+  // Enforce country/currency for each case
+  if (plan.mode === 'product') {
+    if (plan.provider === 'curlec-otp') {
+      otpParams.set('country', 'Malaysia');
+      otpParams.set('currency', 'MYR');
+    }
+    if (plan.provider === 'stripe') {
+      // country(name) already from dropdown; currency already set above
+      // also force one-off & locks already applied in selections
+    }
+  } else {
+    // cart accessories-only
+    if (plan.provider === 'curlec-otp') {
+      otpParams.set('country', 'Malaysia');
+      otpParams.set('currency', 'MYR');
+    }
+  }
+
   window.open(targetUrl + otpParams.toString(), "_blank");
 }
 
