@@ -1,15 +1,15 @@
 ---
 layout: default
-title: KA1s | kommu.ai
+title: KommuAssist | kommu.ai
 stylesheet: products
 ---
 <head>
     <link href="{{ "/css/ka1s.css" | relative_url }}" rel="stylesheet">
     <style>
       /* --- Performance meters --- */
-.perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#eaeaea; }
+.perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#b2b2b2; }
 .perf-group { margin-top: 1.5rem; }
-.perf-group h4 { font-family: GlacialIndifference-Bold; margin: 1.25rem 0 0.75rem; font-weight: 500; font-size: 1.2rem; color:#fff; }
+.perf-group h4 { font-family: GlacialIndifference-Bold; margin: 1.25rem 0 0.75rem; font-weight: 500; font-size: 1.2rem; color:#f1f1f1; }
 
 .meter-row {
   display:grid;
@@ -21,7 +21,7 @@ stylesheet: products
 .meter-label { font-family: GlacialIndifference-Bold; font-size: .9rem; opacity:.9; white-space:nowrap; text-align:left; }
 .meter-anno  { font-size: .85rem; opacity:.8; white-space:nowrap; }
   .meter-track { grid-column: 2 / 3; position:relative; height:4px; background:transparent; border-radius:999px; overflow:visible; }
-  .meter-fill  { position:absolute; inset:0 auto 0 0; width:0%; background:rgba(255,255,255,.9); box-shadow:0 0 12px rgba(255,255,255,.25); border-radius:999px; }
+  .meter-fill  { position:absolute; inset:0 auto 0 0; width:0%; background:rgba(178,178,178,.9); box-shadow:0 0 12px rgba(178,178,178,.25); border-radius:999px; }
 
   .meter-tip {
     position:absolute;
@@ -76,19 +76,19 @@ stylesheet: products
 }
       /* Hero section with purple background image */
       .btn-order {
-            height:50px;
-            line-height:50px;
-            font-size:25px;
-            padding: 0px 35px;
+            height:44px;
+            line-height:24px;
+            font-size:20px;
+            padding: 10px 30px;
         }
 
       .s1-hero {
         position: relative;
-        min-height: 120vh;
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('{{ "/img/ka1s/s1_bg.webp" | relative_url }}') center/cover no-repeat;
+        background: url('{{ "/img/ka1s/s1_bg.png" | relative_url }}') center/cover no-repeat;
       }
       .s1-hero .unit-image-wrapper {
         width: 100%;
@@ -118,7 +118,7 @@ stylesheet: products
       }
       .section-copy--center { text-align: center; }
       .ka-heading-xl {
-        font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
+        font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
         line-height: 1.15;
         font-weight: 700;
         margin: 0.5rem 0 0.75rem;
@@ -137,12 +137,20 @@ stylesheet: products
         margin: 0.25rem 0 0.5rem;
       }
       .ka-subcopy {
+        font-size: clamp(1.5rem, 1.5vw + 0.8rem, 1.5rem);
+        line-height: 30px;
         margin: 3rem 0;
         color: #b2b2b2;
         font-family: GlacialIndifference-Bold;
       }
       .ka-subcopy span {
         font-family: GlacialIndifference-Bold;
+      }
+      .ka-secondaryText {
+        font-size: clamp(1.25rem, 1.5vw + 0.8rem, 1.25rem);
+        margin: 0;
+        color: #f1f1f1;
+        font-weight: 300;
       }
       /* Fix stacking so text isn't covered by videos */
       .module-content { position: relative; }
@@ -163,8 +171,8 @@ stylesheet: products
 
 .section-eyebrow {
   display: block;
-  font-size: 1.5rem;
-  font-weight: 400;
+  font-size: 1.75rem;
+  font-weight: 300;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: #b2b2b2;
@@ -174,11 +182,11 @@ stylesheet: products
 
 .section-title {
   font-family: GlacialIndifference-Bold;
-  font-size: 2.5rem;
-  line-height: 1.15;
+  font-size: 3.5rem;
+  line-height: 67px;
   font-weight: lighter;
   margin-top: 0.25rem;
-  color: #fff;
+  color: #f1f1f1;
   text-align: left;
 }
 
@@ -261,7 +269,7 @@ stylesheet: products
   width: var(--active-width, 0);
   bottom: 0;
   height: 2px;
-  background: #fff;
+  background: #f1f1f1;
   transition: left .22s ease, width .22s ease, transform .22s ease;
   pointer-events: none;
 }
@@ -277,11 +285,11 @@ stylesheet: products
   transition: color .2s ease;
 }
 .safety-tab[aria-selected="true"],
-.safety-tab.is-active { color: #fff; }
+.safety-tab.is-active { color: #f1f1f1; }
 /* no ::after on the button — underline is drawn by the tablist */
 .safety-panel {
   text-align: center;
-  color: #d6d6d6;
+  color: #b2b2b2;
   font-size: 0.95rem;
   line-height: 1.5;
   max-width: 980px;
@@ -372,7 +380,7 @@ stylesheet: products
 
         .frame-text h2,
         .frame-text p {
-        color: #fff;
+        color: #f1f1f1;
         margin: 0;
         }
 
@@ -404,7 +412,7 @@ stylesheet: products
         }
         .frame-headline .line {
           display: block;
-          color: #fff;
+          color: #f1f1f1;
           font-weight: 800;
           line-height: 1.05;
         }
@@ -433,7 +441,7 @@ stylesheet: products
         }
         /* Big H2: 3 Automotive Cameras. */
         .frame-caption .cap-line:nth-child(2) {
-          color: #fff;
+          color: #f1f1f1;
 
           font-size: clamp(1.6rem, 3.3vw, 2.25rem);
           font-weight: 800;
@@ -441,7 +449,7 @@ stylesheet: products
         /* Line 3 + 4: smaller bold */
         .frame-caption .cap-line:nth-child(3),
         .frame-caption .cap-line:nth-child(4) {
-          color: #fff;
+          color: #f1f1f1;
           font-size: clamp(0.95rem, 1.4vw, 1.05rem);
           font-weight: 800;
           margin-top: 0.25rem;
@@ -452,7 +460,8 @@ stylesheet: products
           font-weight: 600;
           opacity: 0; /* revealed via JS */
           margin-top: 0.6rem;
-          color: #fff;
+          margin-bottom: 0.6rem;
+          color: #b2b2b2;
 
         }
 
@@ -492,7 +501,7 @@ stylesheet: products
         .tab-panel { 
           margin-top: 1rem; 
           text-align: center; 
-          color: #d6d6d6;
+          color: #b2b2b2;
           font-size: 0.95rem;
           line-height: 1.5;
         }
@@ -574,7 +583,7 @@ stylesheet: products
 .ports-overlay { position: absolute; inset: 0; pointer-events: none; }
 .port-label {
   position: absolute;
-  color: #eaeaea;
+  color: #f1f1f1;
   font-weight: 500;                /* thinner */
   font-size: clamp(0.8rem, 1.2vw, 1.0rem);
   letter-spacing: 0.02em;
@@ -592,7 +601,7 @@ stylesheet: products
     position: absolute;
     left: 50%;
     width: 1px;                              /* thinner */
-    background: rgba(255,255,255,0.5);        /* slightly lighter */
+    background: rgba(241,241,241,0.5);        /* slightly lighter */
     transform: translateX(-50%);
   }
   /* top labels get line downwards — start below full text block */
@@ -610,7 +619,7 @@ stylesheet: products
 <section class="ka1s-section">
     <div class="module-content s1-hero">
         <div class="unit-image-wrapper">
-            <h2 class="ka-heading-md text-white">KommuAssist 2.</h2>
+            <h2 class="ka-heading-md text-white">KommuAssist 2</h2>
             <h1 class="ka-heading-xl text-white">Built for Smarter Journey.</h1>
             <video
               id="s1Video"
@@ -653,14 +662,8 @@ stylesheet: products
             </script>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
               <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
-              <p class="text-white font-medium" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
+              <p class="text-white font-medium ka-secondaryText" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
               <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it never obstructs the driver’s view and stays neatly tucked along the windshield.</p>
-            </div>
-            <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
-                <div class="row" id="margin-top-ka1s-btns" style="padding: 0px;">
-                  <div class="col-6">
-                  </div>
-                </div>
             </div>
         </div>
     </div>
