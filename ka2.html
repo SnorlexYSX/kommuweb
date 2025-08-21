@@ -5,11 +5,20 @@ stylesheet: products
 ---
 <head>
     <link href="{{ "/css/ka1s.css" | relative_url }}" rel="stylesheet">
+    <!-- Preload Perception stills (used by tabs) -->
+    <link rel="preload" as="image" href="{{ "/img/ka1s/s4_night.png" | relative_url }}">
+    <link rel="preload" as="image" href="{{ "/img/ka1s/s4_rain.png"  | relative_url }}">
+    <link rel="preload" as="image" href="{{ "/img/ka1s/s4_glare.png" | relative_url }}">
+
+    <!-- Preload Safety looped animations (used by tabs) -->
+    <link rel="preload" as="video" href="{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}" type="video/webm">
+    <link rel="preload" as="video" href="{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}" type="video/webm">
+    <link rel="preload" as="video" href="{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}" type="video/webm">
     <style>
       /* --- Performance meters --- */
 .perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#b2b2b2; }
 .perf-group { margin-top: 1.5rem; }
-.perf-group h4 { font-family: GlacialIndifference-Bold; margin: 1.25rem 0 0.75rem; font-weight: 500; font-size: 1.2rem; color:#f1f1f1; }
+.perf-group h4 { font-family: GlacialIndifference-Bold; margin: 4rem 0 0.75rem; font-weight: 500; font-size: 1.75rem; color:#f1f1f1; }
 
 .meter-row {
   display:grid;
@@ -18,9 +27,9 @@ stylesheet: products
   align-items:center;
   margin: .35rem 0 .95rem; /* a bit more vertical breathing room */
 }
-.meter-label { font-family: GlacialIndifference-Bold; font-size: .9rem; opacity:.9; white-space:nowrap; text-align:left; }
+.meter-label { font-family: GlacialIndifference-Bold; font-size: 1.5rem; opacity:.9; white-space:nowrap; text-align:left; }
 .meter-anno  { font-size: .85rem; opacity:.8; white-space:nowrap; }
-  .meter-track { grid-column: 2 / 3; position:relative; height:4px; background:transparent; border-radius:999px; overflow:visible; }
+  .meter-track { grid-column: 2 / 3; position:relative; height:3px; background:transparent; border-radius:999px; overflow:visible; }
   .meter-fill  { position:absolute; inset:0 auto 0 0; width:0%; background:rgba(178,178,178,.9); box-shadow:0 0 12px rgba(178,178,178,.25); border-radius:999px; }
 
   .meter-tip {
@@ -34,8 +43,8 @@ stylesheet: products
     white-space:nowrap;
     pointer-events:none;
   }
-  .meter-tip .meter-value { font-weight:500; font-size:0.85rem; color:#b2b2b2; }
-  .meter-tip .meter-units { font-weight:500; font-size:0.85rem; color:#b2b2b2; }
+  .meter-tip .meter-value { font-weight:500; font-size:1.25rem; color:#b2b2b2; }
+  .meter-tip .meter-units { font-weight:500; font-size:1.25rem; color:#b2b2b2; }
 
 /* subtle tick for end value */
 
@@ -88,7 +97,13 @@ stylesheet: products
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('{{ "/img/ka1s/s1_bg.png" | relative_url }}') center/cover no-repeat;
+        background-image:
+          radial-gradient(120% 120% at 50% 40%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%),
+          linear-gradient(to bottom, rgba(0,0,0,0) 65%, rgba(0,0,0,.9) 100%),
+          url('{{ "/img/ka1s/s1_bg_2.webp" | relative_url }}');
+        background-size: 100% 100%, 100% 100%, cover;
+        background-position: center, center, center;
+        background-repeat: no-repeat, no-repeat, no-repeat;
       }
       .s1-hero .unit-image-wrapper {
         width: 100%;
@@ -96,7 +111,17 @@ stylesheet: products
         place-items: center;
         padding: 6rem 0 3rem;
       }
-      .s1-video,
+      .s1-video {
+        width: min(1200px, 92vw);
+        height: auto;
+        display: block;
+        aspect-ratio: 16 / 9;       /* reserve space before load */
+        background: transparent;    /* transparent so underlying purple bg shows through */
+        object-fit: cover;          /* fill frame consistently */
+        opacity: 0;                 /* fade in once playable */
+        transition: opacity .25s ease;
+        border-radius: 12px;        /* optional: match other media rounding */
+      }
       .s2-video {
         width: min(1200px, 92vw);
         height: auto;
@@ -137,9 +162,9 @@ stylesheet: products
         margin: 0.25rem 0 0.5rem;
       }
       .ka-subcopy {
-        font-size: clamp(1.5rem, 1.5vw + 0.8rem, 1.5rem);
+        font-size: clamp(1.5rem, 1.5rem, 1.5rem);
         line-height: 30px;
-        margin: 3rem 0;
+        margin: 2rem 0;
         color: #b2b2b2;
         font-family: GlacialIndifference-Bold;
       }
@@ -192,23 +217,31 @@ stylesheet: products
 
 .safety-section {
   max-width: 1100px;
-  margin: 4rem auto 3rem;
+  margin: 5rem auto 5rem;
   padding: 0 1rem;
   color: #eaeaea;
+  align-content: center;
 }
 
 .performance-section {
   max-width: 1100px;
-  margin: 4rem auto 3rem;
+  margin: 5rem auto 5rem;
   padding: 0 1rem;
   color: #eaeaea;
+}
+
+/* Make each section at least 100% viewport height */
+.performance-section,
+.safety-section,
+.ports-section {
+  min-height: 90vh;
 }
 
 
 .safety-video-wrap {
   display: grid;
   place-items: center;
-  margin: 1.25rem 0 0.75rem;
+  margin: 2rem 0 3rem;
 }
 .safety-video {
   width: min(1100px, 92vw);
@@ -218,6 +251,8 @@ stylesheet: products
   border-radius: 16px;
   background: #000;
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  aspect-ratio: 16 / 9;    /* maintain height even while loading */
+  min-height: 180px;       /* safety floor on very small viewports */
 }
 
 /* Tabs under the safety video */
@@ -283,6 +318,8 @@ stylesheet: products
   padding: 0.35rem 0.25rem;
   position: relative;
   transition: color .2s ease;
+  font-size: 1.5rem;
+  font-family: 'glacial_indifferencebold'
 }
 .safety-tab[aria-selected="true"],
 .safety-tab.is-active { color: #f1f1f1; }
@@ -290,7 +327,7 @@ stylesheet: products
 .safety-panel {
   text-align: center;
   color: #b2b2b2;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   line-height: 1.5;
   max-width: 980px;
   margin: 0.75rem auto 0;
@@ -354,7 +391,7 @@ stylesheet: products
           will-change: transform;
           z-index: 1;
           pointer-events: none;
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 0px solid rgba(255,255,255,0.08);
         }
         .frame-media {
           display: block;
@@ -416,9 +453,9 @@ stylesheet: products
           font-weight: 800;
           line-height: 1.05;
         }
-        .frame-headline .line1 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-        .frame-headline .line2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-        .frame-headline .line3 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        .frame-headline .line1 { font-size: clamp(1.8rem, 3.5rem, 3.5rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        .frame-headline .line2 { font-size: clamp(1.5rem, 3.25rem, 3.25rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+        .frame-headline .line3 { font-size: clamp(1.5rem, 3rem, 3rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
         /* 5-row caption that docks above the frame and reveals after shrink */
         .frame-caption {
         position: absolute;
@@ -443,26 +480,33 @@ stylesheet: products
         .frame-caption .cap-line:nth-child(2) {
           color: #f1f1f1;
 
-          font-size: clamp(1.6rem, 3.3vw, 2.25rem);
+          font-size: clamp(1.6rem, 3.5rem, 3.5rem);
           font-weight: 800;
         }
         /* Line 3 + 4: smaller bold */
-        .frame-caption .cap-line:nth-child(3),
-        .frame-caption .cap-line:nth-child(4) {
+        .frame-caption .cap-line:nth-child(3) {
           color: #f1f1f1;
-          font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+          font-size: clamp(1rem, 1.75rem, 1.75rem);
           font-weight: 800;
           margin-top: 0.25rem;
+          font-family: 'glacial_indifferencebold'
+        }
+        .frame-caption .cap-line:nth-child(4) {
+          color: #f1f1f1;
+          font-size: clamp(0.9rem, 1.5rem, 1.5rem);
+          font-weight: 800;
+          margin-top: 0.25rem;
+          font-family: 'glacial_indifferencebold'
         }
         /* Descriptive sentence under heading */
         .frame-caption .cap-line:nth-child(5) {
-          font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+          font-size: clamp(.9rem, 1.5rem, 1.5rem);
           font-weight: 600;
           opacity: 0; /* revealed via JS */
           margin-top: 0.6rem;
-          margin-bottom: 0.6rem;
+          margin-bottom: 1rem;
           color: #b2b2b2;
-
+          font-family: 'glacial_indifferencebold'
         }
 
         /* Spacing between sticky section and tabs */
@@ -502,7 +546,7 @@ stylesheet: products
           margin-top: 1rem; 
           text-align: center; 
           color: #b2b2b2;
-          font-size: 0.95rem;
+          font-size: 1.25rem;
           line-height: 1.5;
         }
         .tab-panel p { margin: 0.5rem 0 0; font-weight:100;}
@@ -513,10 +557,10 @@ stylesheet: products
 .ports-section {
   position: relative;
   max-width: 1100px;
-  margin: 4rem auto 5rem;
+  margin: 5rem auto 5rem;
   padding: 0 1rem;
   color: #eaeaea;
-  min-height: 260vh; /* enough scroll room to reveal all labels */
+  min-height: 160vh; /* enough scroll room to reveal all labels */
   padding-bottom: 0;
 }
 /* Tighten subtext spacing in Ports section */
@@ -530,9 +574,9 @@ stylesheet: products
 /* Sticky viewport for Ports so image/labels stay while scrolling */
 .ports-sticky {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden; /* use clip if you prefer */
+  top: 10vh;
+  height: 68vh;
+  overflow: visible; /* use clip if you prefer */
   display: grid;
   grid-template-rows: auto 1fr; /* header then image area */
   align-items: start;            /* stop vertical centering */
@@ -615,6 +659,35 @@ stylesheet: products
     height: var(--line, 72px); 
   }
     </style>
+  <script>
+    // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
+    document.addEventListener('DOMContentLoaded', function(){
+      try {
+        // Perception stills
+        var s4 = [
+          '{{ "/img/ka1s/s4_night.png" | relative_url }}',
+          '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
+          '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
+        ];
+        s4.forEach(function(src){ var img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = src; });
+
+        // Safety animations
+        var s3 = [
+          '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
+          '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
+          '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
+        ];
+        s3.forEach(function(src){
+          var v = document.createElement('video');
+          v.preload = 'auto';
+          v.muted = true; // allow buffering on some browsers conservatively
+          v.src = src;
+          // Kick off a fetch without attaching to DOM
+          try { v.load(); } catch(e) {}
+        });
+      } catch(e) { /* no-op */ }
+    }, { once: true });
+  </script>
 </head>
 <section class="ka1s-section">
     <div class="module-content s1-hero">
@@ -628,6 +701,7 @@ stylesheet: products
               autoplay
               muted
               preload="metadata"
+              poster="{{ "/img/ka1s/s1_bg_2.webp" | relative_url }}"
               data-autoplay="true"
               data-play-once="true"
               aria-label="KommuAssist unit rotating on purple glow background"
@@ -658,12 +732,17 @@ stylesheet: products
                 });
                 // Load after sources are appended
                 try { v.load(); } catch(e) {}
+                // Keep layout stable and fade in once ready
+                const onReady = () => { v.style.opacity = '1'; v.removeEventListener('canplay', onReady); };
+                v.addEventListener('canplay', onReady, { once: true });
+                // If cached and instantly ready, force style now
+                if (v.readyState >= 3) { v.style.opacity = '1'; }
               })();
             </script>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
               <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
               <p class="text-white font-medium ka-secondaryText" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
-              <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it never obstructs the driver’s view and stays neatly tucked along the windshield.</p>
+              <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
         </div>
     </div>
@@ -690,7 +769,7 @@ stylesheet: products
     </video>
     <p class="ka-subcopy font-bold text-left">Powered by <span class="text-white">Rockchip RK3588</span>. Whole new level of edge computing with <span class="text-white">6 TOPS NPU</span> - more room to handle larger AI models effortlessly. Run end-to-end neural networks with <span class="text-white">3-5 million parameters</span>, all while drawing just 
 10 watts of efficient power.</p>
-    <div class="perf-meters" id="perfMeters" style="--meter-label-col: minmax(125px, 145px); --meter-gap: 0.1rem; --meter-tip-gap: 20px;">
+    <div class="perf-meters" id="perfMeters" style="--meter-label-col: minmax(200px, 220px); --meter-gap: 0.1rem; --meter-tip-gap: 20px;">
       <div class="perf-group" aria-label="Throughput">
         <h4>7.5x faster than KA1 and KA1s</h4>
         <div class="meter-row" data-units="TOPS">
@@ -714,14 +793,14 @@ stylesheet: products
           <div class="meter-label">Rockchip RK3588</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="100" data-target="0.6"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/W</span></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
         <div class="meter-row" data-units="TOPS/W">
           <div class="meter-label">Snapdragon 821</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="6.667" data-target="0.04"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/W</span></div>
+            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
       </div>
@@ -1050,8 +1129,17 @@ stylesheet: products
       const nextEl = s.nextElementSibling;
       if (nextEl) {
         const isPerceptionTabs = nextEl.classList.contains('perception-tabs');
-        const liftPx = isPerceptionTabs ? 80 : 160; // gentler lift for tabs so they don’t tuck under
-        const y = -(liftPx * tShrink);
+        // Interpolate -80px -> -160px for perception tabs (with strong ease-in); others 0 -> -160px
+        let y;
+        if (isPerceptionTabs) {
+          const start = -80;    // initial lift (before shrink)
+          const end   = -140;   // final lift target
+          const slowT = Math.pow(tShrink, 1.6); // slower early movement (ease-in)
+          y = start + (end - start) * slowT;
+        } else {
+          const end = -160;
+          y = end * tShrink;
+        }
         nextEl.style.transform = `translateY(${y}px)`;
         nextEl.style.willChange = 'transform';
         nextEl.style.position = 'relative';
@@ -1216,9 +1304,9 @@ stylesheet: products
         steer:    document.getElementById('safety-panel-steer')
       };
       const sources = {
-        attn:     '{{ "/assets/ka_ani_s3_1.webm" | relative_url }}',
-        failsafe: '{{ "/assets/ka_ani_s3_2.webm" | relative_url }}',
-        steer:    '{{ "/assets/ka_ani_s3_3.webm" | relative_url }}'
+        attn:     '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
+        failsafe: '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
+        steer:    '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
       };
       if (!video || tabs.length === 0) return;
 
@@ -1276,10 +1364,12 @@ stylesheet: products
         });
         const src = sources[name];
         if (src && video.getAttribute('src') !== src) {
-          video.pause();
+          // Swap the source; avoid explicit load() to prevent collapse/flicker —
+          // the fixed aspect-ratio keeps the box stable while the new source buffers.
           video.setAttribute('src', src);
-          video.load();
-          video.play().catch(()=>{});
+          // Nudge playback once metadata is ready
+          const onCanPlay = () => { video.play().catch(()=>{}); video.removeEventListener('canplay', onCanPlay); };
+          video.addEventListener('canplay', onCanPlay, { once: true });
         }
         positionActiveUnderline();
       }
