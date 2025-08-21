@@ -1,37 +1,83 @@
 <!-- Navigation -->
+<div class="md:hidden">
 <nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
-  <div class="container mx-auto flex flex-wrap justify-center items-center gap-4">
-    
-    <!-- Nav Links -->
-    <div class="flex flex-wrap justify-center gap-7 text-sm font-normal text-white">
-      <a href="{{ '/' | relative_url }}" class="hover:text-white">Home</a>
-      <a href="{{ '/ka2' | relative_url }}" class="hover:text-white">KommuAssist</a>
-      <a href="{{ '/store' | relative_url }}" class="hover:text-white">Store</a>
-      <a href="{{ '/support' | relative_url }}" class="hover:text-white">Supported Cars</a>
-      <a href="{{ '/kommunity' | relative_url }}" class="hover:text-white">Kommunity</a>
-    </div>
+  <div class="container mx-auto flex items-center justify-between px-4">
 
-    <!-- Right Side (Cart + Locale) -->
+    <!-- Left: Logo -->
+    <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
+      <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-6 w-auto"/>
+      <span class="sr-only">Kommu</span>
+    </a>
+
+    <!-- Right: Cart + Burger -->
     <div class="flex items-center gap-4">
       <!-- Cart Icon -->
-      <button onclick="toggleCart()" class="relative text-white text-lg">
+      <button onclick="toggleCart()" class="relative text-white text-lg" aria-label="Open cart">
         🛒
         <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
       </button>
 
-      <!-- Locale Selector -->
-      <select id="localeSelector" class="bg-black text-white border border-white px-2 py-1 text-sm rounded">
-        <option value="en-MY">🇲🇾 MYR</option>
-        <option value="en-US">🇺🇸 USD</option>
-      </select>
+      <!-- Burger -->
+      <button id="navToggle" class="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-gray-800 focus:outline-none" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
+        <svg id="iconOpen" class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg id="iconClose" class="h-6 w-6 hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile/Overlay Panel: Tabs + Currency Selector -->
+  <div id="mobileNav" class="hidden border-t border-gray-800 bg-black" role="region" aria-label="Navigation Menu">
+    <div class="container mx-auto px-4 py-4">
+      <nav class="flex flex-col gap-3 text-white text-md font-normal">
+        <a href="{{ '/' | relative_url }}" class="py-2 hover:text-gray-300">Home</a>
+        <a href="{{ '/ka2' | relative_url }}" class="py-2 hover:text-gray-300">KommuAssist</a>
+        <a href="{{ '/store' | relative_url }}" class="py-2 hover:text-gray-300">Store</a>
+        <a href="{{ '/support' | relative_url }}" class="py-2 hover:text-gray-300">Supported Cars</a>
+
+        <div class="mt-3 h-px bg-gray-800"></div>
+
+        <!-- Currency / Locale Selector -->
+        <label for="localeSelectorMobile" class="text-xs text-gray-400">Currency</label>
+        <select id="localeSelectorMobile" class="bg-black text-white border border-white px-2 py-2 text-sm rounded w-full">
+          <option value="en-MY">🇲🇾 MYR</option>
+          <option value="en-US">🇺🇸 USD</option>
+        </select>
+      </nav>
     </div>
   </div>
 </nav>
 
 <script>
-  const localeSelector = document.getElementById("localeSelector");
+  // -- Burger toggle logic --
+  (function () {
+    const toggle = document.getElementById('navToggle');
+    const panel  = document.getElementById('mobileNav');
+    const openI  = document.getElementById('iconOpen');
+    const closeI = document.getElementById('iconClose');
+    let open = false;
 
-  // 1. Lookup country via a free IP‑geolocation endpoint
+    function setOpen(v) {
+      open = v;
+      panel.classList.toggle('hidden', !open);
+      openI.classList.toggle('hidden', open);
+      closeI.classList.toggle('hidden', !open);
+      toggle?.setAttribute('aria-expanded', String(open));
+      document.documentElement.classList.toggle('overflow-hidden', open); // lock scroll when open
+    }
+
+    toggle?.addEventListener('click', () => setOpen(!open));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) setOpen(false); });
+  })();
+</script>
+
+<script>
+  // Keep existing locale/currency helpers; moved selector into the menu
+  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
+
   async function detectCountryCode() {
     try {
       const res = await fetch("https://ipapi.co/json/");
@@ -43,13 +89,12 @@
     }
   }
 
-  // 2. Build a locale from browser language + geolocated country
   async function getGeoLocale() {
     const saved = localStorage.getItem("preferredLocale");
     if (saved) return saved;
 
     const browserLang = navigator.language.split("-")[0] || "en";
-    const geoCC = await detectCountryCode();    
+    const geoCC = await detectCountryCode();
     const locale = geoCC 
       ? `${browserLang}-${geoCC}`
       : navigator.language || "en-US";
@@ -58,43 +103,80 @@
     return locale;
   }
 
-  // 3. Apply it
   (async () => {
-    if (!localeSelector) return;
+    if (!localeSelectorMobile) return;
     const locale = await getGeoLocale();
-    localeSelector.value = locale;
+    localeSelectorMobile.value = locale;
 
-    // 4. On manual change, override and reload
-    localeSelector.addEventListener("change", e => {
+    localeSelectorMobile.addEventListener("change", e => {
       localStorage.setItem("preferredLocale", e.target.value);
       location.reload();
     });
   })();
 
-
   function getCurrencyCode(locale) {
     const country = locale.split("-")[1] || "US";
-    const currencyMap = {
-      MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
-    };
+    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
     return currencyMap[country] || "USD";
   }
 
-function getFormatter(locale) {
-  const currency = getCurrencyCode(locale);
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2
-  });
-}
+  function getFormatter(locale) {
+    const currency = getCurrencyCode(locale);
+    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
+  }
 
-function formatPrice(prices) {
-  const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-  const currency = getCurrencyCode(locale);
-  const formatter = getFormatter(locale);
-  const price = prices[currency] || prices["USD"] || 0;
-  return formatter.format(price);
-}
+  function formatPrice(prices) {
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+    const price = prices[currency] || prices["USD"] || 0;
+    return formatter.format(price);
+  }
+</script>
+</div>
 
+<!-- Desktop / Tablet Navigation -->
+<div class="hidden md:block">
+  <nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
+    <div class="container mx-auto flex items-center justify-center px-6">
+      <!-- Center: Tabs/links -->
+      <nav class="flex items-center gap-12 text-md font-normal text-white">
+        <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
+          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-3 w-auto"/>
+          <span class="sr-only">Kommu</span>
+        </a>
+        <a href="{{ '/' | relative_url }}" class="hover:text-gray-300">Home</a>
+        <a href="{{ '/ka2' | relative_url }}" class="hover:text-gray-300">KommuAssist</a>
+        <a href="{{ '/store' | relative_url }}" class="hover:text-gray-300">Store</a>
+        <a href="{{ '/support' | relative_url }}" class="hover:text-gray-300">Supported Cars</a>
+        <select id="localeSelectorDesktop" class="bg-black text-white border border-white px-2 py-2 text-sm rounded">
+          <option value="en-MY">🇲🇾 MYR</option>
+          <option value="en-US">🇺🇸 USD</option>
+        </select>
+        <button onclick="toggleCart()" class="relative text-white text-xl" aria-label="Open cart">
+          🛒
+          <span id="cartCountDesktop" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        </button>
+      </nav>
+    </div>
+  </nav>
+</div>
+
+<script>
+  (async () => {
+    const saved = localStorage.getItem("preferredLocale") || (navigator.language || "en-US");
+    const mobileSel = document.getElementById("localeSelectorMobile");
+    const deskSel   = document.getElementById("localeSelectorDesktop");
+
+    if (mobileSel) mobileSel.value = saved;
+    if (deskSel)   deskSel.value   = saved;
+
+    function onChange(val){
+      localStorage.setItem("preferredLocale", val);
+      location.reload();
+    }
+
+    mobileSel?.addEventListener("change", e => onChange(e.target.value));
+    deskSel?.addEventListener("change",   e => onChange(e.target.value));
+  })();
 </script>

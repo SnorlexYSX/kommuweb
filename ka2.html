@@ -1016,9 +1016,44 @@ stylesheet: products
       }
       const overscan = parseFloat(s.dataset.overscan || "0.00");
       const scaleFrom = Math.max(window.innerWidth / baseWCache, window.innerHeight / baseHCache) * (1 + overscan);
-      const scaleTo   = parseFloat(s.dataset.scaleTo   || "1.00");
-      // scale the container so it zooms in/out
-      const scale = scaleFrom + (scaleTo - scaleFrom) * eased;
+      const requestedScaleTo = parseFloat(s.dataset.scaleTo || "1.00");
+
+      // --- Compute caption-required clearance to adjust end scale on wide screens ---
+      const captionForMeasure = s.querySelector('.frame-caption');
+      let effectiveScaleTo = requestedScaleTo;
+      if (captionForMeasure) {
+        // Match Safety content box width to measure natural caption height at this viewport
+        const contentW = Math.min(window.innerWidth * 0.92, 1100);
+        const widthPx  = Math.max(0, Math.round(contentW - 32)); // 1rem left/right padding
+        // Temporarily set width & reset transform to get natural height
+        const prevWidth = captionForMeasure.style.width;
+        const prevXform = captionForMeasure.style.transform;
+        captionForMeasure.style.width     = widthPx + 'px';
+        captionForMeasure.style.transform = 'translate(0, 0)';
+        const capH = Math.round(captionForMeasure.getBoundingClientRect().height || captionForMeasure.scrollHeight || 0);
+        // Restore transform (positioning happens later)
+        captionForMeasure.style.transform = prevXform;
+        captionForMeasure.style.width     = prevWidth;
+
+        // Geometry terms
+        const gapPx     = Math.max(100, Math.round(baseHCache * 0.03)); // same gap we use later
+        const offsetVH  = 6;                                            // keep in sync with container offset
+        const offsetPx  = (window.innerHeight * offsetVH) / 100;
+        const topMargin = Math.max(60, window.innerHeight * 0.08);
+        // Require: currTop_end >= topMargin + capH
+        // currTop_end = (vh - currHeight_end)/2 - gapPx + offsetPx
+        // => currHeight_end <= vh - 2*(topMargin + capH + gapPx - offsetPx)
+        const vhNow = window.innerHeight;
+        const maxCurrH = vhNow - 2 * (topMargin + capH + gapPx - offsetPx);
+        if (maxCurrH > 0) {
+          const maxScaleTo = maxCurrH / baseHCache;
+          // Effective end scale should not exceed the maximum that preserves caption clearance
+          effectiveScaleTo = Math.min(requestedScaleTo, maxScaleTo);
+        }
+      }
+
+      // scale the container so it zooms in/out using the effective end scale
+      const scale = scaleFrom + (effectiveScaleTo - scaleFrom) * eased;
       // Push the framed image slightly lower so the caption has room above it
       const offsetVH = 6; // shift container down by ~6vh (tweakable)
       const offsetPx = (window.innerHeight * offsetVH) / 100;
@@ -1064,11 +1099,27 @@ stylesheet: products
         const currLeft   = (window.innerWidth  - currWidth)  / 2;
         const currTop    = (window.innerHeight - currHeight) / 2 - gap + offsetPx;
 
-        // Position the caption aligned to the left edge of the current frame
-        caption.style.left = currLeft + 'px';
-        caption.style.top  = currTop  + 'px';
+        // Position the caption aligned to the Safety section's inner content box
+        const safetyEl = document.querySelector('.safety-section');
+        let leftPx = 16; // fallback to 1rem
+        let widthPx = Math.min(window.innerWidth * 0.92, 1100);
+        if (safetyEl) {
+          const r  = safetyEl.getBoundingClientRect();
+          const cs = getComputedStyle(safetyEl);
+          const pl = parseFloat(cs.paddingLeft)  || 0;
+          const pr = parseFloat(cs.paddingRight) || 0;
+          leftPx  = r.left + pl;                  // inner left edge (content box)
+          widthPx = Math.max(0, r.width - pl - pr); // inner content width
+        }
+        // Keep caption within viewport safe area (prevents large images from pushing it offscreen)
+        const vhNow = window.innerHeight;
+        const capTopMin = Math.max(60, vhNow * 0.08);   // at least 60px from top
+        const capTopMax = Math.max(capTopMin + 40, vhNow - 160); // leave room at bottom
+        const capTop    = Math.min(Math.max(currTop, capTopMin), capTopMax);
+        caption.style.left = leftPx + 'px';
+        caption.style.top  = capTop + 'px';
         caption.style.transform = 'translate(0%, -100%)';
-        caption.style.width = baseW + 'px';
+        caption.style.width = Math.round(widthPx) + 'px';
         caption.style.textAlign = 'left';
 
         // Staggered reveal after shrink is well underway
@@ -1099,7 +1150,7 @@ stylesheet: products
         text.style.transform = `translateX(-50%) translateY(${y}px)`;
       }
       s.dataset.scaleFrom = scaleFrom.toFixed(3);
-      s.dataset.scaleTo = scaleTo.toFixed(3);
+      s.dataset.scaleTo = effectiveScaleTo.toFixed(3);
       s.dataset.scale = scale.toFixed(3);
 
       // Smoothly reduce sticky height as we approach the end of the pin,
