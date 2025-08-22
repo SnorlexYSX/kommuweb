@@ -17,17 +17,21 @@
 
 - name: Harness Set
   prices:
-    MYR: 1.00
-    USD: 1.00  
+    MYR: 320.00
+    USD: 120.00  
   category: Hardware
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
   includes:
+  - ADAS Relay
+  - ADAS Connector
+  - 2x USB-C
+  - OBD Power
   - Mount with adhesive
   - Electrostatic sticker
-  - Alcohol wipes
+
   dropdown:
-    title: Select Harness
+    title: Select car model
     placeholder: Car model
     source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
@@ -35,8 +39,8 @@
 
 - name: KA2 Mount
   prices:
-    MYR: 1.00
-    USD: 1.00
+    MYR: 50.00
+    USD: 10.00
   category: Hardware
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
@@ -45,57 +49,85 @@
   - Electrostatic sticker
   - Alcohol wipes
   dropdown:
-    title: Select Mount
+    title: Select car model
     placeholder: Car model
     source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
     value_template: "{{brand}} {{model}} {{year}} {{variant}}"
 
-- name: T Shirt
+- name: nanoSIM card
   prices:
-    MYR: 1.00
-    USD: 1.00
+    MYR: 10.00
+    USD: 10.00
   category: Others
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
   includes:
-  - Mount with adhesive
-  - Electrostatic sticker
-  - Alcohol wipes
-  
-- name: Harness Set
+  - U-mobile prepaid SIM card
+
+- name: microSD card
   prices:
-    MYR: 1.00
-    USD: 1.00
+    MYR: 30.00
+    USD: 30.00
+  category: Others
+  image: /img/products/accessories/sample.png
+  description: Mount to setup KA2 device onto windshield...
+  includes:
+  - 64gb microSD card
+  
+- name: ADAS Connector
+  prices:
+    MYR: 150.00
+    USD: 12.00
   category: Cables & connectors
   image: /img/products/accessories/sample.png
   description: Mount to setup KA2 device onto windshield...
   includes:
-  - Mount with adhesive
-  - Electrostatic sticker
-  - Alcohol wipes
+  - ADAS Connector
+  dropdown:
+    title: Select car model
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
 
-  
-- name: Harness Set
+- name: Short USB 3.1 Type-C Cable
   prices:
-    MYR: 1.00
-    USD: 1.00
-  category: Others
+    MYR: 30.00
+    USD: 33.00
+  category: Cables & connectors
   image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
+  description: To connect Vision to car ADAS system
   includes:
-  - Mount with adhesive
-  - Electrostatic sticker
-  - Alcohol wipes
+  - Relay-to-Vision USB-C Cable
 
-- name: Harness Set
+- name: Long USB 3.1 Type-C Cable
   prices:
-    MYR: 1.00
-    USD: 1.00
-  category: Others
+    MYR: 40.00
+    USD: 33.00
+  category: Cables & connectors
   image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
+  description: To connect Vision to car ADAS system
   includes:
-  - Mount with adhesive
-  - Electrostatic sticker
-  - Alcohol wipes
+  - OBD-to-Relay USB-C Cable
+
+- name: OBD Connector
+  prices:
+    MYR: 100.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/sample.png
+  description: To connect Vision to car ADAS system
+  includes:
+  - OBD connector
+
+- name: ADAS Relay
+  prices:
+    MYR: 150.00
+    USD: 33.00
+  category: Hardware
+  image: /img/products/accessories/sample.png
+  description: To connect Vision to car ADAS system
+  includes:
+  - ADAS Relay
+
