@@ -2,6 +2,12 @@
 layout: default
 title: Store
 ---
+
+<style>
+  .rounded-lg-store{
+    border-radius: 1.5625rem;
+  }
+</style>
 <script>
 function openModal(item) {
 
@@ -75,9 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- Hero -->
 <section class="flex justify-center py-16 px-4">
-  <div class="bg-card rounded-lg p-8 max-w-3xl w-full text-center h-[40vh] aspect-[1.68]">
+  <div class="bg-card rounded-lg-store p-8 max-w-3xl w-full text-center">
     <h1 class="text-4xl font-bold mb-4 text-white">KommuAssist 2.0</h1>
-    <img src="{{ "" | relative_url }}/img/products/device/1.png" width="100%" class="mb-4">
+    <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" width="100%" class="mb-4">
     <p class="mb-4 text-white">RM3,699 or RM150/month with rent-to-own</p>
     <button onclick="goToBuyPage()" class="bg-blue-500 px-6 py-2 rounded-full text-white">Buy</button>
   </div>
@@ -102,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "{{ item.description }}",
             includes: {{ item.includes | jsonify }}
             ,dropdown: {{ item.dropdown | jsonify }}
-          })' class="product-card bg-card p-4 rounded-lg text-center cursor-pointer min-w-[12rem] transition-transform transform hover:-translate-y-1 hover:shadow-lg" data-prices='{{ item.prices | jsonify }}'>
+          })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer min-w-[12rem] transition-transform transform hover:-translate-y-1 hover:shadow-lg" data-prices='{{ item.prices | jsonify }}'>
             <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
             <div class="font-semibold text-white">{{ item.name }}</div>
             <div class="text-sm text-gray-400 product-price">Loading...</div>
@@ -116,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- Accessory Modal -->
 <div id="modal" class="fixed inset-0 bg-card bg-opacity-70 flex items-center justify-center z-50 hidden">
-  <div class="bg-card p-6 rounded-lg w-full max-w-4xl relative">
+  <div class="bg-card p-6 rounded-lg-store w-full max-w-4xl relative">
     <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
     <div class="flex flex-col md:flex-row md:items-center  gap-6">
       <div class="md:w-1/2">
