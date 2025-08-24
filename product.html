@@ -2,33 +2,65 @@
 layout: default
 title: Buy KommuAssist 2
 ---
-
 {% include pricing_helpers.html %}
 
+<style>
+.border-gray-600{
+  --tw-border-opacity: 0.2;
+  border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));
+}
+
+.border-gray-700{
+  --tw-border-opacity: 0.2;
+  border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));
+}
+
+.bg-card {
+    --tw-bg-opacity: 1;
+    background-color: rgb(7 7 7 / var(--tw-bg-opacity, 1));
+}
+
+.rounded-product-select {
+    border-radius: 1.25rem !important;
+}
+
+.h1Title{
+  font-size: 3.5rem;
+}
+
+.secondaryText{
+  font-size: 1.25rem;
+}
+
+.btn-fixed-height {
+  height: 11.25rem;
+}
+</style>
+
 <!-- Product Page Full Layout -->
-<div class="max-w-6xl mx-auto px-4 py-12">
+<div class="w-full px-4 py-12">
   <!-- Title above everything -->
-  <div class="text-left mb-8">
-    <h1 class="text-4xl font-bold mb-2 text-white">KommuAssist 2</h1>
-    <p class="text-md text-gray-300">
+  <div class="text-left mb-8 px-[9rem]">
+    <h1 class="h1Title font-bold mb-4 text-white">KommuAssist 2</h1>
+    <p class="secondaryText text-white">
       <span id="heroOneOffPrice"></span>
       <span id="heroMonthly" class="ml-1"></span>
     </p>
   </div>
 
   <!-- Main content: Image and Options Side-by-Side -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 px-[9rem] md:grid-cols-[3fr,1fr]">
     <!-- Product Image -->
-    <div>
-      <img src="{{ "/img/products/device/1.png" | relative_url }}" class="w-full rounded shadow-lg" alt="Main product image">
+    <div class="bg-card rounded-xl p-6 flex items-center justify-center">
+      <img src="{{ "/img/products/device/buy_page_1.webp" | relative_url }}" class="w-full h-auto object-contain rounded" alt="Main product image">
     </div>
 
     <!-- Car Model and Connectivity -->
-    <div class="text-white space-y-4">
+   <div class="text-white space-y-4 flex flex-col justify-center">
       <!-- Car Model Selection -->
       <div>
         <label for="carSelectList" class="block font-semibold text-white mb-2">Car model</label>
-        <select id="carSelectList" class="w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-medium"></select>
+        <select id="carSelectList" class="btn-fixed-height w-full bg-card border-1 border-gray-600 rounded-product-select px-3 py-2 text-white font-medium"></select>
       </div>
 
       <!-- Connectivity -->
@@ -36,7 +68,7 @@ title: Buy KommuAssist 2
         <p class="font-semibold text-white mb-2">Connectivity</p>
         <div class="flex flex-col md:flex-row gap-4">
           <button 
-            class="connectBtn w-full md:w-1/2 bg-card text-white py-4 px-4 rounded border-1 border-gray-700 flex justify-center items-center"
+            class="connectBtn btn-fixed-height w-full md:w-1/2 bg-card text-white py-4 px-4 rounded-product-select border-1 border-gray-700 flex justify-center items-center"
             data-summary="without SIM Card"
           >
             <div class="text-center">
@@ -44,7 +76,7 @@ title: Buy KommuAssist 2
             </div>
           </button>
           <button 
-            class="connectBtn w-full md:w-1/2 bg-card text-white py-4 px-4 rounded border-1 border-gray-700 flex justify-between items-center"
+            class="connectBtn btn-fixed-height w-full md:w-1/2 bg-card text-white py-4 px-4 rounded-product-select border-1 border-gray-700 flex justify-between items-center"
             data-summary="with SIM Card"
           >            
               <div class="text-left">
@@ -60,14 +92,14 @@ title: Buy KommuAssist 2
   </div>
 
   <!-- Selection Sections -->
-  <div class="space-y-10 text-white">
+  <div class="space-y-10 text-white max-w-[90rem] mx-auto">
     <!-- Trade-in Section -->
     <div>
       <p class="font-semibold mb-1">Trade-in</p>
       <p class="text-sm text-gray-400 mb-3">Upgrade hassle-free — just return KommuAssist 2 and keep your existing setup.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="tradeBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="tradeBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="Trade-in KA1/KA1s"
         >
           <div>
@@ -76,14 +108,14 @@ title: Buy KommuAssist 2
           </div>
         </button>
         <button 
-          class="tradeBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="tradeBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="No Trade-in"
         >          
           <div>
             <p class="font-medium">No trade-in</p>
           </div>
         </button>
-        <button class="bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded border-1 border-gray-500 text-xs whitespace-nowrap">How does trade-in work?</button>
+        <button class="btn-fixed-height bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded-product-select border-1 border-gray-500 text-xs whitespace-nowrap">How does trade-in work?</button>
       </div>
     </div>
 
@@ -93,7 +125,7 @@ title: Buy KommuAssist 2
       <p class="text-sm text-gray-400 mb-3">Choose your preferred payment method.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="payBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="payBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="One-off Purchase"
         >
           <div class="text-left w-[75%]">
@@ -103,7 +135,7 @@ title: Buy KommuAssist 2
           <span id="payOneOffPrice" class="text-sm w-[25%] font-medium"></span>
         </button>
         <button 
-          class="payBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="payBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="Rent-to-own"
         >          
           <div class="text-left w-[75%]">
@@ -112,7 +144,7 @@ title: Buy KommuAssist 2
           </div>
           <span id="payRtoPrice" class="text-sm w-[25%] font-medium"></span>
         </button>
-        <button class="bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded border-1 border-gray-500 text-xs whitespace-nowrap">How does rent-to-own work?</button>
+        <button class="btn-fixed-height bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded-product-select border-1 border-gray-500 text-xs whitespace-nowrap">How does rent-to-own work?</button>
       </div>
     </div>
 
@@ -122,7 +154,7 @@ title: Buy KommuAssist 2
       <p class="text-sm text-gray-400 mb-3">Choose how you'd like your device installed.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="installBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="installBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="Self-installation"
         > 
           <div>
@@ -131,7 +163,7 @@ title: Buy KommuAssist 2
           </div>
         </button>
         <button 
-          class="installBtn md:w-[37.5%] bg-card text-white px-4 py-6 rounded border-1 border-gray-700 flex justify-center items-center text-center"
+          class="installBtn btn-fixed-height md:w-[37.5%] bg-card text-white px-4 py-6 rounded-product-select border-1 border-gray-700 flex justify-center items-center text-center"
           data-summary="Installation at Kommu HQ - set appointment in e-receipt"
         > 
           <div>
@@ -139,7 +171,7 @@ title: Buy KommuAssist 2
             <p class="font-medium text-sm text-gray-300">Let our team handle it for you</p>
           </div>
         </button>
-        <button class="bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded border-1 border-gray-500 text-xs whitespace-nowrap">How to perform self-installation?</button>
+        <button class="btn-fixed-height bg-gray-700 md:w-[25%] text-white py-2 px-4 rounded-product-select border-1 border-gray-500 text-xs whitespace-nowrap">How to perform self-installation?</button>
       </div>
     </div>
   </div>
@@ -151,7 +183,7 @@ title: Buy KommuAssist 2
       <h2 class="text-2xl font-bold mb-2 text-white">Your new KommuAssist</h2>
       <p class="font-medium mb-6">Cruise with intelligence.</p>
       <img
-        src="{{ '/img/products/device/1.png' | relative_url }}"
+        src="{{ '/img/products/device/checkout_img.webp' | relative_url }}"
         alt="Summary image"
         class="w-full rounded"
       >
@@ -181,7 +213,7 @@ title: Buy KommuAssist 2
           onclick="goToCheckout()"
           type="button"
           value=""                         
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-product-select"
         >
           Proceed to Check Out
         </button>
@@ -272,11 +304,11 @@ title: Buy KommuAssist 2
       document.querySelectorAll(selector).forEach(btn => {
         btn.addEventListener("click", () => {
           document.querySelectorAll(selector).forEach(b => {
-            b.classList.remove("ring", "ring-blue-500", "border-white");
+            b.classList.remove("ring", "ring-blue-500", "border-white", "ring-1");
             b.removeAttribute("data-selected");
             b.setAttribute("aria-pressed", "false");
           });
-          btn.classList.add("ring", "ring-blue-500");
+          btn.classList.add("ring-1", "ring-blue-500");
           btn.setAttribute("data-selected", "true");
           btn.setAttribute("aria-pressed", "true");
 
