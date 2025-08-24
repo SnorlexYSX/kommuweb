@@ -2,6 +2,9 @@
 layout: default
 title: Checkout
 ---
+
+{% include pricing_helpers.html %}
+
 <!-- Checkout Page Layout -->
 <div class="max-w-6xl mx-auto px-4 py-12">
   <!-- Checkout Title -->
@@ -88,13 +91,11 @@ title: Checkout
     </div>
   </div>
 </section>
-
 <script>
   const shippingConfig = {{ site.data.shipping | jsonify }};
-  const products = {{ site.data.products | jsonify }};
-  const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-  const currency = getCurrencyCode(locale);
-  const formatter = getFormatter(locale);
+  const locale    = KommuPricing.getPreferredLocale();
+  const currency  = KommuPricing.getCurrencyCode(locale);
+  const formatter = KommuPricing.getFormatter(locale);
 
   // Global helpers so both DOM init and checkoutSubmit can use them
   function getDevicePriceByCurrency(curr) {
@@ -147,6 +148,44 @@ title: Checkout
     return plan;
   }
 
+  function computePricingForSelections(selections){
+    {
+        const ctx = {
+          source: (sessionStorage.getItem('fromProductPage')==='true') ? 'product' : 'cart',
+          currency,
+          payment: /rent-to-own/i.test(selections.payment||'') ? 'Rent-to-own' : 'One-off Purchase',
+          dropdowns: selections
+        };
+        const thenBlock   = KommuPricing.matchRule(ctx) || {};
+        const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
+
+        // Device pricing (promo-aware)
+        const deviceOneOff  = KommuPricing.getDevicePriceByCurrency(currency,  promoLabels);
+        const deviceMonthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels);
+
+        // Bundled add-ons from selections (promo/rule-aware)
+        const bundled = KommuPricing.getAddonSurchargeFromSelections(selections, currency, thenBlock);
+
+        // Subscription meta (prefer promo override if present)
+        let months = 36;
+        let subscriptionId = '';
+        try {
+          const dev = (window.products||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
+          if (dev?.subscription) {
+            months = parseInt(dev.subscription.month || 36, 10) || 36;
+            subscriptionId = dev.subscription.id || '';
+          }
+        } catch(_) {}
+        if (thenBlock.auto_apply?.promotion) {
+          const pr = thenBlock.auto_apply.promotion;
+          if (pr.subscriptionId) subscriptionId = pr.subscriptionId;
+          if (pr.months) months = parseInt(pr.months, 10) || months;
+        }
+
+        return { thenBlock, promoLabels, deviceOneOff, deviceMonthly, bundled, months, subscriptionId };
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const cartItems      = JSON.parse(localStorage.getItem("cart")) || [];
     const selectionsRaw  = sessionStorage.getItem("checkoutSelections");
@@ -163,7 +202,7 @@ title: Checkout
       // Force selection strings for product flow
       if (isFromProduct) {
         if (plan.locks.forceOneOff) { selections.payment = 'One-off purchase'; }
-        if (plan.locks.forceNoSim) { selections.sim = 'Use my own SIM card'; }
+        if (plan.locks.forceNoSim) { selections.sim = 'with SIM Card'; }
         if (plan.locks.forceNoTradeIn) { selections.tradeIn = 'No Trade-in'; }
         if (plan.locks.forceSelfInstall) { selections.install = 'Self-installation'; }
         sessionStorage.setItem('checkoutSelections', JSON.stringify(selections));
@@ -273,19 +312,35 @@ title: Checkout
       `;
 
       if (defaultCountryCode === 'MY') {
-        col3.innerHTML = `
-          <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
-          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
-          <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
-          <div class="mt-6 flex justify-center">
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
-              onclick="checkoutSubmit()"
-            >
-              Continue to Payment
-            </button>
-          </div>
-        `;
+        (function(){
+          const { deviceOneOff, deviceMonthly, bundled, months } = computePricingForSelections(selections);
+          const payIsRTO = /rent-to-own/i.test(selections.payment||'');
+          const years = (months%12===0) ? (months/12) : null;
+
+          let totalText;
+          if (payIsRTO && deviceMonthly>0) {
+            totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+          } else {
+            const total = deviceOneOff + (bundled.total||0) + productShipCost;
+            totalText = formatter.format(total);
+          }
+
+          col3.innerHTML = `
+            <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
+            <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
+            <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
+            <h3 class="text-xl font-bold mt-6 mb-2 text-white">Total Due</h3>
+            <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${totalText}</p>
+            <div class="mt-6 flex justify-center">
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
+                onclick="checkoutSubmit()"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          `;
+        })();
       } else {
       col3.innerHTML = `
           <div>
@@ -407,9 +462,8 @@ title: Checkout
       } else {
         shippingText = `International Shipping – ${entry.name} ${formatter.format(shipCost)}`;
       }
-
-      if (isFromProduct) {
-        col2.innerHTML = `
+      if(isFromProduct) {
+        col2.innerHTML=`
         <div>
           <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
           <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
@@ -424,34 +478,65 @@ title: Checkout
         `;
         
         if (countryCode === 'MY') {
-        col3.innerHTML = `
-            <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
-            <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
-            <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
-            <div class="mt-6 flex justify-center">
-              <button
-                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
-                onclick="checkoutSubmit()"
-              >
-                Continue to Payment
-              </button>
-            </div>
-          `;
-        } else {
-        col3.innerHTML = `
-            <div>
-              <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
-              <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${formatter.format(subtotal + shipCost)}</p>
-              <div class="flex justify-center">
+          (function(){
+            const { deviceOneOff, deviceMonthly, bundled, months } = computePricingForSelections(selections);
+            const payIsRTO = /rent-to-own/i.test(selections.payment||'');
+            const years = (months%12===0) ? (months/12) : null;
+
+            let totalText;
+            if (payIsRTO && deviceMonthly>0) {
+              totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+            } else {
+              const total = deviceOneOff + (bundled.total||0) + shipCost;
+              totalText = formatter.format(total);
+            }
+
+            col3.innerHTML = `
+              <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
+              <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
+              <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
+              <h3 class="text-xl font-bold mt-6 mb-2 text-white">Total Due</h3>
+              <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${totalText}</p>
+              <div class="mt-6 flex justify-center">
                 <button
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
                   onclick="checkoutSubmit()"
                 >
                   Continue to Payment
                 </button>
               </div>
-            </div>
-          `;
+            `;
+          })();
+        } else {
+          (function(){
+            const { deviceOneOff, deviceMonthly, bundled, months } = computePricingForSelections(selections);
+            const payIsRTO = /rent-to-own/i.test(selections.payment||'');
+            const years = (months%12===0) ? (months/12) : null;
+
+            let totalText;
+            if (payIsRTO && deviceMonthly>0) {
+              totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+            } else {
+              const total = deviceOneOff + (bundled.total||0) + shipCost;
+              totalText = formatter.format(total);
+            }
+
+            col3.innerHTML = `
+              <div>
+                <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
+                <p class="text-sm text-gray-300 font-normal">${selections.payment}</p>
+                <p id="totalDue" class="text-sm text-gray-300 mb-10 font-normal">${totalText}</p>
+                <div class="flex justify-center">
+                  <button
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                    onclick="checkoutSubmit()"
+                  >
+                    Continue to Payment
+                  </button>
+                </div>
+              </div>
+            `;
+          })();
         }
       } else {
 
@@ -494,6 +579,7 @@ function checkoutSubmit() {
   })();
 
   const useVisa = (plan.provider === 'curlec-sub');
+  const pricing = computePricingForSelections(selections);
 
   // common form values
   const name     = document.getElementById("checkoutName").value.trim();
@@ -517,7 +603,7 @@ function checkoutSubmit() {
   const promoCode = document.getElementById("checkoutPromoInput")?.value.trim().toUpperCase() || "";
   let devicePrice = 0;
   if (fromProduct) {
-    devicePrice = getDevicePriceByCurrency((currency||'USD'));
+    devicePrice = pricing.deviceOneOff + (pricing.bundled.total||0);
   } else {
     devicePrice = parseFloat(subText) || 0;
   }
@@ -527,11 +613,9 @@ function checkoutSubmit() {
   // build params & redirect
   if (useVisa) {
     // rent-to-own → Visa URL
-    selections.sim = 'Use my own SIM card';
-    selections.tradeIn = 'No Trade-in';
-    const duration = 36;
-    const subscriptionId = (products.find(p => (p.name||"").toLowerCase()==="kommuassist2")?.subscription?.id) || "";
-    const monthlyPayment = (devicePrice / duration).toFixed(2);
+    const duration = pricing.months;
+    const subscriptionId = pricing.subscriptionId || ((products.find(p => (p.name||"").toLowerCase()==="kommuassist2")?.subscription?.id) || "");
+    const monthlyPayment = (pricing.deviceMonthly || 0).toFixed(2);
     const visaItems = [{
       sim:         selections.sim || "",
       tradeIn:     selections.tradeIn || ""
@@ -575,6 +659,8 @@ function checkoutSubmit() {
     postcode,
     country: entry.name || country,
     currency: (currency || 'MYR'),
+    harness: (selections.model || ""),
+    installation: (selections.install || ""),
     deviceprice:  devicePrice.toFixed(2),
     shippingrate: ship.toFixed(2),
     amount:       total.toFixed(2),

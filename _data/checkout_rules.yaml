@@ -1,0 +1,107 @@
+- id: product-myr-oneoff-notradein-without-sim
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "One-off Purchase", tradeIn: "No Trade-in", sim: "without SIM card"}
+  then:
+    provider: curlec-otp
+    locks_checkout: { country: 'MY' }
+    ui: { show: [payment], hide: [] }
+
+- id: product-myr-oneoff-notradein-with-sim
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "One-off Purchase", tradeIn: "No Trade-in", sim: "with SIM card"}
+  then:
+    provider: curlec-otp
+    locks_checkout: { country: 'MY' }
+    auto_apply:
+      addons: ["Sim Card"]
+    ui: { show: [payment], hide: [] }
+
+- id: product-myr-oneoff-tradein-without-sim
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "One-off Purchase", tradeIn: "Trade-in KA1/KA1s", sim: "without SIM card"}
+  then:
+    provider: curlec-otp
+    locks_checkout: { country: 'MY' }
+    auto_apply:
+      promotion:
+        label: "Trade-in"
+        type: one_off
+    ui: { show: [payment], hide: [] }
+
+- id: product-myr-oneoff-tradein-with-sim
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "One-off Purchase", tradeIn: "Trade-in KA1/KA1s", sim: "with SIM card"}
+  then:
+    provider: curlec-otp
+    locks_checkout: { country: 'MY' }
+    auto_apply:
+      promotion:
+        label: "Trade-in"
+        type: one_off
+      addons: ["Sim Card"]
+    ui: { show: [payment], hide: [] }
+
+- id: product-nonmyr-any-device
+  when:
+    source: product
+    currency_in: ["!MYR"]
+  then:
+    provider: stripe
+    locks_product: 
+      dropdowns: { payment: "One-off Purchase", tradeIn: "No Trade-in", sim: "without SIM card", "install":"Self-installation"}
+      lock_message: "For Malaysians Only"
+    locks_checkout:
+      icRequired: false
+    ui: { show: [payment], hide: [] }
+
+- id: product-myr-rto-notradein
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "Rent-to-own", tradeIn: "No Trade-in"}
+  then:
+    provider: curlec-sub
+    locks_checkout:
+      icRequired: true
+    ui: { show: [payment], hide: [] }
+
+- id: product-myr-rto-tradein
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: { payment: "Rent-to-own", tradeIn: "Trade-in KA1/KA1s"}
+  then:
+    provider: curlec-sub
+    locks_checkout:
+      icRequired: true
+    ui: { show: [payment], hide: [] }
+    auto_apply:
+      promotion:
+        label: "Trade-in"
+        type: subscription
+
+- id: cart-myr-accessories
+  when:
+    source: cart
+    currency_in: ["MYR"]
+  then:
+    provider: curlec-otp
+    locks: { hidePromo: true, country: MY }
+    ui: { show: [summary], hide: [promo] }
+
+- id: cart-nonmyr-accessories
+  when:
+    source: cart
+    currency_in: ["!MYR"]
+  then:
+    provider: stripe
+    locks: { hidePromo: true }
+    ui: { show: [summary], hide: [promo] }

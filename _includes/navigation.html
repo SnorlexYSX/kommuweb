@@ -173,6 +173,7 @@
 
     function onChange(val){
       localStorage.setItem("preferredLocale", val);
+      window.dispatchEvent(new CustomEvent('locale:changed'));
       location.reload();
     }
 

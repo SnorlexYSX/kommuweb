@@ -42,12 +42,20 @@
   }
 
   function addToCart(product) {
-    const existingIndex = cart.findIndex(i => i.name === product.name);
+    const normSel = (product.selection || "").toString().trim();
+    product.selection = normSel;
+
+    const existingIndex = cart.findIndex(i =>
+      i.name === product.name && ((i.selection || "").toString().trim() === normSel)
+    );
+
     if (existingIndex !== -1) {
       cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
     } else {
-      product.quantity = 1;
-      cart.push(product);
+      const toStore = { ...product };
+      toStore.quantity = 1;
+      toStore.selection = normSel;
+      cart.push(toStore);
     }
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
