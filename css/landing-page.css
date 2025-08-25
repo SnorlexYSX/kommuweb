@@ -284,8 +284,6 @@ h6 {
 
 .main-btm-description {
     text-align: left;
-    padding: 0px 90px;
-    margin: 75px 0px;
 }
 
 .main-btm-description > h2{
@@ -297,38 +295,35 @@ h6 {
 }
 
 .footer-inline-link {
-    font-size: 1.5rem;
-    font-weight: 800;
-    text-decoration: underline; 
-    color: white;
+    font-size: 1rem;
+    color: #f1f1f1;
 }
 
 .footer-inline-link:hover {
-    font-size: 1.5rem;
-    font-weight: 750;
+    font-size: 1rem;
     text-decoration: underline; 
-    color: white;
+    color: #f1f1f1;
 }
 
 .footer-buttons > a {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 300;
     text-decoration: none; 
-    color: white;
+    color: #f1f1f1;
     margin: 25px 0px;
     font-family: GlacialIndifference-Regular;
 }
 
 .footer-buttons > a:hover {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 300;
     text-decoration: underline; 
-    color: white;
+    color: #f1f1f1;
     font-family: GlacialIndifference-Regular;
 }
 
 .main-btm-description > p{
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-style: normal;
     font-weight: 300;
     font-family: GlacialIndifference-Regular;
@@ -522,6 +517,11 @@ h6 {
     margin-top: 0;
 }
 
+footer {
+    padding: 2rem 0;
+    background-color: #1b1b1b;
+}
+
 @media(max-width:1199px) {
     ul.banner-social-buttons {
         float: left;
@@ -573,9 +573,13 @@ h6 {
     }
 
     .main-btm-description{
-        padding:30px;
-        margin:30px 0px 0px 0px;
+
         text-align: center;
+    }
+
+    footer {
+        padding: 1rem 0;
+        background-color: #1b1b1b;
     }
 
     .main-btm-support{
@@ -594,10 +598,7 @@ h6 {
     }
 }
 
-footer {
-    padding: 50px 0px 50px 0px;
-    background-color: #f8f8f8;
-}
+
 
 p.copyright {
     margin: 15px 0 0;
