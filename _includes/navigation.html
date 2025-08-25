@@ -14,7 +14,9 @@
       <!-- Cart Icon -->
       <button onclick="toggleCart()" class="relative text-white text-lg" aria-label="Open cart">
         🛒
-        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        <span id="cartCount" class="absolute -top-2 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+         style="background-color: #2d2d2d;">
+         0</span>
       </button>
 
       <!-- Burger -->
@@ -42,7 +44,7 @@
 
         <!-- Currency / Locale Selector -->
         <label for="localeSelectorMobile" class="text-xs text-gray-400">Currency</label>
-        <select id="localeSelectorMobile" class="bg-black text-white border border-white px-2 py-2 text-sm rounded w-full">
+        <select id="localeSelectorMobile" class="bg-black text-white px-2 py-2 text-sm rounded w-full">
           <option value="en-MY">🇲🇾 MYR</option>
           <option value="en-US">🇺🇸 USD</option>
         </select>
@@ -142,20 +144,21 @@
       <!-- Center: Tabs/links -->
       <nav class="flex items-center gap-12 text-md font-normal text-white">
         <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
-          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-3 w-auto"/>
+          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-4 w-auto"/>
           <span class="sr-only">Kommu</span>
         </a>
         <a href="{{ '/' | relative_url }}" class="hover:text-gray-300">Home</a>
         <a href="{{ '/ka2' | relative_url }}" class="hover:text-gray-300">KommuAssist</a>
         <a href="{{ '/store' | relative_url }}" class="hover:text-gray-300">Store</a>
         <a href="{{ '/support' | relative_url }}" class="hover:text-gray-300">Supported Cars</a>
-        <select id="localeSelectorDesktop" class="bg-black text-white border border-white px-2 py-2 text-sm rounded">
+        <select id="localeSelectorDesktop" class="bg-black text-white px-2 py-2 text-sm rounded">
           <option value="en-MY">🇲🇾 MYR</option>
           <option value="en-US">🇺🇸 USD</option>
         </select>
         <button onclick="toggleCart()" class="relative text-white text-xl" aria-label="Open cart">
           🛒
-          <span id="cartCountDesktop" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          <span id="cartCountDesktop" class="absolute -top-1.5 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+                style="background-color: #2d2d2d;">0</span>
         </button>
       </nav>
     </div>
