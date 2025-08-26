@@ -10,6 +10,39 @@ title: Buy KommuAssist 2
   border-radius: 1.5rem;
 }
 
+/* Product image container: constant height at >=1500px, smooth scale below */
+.product-image-shell {
+  width: 100%;
+  height: 60rem;               /* fixed at ≥1500px */
+  display: flex;
+  align-items: center;         /* vertical center */
+  justify-content: center;     /* horizontal center */
+  transition: height .4s ease, width .4s ease; /* smooth scaling */
+}
+.product-image-shell > img {
+  width: auto;                 /* don't force width */
+  height: auto;                /* preserve intrinsic ratio */
+  max-width: 100%;             /* contain within square */
+  max-height: 100%;            /* contain within square */
+  object-fit: initial;
+  transition: width .4s ease, height .4s ease;
+}
+
+/* Scale container & image proportionally starting at 1500px; min heights to avoid over-shrink */
+@media (max-width: 1500px) {
+  .product-image-shell {
+    width: 100%;
+    height: auto;              /* let aspect-ratio set height */
+    aspect-ratio: 1 / 1;       /* apply square ratio only below 1500px */
+  }
+  .product-image-shell > img {
+    width: 100%;               /* scale with container width */
+    height: auto;              /* maintain image aspect */
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
 .border-gray-600{
   --tw-border-opacity: 0.2;
   border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));
@@ -50,7 +83,7 @@ title: Buy KommuAssist 2
 }
 
 .secondaryTextBold{
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-family: GlacialIndifference-Bold;
 }
 
@@ -119,12 +152,52 @@ select.store-select::-ms-expand {
 .mb-100px{
   margin-bottom: 6.25rem;
 }
+
+/* Match main content margins/padding to Selection Section below 1780px */
+@media (max-width: 1800px) {
+  .main-grid {
+    max-width: 90rem;     /* same as Selection Section */
+    margin-left: auto;    /* center */
+    margin-right: auto;   /* center */
+    padding-left: 0 !important;  /* override px-[9rem] */
+    padding-right: 0 !important; /* override px-[9rem] */
+  }
+}
+
+@media (min-width: 1800px) {
+  .product-image-shell > img {
+    width: 975px;   /* fixed image width */
+    height: 548.44px;  /* fixed image height */
+    max-width: none;
+    max-height: none;
+  }
+}
+
+@media (max-width: 1500px) {
+  .main-grid {
+    /* Squeeze left column harder: can go down to 280px; prefer ~50vw below 1500px */
+    grid-template-columns: minmax(clamp(280px, 50vw, 1040px), 1fr) 337px;
+    /* Tighten spacing and padding to free width for the right column */
+    gap: 2.5rem !important;      /* ~gap-10 */
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Below 1300px: reduce main content grid gap from gap-20 (5rem) to gap-14 (3.5rem) */
+@media (max-width: 1250px) {
+  .main-grid {
+    gap: 2.5rem !important; /* Tailwind gap-14 */
+  }
+}
 </style>
+
+
 
 <!-- Product Page Full Layout -->
 <div class="w-full px-4 mt-100px">
   <!-- Title above everything -->
-  <div class="text-left mb-8 px-[9rem]">
+  <div class="text-left mb-8 px-[9rem] main-grid">
     <h1 class="h1Title mb-4 text-white">KommuAssist 2</h1>
     <p class="secondaryText text-white">
       <span id="heroOneOffPrice"></span>
@@ -133,10 +206,10 @@ select.store-select::-ms-expand {
   </div>
 
   <!-- Main content: Image and Options Side-by-Side -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-20 px-[9rem] md:grid-cols-[3fr,1fr]">
+  <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 px-[9rem] main-grid">
     <!-- Product Image -->
-    <div class="btn-bg-gray img-container-round-border p-6 flex items-center justify-center">
-      <img src="{{ "/img/products/device/buy_page_1.webp" | relative_url }}" class="w-full h-auto object-contain rounded" alt="Main product image">
+    <div class="btn-bg-gray img-container-round-border p-6 product-image-shell place-self-center">
+      <img src="{{ "/img/products/device/buy_page_1.webp" | relative_url }}" class="rounded" alt="Main product image">
     </div>
 
     <!-- Car Model and Connectivity -->
@@ -178,7 +251,7 @@ select.store-select::-ms-expand {
   </div>
 
   <!-- Selection Sections -->
-  <div class="space-y-20 text-white max-w-[90rem] mx-auto mt-100px mb-100px">
+  <div class="space-y-20 text-white max-w-[90rem] mx-auto mt-100px mb-100px main-grid">
     <!-- Trade-in Section -->
     <div>
       <p class="primaryTextBold text-white">Trade-in</p>
@@ -380,6 +453,9 @@ select.store-select::-ms-expand {
   <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
   <p><a href="{{ '/rto-tc' | relative_url }}" class="underline">RTO T&amp;C</a></p>
 </div>
+
+
+
 <script>
   async function load() {
     const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
