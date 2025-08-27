@@ -129,7 +129,7 @@ stylesheet: products
         .s1-video, .s2-video { animation: none !important; }
       }
       .section-copy {
-        max-width: 900px;
+        max-width: 1200px;
         margin: 2.5rem auto 0;
         padding: 0 1.25rem;
         color: #eaeaea;
@@ -652,6 +652,18 @@ text-align: left;
     bottom: calc(100% + var(--gap, 8px)); 
     height: var(--line, 72px); 
   }
+    /* Page-wide section padding on medium screens and below */
+    @media (max-width: 1200px){
+      /* apply to all <section> as well as named section containers used on this page */
+      .performance-section,
+      .safety-section,
+      .frame-section,
+      .perception-tabs,
+      .ports-section{
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
     </style>
 
 
@@ -690,14 +702,12 @@ text-align: left;
     }
   </script>
 
-
-
 </head>
 <section class="ka1s-section">
     <div class="module-content s1-hero">
         <div class="unit-image-wrapper">
-            <h2 class="ka-heading-md text-white">KommuAssist 2</h2>
-            <h1 class="ka-heading-xl text-white">Built for Smarter Journey.</h1>
+            <h2 class="h3 text-white">KommuAssist 2</h2>
+            <h1 class="h1 text-white">Built for Smarter Journey.</h1>
             <video
               id="s1Video"
               class="s1-video scroll-video"
@@ -739,15 +749,15 @@ text-align: left;
                 // Keep layout stable and fade in once ready
                 const onReady = () => { v.style.opacity = '1'; v.removeEventListener('canplay', onReady); };
                 v.addEventListener('canplay', onReady, { once: true });
-                // If cached and instantly ready, force style now
+                // If cached and instantly ready, force style now 
                 if (v.readyState >= 3) { v.style.opacity = '1'; }
               })();
             </script>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
               
               <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
-              <p class="text-white font-medium ka-secondaryText" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
-              <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
+              <p class="h5 text-white" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
+              <p class="h4 font-bold text-gray text-center pt-16">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="h4 font-bold text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
         </div>
     </div>
