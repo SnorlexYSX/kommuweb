@@ -84,12 +84,6 @@ stylesheet: products
   .meter-fill { transition:none !important; }
 }
       /* Hero section with purple background image */
-      .btn-order {
-            height:44px;
-            line-height:24px;
-            font-size:20px;
-            padding: 10px 30px;
-        }
 
       .s1-hero {
         position: relative;
@@ -356,203 +350,203 @@ stylesheet: products
 @media (max-width: 480px){
   .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
 }
-      /* Full-bleed sticky frame section */
-        .frame-section {
-        position: relative;
-        min-height: 300vh;            /* more scroll room for the pin */
-        overflow: visible;            /* avoid ancestor clipping of sticky */
-        }
+/* Full-bleed sticky frame section */
+.frame-section {
+position: relative;
+min-height: 300vh;            /* more scroll room for the pin */
+overflow: visible;            /* avoid ancestor clipping of sticky */
+}
 
-        .frame-sticky {
-        position: sticky;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;             /* fallback clip */
-        overflow: clip;               /* modern clip to viewport box */
-        display: grid;
-        place-items: center;
-        background: #000;
-        /* contain: layout paint size;  -- removed for WebKit sticky correctness */
-        /* will-change: transform;      -- not needed for sticky */
-        z-index: 2;
-        }
+.frame-sticky {
+position: sticky;
+top: 0;
+left: 0;
+width: 100%;
+height: 100vh;
+overflow: hidden;             /* fallback clip */
+overflow: clip;               /* modern clip to viewport box */
+display: grid;
+place-items: center;
+background: #000;
+/* contain: layout paint size;  -- removed for WebKit sticky correctness */
+/* will-change: transform;      -- not needed for sticky */
+z-index: 2;
+}
 
-        .frame-container {
-          position: relative;             /* centered by .frame-sticky grid */
-          width: min(1000px, 92vw);       /* final framed size */
-          aspect-ratio: 16 / 9;           /* match your design; adjust if needed */
-          overflow: hidden;
-          border-radius: 16px;
-          background: #000;
-          box-shadow: 0 12px 40px rgba(0,0,0,0.45);
-          transform-origin: center center;
-          will-change: transform;
-          z-index: 1;
-          pointer-events: none;
-          border: 0px solid rgba(255,255,255,0.08);
-        }
-        .frame-media {
-          display: block;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transform: none; /* container handles scale */
-          z-index: 0;
-        }
+.frame-container {
+  position: relative;             /* centered by .frame-sticky grid */
+  width: min(1000px, 92vw);       /* final framed size */
+  aspect-ratio: 16 / 9;           /* match your design; adjust if needed */
+  overflow: hidden;
+  border-radius: 16px;
+  background: #000;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  transform-origin: center center;
+  will-change: transform;
+  z-index: 1;
+  pointer-events: none;
+  border: 0px solid rgba(255,255,255,0.08);
+}
+.frame-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: none; /* container handles scale */
+  z-index: 0;
+}
 
-        /* Top text that fades/slides in while the image shrinks */
-        .frame-text {
-        position: absolute;
-        top: 5vh;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 1100px;
-        width: min(92vw, 1100px);
-        text-align: left;
-        z-index: 5; /* above media */
-        pointer-events: none; /* no accidental selection while scrolling */
-        }
+/* Top text that fades/slides in while the image shrinks */
+.frame-text {
+position: absolute;
+top: 5vh;
+left: 50%;
+transform: translateX(-50%);
+max-width: 1100px;
+width: min(92vw, 1100px);
+text-align: left;
+z-index: 5; /* above media */
+pointer-events: none; /* no accidental selection while scrolling */
+}
 
-        .frame-text h2,
-        .frame-text p {
-        color: #f1f1f1;
-        margin: 0;
-        }
+.frame-text h2,
+.frame-text p {
+color: #f1f1f1;
+margin: 0;
+}
 
-        .frame-text h2 { 
-        font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-        line-height: 1.15;
-        font-weight: 800;
-        }
-        .frame-text p {
-        margin-top: .6rem;
-        opacity: .9;
-        }
+.frame-text h2 { 
+font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+line-height: 1.15;
+font-weight: 800;
+}
+.frame-text p {
+margin-top: .6rem;
+opacity: .9;
+}
 
-        /* Headline lines that animate from centered → top-left */
-        .frame-headline {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          display: grid;
-          gap: 0.25rem;
-          text-align: center;
-          z-index: 6;
-          pointer-events: none;
-          width: min(92vw, 1100px);
-          max-width: 1100px;
-          opacity: 1; /* always visible from start */
-          min-width: 280px; /* avoids text wrap jitter on small screens */
-        }
-        .frame-headline .line {
-          display: block;
-          color: #f1f1f1;
-          font-weight: 800;
-          line-height: 1.05;
-        }
-        .frame-headline .line1 { font-size: clamp(1.8rem, 3.5rem, 3.5rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-        .frame-headline .line2 { font-size: clamp(1.5rem, 3.25rem, 3.25rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-        .frame-headline .line3 { font-size: clamp(1.5rem, 3rem, 3rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-        /* 5-row caption that docks above the frame and reveals after shrink */
-        .frame-caption {
-        position: absolute;
-        left: 50%;                 /* JS will reposition; safe default */
-        top: 10vh;
-        transform: translate(-50%, -50%);
-        display: grid;
-        row-gap: 0.35rem;
-        z-index: 7;
-        pointer-events: none;
-        width: min(92vw, 1100px);
-        max-width: 1100px;
-        text-align: left;
-        }
-        .frame-caption .cap-line {
-          line-height: 1.15;
-          opacity: 0;                  /* revealed via JS scroll */
-          transform: translateY(6px);
-          margin: 0;
-        }
-        /* Big H2: 3 Automotive Cameras. */
-        .frame-caption .cap-line:nth-child(2) {
-          color: #f1f1f1;
+/* Headline lines that animate from centered → top-left */
+.frame-headline {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  gap: 0.25rem;
+  text-align: center;
+  z-index: 6;
+  pointer-events: none;
+  width: min(92vw, 1100px);
+  max-width: 1100px;
+  opacity: 1; /* always visible from start */
+  min-width: 280px; /* avoids text wrap jitter on small screens */
+}
+.frame-headline .line {
+  display: block;
+  color: #f1f1f1;
+  font-weight: 800;
+  line-height: 1.05;
+}
+.frame-headline .line1 { font-size: clamp(1.8rem, 3.5rem, 3.5rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+.frame-headline .line2 { font-size: clamp(1.5rem, 3.25rem, 3.25rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+.frame-headline .line3 { font-size: clamp(1.5rem, 3rem, 3rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+/* 5-row caption that docks above the frame and reveals after shrink */
+.frame-caption {
+position: absolute;
+left: 50%;                 /* JS will reposition; safe default */
+top: 10vh;
+transform: translate(-50%, -50%);
+display: grid;
+row-gap: 0.35rem;
+z-index: 7;
+pointer-events: none;
+width: min(92vw, 1100px);
+max-width: 1100px;
+text-align: left;
+}
+.frame-caption .cap-line {
+  line-height: 1.15;
+  opacity: 0;                  /* revealed via JS scroll */
+  transform: translateY(6px);
+  margin: 0;
+}
+/* Big H2: 3 Automotive Cameras. */
+.frame-caption .cap-line:nth-child(2) {
+  color: #f1f1f1;
 
-          font-size: clamp(1.6rem, 3.5rem, 3.5rem);
-          font-weight: 800;
-        }
-        /* Line 3 + 4: smaller bold */
-        .frame-caption .cap-line:nth-child(3) {
-          color: #f1f1f1;
-          font-size: clamp(1rem, 1.75rem, 1.75rem);
-          font-weight: 800;
-          margin-top: 0.25rem;
-          font-family: 'glacial_indifferencebold'
-        }
-        .frame-caption .cap-line:nth-child(4) {
-          color: #f1f1f1;
-          font-size: clamp(0.9rem, 1.5rem, 1.5rem);
-          font-weight: 800;
-          margin-top: 0.25rem;
-          font-family: 'glacial_indifferencebold'
-        }
-        /* Descriptive sentence under heading */
-        .frame-caption .cap-line:nth-child(5) {
-          font-size: clamp(.9rem, 1.5rem, 1.5rem);
-          font-weight: 600;
-          opacity: 0; /* revealed via JS */
-          margin-top: 0.6rem;
-          margin-bottom: 1rem;
-          color: #b2b2b2;
-          font-family: 'glacial_indifferencebold'
-        }
+  font-size: clamp(1.6rem, 3.5rem, 3.5rem);
+  font-weight: 800;
+}
+/* Line 3 + 4: smaller bold */
+.frame-caption .cap-line:nth-child(3) {
+  color: #f1f1f1;
+  font-size: clamp(1rem, 1.75rem, 1.75rem);
+  font-weight: 800;
+  margin-top: 0.25rem;
+  font-family: 'glacial_indifferencebold'
+}
+.frame-caption .cap-line:nth-child(4) {
+  color: #f1f1f1;
+  font-size: clamp(0.9rem, 1.5rem, 1.5rem);
+  font-weight: 800;
+  margin-top: 0.25rem;
+  font-family: 'glacial_indifferencebold'
+}
+/* Descriptive sentence under heading */
+.frame-caption .cap-line:nth-child(5) {
+  font-size: clamp(.9rem, 1.5rem, 1.5rem);
+  font-weight: 600;
+  opacity: 0; /* revealed via JS */
+  margin-top: 0.6rem;
+  margin-bottom: 1rem;
+  color: #b2b2b2;
+  font-family: 'glacial_indifferencebold'
+}
 
-        /* Spacing between sticky section and tabs */
-        #perception-zoom + .perception-tabs { margin-top: 0.35rem; }
+/* Spacing between sticky section and tabs */
+#perception-zoom + .perception-tabs { margin-top: 0.35rem; }
 
-        /* --- Perception tabs styles --- */
-        .perception-tabs { 
-          max-width: 900px; 
-          margin: 0.75rem auto 1.75rem; 
-          padding: 0 1rem; 
-          color: #eaeaea;
-        }
-        .perception-tabs .perception-tablist { margin: 0.25rem auto 0.35rem; }
-        .tabs-wrap { width: 100%; }
-        .perception-tabs .tabs-wrap { text-align: center; }
-        .tablist { 
-          display: flex; 
-          gap: 1rem; 
-          justify-content: center; 
-          margin: 1.25rem auto 0.75rem; 
-        }
-        .tab-btn {
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.14);
-          color: #eaeaea;
-          padding: 0.5rem 1rem;
-          border-radius: 10px;
-          font-weight: 700;
-          letter-spacing: 0.01em;
-          cursor: pointer;
-        }
-        .tab-btn.is-active { 
-          border-color: #cc2b2b;             /* Kommu red highlight */
-          box-shadow: 0 0 0 1px rgba(204,43,43,0.25) inset;
-        }
-        .tab-panel { 
-          margin-top: 1rem; 
-          text-align: center; 
-          color: #b2b2b2;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-        .tab-panel p { margin: 0.5rem 0 0; font-weight:100;}
+/* --- Perception tabs styles --- */
+.perception-tabs { 
+  max-width: 900px; 
+  margin: 0.75rem auto 1.75rem; 
+  padding: 0 1rem; 
+  color: #eaeaea;
+}
+.perception-tabs .perception-tablist { margin: 0.25rem auto 0.35rem; }
+.tabs-wrap { width: 100%; }
+.perception-tabs .tabs-wrap { text-align: center; }
+.tablist { 
+  display: flex; 
+  gap: 1rem; 
+  justify-content: center; 
+  margin: 1.25rem auto 0.75rem; 
+}
+.tab-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #eaeaea;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+.tab-btn.is-active { 
+  border-color: #cc2b2b;             /* Kommu red highlight */
+  box-shadow: 0 0 0 1px rgba(204,43,43,0.25) inset;
+}
+.tab-panel { 
+  margin-top: 1rem; 
+  text-align: center; 
+  color: #b2b2b2;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+.tab-panel p { margin: 0.5rem 0 0; font-weight:100;}
 
-        /* prevent wrap jitter on small screens */
-        .frame-headline { min-width: 280px; }
+/* prevent wrap jitter on small screens */
+.frame-headline { min-width: 280px; }
 
 .ports-section {
   position: relative;
@@ -659,6 +653,9 @@ stylesheet: products
     height: var(--line, 72px); 
   }
     </style>
+
+
+
   <script>
     // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
     document.addEventListener('DOMContentLoaded', function(){
@@ -687,7 +684,14 @@ stylesheet: products
         });
       } catch(e) { /* no-op */ }
     }, { once: true });
+
+        function goToBuyPage() {
+      window.location.href = "{{ '/product' | relative_url }}";
+    }
   </script>
+
+
+
 </head>
 <section class="ka1s-section">
     <div class="module-content s1-hero">
@@ -740,7 +744,8 @@ stylesheet: products
               })();
             </script>
             <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
-              <a role="button" class="btn btn-secondary btn-order" href="{{ "/product" | relative_url }}" target="_blank">Buy</a>
+              
+              <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
               <p class="text-white font-medium ka-secondaryText" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
               <p class="ka-subcopy text-center">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
@@ -928,6 +933,8 @@ stylesheet: products
   </figure>
   </div>
 </section>
+
+
 <script>
   (function(){
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;

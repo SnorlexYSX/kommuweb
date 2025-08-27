@@ -15,20 +15,17 @@
   prices:
     MYR: 28.90
 
-- name: Harness Set
+- name: Second Car Kit
   prices:
     MYR: 320.00
     USD: 120.00  
   category: Hardware
   image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
+  description: Full set of connectors and mount for your other car.
   includes:
-  - ADAS Relay
-  - ADAS Connector
-  - 2x USB-C
-  - OBD Power
-  - Mount with adhesive
-  - Electrostatic sticker
+  - ADAS relay and OBD connector
+  - Full set of cables
+  - Mount, sticker, wipes
 
   dropdown:
     title: Select car model
@@ -43,83 +40,17 @@
     USD: 10.00
   category: Hardware
   image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
+  description: Mount to setup KA2 device onto windshield.
   includes:
-  - Mount with adhesive
+  - Mount
   - Electrostatic sticker
-  - Alcohol wipes
+  - Wipes
   dropdown:
     title: Select car model
     placeholder: Car model
     source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
     list_key: "standard"
     value_template: "{{brand}} {{model}} {{year}} {{variant}}"
-
-- name: nanoSIM card
-  prices:
-    MYR: 10.00
-    USD: 10.00
-  category: Others
-  image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
-  includes:
-  - U-mobile prepaid SIM card
-
-- name: microSD card
-  prices:
-    MYR: 30.00
-    USD: 30.00
-  category: Others
-  image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
-  includes:
-  - 64gb microSD card
-  
-- name: ADAS Connector
-  prices:
-    MYR: 150.00
-    USD: 12.00
-  category: Cables & connectors
-  image: /img/products/accessories/sample.png
-  description: Mount to setup KA2 device onto windshield...
-  includes:
-  - ADAS Connector
-  dropdown:
-    title: Select car model
-    placeholder: Car model
-    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
-    list_key: "standard"
-    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
-
-- name: Short USB 3.1 Type-C Cable
-  prices:
-    MYR: 30.00
-    USD: 33.00
-  category: Cables & connectors
-  image: /img/products/accessories/sample.png
-  description: To connect Vision to car ADAS system
-  includes:
-  - Relay-to-Vision USB-C Cable
-
-- name: Long USB 3.1 Type-C Cable
-  prices:
-    MYR: 40.00
-    USD: 33.00
-  category: Cables & connectors
-  image: /img/products/accessories/sample.png
-  description: To connect Vision to car ADAS system
-  includes:
-  - OBD-to-Relay USB-C Cable
-
-- name: OBD Connector
-  prices:
-    MYR: 100.00
-    USD: 33.00
-  category: Cables & connectors
-  image: /img/products/accessories/sample.png
-  description: To connect Vision to car ADAS system
-  includes:
-  - OBD connector
 
 - name: ADAS Relay
   prices:
@@ -127,7 +58,74 @@
     USD: 33.00
   category: Hardware
   image: /img/products/accessories/sample.png
-  description: To connect Vision to car ADAS system
+  description: Hardware to communicate with car ADAS system.
   includes:
-  - ADAS Relay
+  - ADAS relay unit
+   (DOES NOT come with ADAS connector)
+  
+- name: ADAS Connector
+  prices:
+    MYR: 150.00
+    USD: 12.00
+  category: Cables & connectors
+  image: /img/products/accessories/sample.png
+  description: Connect ADAS relay to car ADAS.
+  includes:
+  - Car brand specific ADAS connector
+  dropdown:
+    title: Select car model
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
 
+- name: OBD Connector
+  prices:
+    MYR: 100.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/sample.png
+  description: To power the entire system from OBD port.
+  includes:
+  - OBD connector unit
+
+- name: Short 3.1 USB-C Cable
+  prices:
+    MYR: 30.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/sample.png
+  description: Connection between ADAS relay to KA device.
+  includes:
+  - Relay-to-KA USB-C Cable
+
+- name: Long 3.1 USB-C Cable
+  prices:
+    MYR: 40.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/sample.png
+  description: Connection between OBD unit and ADAS relay.
+  includes:
+  - OBD-to-Relay USB-C Cable
+
+- name: Nano SIM card
+  prices:
+    MYR: 10.00
+    USD: 10.00
+  category: Others
+  image: /img/products/accessories/sample.png
+  description: For 24/7 connectivity; enables subscription features.
+  includes:
+  - U-mobile prepaid SIM card
+   (user to self-activate and subscribe to RM25/month plan for 40gb data) 
+
+- name: Micro SD card
+  prices:
+    MYR: 30.00
+    USD: 30.00
+  category: Others
+  image: /img/products/accessories/sample.png
+  description: For local storage of drive logs.
+  includes:
+  - 64gb micro SD card

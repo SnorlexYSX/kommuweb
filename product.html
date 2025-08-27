@@ -5,233 +5,48 @@ title: Buy KommuAssist 2
 {% include pricing_helpers.html %}
 
 <style>
+  /* Apple-like mobile summary pane */
+  @media (max-width: 768px) {
+    /* Turn the whole section into a single card */
+    .summary-pane { 
+      background: transparent;          /* let the card stand out */
+      padding-top: 1rem; 
+    }
+    .summary-card {
+      background: #1b1b1b;              /* matches your card tone; change to #fff if desired */
+      padding: 3rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    }
+  
+    /* Stack the columns and add soft separators between blocks */
+    .summary-col + .summary-col {
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin-top: .75rem;
+      padding-top: 1rem;
+    }
+  
+    /* Make the checkout button full-width and single line */
+    #checkoutBtn {
+      width: 100%;
+      white-space: nowrap;
+    }
 
-.img-container{
-  border-radius: 1.5rem;
-  background-color: #1b1b1b;
-}
+    .h3-summary-mobile{
+      font-size: calc(1.5rem + .6vw)
+    }
 
-/* Utility: reliable hide class (not purged) */
-.is-hidden { display: none !important; }
-
-/* Dots for image carousel */
-.carousel-dot {
-  width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,.35); cursor: pointer; transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
-}
-.carousel-dot:hover { transform: scale(1.1); }
-.carousel-dot-active { background: #ffffff; opacity: 1; }
-.product-image-shell { position: relative; }
-
-/* Arrow buttons for image carousel (Apple-like) */
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.35);
-  color: #111;
-  box-shadow: 0 2px 10px rgba(0,0,0,.25);
-  cursor: pointer;
-  transition: background-color .15s ease, transform .15s ease, opacity .15s ease;
-  border: none;
-}
-.carousel-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
-.carousel-arrow:active { transform: translateY(-50%) scale(0.98); }
-.carousel-arrow-left { left: 1.5rem; }
-.carousel-arrow-right { right: 1.5rem; }
-.carousel-arrow svg { width: 18px; height: 18px; }
-@media (max-width: 640px){ .carousel-arrow { width: 36px; height: 36px; } .carousel-arrow svg { width: 14px; height: 14px; } }
-
-/* Product image container: constant height at >=1500px, smooth scale below */
-.product-image-shell {
-  width: 100%;
-  height: 60rem;               /* fixed at ≥1500px */
-  display: flex;
-  align-items: center;         /* vertical center */
-  justify-content: center;     /* horizontal center */
-  transition: height .4s ease, width .4s ease; /* smooth scaling */
-}
-.product-image-shell > img {
-  width: auto;                 /* don't force width */
-  height: auto;                /* preserve intrinsic ratio */
-  max-width: 100%;             /* contain within square */
-  max-height: 100%;            /* contain within square */
-  object-fit: initial;
-  transition: width .4s ease, height .4s ease;
-}
-
-/* Scale container & image proportionally starting at 1500px; min heights to avoid over-shrink */
-@media (max-width: 1500px) {
-  .product-image-shell {
-    width: 100%;
-    height: auto;              /* let aspect-ratio set height */
-    aspect-ratio: 1 / 1;       /* apply square ratio only below 1500px */
+    .h5-summary-mobile{
+      font-size: calc(1.1rem + .6vw)
+    }
   }
-  .product-image-shell > img {
-    width: 100%;               /* scale with container width */
-    height: auto;              /* maintain image aspect */
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
-
-.btn-border-gray{
-  --tw-border-opacity: 0.2;
-  border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));
-}
-
-.btn-bg-gray{
-  background-color: #070707;
-}
-
-.btn-bg-blue{
-  background-color: #007AFF;
-}
-
-.summaryCard-bg-gray{
-  background-color: #1b1b1b;
-}
-
-.rounded-product-select {
-    border-radius: 1.25rem;
-}
-
-.rounded-checkout {
-    border-radius: 0.5rem;
-}
-
-.h1Title{
-  font-size: 3.5rem;
-}
-
-.secondaryText{
-  font-size: 1.1rem;
-  font-family: GlacialIndifference-Regular;
-}
-
-.secondaryTextBold{
-  font-size: 1.1rem;
-  font-family: GlacialIndifference-Bold;
-}
-
-.tertiaryText{
-  font-size: 1rem;
-  font-family: GlacialIndifference-Regular;
-}
-
-.quaternaryText{
-  font-size: 0.9rem;
-  font-family: GlacialIndifference-Regular;
-}
-
-.btn-fixed-height {
-  height: 11.25rem;
-}
-
-.primaryTextBold{
-  font-size: 1.75rem;
-  font-family: GlacialIndifference-Bold;
-}
-
-.text-gray{
-  color:#b2b2b2;
-}
-
-.btn-padding-store{
-  padding: 1.875rem 1.875rem;
-}
-
-.popup-padding-store{
-  padding: 1.5rem 1.875rem;
-}
-
-
-select.store-select{
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23b2b2b2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: 1rem;
-  background-position: right 1.875rem center;
-  -webkit-appearance: none; /* Chrome/Safari */
-  -moz-appearance: none;    /* Firefox   */
-  appearance: none;         
-}
-
-select.store-select::-ms-expand {
-  display: none;
-}
-
-.popupCardGrey{
-  background-color: #2d2d2d;
-}
-
-.popupIconGrey{
-  background-color: #606060;
-}
-
-.bg-transparent{
-  background-color: transparent;
-}
-
-.mt-100px{
-  margin-top: 6.25rem;
-}
-
-.mb-100px{
-  margin-bottom: 6.25rem;
-}
-
-/* Match main content margins/padding to Selection Section below 1780px */
-@media (max-width: 1800px) {
-  .main-grid {
-    max-width: 90rem;     /* same as Selection Section */
-    margin-left: auto;    /* center */
-    margin-right: auto;   /* center */
-    padding-left: 0 !important;  /* override px-[9rem] */
-    padding-right: 0 !important; /* override px-[9rem] */
-  }
-}
-
-@media (min-width: 1800px) {
-  .product-image-shell > img {
-    width: 975px;   /* fixed image width */
-    height: 548.44px;  /* fixed image height */
-    max-width: none;
-    max-height: none;
-  }
-}
-
-@media (max-width: 1500px) {
-  .main-grid {
-    /* Squeeze left column harder: can go down to 240px; prefer ~45vw below 1500px */
-    grid-template-columns: minmax(clamp(240px, 45vw, 1040px), 1fr) 337px;
-    /* Tighten spacing and padding to free width for the right column */
-    gap: 2.5rem !important;      /* ~gap-10 */
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-}
-
-/* Below 1300px: reduce main content grid gap from gap-20 (5rem) to gap-14 (3.5rem) */
-@media (max-width: 1250px) {
-  .main-grid {
-    gap: 2.5rem !important; /* Tailwind gap-14 */
-  }
-}
-</style>
-
-
+  </style>
 
 <!-- Product Page Full Layout -->
-<div class="w-full px-4 mt-100px">
+<div class="w-full px-4 mt-80px">
   <!-- Title above everything -->
   <div class="text-left mb-8 px-[9rem] main-grid">
-    <h1 class="h1Title mb-4 text-white">KommuAssist 2</h1>
-    <p class="secondaryText text-white">
+    <h1 class="h1 font-bold text-white mb-4">KommuAssist 2</h1>
+    <p class="h4 text-white">
       <span id="heroOneOffPrice"></span>
       <span id="heroMonthly" class="ml-1"></span>
     </p>
@@ -254,26 +69,26 @@ select.store-select::-ms-expand {
       <div id="productDots" class="absolute bottom-10 left-0 right-0 flex justify-center gap-4 pointer-events-auto"></div>
     </div>
 
-    <!-- Car Model and Connectivity -->
+    <!-- Car Model and Connectivity Right Column -->
    <div class="text-white space-y-20 flex flex-col justify-center">
       <!-- Car Model Selection -->
       <div>
-        <label for="carSelectList" class="block primaryTextBold text-white">Car model</label>
-        <p class="tertiaryText text-gray mb-4">Select your car model:</p>
-        <select id="carSelectList" class="store-select w-full btn-bg-gray border-1 btn-border-gray rounded-product-select btn-padding-store text-white tertiaryText"></select>
+        <label for="carSelectList" class="h3 block font-bold text-white">Car model</label>
+        <p class="h5 text-gray mb-4">Select your car model:</p>
+        <select id="carSelectList" class="h5 store-select w-full btn-bg-gray border-1 btn-border-gray rounded-product-select btn-padding-store text-white"></select>
       </div>
 
       <!-- Connectivity -->
       <div>
-        <p class="primaryTextBold text-white">Connectivity</p>
-        <p class="tertiaryText text-gray mb-4">Keep device online for undisrupted upload of drive log to Kommu app.</p>
+        <p class="h3 font-bold text-white">Connectivity</p>
+        <p class="h5 text-gray mb-4">Keep device online for undisrupted upload of drive log to Kommu app.</p>
         <div class="flex flex-col gap-4">
           <button 
             class="connectBtn w-full btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center"
             data-summary="without SIM Card"
           >
             <div class="text-center">
-              <p class="tertiaryText">Use my own SIM card</p>
+              <p class="h5 text-white">Use my own SIM card</p>
             </div>
           </button>
           <button 
@@ -281,11 +96,11 @@ select.store-select::-ms-expand {
             data-summary="with SIM Card"
           >            
               <div class="text-left">
-              <p class="tertiaryText text-white">SIM card included</p>
-              <p class="quaternaryText text-gray">User to activate once received</p>
+              <p class="h5 text-white">SIM card included</p>
+              <p class="h6 text-gray">User to activate once received</p>
               <!-- <p class="text-sm text-gray-300 font-medium">RM20/mth for 20gb</p> -->
             </div>
-            <span id="simPrice" class="tertiaryText"></span>
+            <span id="simPrice" class="h6 ml-2"></span>
           </button>
         </div>
       </div>
@@ -293,36 +108,36 @@ select.store-select::-ms-expand {
   </div>
 
   <!-- Selection Sections -->
-  <div class="space-y-20 text-white max-w-[90rem] mx-auto mt-100px mb-100px main-grid">
+  <div class="space-y-20 text-white max-w-[90rem] mx-auto mt-80px mb-100px main-grid">
     <!-- Trade-in Section -->
     <div>
-      <p class="primaryTextBold text-white">Trade-in</p>
-      <p class="tertiaryText text-gray mb-4">Upgrade hassle-free — just return KommuAssist 2 and keep your existing setup.</p>
+      <p class="h3 font-bold text-white">Trade-in</p>
+      <p class="h5 text-gray mb-4">Upgrade hassle-free — just return KommuAssist 2 and keep your existing setup.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="tradeBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="tradeBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="Trade-in KA1/KA1s"
         >
           <div>
-            <p class="tertiaryText text-white">Trade-in KA1/KA1s device*</p>
-            <p class="quaternaryText text-gray">Only available for one-off purchase</p>
+            <p class="h5 text-white">Trade-in KA1/KA1s device*</p>
+            <p class="h6 text-gray">Only available for one-off purchase</p>
           </div>
         </button>
         <button 
-          class="tradeBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="tradeBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="No Trade-in"
         >          
           <div>
-            <p class="tertiaryText text-white">No trade-in</p>
+            <p class="h5 text-white">No trade-in</p>
           </div>
         </button>
-        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0  tertiaryText flex items-center justify-between">
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="tradein">
           <div class="flex flex-col items-start text-left">
-            <p class="tertiaryText text-white">How does trade-in work?</p>
-            <p class="quaternaryText text-gray">Trade-in policy</p>
+            <p class="h6 text-white">How does trade-in work?</p>
+            <p class="h6 text-gray">Trade-in policy</p>
           </div>
           <div class="ml-4 self-center">
-            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white tertiaryText">?</span>
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
           </div>
         </button>
       </div>
@@ -330,36 +145,36 @@ select.store-select::-ms-expand {
 
     <!-- Payment Section -->
     <div>
-      <p class="primaryTextBold text-white">Payment</p>
-      <p class="tertiaryText text-gray mb-4">Choose your preferred payment method.</p>
+      <p class="h3 font-bold text-white">Payment</p>
+      <p class="h5 text-gray mb-4">Choose your preferred payment method.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="payBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="One-off Purchase"
         >
           <div class="text-left w-[60%]">
-            <p class="tertiaryText text-white">One-off</p>
-            <p class="quaternaryText text-gray">3 years warranty included**</p>
+            <p class="h5 text-white">One-off</p>
+            <p class="h6 text-gray">3 years warranty included**</p>
           </div>
-          <span id="payOneOffPrice" class="w-[40%] quaternaryText text-white text-right"></span>
+          <span id="payOneOffPrice" class="w-[40%] h6 text-white text-right"></span>
         </button>
         <button 
-          class="payBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="Rent-to-own"
         >          
           <div class="text-left w-[60%]">
-            <p class="tertiaryText text-white">Rent-to-own**</p>
-            <p class="quaternaryText text-gray">Flexible 36-month instalment</p>
+            <p class="h5 text-white">Rent-to-own**</p>
+            <p class="h6 text-gray">Flexible 36-month instalment</p>
           </div>
-          <span id="payRtoPrice" class="w-[40%] quaternaryText text-white text-right"></span>
+          <span id="payRtoPrice" class="w-[40%] h6 text-white text-right ml-2"></span>
         </button>
-        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0  tertiaryText flex items-center justify-between">
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="rto">
           <div class="flex flex-col items-start text-left">
-            <p class="tertiaryText text-white">How does rent-to-own work?</p>
-            <p class="quaternaryText text-gray">Rent-to-own policy</p>
+            <p class="h6 text-white">How does rent-to-own work?</p>
+            <p class="h6 text-gray">Rent-to-own policy</p>
           </div>
           <div class="ml-4 self-center">
-            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white tertiaryText">?</span>
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
           </div>
         </button>
       </div>
@@ -367,34 +182,34 @@ select.store-select::-ms-expand {
 
     <!-- Installation Section -->
     <div>
-      <p class="primaryTextBold text-white">Installation</p>
-      <p class="tertiaryText text-gray mb-4">Choose how you'd like your device installed.</p>
+      <p class="h3 font-bold text-white">Installation</p>
+      <p class="h5 text-gray mb-4">Choose how you'd like your device installed.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
-          class="installBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="installBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="Self-installation"
         > 
           <div>
-            <p class="tertiaryText text-white">Self-installation</p>
-            <p class="quaternaryText text-gray">We’ll send you a guide for DIY setup</p>
+            <p class="h5 text-white">Self-installation</p>
+            <p class="h6 text-gray">We’ll send you a guide for DIY setup</p>
           </div>
         </button>
         <button 
-          class="installBtn btn-fixed-height md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="installBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
           data-summary="Installation at Kommu HQ - set appointment with link in e-receipt"
         > 
           <div>
-            <p class="tertiaryText text-white">Installation at Kommu HQ</p>
-            <p class="quaternaryText text-gray">Let our team handle it for you</p>
+            <p class="h5 text-white">Installation at Kommu HQ</p>
+            <p class="h6 text-gray">Let our team handle it for you</p>
           </div>
         </button>
-        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0  tertiaryText flex items-center justify-between">
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="install">
           <div class="flex flex-col items-start text-left">
-            <p class="tertiaryText text-white">How to perform self-installation?</p>
-            <p class="quaternaryText text-gray">Watch our step-by-step video</p>
+            <p class="h6 text-white">How to perform self-installation?</p>
+            <p class="h6 text-gray">Watch our step-by-step video</p>
           </div>
           <div class="ml-4 self-center">
-            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white tertiaryText">?</span>
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
           </div>
         </button>
       </div>
@@ -402,11 +217,14 @@ select.store-select::-ms-expand {
   </div>
 </div>
 
-<section class="w-full summaryCard-bg-gray pt-20">
-  <div class="max-w-6xl mx-auto px-6 text-white flex flex-co md:flex-row gap-12">
-    <div class="md:w-[40%]">
-      <h2 class="primaryTextBold text-white mb-2">Your new KommuAssist</h2>
-      <p class="tertiaryText text-gray mb-6">Cruise with intelligence.</p>
+
+<!--Summary section-->
+<section class="w-full summaryCard-bg-gray pt-20 summary-pane">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-8 summary-card">
+
+    <div class="md:w-[40%] summary-col">
+      <h2 class="h3 h3-summary-mobile font-bold text-white mb-2">Your new KommuAssist.</h2>
+      <p class="h5 h5-summary-mobile text-gray mb-6">Cruise with intelligence.</p>
       <img
         src="{{ '/img/products/device/checkout_img_2.webp' | relative_url }}"
         alt="Summary image"
@@ -414,23 +232,23 @@ select.store-select::-ms-expand {
       >
     </div>
 
-    <div class="md:w-[30%] space-y-12 mt-2">
+    <div class="md:w-[30%] space-y-12 mt-1 summary-col">
       <div>
-        <h3 class="secondaryTextBold mb-2 text-white">KommuAssist 2</h3>
-        <p class="tertiaryText text-gray" id="summaryModel">Please select a car model</p>
-        <p class="tertiaryText text-gray" id="summaryConnectivity">Please select a SIM card Option</p>
+        <h3 class="h4 font-bold mb-2 text-white">KommuAssist 2</h3>
+        <p class="h5 text-gray" id="summaryModel">Please select a car model</p>
+        <p class="h5 text-gray" id="summaryConnectivity">Please select a SIM card Option</p>
       </div>
       <div>
-        <h3 class="secondaryTextBold mb-2 text-white">Installation</h3>
-        <p class="tertiaryText text-gray" id="summaryInstallation">Please select an installation method</p>
+        <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+        <p class="h5 text-gray mb-2" id="summaryInstallation">Please select an installation method</p>
       </div>
     </div>
 
-    <div class="md:w-[30%] mt-2">
-      <h3 class="secondaryTextBold mb-2 text-white">Payment</h3>
-      <p id="summaryPayment"  class="tertiaryText text-gray">Please select a payment method</p>
-      <p id="productDynamicTotal" class="tertiaryText text-gray mb-2"></p>
-      <p id="summaryTradeIn"  class="tertiaryText text-gray">Please select a trade-in option</p>
+    <div class="md:w-[30%] mt-1 summary-col">
+      <h3 class="h4 font-bold mb-2 text-white">Payment</h3>
+      <p id="summaryPayment"  class="h5 text-gray">Please select a payment method</p>
+      <p id="productDynamicTotal" class="h5 text-gray mb-2"></p>
+      <p id="summaryTradeIn"  class="h5 text-gray">Please select a trade-in option</p>
       
       <div class="mt-12 flex justify-center">
         <button
@@ -438,7 +256,7 @@ select.store-select::-ms-expand {
           onclick="goToCheckout()"
           type="button"
           value=""                         
-          class="btn-bg-blue hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout"
+          class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
         >
           Check Out
         </button>
@@ -449,46 +267,53 @@ select.store-select::-ms-expand {
 
   <!-- What's in the box -->
 <div class="max-w-6xl mx-auto px-4">
-  <h2 class="text-center primaryTextBold text-white mt-100px mb-8">What’s in the box</h2>
-  <div class="img-container grid grid-cols-1 md:grid-cols-3 gap-6">
+  <h2 class="text-center h2 font-bold text-white mt-80px mb-8">What’s in the box</h2>
+
+  <!-- Mobile: Carousel (below md) -->
+  <div class="md:hidden">
+    <div class="img-container p-6 product-image-shell relative" id="boxCarousel">
+      <img id="boxImg" src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" class="rounded" alt="What's in the box item">
+      <!-- Prev / Next arrows -->
+      <button id="boxPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.5 4.5L7.5 10l5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="boxNext" type="button" class="carousel-arrow carousel-arrow-right" aria-label="Next item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.5 4.5L12.5 10l-5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="boxDots" class="absolute bottom-10 left-0 right-0 flex justify-center gap-4 pointer-events-auto"></div>
+    </div>
+    <div id="boxCaption" class="h5 text-gray-300 my-4 text-center">Vision 2</div>
+  </div>
+
+  <!-- Desktop/tablet: original grid -->
+  <div class="img-container hidden md:grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Vision 2 -->
     <div class="text-center">
       <div class="p-4">
-        <img
-          src="{{ '/img/products/device/checkout_img.webp' | relative_url }}"
-          alt="Vision 2"
-          class="w-full h-48 object-contain"
-        >
+        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="Vision 2" class="w-full h-48 object-contain">
       </div>
-      <p class="tertiaryText text-gray my-4">Vision 2</p>
+      <p class="h5 text-gray-300 my-4">Vision 2</p>
     </div>
     <!-- ADAS connector -->
     <div class="text-center">
       <div class="p-4">
-        <img
-          src="{{ '/img/products/device/checkout_img.webp' | relative_url }}"
-          alt="ADAS connector"
-          class="w-full h-48 object-contain"
-        >
+        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="ADAS connector" class="w-full h-48 object-contain">
       </div>
-      <p class="tertiaryText text-gray my-4">ADAS connector</p>
+      <p class="h5 text-gray-300 my-4">ADAS connector</p>
     </div>
     <!-- OBD connector -->
     <div class="text-center">
       <div class="p-4">
-        <img
-          src="{{ '/img/products/device/checkout_img.webp' | relative_url }}"
-          alt="OBD connector"
-          class="w-full h-48 object-contain"
-        >
+        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="OBD connector" class="w-full h-48 object-contain">
       </div>
-      <p class="tertiaryText text-gray my-4">OBD connector</p>
+      <p class="h5 text-gray-300 my-4">OBD connector</p>
     </div>
   </div>
+</div>
 
 
 <!-- Footnotes & T&C -->
-<div class="max-w-6xl mx-auto px-4 py-12 quaternaryText text-gray space-y-8">
+<div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
   <p>* Trade-in eligible</p>
   <p>** 3-year warranty included</p>
   <p>*** Rent-to-own plan terms apply</p>
@@ -820,6 +645,72 @@ select.store-select::-ms-expand {
     });
   })();
 </script>
+<!-- Help Modal (shared) -->
+<div id="helpOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onclick="closeHelpModal()"></div>
+<div id="helpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6" onclick="if(event.target===this) closeHelpModal()">
+  <div class="bg-[#1b1b1b] text-white rounded-2xl w-full max-w-xl shadow-xl relative" onclick="event.stopPropagation()">
+    <button id="helpClose" type="button" aria-label="Close help" class="absolute top-9 right-4 carousel-arrow" onclick="closeHelpModal()">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="p-6 space-y-4">
+      <h3 id="helpTitle" class="h3 font-bold">Help</h3>
+      <div id="helpBody" class="h5 text-gray"></div>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const overlay = document.getElementById('helpOverlay');
+    const modal   = document.getElementById('helpModal');
+    const titleEl = document.getElementById('helpTitle');
+    const bodyEl  = document.getElementById('helpBody');
+
+    if (!overlay || !modal) return;
+
+    const COPY = {
+      tradein: {
+        title: 'How does trade‑in work?',
+        body: `Return your previous KommuAssist (KA1/KA1s) when you receive KA2.
+               • Only available for one‑off purchase.
+               • You keep your current accessories and setup.
+               • We’ll email return instructions after checkout.`
+      },
+      rto: {
+        title: 'Rent‑to‑own policy',
+        body: `Pay monthly over 36 months. Device warranty is included for 3 years.
+               • Cancel anytime by returning the device.
+               • Missed payments may pause service until resolved.
+               • Full terms are shown during checkout.`
+      },
+      install: {
+        title: 'Self‑installation help',
+        body: `Prefer DIY? We’ll email a step‑by‑step video guide after purchase.
+               • Install at Kommu HQ is also available by appointment.
+               • Reach support if you need help during setup.`
+      }
+    };
+
+    function openHelp(kind){
+      const c = COPY[kind] || {title:'Help', body:'…'};
+      titleEl.textContent = c.title;
+      bodyEl.innerText = c.body;
+      overlay.classList.remove('hidden');
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    window.closeHelpModal = function(){
+      overlay.classList.add('hidden');
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    document.querySelectorAll('button.popupCardGrey[data-help]').forEach(btn => {
+      btn.addEventListener('click', () => openHelp(btn.dataset.help));
+    });
+
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeHelpModal(); });
+  })();
+</script>
 <script>
   (function(){
     const imgs = [
@@ -898,5 +789,60 @@ select.store-select::-ms-expand {
         }
       });
     });
+  })();
+</script>
+<script>
+  (function(){
+    const items = [
+      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'Vision 2', alt: 'Vision 2' },
+      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'ADAS connector', alt: 'ADAS connector' },
+      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'OBD connector', alt: 'OBD connector' }
+    ];
+    const imgEl = document.getElementById('boxImg');
+    const dotsEl = document.getElementById('boxDots');
+    const capEl = document.getElementById('boxCaption');
+    if (!imgEl || !dotsEl || !capEl) return; // only exists on mobile
+
+    let idx = 0;
+    function updateArrows(){
+      const prev = document.getElementById('boxPrev');
+      const next = document.getElementById('boxNext');
+      const last = items.length - 1;
+      if (prev) { (idx <= 0) ? prev.classList.add('is-hidden') : prev.classList.remove('is-hidden'); }
+      if (next) { (idx >= last) ? next.classList.add('is-hidden') : next.classList.remove('is-hidden'); }
+    }
+    function renderDots(){
+      dotsEl.innerHTML = '';
+      items.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'carousel-dot' + (i===idx ? ' carousel-dot-active' : '');
+        b.setAttribute('aria-label', 'Show item ' + (i+1));
+        b.addEventListener('click', ()=> setIndex(i));
+        dotsEl.appendChild(b);
+      });
+    }
+    function setIndex(i){
+      const last = items.length - 1;
+      if (i < 0) i = 0; if (i > last) i = last;
+      if (i === idx) { updateArrows(); return; }
+      idx = i;
+      imgEl.style.opacity = '0';
+      setTimeout(()=>{
+        imgEl.src = items[idx].src;
+        imgEl.alt = items[idx].alt;
+        capEl.textContent = items[idx].caption;
+        imgEl.onload = ()=>{ imgEl.style.opacity = '1'; };
+        renderDots();
+        updateArrows();
+      }, 120);
+    }
+    // init
+    renderDots();
+    updateArrows();
+    const prevBtn = document.getElementById('boxPrev');
+    const nextBtn = document.getElementById('boxNext');
+    if (prevBtn) prevBtn.addEventListener('click', ()=> setIndex(idx-1));
+    if (nextBtn) nextBtn.addEventListener('click', ()=> setIndex(idx+1));
   })();
 </script>

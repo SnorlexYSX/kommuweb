@@ -5,11 +5,64 @@ title: Checkout
 
 {% include pricing_helpers.html %}
 
+<style>
+  /* Apple-like mobile summary pane */
+  @media (max-width: 768px) {
+    /* Turn the whole section into a single card */
+    .summary-pane { 
+      
+      padding-top: 1rem; 
+    }
+    .summary-card {
+      background: #1b1b1b;              /* matches your card tone; change to #fff if desired */
+      padding: 3rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    }
+  
+    /* Stack the columns and add soft separators between blocks */
+    .summary-col + .summary-col {
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin-top: .75rem;
+      padding-top: 1rem;
+    }
+  
+    /* Make the checkout button full-width and single line */
+    #checkoutBtn {
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .h3-summary-mobile{
+      font-size: calc(1.5rem + .6vw)
+    }
+
+    .h5-summary-mobile{
+      font-size: calc(1.1rem + .6vw)
+    }
+  }
+  /* Country dropdown chevron — same method as product page */
+  select.store-select{
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23b2b2b2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    background-position: right 1.875rem center;
+    -webkit-appearance: none; /* Chrome/Safari */
+    -moz-appearance: none;    /* Firefox   */
+    appearance: none;
+    padding-right: 2.25rem;   /* space for the chevron */
+  }
+  /* Tighter right inset like product page */
+  .store-select-tight{
+    background-position: right 0.6rem center !important;
+    padding-right: 2rem;
+  }
+  </style>
+
 <!-- Checkout Page Layout -->
 <div class="max-w-6xl mx-auto px-4 py-12">
   <!-- Checkout Title -->
-  <div class="text-left mb-10">
-    <h1 class="text-4xl font-bold mb-2 text-white">Checkout</h1>
+  <div class="text-left mt-2 mb-8">
+    <h1 class="h2 font-bold mb-2 text-white">Checkout</h1>
   </div>
 
   <!-- Form and Cart Summary Layout -->
@@ -17,85 +70,105 @@ title: Checkout
     <!-- Left Form Fields -->
     <div class="text-white space-y-6">
       <div>
-        <label for="checkoutName" class="block text-sm font-semibold mb-1">First Name</label>
-        <input id="checkoutName" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <label for="checkoutName" class="block h5 font-bold text-gray mb-1">First Name</label>
+        <input id="checkoutName" type="text" class="w-full fillform-black px-4 py-2 rounded-checkoutform border-1 btn-border-gray" required>
       </div>
       <div id="checkoutICGroup" class="hidden">
-        <label for="checkoutIC" class="block text-sm font-semibold mb-1">
+        <label for="checkoutIC" class="block h5 font-bold text-gray mb-1">
           Malaysian IC No. (without –)
         </label>
-        <input id="checkoutIC" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" pattern="\d{12}" required
+        <input id="checkoutIC" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" pattern="\d{12}" required
         >
       </div>
       <div>
-        <label for="checkoutEmail" class="block text-sm font-semibold mb-1">Email</label>
-        <input id="checkoutEmail" type="email" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <label for="checkoutEmail" class="block h5 font-bold text-gray mb-1">Email</label>
+        <input id="checkoutEmail" type="email" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
       </div>
       <div>
-        <label for="checkoutMobile" class="block text-sm font-semibold mb-1">Contact number</label>
-        <input id="checkoutMobile" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <label for="checkoutMobile" class="block h5 font-bold text-gray mb-1">Contact number</label>
+        <input id="checkoutMobile" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
       </div>
       <div>
-        <label for="checkoutAddress" class="block text-sm font-semibold mb-1">Street Address</label>
-        <input id="checkoutAddress" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <label for="checkoutAddress" class="block h5 font-bold text-gray mb-1">Street Address</label>
+        <input id="checkoutAddress" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
       </div>
       <div>
-        <label for="checkoutPostcode" class="block text-sm font-semibold mb-1">Postcode</label>
-        <input id="checkoutPostcode" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded" required>
+        <label for="checkoutPostcode" class="block h5 font-bold text-gray mb-1">Postcode</label>
+        <input id="checkoutPostcode" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
       </div>
       <div>
-        <label for="checkoutCountry" class="block text-sm font-semibold mb-1">Country</label>
-        <select id="checkoutCountry" class="w-full bg-black border border-gray-700 px-4 py-3 rounded text-white" required>
+        <label for="checkoutCountry" class="block h5 font-bold text-gray mb-1">Country</label>
+        <select id="checkoutCountry" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform text-white store-select store-select-tight" required>
           {% for entry in site.data.shipping %}
             <option value="{{ entry.code }}">{{ entry.name }}</option>
           {% endfor %}
         </select>
       </div>
       <div id="checkoutPromoGroup" class="mt-4">
-        <label for="checkoutPromoInput" class="block text-sm font-semibold mb-1">Promo code</label>
-        <input id="checkoutPromoInput" type="text" class="w-full bg-black border border-gray-700 px-4 py-3 rounded">
+        <label for="checkoutPromoInput" class="block h5 font-bold text-gray mb-1">Promo code</label>
+        <input id="checkoutPromoInput" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform">
         <p id="checkoutPromoValidity" class="text-yellow-400 mt-1" hidden></p>
       </div>
     </div>
 
     <!-- Right Cart Summary -->
     <div id="checkoutCartSection" class="text-white">
-      <h2 class="text-lg font-semibold mb-4 text-white">Your Cart</h2>
+      <h2 class="h3 font-bold mb-4 text-white">Your Cart</h2>
       <div id="checkoutCartItems" class="space-y-4 mb-6"></div>
-      <div class="text-sm text-right">
-        <p class="mb-1">Subtotal <span id="checkoutCartSubtotal" class="font-semibold ml-2">RM0</span></p>
-        <p class="text-xs text-gray-400">Customs duties and import taxes for international orders are not included and may be charged separately by your local authorities.</p>
+      <div class="h5 text-right">
+        <p class="mb-1 p-3">Subtotal &nbsp;&nbsp;&nbsp;<span id="checkoutCartSubtotal" class="h5 text-white ml-2">RM0</span></p>
+        <p class="h5 text-gray p-3 text-left">Customs duties and import taxes for international orders are not included and may be charged separately by your local authorities.</p>
       </div>
     </div>
   </div>
 </div>
-<section class="w-full bg-card py-6">
-  <div class="max-w-6xl mx-auto px-6 text-white grid md:grid-cols-3 gap-6">
+
+<!-- Summary section -->
+<section class="w-full bg-card pt-20 summary-pane">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-8 summary-card">
     <!-- Col 1: image & headline -->
-    <div>
-      <h2 id="summaryHeading" class="text-2xl font-bold mb-2 text-white">Welcome to Kommunity</h2>
-      <p class="font-medium mb-6">Cruise with intelligence.</p>
+    <div class="md:w-[40%] summary-col">
+      <h2 id="summaryHeading" class="h3 h3-summary-mobile font-bold text-white mb-2">Welcome to Kommunity.</h2>
+      <p class="h5 h5-summary-mobile text-gray mb-6">Cruise with intelligence.</p>
       <img
-        src="{{ '/img/products/device/1.png' | relative_url }}"
+        src="{{ '/img/products/device/checkout_img_2.webp' | relative_url }}"
         alt="Summary image"
-        class="w-full rounded"
+        class="w-full"
       >
     </div>
 
     <!-- Col 2: placeholder for either product summary or shipping -->
-    <div id="summaryCol2" class="space-y-6">
+    <div id="summaryCol2" class="md:w-[30%] space-y-12 mt-1 summary-col">
     </div>
 
     <!-- Col 3: placeholder for either payment summary+CTA or total due-->
-    <div id="summaryCol3">
+    <div id="summaryCol3" class="md:w-[30%] mt-1 summary-col">
     </div>
   </div>
+
+  <!-- Footnotes & T&C -->
+ <div class="w-screen bg-black">
+  <div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
+    <p>* Trade-in eligible</p>
+    <p>** 3-year warranty included</p>
+    <p>*** Rent-to-own plan terms apply</p>
+    <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
+    <p><a href="{{ '/rto-tc' | relative_url }}" class="underline">RTO T&amp;C</a></p>
+  </div>
+</div>
+
 </section>
 <script>
   const shippingConfig = {{ site.data.shipping | jsonify }};
   const locale    = KommuPricing.getPreferredLocale();
   const currency  = KommuPricing.getCurrencyCode(locale);
   const formatter = KommuPricing.getFormatter(locale);
+
+  // Format currency without a space between currency and digits (e.g., RM650.00)
+  const tightFormat = (amt) => {
+    try { return KommuPricing.getFormatter(locale).format(amt).replace(/\s+(?=\d)/g, ""); }
+    catch (_) { return String(amt); }
+  };
 
   // Global helpers so both DOM init and checkoutSubmit can use them
   function getDevicePriceByCurrency(curr) {
@@ -270,9 +343,25 @@ title: Checkout
     // set default country based on user locale
     const countryInput = document.getElementById("checkoutCountry");
     const defaultCode = locale.split('-')[1]?.toUpperCase() || 'MY';
-    countryInput.value = defaultCode;
-    // Enforce plan country lock immediately
-    if (plan.locks.country) { countryInput.value = plan.locks.country; countryInput.disabled = true; }
+    // If non-MYR and country is not locked, insert "Select country" placeholder
+    if (isNonMYRCurrency && !plan.locks.country) {
+      // Only add the placeholder if not already present
+      if (!countryInput.querySelector('option[value=""]')) {
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.text = "Select country";
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        placeholder.hidden = true;
+        countryInput.insertBefore(placeholder, countryInput.firstChild);
+      }
+      countryInput.value = "";
+      countryInput.disabled = false;
+    } else {
+      countryInput.value = plan.locks.country || defaultCode;
+      if (plan.locks.country) countryInput.disabled = true;
+      else countryInput.disabled = false;
+    }
     countryInput.addEventListener("change", updateTotalDue);
 
     // compute shipping cost for default country (product page summary)
@@ -293,20 +382,26 @@ title: Checkout
         countryInput.value = defaultCode;
         countryInput.disabled = true;
       }
-      heading.innerText    = "Your new KommuAssist";
+      heading.innerText    = "Your new KommuAssist.";
       document.getElementById("checkoutCartSection").style.display = "none";
       document.getElementById("checkoutGrid").classList.remove("md:grid-cols-2");
 
+      let shippingTextInit = '';
+      if (defaultCountryCode === 'MY') {
+        shippingTextInit = 'Local Shipping\u00a0– Free';
+      } else if (productShipEntry && productShipEntry.name && !isNaN(productShipCost) && productShipCost > 0) {
+        shippingTextInit = `International Shipping\u00a0– ${productShipEntry.name} ${tightFormat(productShipCost)}`;
+      }
       col2.innerHTML = `
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
-          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
-          <p class="text-sm text-gray-300 font-medium">${selections.sim}</p>
+          <h3 class="h4 font-bold mb-2 text-white">KommuAssist 2</h3>
+          <p class="h5 text-gray mb-1 font-medium">${selections.model}</p>
+          <p class="h5 text-gray font-medium">${selections.sim}</p>
         </div>
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">Installation</h3>
-          <p class="text-sm text-gray-300 font-medium">
-            ${selections.install} - ${formatter.format(productShipCost)}
+          <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+          <p class="h5 text-gray font-medium">
+            ${selections.install}${(/kommu\s*hq/i.test(selections.install) ? '' : (shippingTextInit ? ' - ' + shippingTextInit : ''))}
           </p>
         </div>
       `;
@@ -319,21 +414,21 @@ title: Checkout
 
           let totalText;
           if (payIsRTO && deviceMonthly>0) {
-            totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+            totalText = years ? `${tightFormat(deviceMonthly)}/mth for ${years} years` : `${tightFormat(deviceMonthly)}/mth for ${months} months`;
           } else {
             const total = deviceOneOff + (bundled.total||0) + productShipCost;
-            totalText = formatter.format(total);
+            totalText = tightFormat(total);
           }
 
           col3.innerHTML = `
-            <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
-            <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
-            <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
-            <h3 class="text-xl font-bold mt-6 mb-2 text-white">Total Due</h3>
-            <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${totalText}</p>
+            <h3 class="h4 font-bold mb-2 text-white">Payment</h3>
+            <p class="h5 text-gray mb-1 font-medium">${selections.payment}</p>
+            <p class="h5 text-gray font-medium">${selections.tradeIn}</p>
+            <h3 class="h4 font-bold mt-6 mb-2 text-white">Total Due</h3>
+            <p id="totalDue" class="h5 text-gray mb-4 font-normal">${totalText}</p>
             <div class="mt-6 flex justify-center">
               <button
-                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
+                class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
                 onclick="checkoutSubmit()"
               >
                 Continue to Payment
@@ -344,11 +439,11 @@ title: Checkout
       } else {
       col3.innerHTML = `
           <div>
-            <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
-            <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
+            <h3 class="h4 font-bold mb-2 text-white">Total Due</h3>
+            <p id="totalDue" class="h5 text-gray mb-4 font-normal"></p>
             <div class="flex justify-center">
               <button
-                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
                 onclick="checkoutSubmit()"
               >
                 Continue to Payment
@@ -362,18 +457,23 @@ title: Checkout
       // → STORE/CART PAGE SUMMARY
       let shippingText;
 
-      countryInput.value = defaultCode;
+      // (countryInput.value already set above)
       countryInput.disabled = false;
-      if (defaultCode === "MY") {
-        shippingText = "Local Shipping – Free";
+      const selectedCode = (countryInput.value || '').trim().toUpperCase();
+      if (selectedCode === "MY") {
+        shippingText = "Local Shipping\u00a0– Free";
+      } else if (productShipEntry && productShipEntry.name && !isNaN(productShipCost) && productShipCost > 0) {
+        shippingText = `International Shipping\u00a0– ${productShipEntry.name} ${tightFormat(productShipCost)}`;
+      } else if (isNonMYRCurrency && !plan.locks.country) {
+        shippingText = "Select country";
       } else {
-        shippingText = `International Shipping – ${productShipEntry.name} ${formatter.format(productShipCost)}`;
+        shippingText = "Select country to see shipping";
       }
 
       col2.innerHTML = `
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">Shipping</h3>
-          <p class="text-sm text-gray-300 font-normal">
+          <h3 class="h4 font-bold mb-2 text-white">Shipping</h3>
+          <p class="h5 text-gray font-normal">
             ${shippingText}
           </p>
         </div>
@@ -381,11 +481,11 @@ title: Checkout
 
       col3.innerHTML = `
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
-          <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal"></p>
+          <h3 class="h4 font-bold mb-2 text-white">Total Due</h3>
+          <p id="totalDue" class="h5 text-gray mb-4 font-normal"></p>
           <div class="flex justify-center">
             <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+              class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
               onclick="checkoutSubmit()"
             >
               Continue to Payment
@@ -403,7 +503,7 @@ title: Checkout
       const itemTotal = unitPrice * qty;
 
       const card = document.createElement("div");
-      card.className = "flex items-center gap-4 p-3 rounded bg-black";
+      card.className = "flex items-center gap-4 p-3 bg-black";
 
       const imgWrapper = document.createElement("div");
       imgWrapper.className = "bg-card p-2 rounded-lg";
@@ -417,13 +517,13 @@ title: Checkout
       const details = document.createElement("div");
       details.className = "flex-1";
       const title = document.createElement("p");
-      title.className = "text-sm font-semibold";
+      title.className = "h4 font-bold text-white";
       title.innerText = item.name;
       const quantityP = document.createElement("p");
-      quantityP.className = "text-xs text-gray-400";
+      quantityP.className = "h5 text-gray";
       quantityP.innerText = `Qty: ${qty}`;
       const desc = document.createElement("p");
-      desc.className = "text-xs text-gray-400";
+      desc.className = "h5 text-gray";
       desc.innerText = item.selection || "";
 
       details.appendChild(title);
@@ -432,8 +532,8 @@ title: Checkout
 
       // price
       const priceEl = document.createElement("p");
-      priceEl.className = "text-sm font-medium text-right";
-      priceEl.innerText = formatter.format(itemTotal);
+      priceEl.className = "h5 font-medium text-right";
+      priceEl.innerText = tightFormat(itemTotal);
 
       // assemble
       card.appendChild(imgWrapper);
@@ -445,7 +545,7 @@ title: Checkout
       subtotal += itemTotal;
     });
 
-    subtotalDisplay.innerText = formatter.format(subtotal);
+    subtotalDisplay.innerText = tightFormat(subtotal);
 
     function updateTotalDue() {
       const countryCode = countryInput.value.trim().toUpperCase();
@@ -454,25 +554,31 @@ title: Checkout
       // find the matching shipping entry
       const entry = shippingConfig.find(e => e.code === countryCode) || {};
       const shipCost = parseFloat(entry.rates?.[currency] || 0);
+      let shippingText;
+      const ccy = (currency || '').toUpperCase();
 
       // update shipping column
       const countryName = entry.name || countryCode;
       if (countryCode === "MY") {
         shippingText = "Local Shipping – Free";
+      } else if (entry && entry.name && !isNaN(shipCost) && shipCost > 0) {
+        shippingText = `International Shipping – ${entry.name} ${tightFormat(shipCost)}`;
+      } else if (ccy !== 'MYR') {
+        shippingText = "Select country";
       } else {
-        shippingText = `International Shipping – ${entry.name} ${formatter.format(shipCost)}`;
+        shippingText = ""; // not selected / unknown yet
       }
       if(isFromProduct) {
         col2.innerHTML=`
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">KommuAssist 2</h3>
-          <p class="text-sm text-gray-300 mb-1 font-medium">${selections.model}</p>
-          <p class="text-sm text-gray-300 font-medium">${selections.sim}</p>
+          <h3 class="h4 font-bold mb-2 text-white">KommuAssist 2</h3>
+          <p class="h5 text-gray mb-1 font-medium">${selections.model}</p>
+          <p class="h5 text-gray font-medium">${selections.sim}</p>
         </div>
         <div>
-          <h3 class="text-xl font-bold mb-2 text-white">Installation</h3>
-          <p class="text-sm text-gray-300 font-medium">
-            ${selections.install} - ${shippingText}
+          <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+          <p class="h5 text-gray font-medium">
+            ${selections.install}${(/kommu\s*hq/i.test(selections.install) ? '' : (shippingText ? ' - ' + shippingText : ''))}
           </p>
         </div>
         `;
@@ -485,21 +591,21 @@ title: Checkout
 
             let totalText;
             if (payIsRTO && deviceMonthly>0) {
-              totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+              totalText = years ? `${tightFormat(deviceMonthly)}/mth for ${years} years` : `${tightFormat(deviceMonthly)}/mth for ${months} months`;
             } else {
               const total = deviceOneOff + (bundled.total||0) + shipCost;
-              totalText = formatter.format(total);
+              totalText = tightFormat(total);
             }
 
             col3.innerHTML = `
-              <h3 class="text-xl font-bold mb-2 text-white">Payment</h3>
-              <p class="text-sm text-gray-300 mb-1 font-medium">${selections.payment}</p>
-              <p class="text-sm text-gray-300 font-medium">${selections.tradeIn}</p>
-              <h3 class="text-xl font-bold mt-6 mb-2 text-white">Total Due</h3>
-              <p id="totalDue" class="text-sm text-gray-300 mb-4 font-normal">${totalText}</p>
+              <h3 class="h4 font-bold mb-2 text-white">Payment</h3>
+              <p class="h5 text-gray mb-1 font-medium">${selections.payment}</p>
+              <p class="h5 text-gray font-medium">${selections.tradeIn}</p>
+              <h3 class="h4 font-bold mt-6 mb-2 text-white">Total Due</h3>
+              <p id="totalDue" class="h5 text-gray mb-4 font-normal">${totalText}</p>
               <div class="mt-6 flex justify-center">
                 <button
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-3xl"
+                  class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
                   onclick="checkoutSubmit()"
                 >
                   Continue to Payment
@@ -515,20 +621,20 @@ title: Checkout
 
             let totalText;
             if (payIsRTO && deviceMonthly>0) {
-              totalText = years ? `${formatter.format(deviceMonthly)}/mth for ${years} years` : `${formatter.format(deviceMonthly)}/mth for ${months} months`;
+              totalText = years ? `${tightFormat(deviceMonthly)}/mth for ${years} years` : `${tightFormat(deviceMonthly)}/mth for ${months} months`;
             } else {
               const total = deviceOneOff + (bundled.total||0) + shipCost;
-              totalText = formatter.format(total);
+              totalText = tightFormat(total);
             }
 
             col3.innerHTML = `
               <div>
-                <h3 class="text-xl font-bold mb-2 text-white">Total Due</h3>
-                <p class="text-sm text-gray-300 font-normal">${selections.payment}</p>
-                <p id="totalDue" class="text-sm text-gray-300 mb-10 font-normal">${totalText}</p>
+                <h3 class="h4 font-bold mb-2 text-white">Total Due</h3>
+                <p class="h5 text-gray font-normal">${selections.payment}</p>
+                <p id="totalDue" class="h5 text-gray mb-10 font-normal">${totalText}</p>
                 <div class="flex justify-center">
                   <button
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-20 py-2 rounded-3xl"
+                    class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
                     onclick="checkoutSubmit()"
                   >
                     Continue to Payment
@@ -539,12 +645,11 @@ title: Checkout
           })();
         }
       } else {
-
-        totalDueDisplay.innerText = formatter.format(subtotal + shipCost);
+        totalDueDisplay.innerText = tightFormat(subtotal + shipCost);
         col2.innerHTML = `
           <div>
-            <h3 class="text-xl font-bold mb-2 text-white">Shipping</h3>
-            <p class="text-sm text-gray-300 font-normal">
+            <h3 class="h4 font-bold mb-2 text-white">Shipping</h3>
+            <p class="h5 text-gray font-normal">
               ${shippingText}
             </p>
           </div>

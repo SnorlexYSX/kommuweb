@@ -1,12 +1,81 @@
 ---
 layout: default
-title: Store
+title: Store | kommu.ai
 ---
 
 <style>
   .rounded-lg-store{
     border-radius: 1.5625rem;
   }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Prevent page from horizontally scrolling */
+  html, body { overflow-x: hidden; }
+  /* Full-bleed row that doesn’t expand page width */
+  .full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+
+  .row-align {
+  padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
+  padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
+}
+
+  body {
+    background-color: #000;
+  }
+  html {
+    background-color: #000;
+  }
+ 
+  .fixed-card {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    height: 423px;
+    min-height: 423px;
+    max-height: 423px;
+  }
+  @media (max-width: 1200px) {
+    .fixed-card {
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+      height: 363px;
+      min-height: 363px;
+      max-height: 363px;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .modal-container {
+      width: 750px;   /* fixed width */
+    }
+  }
+
+  @media (max-width: 950px) {
+    .modal-container {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+    }
+  }
+
+  select.store-select.store-select-tight {
+    background-position: right 0.6rem center;
+  }
+</style>
+<style>
+@media (max-width: 500px) {
+  .modal-container {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+</style>
+<style>
+@media (max-width: 500px) {
+  #modalImage {
+    max-height: 250px;
+  }
+}
 </style>
 <script>
 function openModal(item) {
@@ -74,18 +143,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const prices = JSON.parse(card.dataset.prices);
     const price = prices[currency] || prices["USD"] || 0;
     const priceEl = card.querySelector(".product-price");
-    if (priceEl) priceEl.innerText = formatter.format(price);
+    if (priceEl) priceEl.innerText = formatter.format(price).replace(/\s+/g, "");
   });
 });
 </script>
 
 <!-- Hero -->
-<section class="flex justify-center py-16 px-4">
-  <div class="bg-card rounded-lg-store p-8 max-w-3xl w-full text-center">
-    <h1 class="text-4xl font-bold mb-4 text-white">KommuAssist 2.0</h1>
+<section class="flex justify-center py-20 px-4">
+  <div class="bg-card rounded-lg-store py-8 px-16 max-w-3xl w-full text-center">
+    <h2 class="h2 font-bold mb-4 text-white">KommuAssist 2.0</h2>
     <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" width="100%" class="mb-4">
-    <p class="mb-4 text-white">RM3,699 or RM150/month with rent-to-own</p>
-    <button onclick="goToBuyPage()" class="bg-blue-500 px-6 py-2 rounded-full text-white">Buy</button>
+    <p class="h5 mb-4 text-gray-300">RM3,699 or RM150/month with rent-to-own</p>
+    <button onclick="goToBuyPage()" class="h5 bg-blue-600 px-6 py-2 rounded-full text-white">Buy</button>
   </div>
 </section>
 
@@ -93,12 +162,12 @@ document.addEventListener("DOMContentLoaded", () => {
 <section class="px-4 flex justify-center">
   <div class="w-full max-w-[1100px]">
 
-  <h2 class="text-2xl font-semibold mb-6 text-white">Shop Accessories</h2>
+  <h1 class="h1 font-bold mb-6 text-white">Shop Parts</h1>
 
   {% assign categories = "Hardware,Cables & connectors,Others" | split: "," %}
   {% for category in categories %}
-    <h3 class="text-xl font-bold mt-8 mb-4 text-white">{{ category }}</h3>
-    <div class="flex overflow-x-auto overflow-y-visible md:overflow-visible space-x-4 md:grid md:grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] pr-0 mr-0 md:gap-3">
+    <h3 class="h3 mt-4 mb-4 text-gray-300">{{ category }}</h3>
+    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible gap-8 scrollbar-hide full-bleed-row row-align pb-10">
       {% for item in site.data.products %}
         {% if item.category == category %}
           <div onclick='openModal({
@@ -108,10 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
             description: "{{ item.description }}",
             includes: {{ item.includes | jsonify }}
             ,dropdown: {{ item.dropdown | jsonify }}
-          })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer min-w-[12rem] transition-transform transform hover:-translate-y-1 hover:shadow-lg" data-prices='{{ item.prices | jsonify }}'>
-            <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="w-full h-32 object-contain mb-3 rounded">
-            <div class="font-semibold text-white">{{ item.name }}</div>
-            <div class="text-sm text-gray-400 product-price">Loading...</div>
+          })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer fixed-card transition-transform" data-prices='{{ item.prices | jsonify }}'>
+            <div class="h-[70%] flex items-center justify-center p-2">
+              <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="max-h-full object-contain rounded">
+            </div>
+            <div class="h-[30%] flex flex-col justify-center">
+              <div class="h4 font-bold text-white">{{ item.name }}</div>
+              <div class="h5 text-gray-300 product-price">Loading...</div>
+            </div>
           </div>
         {% endif %}
       {% endfor %}
@@ -121,25 +194,25 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <!-- Accessory Modal -->
-<div id="modal" class="fixed inset-0 bg-card bg-opacity-70 flex items-center justify-center z-50 hidden">
-  <div class="bg-card p-6 rounded-lg-store w-full max-w-4xl relative">
-    <button onclick="closeModal()" class="absolute top-2 right-2 text-white">✕</button>
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden" onclick="closeModal()">
+  <div class="bg-card px-8 py-10 rounded-lg-store w-full max-w-3xl relative modal-container" onclick="event.stopPropagation()">
+    <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/30 text-black flex items-center justify-center shadow-md hover:bg-white hover:scale-105 transition">✕</button>
     <div class="flex flex-col md:flex-row md:items-center  gap-6">
       <div class="md:w-1/2">
-        <img id="modalImage" src="" class="w-full h-64 object-contain rounded">
+        <img id="modalImage" src="" class="w-full h-60 object-contain rounded">
       </div>
       <div class="md:w-1/2">
-        <h3 id="modalTitle" class="text-2xl font-bold mb-1 text-white"></h3>
-        <p id="modalPrice" class="text-sm text-gray-400 mb-4"></p>
+        <h3 id="modalTitle" class="h3 font-bold mb-1 text-white"></h3>
+        <p id="modalPrice" class="h5 text-gray mb-4"></p>
         <div id="modalDropdownContainer" class="mb-4 hidden">
-          <label id="modalDropdownLabel" for="modalDropdown" class="block font-semibold text-white mb-1"></label>
-          <select id="modalDropdown" class="w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-normal"></select>
+          <label id="modalDropdownLabel" for="modalDropdown" class="h5 block font-normal text-white mb-1"></label>
+          <select id="modalDropdown" class="store-select store-select-tight w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-normal"></select>
         </div>
-        <p class="text-white mb-1">Description</p>
-        <p id="modalDesc" class="font-normal text-sm text-gray-300 mb-4"></p>
-        <p class="font-semibold text-white mb-1">Included:</p>
-        <ol id="modalIncludes" class="font-normal list-disc list-inside space-y-1 text-white mb-6"></ol>
-        <button id="modalAddBtn" class="block mx-auto bg-blue-500 px-6 py-2 rounded text-white">Add to Cart</button>
+        <p class="h5 font-normal text-white mb-1">Description</p>
+        <p id="modalDesc" class="h5 font-normal text-gray mb-4"></p>
+        <p class="h5 font-normal text-white mb-1">Included:</p>
+        <ol id="modalIncludes" class="h5 font-normal list-disc list-inside space-y-1 text-gray mb-6"></ol>
+        <button id="modalAddBtn" class="h5 block mx-auto bg-blue-600 px-6 py-2 rounded text-white">Add to Cart</button>
       </div>
     </div>
   </div>

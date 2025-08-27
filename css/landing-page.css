@@ -163,42 +163,12 @@ html {
     height: 100%;
 }
 
-body,
-h1{
-    font-family: "GlacialIndifference-Bold";
-    font-weight: 800;
-    color: #000000;
-}
-
-h3,
-h4,
-h5,
-h6 {
-    font-family: "GlacialIndifference-Regular";
-    font-weight: 300;
-    color: #000000;
-}
 
 .lead {
     font-size: 18px;
     font-weight: 400;
 }
-
-@media(min-width:400px) {
-
-.h1, h1 {
-    font-size: calc(2rem + 1.5vw);
-}
     
-}
-
-@media(min-width:1200px) {
-
-.h1, h1 {
-    font-size: 4rem;
-}
-    
-}
 
 .intro-header {
     /* padding-top: 50px;  */

@@ -1,7 +1,76 @@
 ---
 layout: default
-title: Kommu - Revolutionalizing Self-Driving
+title: Kommu
 ---
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Full-bleed row that doesn’t expand page width */
+  .full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+  /* Align rows to 1100px container center, keep 1rem right spacing */
+  .row-align { 
+    padding-left: max(calc((100vw - 1100px) / 2), 1.5rem); 
+    padding-right: max(calc((100vw - 1100px) / 2), 1.5rem); 
+    gap: 3.5rem;
+  }
+
+  @media (max-width: 1200px) {
+    .row-align { 
+      gap: 2.5rem;
+    }
+  }
+
+  html, body { overflow-x: hidden; }
+
+  .fixed-card {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    
+  }
+  @media (max-width: 1200px) {
+    .fixed-card {
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+      gap: 2.5rem;
+    }
+  }
+
+  .section-padding-y{
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+  }
+
+  @media (max-width: 1200px) {
+    .section-padding-y {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    }
+  }
+
+  .brand-logo {
+    width: 7.5rem;   /* 150px */
+    height: auto;
+  }
+
+  @media (max-width: 1200px) {
+    .brand-logo {
+      width: 7rem; /* 100px */
+    }
+  }
+
+  @media (max-width: 500px) {
+    .brand-logos-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      gap: 2rem;
+    }
+  }
+
+</style>
+
 
 <section id="home" class="relative h-screen overflow-hidden">
   <video
@@ -10,63 +79,63 @@ title: Kommu - Revolutionalizing Self-Driving
     src="{{ "/assets/ytvid.mp4" | relative_url }}"
   ></video>
   <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 md:pb-40 text-center px-4">
-    <h1 class="text-4xl md:text-5xl font-bold text-white">
+    <h2 class="h2 text-white">
       Elevate your driving experience with L2+ ADAS
-    </h1>
-    <p class="mt-3 text-lg text-gray-300 font-medium">
+    </h2>
+    <h3 class="h3 text-gray-300">
       Drive smarter and safer with KommuAssist
-    </p>
+    </h3>
     <div class="mt-6 space-x-6">
       <a
         href="{{ '/store' | relative_url }}"
-        class="text-blue-500 hover:underline font-medium"
+        class="h4 text-blue-500 hover:underline"
       >Buy Now ›</a>
       <a
         href="{{ '/ka2' | relative_url }}"
-        class="text-blue-500 hover:underline font-medium"
+        class="h4 text-blue-500 hover:underline"
       >Learn More ›</a>
     </div>
   </div>
 </section>
 
 
-<section class="py-20 bg-black">
+<section class="section-padding-y">
   <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-lg text-gray-300 font-medium">Hardware</h2>
-    <h1 class="text-3xl font-bold text-white mt-2 mb-4">KommuAssist 2.0</h1>
-    <p class="text-gray-300 mb-8">
+    <h4 class="h3 text-gray-300">Hardware</h4>
+    <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
+    <p class="h4 font-bold text-gray mb-8">
       Whole new level of edge computing with 6 TOPS NPU and 3× automotive‑grade cameras. Designed for reliability, built for AI.
     </p>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-      <div class="rounded-lg p-4">
+    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-10">
+      <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">RK3588 at the core.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+        <h4 class="h3 font-bold text-white">RK3588 at the core.</h4>
+        <p class="h5 text-gray mt-2">
           On-device neural processing. 6 TOPS NPU acceleration for real‑time vision inference.
         </p>
       </div>
 
-      <div class="rounded-lg p-4">
+      <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">3× automotive cameras.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+        <h4 class="h3 font-bold text-white">3× automotive cameras.</h4>
+        <p class="h5 text-gray mt-2">
           Synchronized wide‑angle and long range perception built for automotive‑grade vision.
         </p>
       </div>
 
-      <div class="rounded-lg p-4">
+      <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">Cool by design.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+        <h4 class="h3 font-bold text-white">Cool by design.</h4>
+        <p class="h5 text-gray mt-2">
           CNC-machined aluminum unibody doubles as a passive heatsink for sustained performance.
         </p>
       </div>
 
-      <div class="rounded-lg p-4">
+      <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">Mounts like magic.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+        <h4 class="h3 font-bold text-white">Mounts like magic.</h4>
+        <p class="h5 text-gray mt-2">
           Magnetic mount for effortless installation and release. Snap and go.
         </p>
       </div>
@@ -74,44 +143,44 @@ title: Kommu - Revolutionalizing Self-Driving
   </div>
 </section>
 
-
-<section class="py-20 bg-black">
+<section class="section-padding-y">
   <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-lg text-gray-300 font-medium">Software</h2>
-    <h1 class="text-3xl font-bold text-white mt-2 mb-4">bukapilot v10</h1>
-    <p class="text-sm text-gray-300 mb-8 font-normal">
+    <h4 class="h3 text-gray-300">Software</h4>
+    <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
+    <p class="h4 font-bold text-gray mb-8">
       bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
     </p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-      <div class="bg-none rounded-lg p-4 text-center">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="ADAS driving agent" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">ADAS driving agent.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+    
+    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-10">
+      <div class="rounded-lg fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
+        <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
+        <p class="h5 text-gray mt-2">
           End‑to‑end neural. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
+        </p>
         </p>
       </div>
 
-      <div class="bg-none rounded-lg p-4 text-center">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Understands the road" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">Understands the road.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+      <div class="rounded-lg fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded">
+        <h4 class="h3 font-bold text-white">Understands the road.</h4>
+        <p class="h5 text-gray mt-2">
           Smart enough to spot traffic lights, expand lanes, and safely change lanes.
         </p>
       </div>
 
-      <div class="bg-none rounded-lg p-4 text-center">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Driven by community" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">Driven by community.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+      <div class="rounded-lg fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded">
+        <h4 class="h3 font-bold text-white">Driven by community.</h4>
+        <p class="h5 text-gray mt-2">
           Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
         </p>
       </div>
 
-      <div class="bg-none rounded-lg p-4 text-center">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Safety‑focused" class="w-full mb-4 rounded">
-        <h4 class="text-lg font-semibold text-white">Safety‑focused.</h4>
-        <p class="text-sm text-white mt-2 font-normal">
+      <div class="rounded-lg fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded">
+        <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
+        <p class="h5 text-gray mt-2">
           Designed with ISO 26262 in mind and supports NHTSA‑grade features.
         </p>
       </div>
@@ -121,53 +190,63 @@ title: Kommu - Revolutionalizing Self-Driving
 
 
 
+
 <!-- COMPATIBILITY -->
-<section class="py-20">
+<section class="section-padding-y">
   <div class="max-w-6xl mx-auto px-4">
-    <div class="bg-card rounded-2xl p-12 text-center text-white space-y-6">
-      <h3 class="text-4xl font-bold text-white">KommuAssist is compatible with these car models.</h3>
+    <div class="bg-card rounded-2xl py-12 px-16 text-center text-white">
+      <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
       <a
         href="{{ '/support' | relative_url }}"
-        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-3xl"
+        class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full my-12"
       >Check Car Models</a>
-      <div class="mt-8 grid grid-cols-3 gap-8 place-items-center">
+      <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 max-w-[720px] mx-auto brand-logos-grid">
         <!-- logos -->
-        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="h-30">
-        <img src="{{ '/img/main/proton.png'  | relative_url }}" alt="Proton"  class="h-30">
-        <img src="{{ '/img/main/honda.png'   | relative_url }}" alt="Honda"   class="h-30">
-        <img src="{{ '/img/main/toyota.png'  | relative_url }}" alt="Toyota"  class="h-30">
-        <img src="{{ '/img/main/byd.png'     | relative_url }}" alt="BYD"     class="h-30">
-        <img src="{{ '/img/main/hyundai.png' | relative_url }}" alt="Hyundai" class="h-30">
-        <img src="{{ '/img/main/lexus.png'   | relative_url }}" alt="Lexus"   class="h-30">
+        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="brand-logo object-contain" />
+        <img src="{{ '/img/main/proton.png'  | relative_url }}" alt="Proton"  class="brand-logo object-contain" />
+        <img src="{{ '/img/main/honda.png'   | relative_url }}" alt="Honda"   class="brand-logo object-contain" />
+        <img src="{{ '/img/main/toyota.png'  | relative_url }}" alt="Toyota"  class="brand-logo object-contain" />
+        <img src="{{ '/img/main/byd.png'     | relative_url }}" alt="BYD"     class="brand-logo object-contain" />
+        <img src="{{ '/img/main/lexus.png'   | relative_url }}" alt="Lexus"   class="brand-logo object-contain" />
       </div>
-      <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-left text-sm">
+      <div class="mt-8 hidden sm:grid grid-cols-2 md:grid-cols-4 gap-10 text-left text-sm">
         <div>
-          <p class="font-semibold">Perodua</p>
-          <p class="text-white font-normal">Axia (2022–2024 A/T)<br>Myvi (2022–2024 A/T)</p>
+          <p class="h4 font-bold my-2">Perodua</p>
+          <p class="h5 text-gray font-normal my-1">Myvi (2022–2025 AV)</p>
+          <p class="h5 text-gray font-normal my-1">Ativa (2019–2025 AV)</p>
+          <p class="h5 text-gray font-normal my-1">Alza (2022–2025 AV)</p>
         </div>
         <div>
-          <p class="font-semibold">Proton</p>
-          <p class="text-white font-normal">X50 (2019–2024 Flagship)<br>X70 (2019–2024 Flagship)</p>
+          <p class="h4 font-bold my-2">Proton</p>
+          <p class="h5 text-gray font-normal my-1">S70 (2024–2025 Flagship, FSX)</p>
+          <p class="h5 text-gray font-normal my-1">X50 (2019–2025 Flagship)</p>
+          <p class="h5 text-gray font-normal my-1">X70 (2024–2025 Premium, Premium X)</p>
+          <p class="h5 text-gray font-normal my-1">X90 (2023–2025 Premium, Flagship)</p>
         </div>
         <div>
-          <p class="font-semibold">Honda</p>
-          <p class="text-white font-normal">Civic (2016–2024 V, E, Sensing)<br>City (2020–2024 V, E, Sensing)</p>
+          <p class="h4 font-bold my-2">Honda</p>
+          <p class="h5 text-gray font-normal my-1">City (2019–2025 V-Sensing, RS)</p>
+          <p class="h5 text-gray font-normal my-1">City FL (2024–2025 RS ybrid)</p>
+          <p class="h5 text-gray font-normal my-1">Civic FE (2022–2025)</p>
         </div>
         <div>
-          <p class="font-semibold">Toyota</p>
-          <p class="text-white font-normal">Hilux (2010–2024 A/T)<br>Vios (2018–2024 A/T)</p>
+          <p class="h4 font-bold my-2">Toyota</p>
+          <p class="h5 text-gray font-normal my-1">Vios (2023–2025 G)</p>
+          <p class="h5 text-gray font-normal my-1">Veloz (2022–2025 AT)</p>
+          <p class="h5 text-gray font-normal my-1">Cross (2022–2025 V, Hybrid)</p>
+          <p class="h5 text-gray font-normal my-1">Altis TSS2.0 (2019–2025 G, Hybrid)</p>
+          <p class="h5 text-gray font-normal my-1">Alphard TSS2.0 (2019–2025)</p>
         </div>
         <div>
-          <p class="font-semibold">BYD</p>
-          <p class="text-white font-normal">Atto 3 (2022–2024 A/T)<br>Yuan (2022–2024 A/T)</p>
+          <p class="h4 font-bold my-2">BYD</p>
+          <p class="h5 text-gray font-normal my-1">Atto 3 (2023–2025 All)</p>
         </div>
         <div>
-          <p class="font-semibold">Hyundai</p>
-          <p class="text-white font-normal">Kona (2018–2024 A/T)<br>Tucson (2015–2024 A/T)</p>
-        </div>
-        <div>
-          <p class="font-semibold">Lexus</p>
-          <p class="text-white font-normal">UX (2019–2024 A/T)<br>NX (2014–2024 A/T)</p>
+          <p class="h4 font-bold my-2">Lexus</p>
+          <p class="h5 text-gray font-normal my-1">ES (2019–2024 All)</p>
+          <p class="h5 text-gray font-normal my-1">NX (2020–2024 All)</p>
+          <p class="h5 text-gray font-normal my-1">UX (2020–2024 All)</p>
+          <p class="h5 text-gray font-normal my-1">RX (2020–2024 All)</p>
         </div>
       </div>
     </div>

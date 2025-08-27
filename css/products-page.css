@@ -1,3 +1,4 @@
+/*
 .w-95 {
     width: 95%!important;
 }
@@ -7,9 +8,7 @@
     padding-right: 0px;
 }
 
-.form-select{
-    font-family: GlacialIndifference-Regular;
-}
+
 
 .buy-btn{
     border: 1px solid transparent;
