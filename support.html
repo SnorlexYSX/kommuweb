@@ -62,7 +62,24 @@ title: Supported cars | kommu.ai
         carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.png`;
     }
 
+// Ensure the very first image also fades in (including from cache)
+document.addEventListener('DOMContentLoaded', () => {
+  const img = document.getElementById('support-car-img');
+  if (!img) return;
 
+  const reveal = () => { img.style.opacity = 1; };
+  const hide   = () => { img.style.opacity = 0; };
+
+  // Attach once; don't rely solely on inline attributes
+  img.addEventListener('load', reveal, { once: false });
+  img.addEventListener('error', hide,   { once: false });
+
+  // If the image is already loaded (from cache), trigger the fade
+  if (img.complete && img.naturalWidth > 0) {
+    // next frame to respect CSS transition
+    requestAnimationFrame(reveal);
+  }
+});
 </script>
 
 

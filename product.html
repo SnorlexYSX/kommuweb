@@ -34,7 +34,7 @@ title: Buy KommuAssist 2
     }
   
     /* Make the checkout button full-width and single line */
-    #checkoutBtn {
+    #summaryCheckoutBtn {
       width: 100%;
       white-space: nowrap;
     }
@@ -271,7 +271,7 @@ title: Buy KommuAssist 2
       
       <div class="mt-10 flex justify-center">
         <button
-          id="checkoutBtn"
+          id="summaryCheckoutBtn"
           onclick="goToCheckout()"
           type="button"
           value=""                         
@@ -424,7 +424,7 @@ title: Buy KommuAssist 2
       }
     }
 
-    const btn = document.getElementById('checkoutBtn');
+    const btn = document.getElementById('summaryCheckoutBtn');
     btn.value = JSON.stringify(selections);
     sessionStorage.setItem('checkoutSelections', btn.value);
 
