@@ -2,7 +2,7 @@
 layout: default
 title: Store | kommu.ai
 ---
-
+{% include pricing_helpers.html %}
 <style>
   .rounded-lg-store{
     border-radius: 1.5625rem;
@@ -160,6 +160,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const currency = getCurrencyCode(locale);
   const formatter = getFormatter(locale);
 
+  // --- Hero price line using pricing helpers ---
+  try {
+    const productsData = {{ site.data.products | jsonify }};
+    const dev = (productsData||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
+    const months = parseInt(dev?.subscription?.month || 36, 10) || 36;
+
+    // No preferred promo labels on store hero; show base pricing for the currency
+    const oneOff  = KommuPricing.getDevicePriceByCurrency(currency, []);
+    const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, []);
+
+    const tighten = (amt) => formatter.format(amt).replace(/\s+(?=\d)/g, '');
+    let heroText = tighten(oneOff);
+    if (monthly && monthly > 0) {
+      heroText += ` or ${tighten(monthly)}/month with rent-to-own`;
+    }
+    const heroEl = document.getElementById('heroPriceLine');
+    if (heroEl) heroEl.textContent = heroText;
+  } catch(_) {}
+
+  function updateHeroPriceLine(){
+    try {
+      const locale = localStorage.getItem('preferredLocale') || navigator.language || 'en-US';
+      const currency = getCurrencyCode(locale);
+      const formatter = getFormatter(locale);
+
+      const oneOff  = KommuPricing.getDevicePriceByCurrency(currency, []);
+      const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, []);
+      const tighten = (amt) => formatter.format(amt).replace(/\s+(?=\d)/g, '');
+
+      let heroText = tighten(oneOff);
+      if (monthly && monthly > 0) {
+        heroText += ` or ${tighten(monthly)}/month with rent-to-own`;
+      }
+      const heroEl = document.getElementById('heroPriceLine');
+      if (heroEl) heroEl.textContent = heroText;
+    } catch(_) {}
+  }
+  document.addEventListener('kommu:pricing:locale_changed', updateHeroPriceLine);
+  window.addEventListener('storage', (e)=>{ if (e.key==='preferredLocale') updateHeroPriceLine(); });
+
   document.querySelectorAll(".product-card").forEach(card => {
     const prices = JSON.parse(card.dataset.prices);
     const price = prices[currency] || prices["USD"] || 0;
@@ -188,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="aspect-[4/3] w-full mb-4">
       <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" alt="KommuAssist 2.0 device" class="w-full h-full object-contain rounded">
     </div>
-    <p class="h5 mb-4 text-gray-300">RM3,699 or RM150/month with rent-to-own</p>
+    <p id="heroPriceLine" class="h5 mb-4 text-gray-300">Loading price…</p>    
     <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
   </div>
 </section>

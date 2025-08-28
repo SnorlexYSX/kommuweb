@@ -49,9 +49,6 @@
       addons: ["Sim Card"]
     ui: { show: [payment], hide: [] }
 
-
-
-
 - id: product-nonmyr-any-device
   when:
     source: product
