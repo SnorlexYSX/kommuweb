@@ -157,7 +157,7 @@ h4 {
 /*tertiaryText*/
 .h5,
 h5 {
-    font-size: calc(0.8rem + .3vw)
+    font-size: calc(0.85rem + .3vw)
 }
 
 @media (min-width:1200px) {
