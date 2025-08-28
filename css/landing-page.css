@@ -277,26 +277,22 @@ html {
 
 .footer-buttons > a {
     font-size: 1rem;
-    font-weight: 300;
     text-decoration: none; 
     color: #f1f1f1;
     margin: 25px 0px;
-    font-family: GlacialIndifference-Regular;
+    
 }
 
 .footer-buttons > a:hover {
     font-size: 1rem;
-    font-weight: 300;
     text-decoration: underline; 
     color: #f1f1f1;
-    font-family: GlacialIndifference-Regular;
+    
 }
 
 .main-btm-description > p{
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-style: normal;
-    font-weight: 300;
-    font-family: GlacialIndifference-Regular;
 }
 
 .main-btm-img {
