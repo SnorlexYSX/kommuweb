@@ -16,18 +16,20 @@ stylesheet: products
     <link rel="preload" as="video" href="{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}" type="video/webm">
     <style>
       /* --- Performance meters --- */
-.perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#b2b2b2; }
+.perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#b2b2b2;
+  --meter-label-col: 220px; --meter-gap: 0.1rem; --meter-tip-gap: 20px;
+}
 .perf-group { margin-top: 1.5rem; }
 .perf-group h4 { font-family: GlacialIndifference-Bold; margin: 4rem 0 0.75rem; font-weight: 500; font-size: 1.75rem; color:#f1f1f1; }
 
 .meter-row {
   display:grid;
-  grid-template-columns: var(--meter-label-col, minmax(160px, 220px)) 1fr; /* label width */
+  grid-template-columns: var(--meter-label-col, minmax(220px, 220px)) 1fr; /* label width */
   gap: .35rem var(--meter-gap, .85rem); /* space between label and bar */
   align-items:center;
   margin: .35rem 0 .95rem; /* a bit more vertical breathing room */
 }
-.meter-label { font-family: GlacialIndifference-Bold; font-size: 1.5rem; opacity:.9; white-space:nowrap; text-align:left; }
+.meter-label { opacity:.9; white-space:nowrap; text-align:left; }
 .meter-anno  { font-size: .85rem; opacity:.8; white-space:nowrap; }
   .meter-track { grid-column: 2 / 3; position:relative; height:3px; background:transparent; border-radius:999px; overflow:visible; }
   .meter-fill  { position:absolute; inset:0 auto 0 0; width:0%; background:rgba(178,178,178,.9); box-shadow:0 0 12px rgba(178,178,178,.25); border-radius:999px; }
@@ -43,8 +45,8 @@ stylesheet: products
     white-space:nowrap;
     pointer-events:none;
   }
-  .meter-tip .meter-value { font-weight:500; font-size:1.25rem; color:#b2b2b2; }
-  .meter-tip .meter-units { font-weight:500; font-size:1.25rem; color:#b2b2b2; }
+  .meter-tip .meter-value { color:#b2b2b2; }
+  .meter-tip .meter-units { color:#b2b2b2; }
 
 /* subtle tick for end value */
 
@@ -54,30 +56,32 @@ stylesheet: products
 /* --- Responsive tweaks: ensure bars are visible on small screens --- */
 .meter-track { min-width: 140px; } /* never collapse to zero */
 
+@media (max-width: 1000px){
+  #perfMeters{
+    --meter-gap: .4rem; /* shorter gap between label and bar */
+  }
+}
+
 @media (max-width: 768px){
   /* Give the bar more of the row on small screens */
   #perfMeters{ 
-    --meter-label-col: minmax(110px, 38vw);
-    --meter-gap: .6rem; 
+    --meter-label-col: minmax(150px, 150px);
+    --meter-gap: .2rem; 
     --meter-tip-gap: 12px;
   }
   .meter-row{ 
-    grid-template-columns: var(--meter-label-col, minmax(110px, 38vw)) 1fr; 
+    grid-template-columns: var(--meter-label-col, minmax(150px, 150px)) 1fr; 
     gap: .4rem .75rem;
   }
-  .perf-group h4{ font-size: 1.05rem; }
-  .meter-label{ font-size: .85rem; }
-  .meter-tip .meter-value, 
-  .meter-tip .meter-units{ font-size: .8rem; }
 }
 
-@media (max-width: 420px){
+@media (max-width: 570px){
   #perfMeters{ 
-    --meter-label-col: minmax(96px, 44vw); 
-    --meter-gap: .55rem; 
+    --meter-label-col: minmax(130px, 130px); 
+    --meter-gap: .2rem; 
     --meter-tip-gap: 10px;
   }
-  .meter-row{ grid-template-columns: var(--meter-label-col, minmax(96px, 44vw)) 1fr; }
+  .meter-row{ grid-template-columns: var(--meter-label-col, minmax(130px, 130px)) 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -156,11 +160,7 @@ stylesheet: products
         margin: 0.25rem 0 0.5rem;
       }
       .ka-subcopy {
-        font-size: clamp(1.5rem, 1.5rem, 1.5rem);
-        line-height: 30px;
         margin: 2rem 0;
-        color: #b2b2b2;
-        font-family: GlacialIndifference-Bold;
       }
       .ka-subcopy span {
         font-family: GlacialIndifference-Bold;
@@ -190,8 +190,6 @@ stylesheet: products
 
 .section-eyebrow {
   display: block;
-  font-size: 1.75rem;
-  font-weight: 300;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: #b2b2b2;
@@ -200,10 +198,7 @@ stylesheet: products
 }
 
 .section-title {
-  font-family: GlacialIndifference-Bold;
-  font-size: 3.5rem;
   line-height: 67px;
-  font-weight: lighter;
   margin-top: 0.25rem;
   color: #f1f1f1;
   text-align: left;
@@ -255,29 +250,33 @@ stylesheet: products
   --tabline-gap: 8px;
   --tabline-pad: 40px;
   display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin: 0.75rem auto 0.5rem;
+  padding: 0 var(--tabline-pad) var(--tabline-gap);
+  position: relative;
+  max-width: 92vw;
+  box-sizing: border-box;
+}
+.safety-tablist .safety-tab {
+  flex: 1;
+  text-align: center;
+}
+
+/* Perception tabs (night / rain / sun) — mirror Safety tab behavior */
+.perception-tablist {
+  --tabline-gap: 8px;
+  --tabline-pad: 40px;
+  display: flex;
   width: max-content;
   gap: 5rem;
   justify-content: center;
   margin: 0.75rem auto 0.5rem;
   padding: 0 var(--tabline-pad) var(--tabline-gap);
   position: relative;
-  max-width: 92vw;          
-  box-sizing: border-box;   
-}
-
-/* Perception tabs (night / rain / sun) */
-.perception-tablist {
-  --tabline-gap: 8px;
-  --tabline-pad: 8rem;   
-  display: flex;
-  width: max-content;
-  gap: 15rem;        
-  justify-content: center;
-  margin: 0.75rem auto 0.5rem;
-  padding: 0 var(--tabline-pad) var(--tabline-gap);
-  position: relative;
   max-width: 92vw;
   box-sizing: border-box;
+  min-width: 280px; /* ensure comfortable tap area on mobile */
 }
 
 
@@ -306,49 +305,45 @@ stylesheet: products
   background: transparent;
   border: none;
   color: #b2b2b2;            /* default text color */
-  font-weight: 700;
   letter-spacing: 0.01em;
   cursor: pointer;
   padding: 0.35rem 0.25rem;
   position: relative;
   transition: color .2s ease;
-  font-size: 1.5rem;
-  font-family: 'glacial_indifferencebold'
 }
 .safety-tab[aria-selected="true"],
 .safety-tab.is-active { color: #f1f1f1; }
 /* no ::after on the button — underline is drawn by the tablist */
 .safety-panel {
   text-align: center;
-  color: #b2b2b2;
-  font-size: 1.25rem;
-  line-height: 1.5;
   max-width: 980px;
-  margin: 0.75rem auto 0;
-  font-weight: 100;
+  margin: 2rem auto 0;
 }
 /* Tabs responsiveness: smaller gaps/padding on narrow screens */
 @media (max-width: 900px){
   .safety-tablist{ gap: 3rem; --tabline-pad: 28px; }
-  .safety-tab{ font-size: 1rem; }
 }
 @media (max-width: 720px){
   .safety-tablist{ gap: 1.75rem; --tabline-pad: 16px; }
-  .safety-tab{ font-size: .95rem; }
 }
 @media (max-width: 480px){
-  .safety-tablist{ gap: 1.25rem; --tabline-pad: 12px; }
-  .safety-tab{ font-size: .9rem; }
+  .safety-tablist{ gap: 1rem; --tabline-pad: 0px; }
 }
 
 @media (max-width: 900px){
-  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+  .perception-tablist{ gap: 3rem; --tabline-pad: 28px; }
 }
 @media (max-width: 720px){
-  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+  .perception-tablist{ gap: 1.75rem; --tabline-pad: 16px; }
+  .perception-tablist button {
+    min-width: 100px; /* bigger tap target */
+  }
 }
-@media (max-width: 480px){
-  .perception-tablist{ gap: 10rem; --tabline-pad: 5rem; }
+@media (max-width: 550px){
+  .perception-tablist{ gap: 1.25rem; --tabline-pad: 12px; }
+  .perception-tablist button {
+    min-width: 80px; /* bigger tap target */
+  }
 }
 /* Full-bleed sticky frame section */
 .frame-section {
@@ -409,22 +404,6 @@ z-index: 5; /* above media */
 pointer-events: none; /* no accidental selection while scrolling */
 }
 
-.frame-text h2,
-.frame-text p {
-color: #f1f1f1;
-margin: 0;
-}
-
-.frame-text h2 { 
-font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-line-height: 1.15;
-font-weight: 800;
-}
-.frame-text p {
-margin-top: .6rem;
-opacity: .9;
-}
-
 /* Headline lines that animate from centered → top-left */
 .frame-headline {
   position: absolute;
@@ -441,15 +420,7 @@ opacity: .9;
   opacity: 1; /* always visible from start */
   min-width: 280px; /* avoids text wrap jitter on small screens */
 }
-.frame-headline .line {
-  display: block;
-  color: #f1f1f1;
-  font-weight: 800;
-  line-height: 1.05;
-}
-.frame-headline .line1 { font-size: clamp(1.8rem, 3.5rem, 3.5rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-.frame-headline .line2 { font-size: clamp(1.5rem, 3.25rem, 3.25rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
-.frame-headline .line3 { font-size: clamp(1.5rem, 3rem, 3rem); font-weight: 300; font-family: 'glacial_indifferencebold'}
+
 /* 5-row caption that docks above the frame and reveals after shrink */
 .frame-caption {
 position: absolute;
@@ -472,35 +443,20 @@ text-align: left;
 }
 /* Big H2: 3 Automotive Cameras. */
 .frame-caption .cap-line:nth-child(2) {
-  color: #f1f1f1;
-
-  font-size: clamp(1.6rem, 3.5rem, 3.5rem);
-  font-weight: 800;
+  margin-top: 1rem;
 }
 /* Line 3 + 4: smaller bold */
 .frame-caption .cap-line:nth-child(3) {
-  color: #f1f1f1;
-  font-size: clamp(1rem, 1.75rem, 1.75rem);
-  font-weight: 800;
   margin-top: 0.25rem;
-  font-family: 'glacial_indifferencebold'
 }
 .frame-caption .cap-line:nth-child(4) {
-  color: #f1f1f1;
-  font-size: clamp(0.9rem, 1.5rem, 1.5rem);
-  font-weight: 800;
   margin-top: 0.25rem;
-  font-family: 'glacial_indifferencebold'
 }
 /* Descriptive sentence under heading */
 .frame-caption .cap-line:nth-child(5) {
-  font-size: clamp(.9rem, 1.5rem, 1.5rem);
-  font-weight: 600;
   opacity: 0; /* revealed via JS */
   margin-top: 0.6rem;
   margin-bottom: 1rem;
-  color: #b2b2b2;
-  font-family: 'glacial_indifferencebold'
 }
 
 /* Spacing between sticky section and tabs */
@@ -537,13 +493,9 @@ text-align: left;
   box-shadow: 0 0 0 1px rgba(204,43,43,0.25) inset;
 }
 .tab-panel { 
-  margin-top: 1rem; 
+  margin-top: 2rem; 
   text-align: center; 
-  color: #b2b2b2;
-  font-size: 1.25rem;
-  line-height: 1.5;
 }
-.tab-panel p { margin: 0.5rem 0 0; font-weight:100;}
 
 /* prevent wrap jitter on small screens */
 .frame-headline { min-width: 280px; }
@@ -657,7 +609,6 @@ text-align: left;
       /* apply to all <section> as well as named section containers used on this page */
       .performance-section,
       .safety-section,
-      .frame-section,
       .perception-tabs,
       .ports-section{
         padding-left: 1.5rem !important;
@@ -764,8 +715,8 @@ text-align: left;
 </section>
 <section class="performance-section" id="performance">
   <div class="performance-header">
-    <div class="section-eyebrow">Performance</div>
-    <h2 class="section-title">Stronger. Faster.</h2>
+    <div class="h3 section-eyebrow">Performance</div>
+    <h2 class="h1 section-title">Stronger. Faster.</h2>
   </div>
   <div class="module-content">
     <video
@@ -782,40 +733,40 @@ text-align: left;
       <source src="{{ "/assets/ka_ani_s2.mp4" | relative_url }}" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <p class="ka-subcopy font-bold text-left">Powered by <span class="text-white">Rockchip RK3588</span>. Whole new level of edge computing with <span class="text-white">6 TOPS NPU</span> - more room to handle larger AI models effortlessly. Run end-to-end neural networks with <span class="text-white">3-5 million parameters</span>, all while drawing just 
+    <p class="h4 font-bold text-gray text-left">Powered by <span class="h4 font-bold text-white">Rockchip RK3588</span>. Whole new level of edge computing with <span class="h4 font-bold text-white">6 TOPS NPU</span> - more room to handle larger AI models effortlessly. Run end-to-end neural networks with <span class="h4 font-bold text-white">3-5 million parameters</span>, all while drawing just 
 10 watts of efficient power.</p>
-    <div class="perf-meters" id="perfMeters" style="--meter-label-col: minmax(200px, 220px); --meter-gap: 0.1rem; --meter-tip-gap: 20px;">
+    <div class="perf-meters" id="perfMeters">
       <div class="perf-group" aria-label="Throughput">
-        <h4>7.5x faster than KA1 and KA1s</h4>
+        <h4 class="h4 font-bold text-white">7.5x faster than KA1 and KA1s</h4>
         <div class="meter-row" data-units="TOPS">
-          <div class="meter-label">Rockchip RK3588</div>
+          <div class="h4 font-bold meter-label">Rockchip RK3588</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="100" data-target="6"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
           </div>
         </div>
         <div class="meter-row" data-units="TOPS">
-          <div class="meter-label">Snapdragon 821</div>
+          <div class="h4 font-bold meter-label">Snapdragon 821</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="13.333" data-target="0.8"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
           </div>
         </div>
       </div>
       <div class="perf-group" aria-label="Efficiency">
-        <h4>15x more power-efficient than KA1 and KA1s</h4>
+        <h4 class="h4 font-bold text-white">15x more power-efficient than KA1 and KA1s</h4>
         <div class="meter-row" data-units="TOPS/W">
-          <div class="meter-label">Rockchip RK3588</div>
+          <div class="h4 font-bold meter-label">Rockchip RK3588</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="100" data-target="0.6"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
+            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
         <div class="meter-row" data-units="TOPS/W">
-          <div class="meter-label">Snapdragon 821</div>
+          <div class="h4 font-bold meter-label">Snapdragon 821</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="6.667" data-target="0.04"></div>
-            <div class="meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
+            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
       </div>
@@ -825,8 +776,8 @@ text-align: left;
 <!-- SAFETY (tabs + looped video) -->
 <section class="safety-section" id="safety">
   <div class="safety-header">
-    <div class="section-eyebrow">Safety</div>
-    <h2 class="section-title">Safety First. Always.</h2>
+    <div class="h3 section-eyebrow">Safety</div>
+    <h2 class="h1 section-title">Safety First. Always.</h2>
   </div>
 
   <div class="safety-video-wrap">
@@ -839,18 +790,18 @@ text-align: left;
 
   <div class="safety-tabs">
     <div class="safety-tablist" role="tablist" aria-label="Safety features">
-      <button class="safety-tab" id="safety-tab-attn"  role="tab" aria-selected="true"  aria-controls="safety-panel-attn">Driver Attentiveness Monitoring</button>
-      <button class="safety-tab" id="safety-tab-failsafe" role="tab" aria-selected="false" aria-controls="safety-panel-failsafe">Fail-Safe Response</button>
-      <button class="safety-tab" id="safety-tab-steer" role="tab" aria-selected="false" aria-controls="safety-panel-steer">Steering Limit</button>
+      <button class="h4 font-bold safety-tab " id="safety-tab-attn"  role="tab" aria-selected="true"  aria-controls="safety-panel-attn">Driver Attentiveness Monitoring</button>
+      <button class="h4 font-bold safety-tab" id="safety-tab-failsafe" role="tab" aria-selected="false" aria-controls="safety-panel-failsafe">Fail-Safe Response</button>
+      <button class="h4 font-bold safety-tab" id="safety-tab-steer" role="tab" aria-selected="false" aria-controls="safety-panel-steer">Steering Limit</button>
     </div>
 
-    <div id="safety-panel-attn" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-attn">
+    <div id="safety-panel-attn" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-attn">
       <p>Using an infrared driver-facing camera, KommuAssist 2 tracks eye movement, head position, and facial cues in real time. If signs of distraction or drowsiness are detected, the system issues audible and visual alerts to bring attention back to the road.</p>
     </div>
-    <div id="safety-panel-failsafe" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-failsafe" hidden>
+    <div id="safety-panel-failsafe" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-failsafe" hidden>
       <p>Continuous self-diagnostics monitor device temperature, camera health, and processing stability. In the event of a critical fault, KommuAssist 2 triggers a fail-safe mode, disabling only its autonomous functions while leaving all manual driving controls fully operational.</p>
     </div>
-    <div id="safety-panel-steer" class="safety-panel" role="tabpanel" aria-labelledby="safety-tab-steer" hidden>
+    <div id="safety-panel-steer" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-steer" hidden>
       <p>When the system approaches its maximum steering capability during cornering, an audio warning alerts the driver to take over the wheel, ensuring smooth control and avoiding abrupt disengagements.</p>
     </div>
   </div>
@@ -869,17 +820,17 @@ text-align: left;
 
     <!-- Top text that starts centered (3 lines) and ends left-aligned above the image -->
     <div class="frame-text frame-headline" aria-hidden="false">
-      <span class="line line1">3 Automotive Cameras.</span>
-      <span class="line line2">2 on the road.</span>
-      <span class="line line3">1 in-cabin.</span>
+      <span class="h1 font-bold text-white line line1">3 Automotive Cameras.</span>
+      <span class="h2 font-bold text-white line line2">2 on the road.</span>
+      <span class="h2 font-bold text-white line line3">1 in-cabin.</span>
     </div>
     <!-- 5-row caption that appears above the image post-shrink -->
     <div class="frame-text frame-caption" aria-hidden="false">
-        <span class="cap-line section-eyebrow">PERCEPTION</span>
-        <span class="cap-line section-title">3 Automotive Cameras.</span>
-        <span class="cap-line">2 on the road.</span>
-        <span class="cap-line">1 in-cabin.</span>
-        <span class="cap-line">Precision-tuned for full lane coverage, driver monitoring, and low-light visibility.</span>
+        <span class="cap-line h3 section-eyebrow">PERCEPTION</span>
+        <span class="cap-line h1 section-title">3 Automotive Cameras.</span>
+        <span class="cap-line h2 text-white">2 on the road.</span>
+        <span class="cap-line h2 text-white">1 in-cabin.</span>
+        <span class="cap-line h4 font-bold text-gray">Precision-tuned for full lane coverage, driver monitoring, and low-light visibility.</span>
     </div>
 </div>
 
@@ -888,17 +839,17 @@ text-align: left;
 <section class="perception-tabs" aria-labelledby="perception-tabs-title">
   <div class="tabs-wrap">
     <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
-      <button class="safety-tab" role="tab" aria-selected="true"  aria-controls="tab-panel-night" id="tab-night">Night</button>
-      <button class="safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain"  id="tab-rain">Rain</button>
-      <button class="safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun"   id="tab-sun">Sun</button>
+      <button class="h4 font-bold safety-tab" role="tab" aria-selected="true"  aria-controls="tab-panel-night" id="tab-night">Night</button>
+      <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain"  id="tab-rain">Rain</button>
+      <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun"   id="tab-sun">Sun</button>
     </div>
-    <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="tab-panel is-active">
+    <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="h4 text-gray tab-panel is-active">
       <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from pulsing headlights or traffic lights.</p>
     </div>
-    <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="tab-panel" hidden>
+    <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="h4 text-gray tab-panel" hidden>
       <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses clear with wiper action and defogging.</p>
     </div>
-    <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="tab-panel" hidden>
+    <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="h4 text-gray tab-panel" hidden>
       <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still provides usable vision for control.</p>
     </div>
   </div>
@@ -907,13 +858,13 @@ text-align: left;
 <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
   <div class="ports-sticky">
     <div class="ports-header">
-    <div class="section-eyebrow">Ports and Connectivity</div>
-    <h2 class="section-title">Seamless Plug-and-Play Integration.</h2>
-    <p class="ka-subcopy">
-      Equipped with <span class="text-white">LTE, GPS, Wi-Fi, Bluetooth and local storage</span>, this unit is engineered
+    <div class="h3 section-eyebrow">Ports and Connectivity</div>
+    <h2 class="h1 section-title">Seamless Integration.</h2>
+    <p class="h4 font-bold text-gray text-left">
+      Equipped with <span class="h4 font-bold text-white">LTE, GPS, Wi-Fi, Bluetooth and local storage</span>, this unit is engineered
       for low-latency connection with KommuAI app, ensuring seamless data exchange and
       control between devices.
-    </p>
+    </p> 
   </div>
 
   <figure class="ports-figure">
@@ -1567,7 +1518,7 @@ text-align: left;
         rows.forEach(row => {
           const fill = row.querySelector('.meter-fill');
           const pct  = parseFloat(fill.dataset.pct || '0');
-          const maxPct = parseFloat(row.dataset.maxpct || '80'); // cap end at 80% by default
+          const maxPct = parseFloat(row.dataset.maxpct || '65'); // cap end at 80% by default
           const capPct = Math.min(pct, maxPct);
           const wPct = e * capPct;                 // current width % (capped)
           fill.style.width = wPct + '%';
@@ -1603,7 +1554,7 @@ text-align: left;
             rows.forEach(row => {
               const fill = row.querySelector('.meter-fill');
               const pct  = parseFloat(fill.dataset.pct || '0');
-              const maxPct = parseFloat(row.dataset.maxpct || '80');
+              const maxPct = parseFloat(row.dataset.maxpct || '65');
               const capPct = Math.min(pct, maxPct);
               fill.style.width = capPct + '%';
               const valSpan = row.querySelector('.meter-value');
