@@ -157,7 +157,7 @@ h4 {
 /*tertiaryText*/
 .h5,
 h5 {
-    font-size: calc(0.85rem + .3vw)
+    font-size: calc(0.95rem + 0.05vw)
 }
 
 @media (min-width:1200px) {
@@ -171,14 +171,14 @@ h5 {
 /*quaternaryText*/
 .h6,
 h6 {
-    font-size: calc(0.7rem + .2vw)
+    font-size: calc(0.85rem + 0.10vw)
 }
 
 @media (min-width:1200px) {
 
     .h6,
     h6 {
-        font-size: 0.9rem
+        font-size: 0.93rem
     }
 }
 
