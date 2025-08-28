@@ -2,7 +2,7 @@
 <div id="cartDrawer" class="fixed top-0 max-h-screen bg-card shadow-lg p-6 hidden z-50 overflow-y-auto pt-8 inline-block w-screen">
   <div class="flex justify-between items-center mb-4">
     <h2 class="h3 font-bold text-white">Your Cart</h2>
-    <button onclick="closeCart()" class="close-btn" aria-label="Close">
+    <button onclick="closeCart()" class="close-btn rounded-full bg-white/10 hover:bg-white/20 transition" aria-label="Close">
       <svg class="w-6 h-6 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 6l12 12M18 6L6 18"/>
       </svg>
@@ -16,16 +16,28 @@
 </div>
 
 <style>
-  /* Fix close icon tap target to 24×24 on all browsers (incl. iOS Safari) */
-  #cartDrawer .close-btn{
-    width:24px;height:24px;
-    min-width:24px;min-height:24px;
-    display:inline-flex;align-items:center;justify-content:center;
-    color:#fff;padding:0;margin:0;line-height:0; /* prevent glyph overflow */
-    -webkit-text-size-adjust:100%;
-    flex:0 0 24px; /* lock flex sizing */
+  /* Make close button a 36x36px circle, with a 24x24px centered SVG icon */
+  #cartDrawer .close-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0;
+    margin: 0;
+    line-height: 0; /* prevent glyph overflow */
+    -webkit-text-size-adjust: 100%;
+    flex: 0 0 32px; /* lock flex sizing */
   }
-  #cartDrawer .close-btn svg{width:24px;height:24px;display:block}
+  #cartDrawer .close-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
 </style>
 
 <!-- Cart Logic -->
