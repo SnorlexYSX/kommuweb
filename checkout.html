@@ -235,35 +235,29 @@ title: Checkout
     const isFromProduct = sessionStorage.getItem('fromProductPage') === 'true';
     const selectionsRaw = sessionStorage.getItem('checkoutSelections');
     const selections = (isFromProduct && selectionsRaw) ? JSON.parse(selectionsRaw) : {};
-    const plan = { provider: '', locks: {}, mode: isFromProduct ? 'product' : 'cart' };
 
-    if (isFromProduct) {
-      const wantsRTO = (selections.payment||'').toLowerCase().includes('rent-to-own');
-      if (!nonMYR && !wantsRTO) {
-        // 1) product • MYR • one-off • device
-        plan.provider = 'curlec-otp';
-        plan.locks = { country: 'MY', icRequired: false };
-      } else if (!nonMYR && wantsRTO) {
-        // 2) product • MYR • RTO • device
-        plan.provider = 'curlec-sub';
-        plan.locks = { country: 'MY', icRequired: true, forceNoSim: true, forceNoTradeIn: true };
-      } else {
-        // 3) product • non-MYR • any • device
-        plan.provider = 'stripe';
-        plan.locks = { icRequired: false, forceOneOff: true, forceNoSim: true, forceNoTradeIn: true, forceSelfInstall: true };
-      }
-    } else {
-      // CART FLOWS (accessories-only here)
-      if (ccy === 'MYR') {
-        // 4) cart • MYR • accessories-only
-        plan.provider = 'curlec-otp';
-        plan.locks = { hidePromo: true, country: 'MY' };
-      } else {
-        // 5) cart • non-MYR • accessories-only
-        plan.provider = 'stripe';
-        plan.locks = { hidePromo: true };
-      }
-    }
+    // --- derive from checkout_rules.yaml when available ---
+    const ctx = {
+      source: isFromProduct ? 'product' : 'cart',
+      currency: ccy,
+      payment: /rent-to-own/i.test(selections.payment||'') ? 'Rent-to-own' : 'One-off Purchase',
+      dropdowns: selections
+    };
+    const thenBlock = KommuPricing.matchRule(ctx) || null;
+
+    // Merge locks from possible buckets in rules (locks / locks_checkout)
+    const locksFromRules = Object.assign(
+      {},
+      (thenBlock && thenBlock.locks) || {},
+      (thenBlock && thenBlock.locks_checkout) || {}
+    );
+
+    const plan = {
+      provider: (thenBlock && thenBlock.provider) || '',
+      locks: locksFromRules,
+      mode: isFromProduct ? 'product' : 'cart'
+    };
+
     return plan;
   }
 
@@ -277,7 +271,7 @@ title: Checkout
         };
         const thenBlock   = KommuPricing.matchRule(ctx) || {};
         const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
-
+        console.log(promoLabels)
         // Device pricing (promo-aware)
         const deviceOneOff  = KommuPricing.getDevicePriceByCurrency(currency,  promoLabels);
         const deviceMonthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels);
@@ -296,12 +290,21 @@ title: Checkout
           }
         } catch(_) {}
         if (thenBlock.auto_apply?.promotion) {
-          const pr = thenBlock.auto_apply.promotion;
-          if (pr.subscriptionId) subscriptionId = pr.subscriptionId;
-          if (pr.months) months = parseInt(pr.months, 10) || months;
+          const sub = KommuPricing.getSubscriptionPromoFromLabels(promoLabels, currency);
+          if (sub) {
+            if (sub.id)     subscriptionId = sub.id;
+            if (sub.months) months = sub.months;
+            // If helper also found a promo monthly price, prefer it over deviceMonthly
+            if (typeof sub.monthly === 'number' && !Number.isNaN(sub.monthly)) {
+              // shadow outer const via object return below
+              // we cannot reassign const deviceMonthly here, so we will pass an override flag in return
+              var _monthlyOverride = sub.monthly;
+            }
+          }
         }
 
-        return { thenBlock, promoLabels, deviceOneOff, deviceMonthly, bundled, months, subscriptionId };
+        return { thenBlock, promoLabels, deviceOneOff, deviceMonthly: (typeof _monthlyOverride === 'number' ? _monthlyOverride : deviceMonthly), bundled, months, subscriptionId };
+
     }
   }
 
@@ -386,20 +389,27 @@ title: Checkout
     // Resolve source of checkout view
 
     function applyLocks(plan) {
+      const locks = plan.locks || {};
       const ctry = document.getElementById('checkoutCountry');
-      if (plan.locks.country) { ctry.value = plan.locks.country; ctry.disabled = true; } else { ctry.disabled = false; }
-      if (plan.locks.icRequired) { icGroup.classList.remove('hidden'); icInput.required = true; } else { icGroup.classList.add('hidden'); icInput.required = false; }
-      if (plan.locks.hidePromo) { promoGroup.classList.add('hidden'); } else { promoGroup.classList.remove('hidden'); }
 
-      // Force selection strings for product flow
+      // Country lock
+      if (locks.country) { ctry.value = locks.country; ctry.disabled = true; } else { ctry.disabled = false; }
+      // IC requirement
+      if (locks.icRequired === true) { icGroup.classList.remove('hidden'); icInput.required = true; }
+      else { icGroup.classList.add('hidden'); icInput.required = false; }
+      // Hide promo (cart flows)
+      if (locks.hidePromo === true) { promoGroup.classList.add('hidden'); } else { promoGroup.classList.remove('hidden'); }
+
+      // Force selections for product flow (if rules ask for it)
       if (isFromProduct) {
-        if (plan.locks.forceOneOff) { selections.payment = 'One-off purchase'; }
-        if (plan.locks.forceNoSim) { selections.sim = 'with SIM Card'; }
-        if (plan.locks.forceNoTradeIn) { selections.tradeIn = 'No Trade-in'; }
-        if (plan.locks.forceSelfInstall) { selections.install = 'Self-installation'; }
+        if (locks.forceOneOff === true)      { selections.payment = 'One-off purchase'; }
+        if (locks.forceNoSim === true)       { selections.sim = 'with SIM Card'; }
+        if (locks.forceNoTradeIn === true)   { selections.tradeIn = 'No Trade-in'; }
+        if (locks.forceSelfInstall === true) { selections.install = 'Self-installation'; }
         sessionStorage.setItem('checkoutSelections', JSON.stringify(selections));
       }
     }
+    
     const urlParams = new URLSearchParams(location.search);
     const modeParam = urlParams.get('mode') || urlParams.get('src'); // allow ?mode=cart or ?src=cart
     if (modeParam === 'cart') {

@@ -84,11 +84,34 @@
       const baseMonthly = parseFloat((sub.monthly_price||{})[ccy] ?? 0) || 0;
       const promo = activePromoFor('KommuAssist2','subscription',ccy,labels);
       if (promo){
-        if (promo.monthly_prices && promo.monthly_prices[ccy] != null) return parseFloat(promo.monthly_prices[ccy]) || baseMonthly;
-        if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.monthly_price != null) return parseFloat(promo.monthly_price) || baseMonthly;
+        // monthly_price can be either a per-ccy map or a scalar
+        if (promo.monthly_price && typeof promo.monthly_price === 'object' && promo.monthly_price[ccy] != null) {
+          return parseFloat(promo.monthly_price[ccy]) || baseMonthly;
+        }
+        if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.monthly_price != null && typeof promo.monthly_price !== 'object') {
+          return parseFloat(promo.monthly_price) || baseMonthly;
+        }
       }
       return baseMonthly || 0;
     } catch(_) { return 0; }
+  }
+  // Resolve subscription override (id, months, monthly) from promotions by label
+  function getSubscriptionPromoFromLabels(labels, curr){
+    const ccy = (curr||'').toUpperCase();
+    if (!Array.isArray(labels) || !labels.length) return null;
+    const promo = activePromoFor('KommuAssist2','subscription',ccy,labels);
+    if (!promo) return null;
+    const out = {
+      id: promo.id || promo.subscriptionId || '',
+      months: parseInt(promo.month || promo.months || 0, 10) || null,
+      monthly: null
+    };
+    if (promo.monthly_price && typeof promo.monthly_price === 'object' && promo.monthly_price[ccy] != null) {
+      out.monthly = parseFloat(promo.monthly_price[ccy]) || null;
+    } else if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.monthly_price != null && typeof promo.monthly_price !== 'object') {
+      out.monthly = parseFloat(promo.monthly_price) || null;
+    }
+    return out;
   }
 
   // ----- Rules matcher (for product/cart flows)
@@ -135,7 +158,7 @@
     getPreferredLocale, getCurrencyCode, getFormatter,
     getProductPriceByNameCurrency, getBaseDevicePriceByCurrency,
     getDevicePriceByCurrency, getDeviceMonthlyByCurrency,
-    matchRule, getAddonSurchargeFromSelections
+    matchRule, getAddonSurchargeFromSelections, getSubscriptionPromoFromLabels
   };
 
   // Optional: react to locale changes without reload (if caller dispatches this event)
