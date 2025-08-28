@@ -58,6 +58,7 @@ title: Supported cars | kommu.ai
         lkaSpeedRange.innerText = `${carSelected.lkc_speed_range} km/h`;
         lkaSteerTorque.innerText = `${carSelected.lkc_torque}`;
         lkaAngle.innerText = `${carSelected.max_steering_angle}`
+        carImage.style.opacity = 0;
         carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.png`;
     }
 
@@ -82,12 +83,16 @@ title: Supported cars | kommu.ai
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">    
         <div class="md:col-span-7 space-y-6">
-            <div class="img-container overflow-hidden">
+            <div class="img-container overflow-hidden aspect-[1/1]">
                 <img
                 id="support-car-img"
                 src="{{ '/img/support/ativa.jpg' | relative_url }}"
                 alt="Selected vehicle"
-                class="w-full h-auto object-cover"
+                class="w-full h-auto object-cover opacity-0 transition-opacity duration-300"
+                loading="lazy"
+                decoding="async"
+                onload="this.style.opacity=1"
+                onerror="this.style.opacity=0"
                 >
             </div>
         </div>

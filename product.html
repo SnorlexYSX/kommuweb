@@ -47,6 +47,17 @@ title: Buy KommuAssist 2
       font-size: calc(1.1rem + .6vw)
     }
   }
+  /* Fade-in behaviour for product/box images (match supported vehicle) */
+  .product-image-shell img,
+  #boxImg,
+  #mainProductImg {
+    opacity: 0;
+    transition: opacity .35s ease;
+    will-change: opacity;
+  }
+  .img-loaded {
+    opacity: 1 !important;
+  }
   </style>
 
 <!-- Product Page Full Layout -->
@@ -730,6 +741,12 @@ title: Buy KommuAssist 2
     const dotsEl = document.getElementById('productDots');
     if (!imgEl || !dotsEl) return;
 
+    // Initial fade-in for first load
+    if (imgEl) {
+      if (imgEl.complete) imgEl.classList.add('img-loaded');
+      else imgEl.addEventListener('load', () => imgEl.classList.add('img-loaded'), { once: true });
+    }
+
     let idx = 0;
     function updateArrows(){
       const prev = document.getElementById('prodPrev');
@@ -762,13 +779,13 @@ title: Buy KommuAssist 2
       if (i === idx) { updateArrows(); return; }
       idx = i;
       // fade swap
-      imgEl.style.opacity = '0';
+      imgEl.classList.remove('img-loaded');
       setTimeout(() => {
         imgEl.src = imgs[idx];
-        imgEl.onload = () => { imgEl.style.opacity = '1'; };
+        imgEl.onload = () => { imgEl.classList.add('img-loaded'); };
         renderDots();
         updateArrows();
-      }, 120);
+      }, 60);
     }
 
     // --- Touch swipe support ---
@@ -836,6 +853,12 @@ title: Buy KommuAssist 2
     const capEl = document.getElementById('boxCaption');
     if (!imgEl || !dotsEl || !capEl) return; // only exists on mobile
 
+    // Initial fade-in for first load
+    if (imgEl) {
+      if (imgEl.complete) imgEl.classList.add('img-loaded');
+      else imgEl.addEventListener('load', () => imgEl.classList.add('img-loaded'), { once: true });
+    }
+
     let idx = 0;
     function updateArrows(){
       const prev = document.getElementById('boxPrev');
@@ -860,15 +883,15 @@ title: Buy KommuAssist 2
       if (i < 0) i = 0; if (i > last) i = last;
       if (i === idx) { updateArrows(); return; }
       idx = i;
-      imgEl.style.opacity = '0';
+      imgEl.classList.remove('img-loaded');
       setTimeout(()=>{
         imgEl.src = items[idx].src;
         imgEl.alt = items[idx].alt;
         capEl.textContent = items[idx].caption;
-        imgEl.onload = ()=>{ imgEl.style.opacity = '1'; };
+        imgEl.onload = ()=>{ imgEl.classList.add('img-loaded'); };
         renderDots();
         updateArrows();
-      }, 120);
+      }, 60);
     }
 
     // --- Touch swipe support ---

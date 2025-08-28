@@ -60,6 +60,15 @@ title: Store | kommu.ai
   select.store-select.store-select-tight {
     background-position: right 0.6rem center;
   }
+
+  /* Added for image fade-in */
+  .product-card img {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .product-card img.img-loaded {
+    opacity: 1;
+  }
 </style>
 <style>
 @media (max-width: 500px) {
@@ -156,6 +165,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = prices[currency] || prices["USD"] || 0;
     const priceEl = card.querySelector(".product-price");
     if (priceEl) priceEl.innerText = formatter.format(price).replace(/\s+/g, "");
+
+    // Add fade-in for images
+    const img = card.querySelector("img");
+    if (img) {
+      if (img.complete && img.naturalWidth !== 0) {
+        img.classList.add("img-loaded");
+      } else {
+        img.addEventListener("load", () => {
+          img.classList.add("img-loaded");
+        });
+      }
+    }
   });
 });
 </script>
@@ -164,7 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <section class="flex justify-center py-20 px-4">
   <div class="bg-card rounded-lg-store py-8 px-16 max-w-3xl w-full text-center">
     <h2 class="h2 font-bold mb-4 text-white">KommuAssist 2.0</h2>
-    <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" width="100%" class="mb-4">
+    <div class="aspect-[4/3] w-full mb-4">
+      <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" alt="KommuAssist 2.0 device" class="w-full h-full object-contain rounded">
+    </div>
     <p class="h5 mb-4 text-gray-300">RM3,699 or RM150/month with rent-to-own</p>
     <button onclick="goToBuyPage()" class="h5 bg-blue-600 px-6 py-2 rounded-full text-white">Buy</button>
   </div>
