@@ -455,7 +455,6 @@ text-align: left;
 .frame-caption .cap-line:nth-child(5) {
   opacity: 0; /* revealed via JS */
   margin-top: 0.6rem;
-  margin-bottom: 1rem;
 }
 
 /* Spacing between sticky section and tabs */
@@ -809,7 +808,7 @@ text-align: left;
   </div>
 </section>
 <!-- Full-bleed cockpit section that shrinks into the page frame -->
-<section class="frame-section" id="perception-zoom" data-scale-to="1.00" data-text-in="0.20" data-overscan="0.05">
+<section class="frame-section" id="perception-zoom" data-scale-to="1.50" data-text-in="0.20" data-overscan="0.05" data-cap-bias="-40" data-cap-min-vh="8" data-cap-bottom-pad="160" data-cap-gap-mul="1" data-tab-slow="20">
 <div class="frame-sticky">
     <div class="frame-container">
         <img
@@ -985,48 +984,46 @@ text-align: left;
         container.dataset.baseH = String(baseHCache);
       }
       const overscan = parseFloat(s.dataset.overscan || "0.00");
-      const scaleFrom = Math.max(window.innerWidth / baseWCache, window.innerHeight / baseHCache) * (1 + overscan);
-      const requestedScaleTo = parseFloat(s.dataset.scaleTo || "1.00");
+      const scaleFrom = Math.max(window.innerWidth / baseWCache,
+                                 window.innerHeight / baseHCache) * (1 + overscan);
 
-      // --- Compute caption-required clearance to adjust end scale on wide screens ---
+      // We want the final image/container width to always be baseWCache.
+      // That means end scale MUST be 1.00. If the caption needs more room,
+      // we add vertical offset instead of reducing the end scale.
+      const endScale = 1.00;
+
+      // Measure caption height at this viewport (natural flow width)
+      let extraOffsetNeeded = 0;
       const captionForMeasure = s.querySelector('.frame-caption');
-      let effectiveScaleTo = requestedScaleTo;
       if (captionForMeasure) {
-        // Match Safety content box width to measure natural caption height at this viewport
         const contentW = Math.min(window.innerWidth * 0.92, 1100);
-        const widthPx  = Math.max(0, Math.round(contentW - 32)); // 1rem left/right padding
-        // Temporarily set width & reset transform to get natural height
+        const widthPx  = Math.max(0, Math.round(contentW - 32));
         const prevWidth = captionForMeasure.style.width;
         const prevXform = captionForMeasure.style.transform;
         captionForMeasure.style.width     = widthPx + 'px';
         captionForMeasure.style.transform = 'translate(0, 0)';
         const capH = Math.round(captionForMeasure.getBoundingClientRect().height || captionForMeasure.scrollHeight || 0);
-        // Restore transform (positioning happens later)
         captionForMeasure.style.transform = prevXform;
         captionForMeasure.style.width     = prevWidth;
 
-        // Geometry terms
-        const gapPx     = Math.max(100, Math.round(baseHCache * 0.03)); // same gap we use later
-        const offsetVH  = 6;                                            // keep in sync with container offset
-        const offsetPx  = (window.innerHeight * offsetVH) / 100;
-        const topMargin = Math.max(60, window.innerHeight * 0.08);
-        // Require: currTop_end >= topMargin + capH
-        // currTop_end = (vh - currHeight_end)/2 - gapPx + offsetPx
-        // => currHeight_end <= vh - 2*(topMargin + capH + gapPx - offsetPx)
-        const vhNow = window.innerHeight;
-        const maxCurrH = vhNow - 2 * (topMargin + capH + gapPx - offsetPx);
-        if (maxCurrH > 0) {
-          const maxScaleTo = maxCurrH / baseHCache;
-          // Effective end scale should not exceed the maximum that preserves caption clearance
-          effectiveScaleTo = Math.min(requestedScaleTo, maxScaleTo);
-        }
+        // With endScale fixed at 1, compute the default end top position of the frame
+        // and how much additional offset is required to keep: currTop_end >= topMargin + capH
+        const gapPx     = Math.max(100, Math.round(baseHCache * 0.03));
+        const vhNow     = window.innerHeight;
+        const topMargin = Math.max(60, vhNow * 0.08);
+        const defaultOffsetPx = (vhNow * 6) / 100; // same 6vh baseline
+        const currTopEndDefault = (vhNow - baseHCache) / 2 - gapPx + defaultOffsetPx;
+        const requiredTop = topMargin + capH;
+        extraOffsetNeeded = Math.max(0, requiredTop - currTopEndDefault);
       }
 
-      // scale the container so it zooms in/out using the effective end scale
-      const scale = scaleFrom + (effectiveScaleTo - scaleFrom) * eased;
-      // Push the framed image slightly lower so the caption has room above it
-      const offsetVH = 6; // shift container down by ~6vh (tweakable)
-      const offsetPx = (window.innerHeight * offsetVH) / 100;
+      // Interpolate scale from scaleFrom -> 1.00 using eased scroll progress
+      const scale = scaleFrom + (endScale - scaleFrom) * eased;
+
+      // Base offset is 6vh; if we need more room for caption, add it progressively with eased.
+      const offsetVH = 6;
+      const baseOffsetPx = (window.innerHeight * offsetVH) / 100;
+      const offsetPx = baseOffsetPx + extraOffsetNeeded * eased;
         // --- Headline: fixed in center, fades away ---
         const headline = s.querySelector('.frame-headline');
         if (headline) {
@@ -1063,7 +1060,7 @@ text-align: left;
         }
 
         // Compute where the scaled frame currently sits
-        const gap = Math.max(100, Math.round(baseH * 0.03)); // larger, responsive clearance above image
+        const gap = Math.max(100, Math.round(baseH * 0.03 * (parseFloat(s.dataset.capGapMul || '1')))); // larger, responsive clearance above image
         const currHeight = baseH * scale;
         const currWidth  = baseW * scale;
         const currLeft   = (window.innerWidth  - currWidth)  / 2;
@@ -1083,9 +1080,12 @@ text-align: left;
         }
         // Keep caption within viewport safe area (prevents large images from pushing it offscreen)
         const vhNow = window.innerHeight;
-        const capTopMin = Math.max(60, vhNow * 0.08);   // at least 60px from top
-        const capTopMax = Math.max(capTopMin + 40, vhNow - 160); // leave room at bottom
-        const capTop    = Math.min(Math.max(currTop, capTopMin), capTopMax);
+        const capBiasPx     = parseFloat(s.dataset.capBias || '0');          // +down, -up (pixels)
+        const capMinVh      = parseFloat(s.dataset.capMinVh || '8');         // % of viewport height
+        const capBottomPad  = parseFloat(s.dataset.capBottomPad || '160');   // px
+        const capTopMin = Math.max(60, vhNow * (capMinVh / 100));            // floor from top
+        const capTopMax = Math.max(capTopMin + 40, vhNow - capBottomPad);    // keep off bottom
+        const capTop    = Math.min(Math.max(currTop + capBiasPx, capTopMin), capTopMax);
         caption.style.left = leftPx + 'px';
         caption.style.top  = capTop + 'px';
         caption.style.transform = 'translate(0%, -100%)';
@@ -1120,8 +1120,8 @@ text-align: left;
         text.style.transform = `translateX(-50%) translateY(${y}px)`;
       }
       s.dataset.scaleFrom = scaleFrom.toFixed(3);
-      s.dataset.scaleTo = effectiveScaleTo.toFixed(3);
-      s.dataset.scale = scale.toFixed(3);
+      s.dataset.scaleTo   = endScale.toFixed(3);
+      s.dataset.scale     = scale.toFixed(3);
 
       // Smoothly reduce sticky height as we approach the end of the pin,
       // but do NOT change section min-height; only visually reduce gap by pulling up the next section.
@@ -1150,13 +1150,16 @@ text-align: left;
       const nextEl = s.nextElementSibling;
       if (nextEl) {
         const isPerceptionTabs = nextEl.classList.contains('perception-tabs');
-        // Interpolate -80px -> -160px for perception tabs (with strong ease-in); others 0 -> -160px
+        // Interpolate -80px -> -[end]px for perception tabs (with linear scroll); others 0 -> -160px
         let y;
         if (isPerceptionTabs) {
-          const start = -80;    // initial lift (before shrink)
-          const end   = -140;   // final lift target
-          const slowT = Math.pow(tShrink, 1.6); // slower early movement (ease-in)
-          y = start + (end - start) * slowT;
+          const start = 500;    // initial lift (before shrink)
+          const end   = (window.innerWidth < 500) ? -190 : -120;   // final lift target
+          // Slow factor via exponent: keeps 0->1 mapping but moves slower early on.
+          // Tune with data-tab-slow on the section (default 1.5).
+          const k = parseFloat(s.dataset.tabSlow || '1.5');
+          const progress = Math.pow(tShrink, isFinite(k) && k > 0 ? k : 1.5);
+          y = start + (end - start) * progress;
         } else {
           const end = -160;
           y = end * tShrink;
@@ -1574,4 +1577,19 @@ text-align: left;
     io.observe(wrap);
   })();
 })();
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const perceptionSection = document.getElementById("perception-zoom");
+    function updateCapBias() {
+      if (window.innerWidth < 500) {
+        perceptionSection.setAttribute("data-cap-bias", "10");
+      } else {
+        perceptionSection.setAttribute("data-cap-bias", "-30");
+      }
+    }
+    updateCapBias();
+    window.addEventListener("resize", updateCapBias);
+  });
 </script>
