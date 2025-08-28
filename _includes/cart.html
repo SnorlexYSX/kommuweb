@@ -236,7 +236,11 @@
   function updateCartCount() {
     const count = (cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
     const badge = document.getElementById('cartCount');
+    const badgeDesktop = document.getElementById('cartCountDesktop');
+
     if (badge) badge.textContent = count;
+    if (badgeDesktop) badgeDesktop.textContent = count;
+
   }
 
   document.addEventListener('DOMContentLoaded', () => {

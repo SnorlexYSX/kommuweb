@@ -71,31 +71,67 @@ title: Checkout
     <!-- Left Form Fields -->
     <div class="text-white space-y-6">
       <div>
-        <label for="checkoutName" class="block h5 font-bold text-gray mb-1">First Name</label>
-        <input id="checkoutName" type="text" class="w-full fillform-black px-4 py-2 rounded-checkoutform border-1 btn-border-gray" required>
+        <label for="checkoutName" class="block h5 font-bold text-gray mb-1">Name (Custom Engraving)</label>
+        <input id="checkoutName"
+               type="text"
+               class="w-full fillform-black px-4 py-2 rounded-checkoutform border-1 btn-border-gray"
+               aria-describedby="checkoutNameError"
+               autocomplete="given-name"
+               required>
+        <p id="checkoutNameError" class="text-red-400 text-sm mt-1" hidden>Please enter your first name (letters only).</p>
       </div>
       <div id="checkoutICGroup" class="hidden">
         <label for="checkoutIC" class="block h5 font-bold text-gray mb-1">
           Malaysian IC No. (without –)
         </label>
-        <input id="checkoutIC" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" pattern="\d{12}" required
-        >
+        <input id="checkoutIC"
+               type="text"
+               inputmode="numeric"
+               autocomplete="off"
+               maxlength="12"
+               class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform"
+               pattern="\d{12}"
+               aria-describedby="checkoutICHelp checkoutICError"
+               required>
+        <p id="checkoutICError" class="text-red-400 text-sm mt-1" hidden>Please enter a valid IC number.</p>
       </div>
       <div>
         <label for="checkoutEmail" class="block h5 font-bold text-gray mb-1">Email</label>
-        <input id="checkoutEmail" type="email" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
+        <input id="checkoutEmail" type="email" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" aria-describedby="checkoutEmailError" required>
+        <p id="checkoutEmailError" class="text-red-400 text-sm mt-1" hidden>Please enter a valid email address.</p>
       </div>
       <div>
         <label for="checkoutMobile" class="block h5 font-bold text-gray mb-1">Contact number</label>
-        <input id="checkoutMobile" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
+        <input id="checkoutMobile"
+               type="tel"
+               inputmode="tel"
+               class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform"
+               pattern="^[+]?\d[\d\s-]{6,}$"
+               aria-describedby="checkoutMobileError"
+               required>
+        <p id="checkoutMobileError" class="text-red-400 text-sm mt-1" hidden>Please provide a valid mobile phone number.</p>
       </div>
       <div>
         <label for="checkoutAddress" class="block h5 font-bold text-gray mb-1">Street Address</label>
-        <input id="checkoutAddress" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
+        <input id="checkoutAddress"
+               type="text"
+               class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform"
+               aria-describedby="checkoutAddressError"
+               autocomplete="address-line1"
+               required>
+        <p id="checkoutAddressError" class="text-red-400 text-sm mt-1" hidden>Please enter a valid street address.</p>
       </div>
       <div>
         <label for="checkoutPostcode" class="block h5 font-bold text-gray mb-1">Postcode</label>
-        <input id="checkoutPostcode" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform" required>
+        <input id="checkoutPostcode"
+               type="text"
+               inputmode="numeric"
+               maxlength="10"
+               class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform"
+               pattern="\d{4,10}"
+               aria-describedby="checkoutPostcodeError"
+               required>
+        <p id="checkoutPostcodeError" class="text-red-400 text-sm mt-1" hidden>Please enter 4 to 10 digits.</p>
       </div>
       <div>
         <label for="checkoutCountry" class="block h5 font-bold text-gray mb-1">Country</label>
@@ -261,6 +297,79 @@ title: Checkout
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    // ---- Field sanitation & validation helpers ----
+    const icEl    = document.getElementById('checkoutIC');
+    const mobEl   = document.getElementById('checkoutMobile');
+    const pcEl    = document.getElementById('checkoutPostcode');
+    const emailEl = document.getElementById('checkoutEmail');
+    const addrEl  = document.getElementById('checkoutAddress');
+    const nameEl  = document.getElementById('checkoutName');
+
+    // --- realtime validation helpers (debounced + on-blur inline message)
+    const validators = [];
+    // expose to submit handler
+    window.__checkoutValidators = validators;
+    const debounce = (fn, ms=400) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+
+    function attachValidation(el, { errorId, sanitizeDigitsMaxLen = 0, test, message }){
+      if (!el) return;
+      const errEl = errorId ? document.getElementById(errorId) : null;
+      const run = () => {
+        const ok = test(el.value);
+        el.setCustomValidity(ok ? '' : message);
+        if (errEl) {
+          if (ok) { errEl.hidden = true; errEl.textContent = ''; }
+          else { errEl.hidden = false; errEl.textContent = message; }
+        }
+        // toggle red ring border based on validity
+        if (ok) {
+          el.classList.remove('ring-1','ring-red-500');
+        } else {
+          el.classList.add('ring-1','ring-red-500');
+        }
+        return ok;
+      };
+      // keep for submit-all
+      validators.push(run);
+      if (sanitizeDigitsMaxLen > 0) {
+        el.addEventListener('input', () => {
+          const prev = el.value;
+          const digits = prev.replace(/\D+/g,'').slice(0, sanitizeDigitsMaxLen);
+          if (prev !== digits) el.value = digits;
+        });
+      }
+      el.addEventListener('input', debounce(run, 400));
+      ['blur','change'].forEach(evt => el.addEventListener(evt, run));
+    }
+
+    // First Name: 2–50 characters, allow letters, spaces, hyphens and apostrophes; must contain at least 2 letters
+    attachValidation(nameEl, { errorId: 'checkoutNameError', test: v => {
+      const val = (v||'').trim();
+      if (val.length < 2 || val.length > 50) return false;
+      if (!/^[A-Za-z'\-\s]+$/.test(val)) return false;
+      return (val.replace(/[^A-Za-z]/g, '').length >= 2);
+    }, message: 'Please enter a valid name.' });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    attachValidation(emailEl, { errorId: 'checkoutEmailError', test: v => emailRegex.test(v), message: 'Please enter a valid email address.' });
+    attachValidation(icEl,    { errorId: 'checkoutICError',    sanitizeDigitsMaxLen: 12, test: v => /^\d{12}$/.test(v), message: 'Please enter exactly 12 digits.' });
+    attachValidation(pcEl,    { errorId: 'checkoutPostcodeError', sanitizeDigitsMaxLen: 10, test: v => /^\d{4,10}$/.test(v), message: 'Please enter 4 to 10 digits.' });
+    attachValidation(mobEl,   { errorId: 'checkoutMobileError', test: v => /^[+]?\d[\d\s-]{6,}$/.test(v), message: 'Please provide a valid mobile phone number.' });
+    // Address: at least 5 visible chars and must contain at least one letter or digit
+    attachValidation(addrEl, { errorId: 'checkoutAddressError', test: v => {
+      const val = (v||'').trim().replace(/\s+/g,' ');
+      return val.length >= 5 && /[A-Za-z0-9]/.test(val);
+    }, message: 'Please enter a valid street address.' });
+
+    // expose a runner for all validators (used by submit)
+    window.__runAllCheckoutValidations = function(){
+      let ok = true;
+      if (Array.isArray(window.__checkoutValidators)) {
+        for (const run of window.__checkoutValidators) {
+          if (run && run() === false) ok = false;
+        }
+      }
+      return ok;
+    };
     const cartItems      = JSON.parse(localStorage.getItem("cart")) || [];
     const selectionsRaw  = sessionStorage.getItem("checkoutSelections");
     let isFromProduct  = sessionStorage.getItem("fromProductPage") === "true";
@@ -666,6 +775,19 @@ const visaUrl = "https://aws.kommu.ai/curlec/visa?";
 const otpUrl = "https://aws.kommu.ai/curlec/otp?";
 const stripeUrl = "https://aws.kommu.ai/stripe/checkout?";
 
+// Helper: Smoothly scroll to a field with offset for sticky headers
+function __scrollToField(el){
+  if (!el) return;
+  try {
+    const rect = el.getBoundingClientRect();
+    const y = rect.top + window.pageYOffset - 100; // offset for top padding/header
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  } catch(_) {
+    // fallback
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 function checkoutSubmit() {
   var fromProduct   = false;
   const _urlParams = new URLSearchParams(location.search);
@@ -697,11 +819,43 @@ function checkoutSubmit() {
   const postcode = document.getElementById("checkoutPostcode").value.trim();
   const country  = document.getElementById("checkoutCountry").value.trim().toUpperCase();
 
-  // basic validation
-  if (!name || !email || !mobile || !addr1 || !postcode || !country ||
-      (document.getElementById("checkoutIC").required && !ic)) {
-    alert("Please fill out all required fields.");
-    return;
+  // basic validation (inline errors; block submit if any invalid)
+  let allOK = true;
+  // trigger field validators to show error text
+  if (typeof window.__runAllCheckoutValidations === 'function') {
+    allOK = window.__runAllCheckoutValidations();
+  }
+  // also ensure required built-in constraints are respected
+  const requiredEls = [
+    document.getElementById('checkoutName'),
+    document.getElementById('checkoutEmail'),
+    document.getElementById('checkoutMobile'),
+    document.getElementById('checkoutAddress'),
+    document.getElementById('checkoutPostcode'),
+    document.getElementById('checkoutCountry')
+  ];
+  const icField = document.getElementById('checkoutIC');
+  if (icField && icField.required) requiredEls.push(icField);
+
+  let firstInvalid = null;
+  for (const el of requiredEls) {
+    if (!el) continue;
+    if (!el.checkValidity()) {
+      allOK = false;
+      el.classList.add('ring-1','ring-red-500');
+      if (!firstInvalid) firstInvalid = el;
+    } else {
+      el.classList.remove('ring-1','ring-red-500');
+    }
+  }
+  if (!allOK) {
+    // scroll to the first invalid field and focus it
+    if (firstInvalid) {
+      __scrollToField(firstInvalid);
+      // focus slightly after scroll begins for mobile browsers
+      setTimeout(() => { try { firstInvalid.focus({ preventScroll: true }); } catch(_) { firstInvalid.focus(); } }, 250);
+    }
+    return; // stop here if anything is invalid
   }
 
   // calculate subtotal and shipping

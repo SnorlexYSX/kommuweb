@@ -49,6 +49,9 @@
       addons: ["Sim Card"]
     ui: { show: [payment], hide: [] }
 
+
+
+
 - id: product-nonmyr-any-device
   when:
     source: product
@@ -105,3 +108,30 @@
     provider: stripe
     locks: { hidePromo: true }
     ui: { show: [summary], hide: [promo] }
+
+
+
+# For dynamic product button updates. Wont affect output since top rules gets check first.
+- id: product-myr-notradein
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: {tradeIn: "No Trade-in"}
+  then:
+    ui: { show: [payment], hide: [] }
+
+# For dynamic product button updates Wont affect output since top rules gets check first.
+- id: product-myr-tradein
+  when:
+    source: product
+    currency_in: ["MYR"]
+    dropdowns: {tradeIn: "Trade-in KA1/KA1s"}
+  then:
+    auto_apply:
+      promotion:
+        label: "Trade-in"
+        type: one_off
+      promotion:
+        label: "Trade-in"
+        type: subscription
+    ui: { show: [payment], hide: [] }
