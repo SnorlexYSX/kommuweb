@@ -133,7 +133,7 @@ stylesheet: products
       }
       .section-copy {
         max-width: 1200px;
-        margin: 2.5rem auto 0;
+        margin: 1rem auto 0;
         padding: 0 1.25rem;
         color: #eaeaea;
         text-align: left;
@@ -503,14 +503,9 @@ text-align: left;
   position: relative;
   max-width: 1100px;
   margin: 5rem auto 5rem;
-  padding: 0 1rem;
   color: #eaeaea;
   min-height: 160vh; /* enough scroll room to reveal all labels */
   padding-bottom: 0;
-}
-/* Tighten subtext spacing in Ports section */
-.ports-section .ka-subcopy {
-  margin: 0.75rem 0 5rem;
 }
 
 .ports-section .section-content {
@@ -521,7 +516,7 @@ text-align: left;
   position: sticky;
   top: 10vh;
   height: 68vh;
-  overflow: visible; /* use clip if you prefer */
+  overflow: clip; /* use clip if you prefer */
   display: grid;
   grid-template-rows: auto 1fr; /* header then image area */
   align-items: start;            /* stop vertical centering */
@@ -543,10 +538,18 @@ text-align: left;
   align-self: start;            /* anchor image area to top */
   margin: 0.25rem 0 0;          /* tighter gap under subtext */
 }
-.ports-header { 
-  align-self: start; 
-  width: min(1100px, 92vw);
-}
+  .ports-header { 
+    align-self: start; 
+    
+  }
+
+  /* Ensure .ports-header is always contained within .ports-sticky */
+  .ports-sticky .ports-header {
+    position: relative;
+    z-index: 2;  /* keep it above the image */
+    width: 100%; /* contained within sticky grid */
+    align-self: start; /* stick to top of the grid area */
+  }
 
 /* Add more breathing room between title and subcopy */
 .ports-header h2 {
@@ -558,7 +561,7 @@ text-align: left;
   margin-bottom: 2rem; /* tweak this value */
 }
 .ports-image {
-  width: min(1100px, 92vw);
+  width: min(1100px, 80vw);
   height: auto;
   border-radius: 16px; /* match other sections */
   display: block;
@@ -567,7 +570,7 @@ text-align: left;
         .module-content { position: relative; }
         .unit-image-wrapper { position: relative; z-index: 0; }
       /* --- Ports labels overlay & animation --- */
-.ports-stage { position: relative; width: min(1100px, 92vw); }
+.ports-stage { position: relative; width: min(1100px, 80vw); }
 .ports-figure { position: relative; }
 .ports-overlay { position: absolute; inset: 0; pointer-events: none; }
 .port-label {
@@ -703,11 +706,11 @@ text-align: left;
                 if (v.readyState >= 3) { v.style.opacity = '1'; }
               })();
             </script>
-            <div class="section-copy section-copy--center" style="margin-top: 1.25rem;">
+            <div class="section-copy section-copy--center">
               
               <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
-              <p class="h5 text-white" style="margin-top: 2rem;">RM3,999 or RM125/mo. for 36 months</p>
-              <p class="h4 font-bold text-gray text-center pt-16">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="h4 font-bold text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
+              <p class="h5 text-white pt-4">RM3,999 or RM125/mo. for 36 months</p>
+              <p class="h4 font-bold text-gray text-center pt-10">KommuAssist is precision-engineered from a solid aluminum unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under intense sunlight. Its <span class="h4 font-bold text-white">compact, windshield-parallel design </span>ensures it minimally obstructs the driver’s view and stays neatly tucked along the windshield.</p>
             </div>
         </div>
     </div>
@@ -741,14 +744,14 @@ text-align: left;
           <div class="h4 font-bold meter-label">Rockchip RK3588</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="100" data-target="6"></div>
-            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+            <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
           </div>
         </div>
         <div class="meter-row" data-units="TOPS">
           <div class="h4 font-bold meter-label">Snapdragon 821</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="13.333" data-target="0.8"></div>
-            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
+            <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS</span></div>
           </div>
         </div>
       </div>
@@ -758,14 +761,14 @@ text-align: left;
           <div class="h4 font-bold meter-label">Rockchip RK3588</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="100" data-target="0.6"></div>
-            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
+            <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
         <div class="meter-row" data-units="TOPS/W">
           <div class="h4 font-bold meter-label">Snapdragon 821</div>
           <div class="meter-track">
             <div class="meter-fill" data-pct="6.667" data-target="0.04"></div>
-            <div class="h5 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
+            <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span class="meter-units">TOPS/Watt</span></div>
           </div>
         </div>
       </div>
@@ -1517,7 +1520,7 @@ text-align: left;
         rows.forEach(row => {
           const fill = row.querySelector('.meter-fill');
           const pct  = parseFloat(fill.dataset.pct || '0');
-          const maxPct = parseFloat(row.dataset.maxpct || '65'); // cap end at 80% by default
+          const maxPct = parseFloat(row.dataset.maxpct || '70'); // cap end at 80% by default
           const capPct = Math.min(pct, maxPct);
           const wPct = e * capPct;                 // current width % (capped)
           fill.style.width = wPct + '%';
@@ -1553,7 +1556,7 @@ text-align: left;
             rows.forEach(row => {
               const fill = row.querySelector('.meter-fill');
               const pct  = parseFloat(fill.dataset.pct || '0');
-              const maxPct = parseFloat(row.dataset.maxpct || '65');
+              const maxPct = parseFloat(row.dataset.maxpct || '70');
               const capPct = Math.min(pct, maxPct);
               fill.style.width = capPct + '%';
               const valSpan = row.querySelector('.meter-value');
