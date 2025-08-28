@@ -10,13 +10,14 @@ title: Checkout
   @media (max-width: 768px) {
     /* Turn the whole section into a single card */
     .summary-pane { 
-      
+      background: transparent;
       padding-top: 1rem; 
     }
     .summary-card {
       background: #1b1b1b;              /* matches your card tone; change to #fff if desired */
       padding: 3rem;
       box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      gap: 0;
     }
   
     /* Stack the columns and add soft separators between blocks */
@@ -138,26 +139,26 @@ title: Checkout
     </div>
 
     <!-- Col 2: placeholder for either product summary or shipping -->
-    <div id="summaryCol2" class="md:w-[30%] space-y-12 mt-1 summary-col">
+    <div id="summaryCol2" class="md:w-[30%] mt-1 summary-col">
     </div>
 
     <!-- Col 3: placeholder for either payment summary+CTA or total due-->
     <div id="summaryCol3" class="md:w-[30%] mt-1 summary-col">
     </div>
   </div>
+</section>
 
   <!-- Footnotes & T&C -->
- <div class="w-screen bg-black">
-  <div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
-    <p>* Trade-in eligible</p>
-    <p>** 3-year warranty included</p>
-    <p>*** Rent-to-own plan terms apply</p>
-    <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
-    <p><a href="{{ '/rto-tc' | relative_url }}" class="underline">RTO T&amp;C</a></p>
+  <div class="w-screen bg-black">
+    <div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
+      <p>* Trade-in eligible</p>
+      <p>** 3-year warranty included</p>
+      <p>*** Rent-to-own plan terms apply</p>
+      <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
+      <p><a href="{{ '/rto-tc' | relative_url }}" class="underline">RTO T&amp;C</a></p>
+    </div>
   </div>
-</div>
 
-</section>
 <script>
   const shippingConfig = {{ site.data.shipping | jsonify }};
   const locale    = KommuPricing.getPreferredLocale();
@@ -399,7 +400,7 @@ title: Checkout
           <p class="h5 text-gray font-medium">${selections.sim}</p>
         </div>
         <div>
-          <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+          <h3 class="h4 font-bold mb-2 text-white pt-4">Installation</h3>
           <p class="h5 text-gray font-medium">
             ${selections.install}${(/kommu\s*hq/i.test(selections.install) ? '' : (shippingTextInit ? ' - ' + shippingTextInit : ''))}
           </p>
@@ -576,7 +577,7 @@ title: Checkout
           <p class="h5 text-gray font-medium">${selections.sim}</p>
         </div>
         <div>
-          <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+          <h3 class="h4 font-bold mb-2 text-white pt-4">Installation</h3>
           <p class="h5 text-gray font-medium">
             ${selections.install}${(/kommu\s*hq/i.test(selections.install) ? '' : (shippingText ? ' - ' + shippingText : ''))}
           </p>

@@ -2,12 +2,12 @@
 <div id="cartDrawer" class="fixed top-0 max-h-screen bg-card shadow-lg p-6 hidden z-50 overflow-y-auto pt-8 inline-block w-screen">
   <div class="flex justify-between items-center mb-4">
     <h2 class="h3 font-bold text-white">Your Cart</h2>
-    <button onclick="closeCart()" class="text-white">✕</button>
+    <button onclick="closeCart()" class="text-white w-[24px] h-[24px] flex items-center justify-center">✕</button>
   </div>
   <div id="cartRows" class="flex flex-col w-full sm:w-max"></div>
   <div id="cartNote"></div>
   <div class="mt-6 text-center">
-    <button onclick="goToCheckoutFromCart()" class="bg-blue-600 hover:bg-blue-700 w-full py-2 rounded-checkout text-white">Checkout</button>
+    <button id="checkoutBtn" onclick="goToCheckoutFromCart()" class="bg-blue-600 hover:bg-blue-700 w-full py-2 rounded-checkout text-white">Checkout</button>
   </div>
 </div>
 
@@ -15,6 +15,8 @@
 <script>
   const BASEURL = "{{ site.baseurl }}";
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let cartOpenGuard = false; // prevents immediate close from the opening click
+  let blockCartInsideClick = null;
 
   function getCurrencyCode(locale) {
     const country = locale.split("-")[1] || "US";
@@ -75,7 +77,7 @@
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
     updateCartCount();
-    document.getElementById('cartDrawer').classList.remove('hidden');
+    openCart();
   }
 
   function removeFromCart(index) {
@@ -103,6 +105,32 @@
     rows.innerHTML = '';
     noteContainer.innerHTML = '';
 
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Empty state (no items)
+    if (!cart || cart.length === 0) {
+      rows.innerHTML = '<div class="h5 text-gray mt-2">Your cart is empty.</div>';
+
+      // Hide customs note when empty
+      noteContainer.innerHTML = '';
+
+      // Disable & gray out the checkout button
+      if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-40', 'cursor-not-allowed', 'bg-gray-600');
+        checkoutBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+      }
+
+      adjustCartWidth();
+      return;
+    } else if (checkoutBtn) {
+      // Re‑enable checkout when items exist
+      checkoutBtn.disabled = false;
+      checkoutBtn.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-gray-600');
+      if (!checkoutBtn.classList.contains('bg-blue-600')) checkoutBtn.classList.add('bg-blue-600');
+      if (!checkoutBtn.classList.contains('hover:bg-blue-700')) checkoutBtn.classList.add('hover:bg-blue-700');
+    }
+
     const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
     const currency = getCurrencyCode(locale);
     const btnBase = 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition';
@@ -122,7 +150,7 @@
         <img src="${BASEURL}${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded"/>
         <div class="min-w-0">
           <div class="h4 font-bold text-white whitespace-nowrap">${item.name}</div>
-          ${item.selection ? `<div class="h6 text-gray whitespace-nowrap">${item.selection}</div>` : ''}
+          ${item.selection ? `<div class="h6 text-gray break-words whitespace-normal">${item.selection}</div>` : ''}
           <div class="h5 text-gray whitespace-nowrap">${formatPrice({ [currency]: priceValue })}</div>
         </div>
         <div class="ml-auto flex items-center gap-2 shrink-0">
@@ -148,15 +176,61 @@
     adjustCartWidth();
   }
 
+  function handleOutsideClick(event) {
+    if (cartOpenGuard) return; // don't close from the same click that opened it
+    const drawer = document.getElementById('cartDrawer');
+    if (!drawer) return;
+
+    // If the original click started inside the drawer, do nothing.
+    // Using composedPath keeps the ancestors from the original dispatch
+    // even if the DOM gets re-rendered during the click handler.
+    const path = event.composedPath ? event.composedPath() : [];
+    const clickedInside = path && path.some(node => node === drawer || (node && node.closest && node.closest && node.closest === drawer));
+    if (clickedInside) return;
+
+    // Fallback to contains check
+    if (drawer.contains(event.target)) return;
+
+    closeCart();
+  }
+
   function closeCart() {
-    document.getElementById('cartDrawer').classList.add('hidden');
+    const drawer = document.getElementById('cartDrawer');
+    if (drawer) drawer.classList.add('hidden');
+    document.body.classList.remove('cart-overlay-active');
+    if (blockCartInsideClick) {
+      drawer.removeEventListener('click', blockCartInsideClick);
+    }
+    document.removeEventListener('click', handleOutsideClick);
+  }
+
+  function openCart() {
+    const drawer = document.getElementById('cartDrawer');
+    if (!drawer) return;
+    drawer.classList.remove('hidden');
+    document.body.classList.add('cart-overlay-active');
+    adjustCartWidth();
+    if (!blockCartInsideClick) {
+      blockCartInsideClick = (e) => e.stopPropagation();
+    }
+    drawer.addEventListener('click', blockCartInsideClick);
+    cartOpenGuard = true;
+    setTimeout(() => {
+      document.addEventListener('click', handleOutsideClick);
+      cartOpenGuard = false;
+    }, 0);
   }
 
   function toggleCart() {
     const drawer = document.getElementById('cartDrawer');
-    drawer.classList.toggle('hidden');
+    if (!drawer) return;
+    const willOpen = drawer.classList.contains('hidden');
+    if (willOpen) {
+      openCart();
+    } else {
+      closeCart();
+    }
     updateCartCount();
-    if (!drawer.classList.contains('hidden')) adjustCartWidth();
   }
 
   function updateCartCount() {

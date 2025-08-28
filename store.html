@@ -64,7 +64,7 @@ title: Store | kommu.ai
 <style>
 @media (max-width: 500px) {
   .modal-container {
-    max-height: 90vh;
+    max-height: 80vh;
     overflow-y: auto;
   }
 }
@@ -77,9 +77,12 @@ title: Store | kommu.ai
 }
 </style>
 <script>
+let _modalResizeHandler = null;
+
 function openModal(item) {
 
   document.getElementById('modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
   document.getElementById('modalImage').src = `${BASEURL}${item.image}`;
   document.getElementById('modalTitle').textContent = item.name;
   document.getElementById('modalPrice').textContent = formatPrice(item.prices);
@@ -123,10 +126,20 @@ function openModal(item) {
     document.getElementById('modalDropdownLabel').innerText = '';
     ddSelect.innerHTML = '';
   }
+
+  const descBlock = document.getElementById('modalDescBlock');
+  if (window.innerWidth < 500) {
+    descBlock.classList.add('hidden');
+  } else {
+    descBlock.classList.remove('hidden');
+  }
 }
 
 function closeModal() {
   document.getElementById('modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  const descBlock = document.getElementById('modalDescBlock');
+  if (descBlock) descBlock.classList.remove('hidden');
 }
 
 function goToBuyPage() {
@@ -207,8 +220,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <label id="modalDropdownLabel" for="modalDropdown" class="h5 block font-normal text-white mb-1"></label>
           <select id="modalDropdown" class="store-select store-select-tight w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-normal"></select>
         </div>
-        <p class="h5 font-normal text-white mb-1">Description</p>
-        <p id="modalDesc" class="h5 font-normal text-gray mb-4"></p>
+        <div id="modalDescBlock">
+          <p class="h5 font-normal text-white mb-1">Description</p>
+          <p id="modalDesc" class="h5 font-normal text-gray mb-4"></p>
+        </div>
         <p class="h5 font-normal text-white mb-1">Included:</p>
         <ol id="modalIncludes" class="h5 font-normal list-disc list-inside space-y-1 text-gray mb-6"></ol>
         <button id="modalAddBtn" class="h5 block mx-auto bg-blue-600 px-6 py-2 rounded text-white">Add to Cart</button>

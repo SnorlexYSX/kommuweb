@@ -3,13 +3,13 @@
    COLORS / BACKGROUNDS / BORDERS
 ================================ */
 .img-container { border-radius: 1.5rem; background-color: #1b1b1b; }
-.btn-bg-gray { background-color: #070707; }
+.btn-bg-gray { background-color: #101010; }
 .btn-bg-blue { background-color: #007AFF; }
 .summaryCard-bg-gray { background-color: #1b1b1b; }
 .popupCardGrey { background-color: #2d2d2d; }
 .popupIconGrey { background-color: #606060; }
 .bg-transparent { background-color: transparent; }
-.text-gray { color: #b2b2b2; }
+.text-gray { color: #b2b2b2; } 
 .btn-border-gray {
   --tw-border-opacity: 0.2;
   border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));

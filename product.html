@@ -16,6 +16,7 @@ title: Buy KommuAssist 2
       background: #1b1b1b;              /* matches your card tone; change to #fff if desired */
       padding: 3rem;
       box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      gap: 0;
     }
   
     /* Stack the columns and add soft separators between blocks */
@@ -232,14 +233,14 @@ title: Buy KommuAssist 2
       >
     </div>
 
-    <div class="md:w-[30%] space-y-12 mt-1 summary-col">
+    <div class="md:w-[30%] mt-1 summary-col">
       <div>
         <h3 class="h4 font-bold mb-2 text-white">KommuAssist 2</h3>
         <p class="h5 text-gray" id="summaryModel">Please select a car model</p>
         <p class="h5 text-gray" id="summaryConnectivity">Please select a SIM card Option</p>
       </div>
       <div>
-        <h3 class="h4 font-bold mb-2 text-white">Installation</h3>
+        <h3 class="h4 font-bold mb-2 text-white pt-4">Installation</h3>
         <p class="h5 text-gray mb-2" id="summaryInstallation">Please select an installation method</p>
       </div>
     </div>
@@ -250,7 +251,7 @@ title: Buy KommuAssist 2
       <p id="productDynamicTotal" class="h5 text-gray mb-2"></p>
       <p id="summaryTradeIn"  class="h5 text-gray">Please select a trade-in option</p>
       
-      <div class="mt-12 flex justify-center">
+      <div class="mt-10 flex justify-center">
         <button
           id="checkoutBtn"
           onclick="goToCheckout()"
@@ -763,15 +764,26 @@ title: Buy KommuAssist 2
       }, 120);
     }
 
-    // keyboard nav
-    document.addEventListener('keydown', (e)=>{
-      if (e.key === 'ArrowRight') setIndex(idx+1);
-      if (e.key === 'ArrowLeft') setIndex(idx-1);
-    });
-
-    // init
-    renderDots();
-    updateArrows();
+    // --- Touch swipe support ---
+    function addSwipeSupport(el, onLeft, onRight){
+      if (!el) return;
+      let startX = 0, startY = 0, tracking = false;
+      el.addEventListener('touchstart', (e)=>{
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        startX = t.clientX; startY = t.clientY; tracking = true;
+      }, {passive:true});
+      el.addEventListener('touchend', (e)=>{
+        if (!tracking) return;
+        const t = e.changedTouches && e.changedTouches[0];
+        tracking = false;
+        if (!t) return;
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return; // ignore short/vertical swipes
+        if (dx < 0) onLeft && onLeft(); else onRight && onRight();
+      }, {passive:true});
+    }
 
     // arrow buttons
     const prevBtn = document.getElementById('prodPrev');
@@ -789,6 +801,20 @@ title: Buy KommuAssist 2
         }
       });
     });
+
+    // Touch swipe: attach to image container
+    const container = imgEl.closest('.img-container') || imgEl.parentElement;
+    addSwipeSupport(container, ()=> setIndex(idx+1), ()=> setIndex(idx-1));
+
+    // keyboard nav
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowRight') setIndex(idx+1);
+      if (e.key === 'ArrowLeft') setIndex(idx-1);
+    });
+
+    // init
+    renderDots();
+    updateArrows();
   })();
 </script>
 <script>
@@ -837,6 +863,32 @@ title: Buy KommuAssist 2
         updateArrows();
       }, 120);
     }
+
+    // --- Touch swipe support ---
+    function addSwipeSupport(el, onLeft, onRight){
+      if (!el) return;
+      let startX = 0, startY = 0, tracking = false;
+      el.addEventListener('touchstart', (e)=>{
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        startX = t.clientX; startY = t.clientY; tracking = true;
+      }, {passive:true});
+      el.addEventListener('touchend', (e)=>{
+        if (!tracking) return;
+        const t = e.changedTouches && e.changedTouches[0];
+        tracking = false;
+        if (!t) return;
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return; // ignore short/vertical swipes
+        if (dx < 0) onLeft && onLeft(); else onRight && onRight();
+      }, {passive:true});
+    }
+
+    // Touch swipe: attach to image container
+    const container = imgEl.closest('.img-container') || imgEl.parentElement;
+    addSwipeSupport(container, ()=> setIndex(idx+1), ()=> setIndex(idx-1));
+
     // init
     renderDots();
     updateArrows();
