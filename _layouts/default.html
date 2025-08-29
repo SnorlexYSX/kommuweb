@@ -39,6 +39,7 @@
         ::-webkit-scrollbar {
           display: none;
         }
+
         html, body {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;     /* Firefox */
@@ -47,24 +48,22 @@
 
     </style>
 
-	{% include head.html %}
+	  {% include head.html %}
 
-	<body class="d-flex flex-column h-100">
+	<body class="d-flex flex-column dvh-100">
 		{% include js.html %}
 		{% include navigation.html %}
-        <div id="main-content">
-            {{ content }}
-        </div>
-        {% include cart.html %}
-
+    <div id="main-content">
+    {{ content }}
+    </div>
+    {% include cart.html %}
 		{% include footer.html %}
-
 	</body>
-<style>
-#main-content {
-    margin-left: 0px;
-    margin-right: 0px;
-    background: black;
-}
-</style>
+  <style>
+  #main-content {
+      margin-left: 0px;
+      margin-right: 0px;
+      background: black;
+  }
+  </style>
 </html>

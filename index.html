@@ -25,6 +25,12 @@ title: Kommu
       gap: 2.5rem;
     }
   }
+  
+  @media (max-width: 500px) {
+    .row-align { 
+      gap: 1.5rem;
+    }
+  }
 
   html, body { overflow-x: hidden; }
 
@@ -36,10 +42,17 @@ title: Kommu
   }
   @media (max-width: 1200px) {
     .fixed-card {
-      width: 300px;
-      min-width: 300px;
-      max-width: 300px;
-      gap: 2.5rem;
+      width: 250px;
+      min-width: 250px;
+      max-width: 250px;
+    }
+  }
+
+  @media (max-width: 389px) {
+    .fixed-card {
+      width: 200px;
+      min-width: 200px;
+      max-width: 200px;
     }
   }
 
@@ -62,7 +75,7 @@ title: Kommu
 
   @media (max-width: 1200px) {
     .brand-logo {
-      width: 7rem; /* 100px */
+      width: 6rem; /* 100px */
     }
   }
 
@@ -71,7 +84,7 @@ title: Kommu
       display: grid !important;
       grid-template-columns: repeat(2, 1fr);
       justify-items: center;
-      gap: 2rem;
+      gap: 0.5rem;
     }
     .hero-overlay {
       padding-bottom: 3rem; /* pb-12 */
@@ -115,10 +128,36 @@ title: Kommu
       right: 20px;
     }
   }
+
+@media (max-width: 500px) {
+  .btn-check-models {
+    margin-top: 2rem; /* my-8 */
+    margin-bottom: 2rem; /* my-8 */
+  }
+}
+
+  /* --- Scroll Snap (full-screen sections) --- */
+  /* Ensure each hero/feature section fills the viewport and snaps cleanly */
+  .dvh-100 {
+    height: 100dvh;   /* dynamic viewport height to avoid iOS URL bar issues */
+  }
+  /* Scroll snap only enabled below 768px, with gentler snap and padding */
+  @media (max-width: 768px) {
+    html, body {
+      scroll-snap-type: y proximity;
+      scroll-behavior: smooth; /* gentle anchor jumps */
+      scroll-padding-top: 20vh;   /* widen the snap "target" for softer settling */
+      scroll-padding-bottom: 20vh;
+      overscroll-behavior-y: contain; /* reduce abrupt chaining/bounce */
+    }
+    section.dvh-100 {
+      scroll-snap-align: center; /* was center, now start */
+    }
+  }
 </style>
 
 
-<section id="home" class="relative h-[100dvh] overflow-hidden">
+<section id="home" class="relative dvh-100 overflow-hidden">
   <video
     class="absolute inset-0 w-full h-full object-cover"
     autoplay muted loop playsinline
@@ -145,8 +184,8 @@ title: Kommu
 </section>
 
 
-<section class="section-padding-y">
-  <div class="max-w-6xl mx-auto px-4">
+<section class="dvh-100 flex items-center">
+  <div class="max-w-6xl mx-auto my-auto px-4">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -189,7 +228,7 @@ title: Kommu
   </div>
 </section>
 
-<section class="section-padding-y">
+<section class="dvh-100 flex items-center">
   <div class="max-w-6xl mx-auto px-4">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
@@ -238,13 +277,13 @@ title: Kommu
 
 
 <!-- COMPATIBILITY -->
-<section class="section-padding-y">
+<section class="dvh-100 flex items-center">
   <div class="max-w-6xl mx-auto px-4">
     <div class="bg-card rounded-2xl py-12 px-16 text-center text-white">
       <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
       <a
         href="{{ '/support' | relative_url }}"
-        class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full my-12"
+        class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full my-12 btn-check-models"
       >Check Car Models</a>
       <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 max-w-[720px] mx-auto brand-logos-grid">
         <!-- logos -->
