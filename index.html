@@ -151,7 +151,7 @@ title: Kommu
     .page-snap {
       scroll-snap-type: y proximity;
       scroll-behavior: smooth; /* gentle anchor jumps */
-      scroll-padding-top: 12vh;
+      scroll-padding-top: 10vh;
       scroll-padding-bottom: 12vh;
     }
     section.dvh-100,
@@ -438,8 +438,8 @@ title: Kommu
       if (snapContainer) snapContainer.classList.add('snap-off');
       springScrollToElement(target, {
         duration: 1200,
-        stiffness: 190,
-        damping: 22,
+        stiffness: 175,
+        damping: 25,
         mass: 1,
         offset,
         onDone: () => {
