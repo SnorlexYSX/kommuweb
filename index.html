@@ -3,6 +3,9 @@ layout: default
 title: Kommu
 ---
 <style>
+  :root {
+    --spring-offset: 0; /* set e.g. 80 for fixed headers in px */
+  }
   body {
     background-color: #000;
   }
@@ -146,9 +149,9 @@ title: Kommu
     html, body {
       scroll-snap-type: y proximity;
       scroll-behavior: smooth; /* gentle anchor jumps */
-      scroll-padding-top: 15vh;   /* widen the snap "target" for softer settling */
-      /*scroll-padding-bottom: 15vh;*/
-      overscroll-behavior-y: auto; /* reduce abrupt chaining/bounce */
+      scroll-padding-top: 40vh;   /* widen the snap "target" for softer settling */
+      scroll-padding-bottom: 40vh;
+      overscroll-behavior-y: contain; /* reduce abrupt chaining/bounce */
     }
     section.dvh-110 {
       scroll-snap-align: center; /* was center, now start */
@@ -340,3 +343,96 @@ title: Kommu
 <a href="https://wa.me/15558229640" target="_blank" class="whatsapp-float">
   <i class="fab fa-whatsapp fa-xl"></i>
 </a>
+
+<script>
+(function () {
+  // Apply only on touch devices to mimic iOS-native feel
+  const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
+
+  // Damped spring scroll (iOS-like): configurable mass-spring-damper
+  // Based on underdamped harmonic motion solution.
+  function springInterpolation(t, opts) {
+    const { stiffness = 170, damping = 26, mass = 1 } = opts || {};
+    // Convert to angular frequencies
+    const w0 = Math.sqrt(stiffness / mass);          // undamped natural frequency
+    const zeta = damping / (2 * Math.sqrt(stiffness * mass)); // damping ratio
+    if (zeta >= 1) {
+      // Critically/over-damped fallback to smooth easeOut
+      return 1 - Math.exp(-t * w0);
+    }
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);      // damped natural frequency
+    // Normalized time in seconds (t in [0,1] assumed)
+    const A = 1;
+    const B = (zeta / Math.sqrt(1 - zeta * zeta));
+    // y(t) from 0 -> 1 with slight overshoot depending on zeta
+    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + B * Math.sin(wd * t));
+  }
+
+  // Main animator using requestAnimationFrame
+  function springScrollTo(targetY, options) {
+    const {
+      duration = 1200,                 // ms baseline for typical distances
+      stiffness = 180,                 // higher = snappier
+      damping = 24,                    // higher = less overshoot
+      mass = 1,
+      offset = 0                       // e.g., use to account for fixed headers
+    } = options || {};
+
+    const start = window.scrollY || window.pageYOffset;
+    const end = Math.max(0, Math.min(
+      targetY - offset,
+      document.documentElement.scrollHeight - window.innerHeight
+    ));
+    const distance = end - start;
+    if (Math.abs(distance) < 1) return; // nothing to do
+
+    // Optionally scale duration with distance for consistent feel
+    const px = Math.abs(distance);
+    const dur = Math.min(1800, Math.max(600, duration * (px / 1200) ** 0.5));
+
+    let startTime = null;
+    function frame(ts) {
+      if (!startTime) startTime = ts;
+      const t = (ts - startTime) / dur;
+      if (t >= 1) {
+        window.scrollTo(0, end);
+        return;
+      }
+      // Convert t (0..1) to "seconds" domain for spring math
+      const seconds = t * 1.2; // stretch factor to tune feel
+      const p = springInterpolation(seconds, { stiffness, damping, mass });
+      window.scrollTo(0, start + distance * p);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Convenience: scroll to an element
+  function springScrollToElement(el, opts) {
+    const rect = el.getBoundingClientRect();
+    const targetY = rect.top + window.scrollY;
+    springScrollTo(targetY, opts);
+  }
+
+  // Auto-bind anchor links like <a href="#section-id">...</a> on touch devices
+  if (isTouch) {
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      const id = href.slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      // Optional: account for any top padding you set via scroll-padding-top
+      const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
+      springScrollToElement(target, { duration: 1200, stiffness: 190, damping: 22, mass: 1, offset });
+    }, { passive: false });
+  }
+
+  // Expose programmatic API if you want to call it elsewhere:
+  window.springScrollTo = springScrollTo;
+  window.springScrollToElement = springScrollToElement;
+})();
+</script>
