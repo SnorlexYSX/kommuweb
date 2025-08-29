@@ -442,7 +442,31 @@ title: Checkout
     if (isFromProduct && selectionsRaw) {
       selections = JSON.parse(selectionsRaw);
     }
-    
+
+    // When coming from product page in a non-MYR currency (e.g., USD),
+    // force dropdown selections to options that are allowed for USD:
+    //  - Payment: One-off purchase only (no RTO)
+    //  - SIM: Use my own SIM card (no bundled SIM)
+    //  - Installation: Self‑installation (international shipping only)
+    const _ccyUpper = (currency || '').toUpperCase();
+    if (isFromProduct && _ccyUpper !== 'MYR') {
+      const s = selections || {};
+      // Payment
+      if (!/one\s*-?off/i.test(s.payment || '')) {
+        s.payment = 'One-off purchase';
+      }
+      // SIM option
+      if (!/own\s*sim/i.test(s.sim || '')) {
+        s.sim = 'Use my own SIM card';
+      }
+      // Installation
+      if (!/self\s*-?install/i.test(s.install || '')) {
+        s.install = 'Self-installation';
+      }
+      selections = s;
+      // Persist back so downstream helpers (computePlan, summary, submit) see the overrides
+      try { sessionStorage.setItem('checkoutSelections', JSON.stringify(selections)); } catch(_) {}
+    }
 
     // Compute plan and apply locks
     const isNonMYRCurrency = (currency || '').toUpperCase() !== 'MYR';

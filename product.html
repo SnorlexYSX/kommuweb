@@ -116,7 +116,7 @@ title: Buy KommuAssist 2
           >            
               <div class="text-left">
               <p class="h5 text-white">SIM card included</p>
-              <p class="h6 text-gray">User to activate once received</p>
+              <p class="h6 text-gray">User self-activate RM25/month CelcomDigi plan</p>
               <!-- <p class="text-sm text-gray-300 font-medium">RM20/mth for 20gb</p> -->
             </div>
             <span id="simPrice" class="h6 ml-2"></span>
@@ -462,12 +462,12 @@ title: Buy KommuAssist 2
     // clear state
     btns.forEach(b => {
       if (b === chosen) return; // skip chosen for now
-      b.classList.remove('ring','ring-blue-500','border-white');
+      b.classList.remove('ring','ring-blue-500','ring-1','border-white');
       if (b.hasAttribute('data-selected')) b.removeAttribute('data-selected');
       b.setAttribute('aria-pressed','false');
     });
     // set chosen
-    chosen.classList.add('ring','ring-blue-500');
+    chosen.classList.add('ring','ring-blue-500','ring-1');
     chosen.setAttribute('data-selected','true');
     chosen.setAttribute('aria-pressed','true');
 
@@ -490,9 +490,9 @@ title: Buy KommuAssist 2
     let overlay = btn.querySelector(':scope > .kommu-lock-overlay');
     if (!overlay){
       overlay = document.createElement('div');
-      overlay.className = 'kommu-lock-overlay absolute inset-0 flex items-center justify-center pointer-events-none';
+      overlay.className = 'kommu-lock-overlay absolute inset-0 bg-gray-600/40 backdrop-blur-sm rounded-product-select flex items-center justify-center pointer-events-none';
       const badge = document.createElement('div');
-      badge.className = 'bg-amber-300 text-black font-semibold px-2 py-1 rounded shadow text-xs text-center';
+      badge.className = 'h5 text-white font-normal text-center';
       badge.textContent = message || '';
       overlay.appendChild(badge);
       btn.appendChild(overlay);
