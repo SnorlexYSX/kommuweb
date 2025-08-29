@@ -73,6 +73,9 @@ title: Kommu
       justify-items: center;
       gap: 2rem;
     }
+    .hero-overlay {
+      padding-bottom: 3rem; /* pb-12 */
+    }
   }
 
   .whatsapp-float {
@@ -115,13 +118,13 @@ title: Kommu
 </style>
 
 
-<section id="home" class="relative h-[100dvh]">
+<section id="home" class="relative h-[100dvh] overflow-hidden">
   <video
     class="absolute inset-0 w-full h-full object-cover"
     autoplay muted loop playsinline
     src="{{ "/assets/ytvid.mp4" | relative_url }}"
   ></video>
-  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 md:pb-40 text-center px-4">
+  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 md:pb-40 text-center px-4 hero-overlay">
     <h2 class="h2 text-white">
       Elevate your driving experience with L2+ ADAS
     </h2>
