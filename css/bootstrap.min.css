@@ -7912,6 +7912,10 @@ fieldset:disabled .btn {
     height: 100dvh !important;
 }
 
+.dvh-110, dvh-110 {
+    height: 110dvh !important;
+}
+
 .min-vh-100 {
     min-height: 100vh !important
 }
