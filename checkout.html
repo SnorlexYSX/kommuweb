@@ -115,7 +115,7 @@ title: Checkout
                type="tel"
                inputmode="tel"
                class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform"
-               pattern="^[+]?\d[\d\s-]{6,}$"
+               pattern="^\+?[0-9][0-9 \-]{6,}$"
                aria-describedby="checkoutMobileError"
                required>
         <p id="checkoutMobileError" class="text-red-400 text-sm mt-1" hidden>Please provide a valid mobile phone number.</p>
@@ -327,13 +327,29 @@ title: Checkout
       if (!el) return;
       const errEl = errorId ? document.getElementById(errorId) : null;
       const run = () => {
-        const ok = test(el.value);
+        // Skip validation for hidden/disabled fields
+        const isHidden = (el.offsetParent === null) || !!el.closest('.hidden');
+        const isDisabled = el.disabled === true;
+        if (isHidden || isDisabled) {
+          el.setCustomValidity('');
+          if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+          el.classList.remove('ring-1','ring-red-500');
+          return true;
+        }
+        const val = (el.value || '').trim();
+        const isRequired = !!el.required;
+        let ok;
+        if (!isRequired && val === '') {
+          // Non-required & empty is OK
+          ok = true;
+        } else {
+          ok = !!test(val);
+        }
         el.setCustomValidity(ok ? '' : message);
         if (errEl) {
           if (ok) { errEl.hidden = true; errEl.textContent = ''; }
           else { errEl.hidden = false; errEl.textContent = message; }
         }
-        // toggle red ring border based on validity
         if (ok) {
           el.classList.remove('ring-1','ring-red-500');
         } else {
@@ -365,7 +381,7 @@ title: Checkout
     attachValidation(emailEl, { errorId: 'checkoutEmailError', test: v => emailRegex.test(v), message: 'Please enter a valid email address.' });
     attachValidation(icEl,    { errorId: 'checkoutICError',    sanitizeDigitsMaxLen: 12, test: v => /^\d{12}$/.test(v), message: 'Please enter exactly 12 digits.' });
     attachValidation(pcEl,    { errorId: 'checkoutPostcodeError', sanitizeDigitsMaxLen: 10, test: v => /^\d{4,10}$/.test(v), message: 'Please enter 4 to 10 digits.' });
-    attachValidation(mobEl,   { errorId: 'checkoutMobileError', test: v => /^[+]?\d[\d\s-]{6,}$/.test(v), message: 'Please provide a valid mobile phone number.' });
+    attachValidation(mobEl,   { errorId: 'checkoutMobileError', test: v => /^\+?[0-9][0-9 \-]{6,}$/.test(v), message: 'Please provide a valid mobile phone number.' });
     // Address: at least 5 visible chars and must contain at least one letter or digit
     attachValidation(addrEl, { errorId: 'checkoutAddressError', test: v => {
       const val = (v||'').trim().replace(/\s+/g,' ');
@@ -868,6 +884,8 @@ function checkoutSubmit() {
   if (typeof window.__runAllCheckoutValidations === 'function') {
     allOK = window.__runAllCheckoutValidations();
   }
+  console.log(allOK)
+
   // also ensure required built-in constraints are respected
   const requiredEls = [
     document.getElementById('checkoutName'),
