@@ -130,7 +130,7 @@ title: Kommu
       bottom: 20px;
       right: 20px;
     }
-  }yes 
+  }
 
 @media (max-width: 500px) {
   .btn-check-models {
@@ -144,22 +144,25 @@ title: Kommu
   .dvh-100 {
     height: 100dvh;   /* dynamic viewport height to avoid iOS URL bar issues */
   }
-  /* Scroll snap only enabled below 768px, with gentler snap and padding */
+  .snap-off {
+    scroll-snap-type: none !important;
+  }
   @media (max-width: 768px) {
-    html, body {
+    .page-snap {
       scroll-snap-type: y proximity;
       scroll-behavior: smooth; /* gentle anchor jumps */
-      scroll-padding-top: 40vh;   /* widen the snap "target" for softer settling */
-      scroll-padding-bottom: 40vh;
-      overscroll-behavior-y: contain; /* reduce abrupt chaining/bounce */
+      scroll-padding-top: 12vh;
+      scroll-padding-bottom: 12vh;
     }
+    section.dvh-100,
     section.dvh-110 {
-      scroll-snap-align: center; /* was center, now start */
+      scroll-snap-align: start;
     }
   }
 </style>
 
 
+<main class="page-snap">
 <section id="home" class="relative dvh-100 overflow-hidden">
   <video
     class="absolute inset-0 w-full h-full object-cover"
@@ -343,6 +346,7 @@ title: Kommu
 <a href="https://wa.me/15558229640" target="_blank" class="whatsapp-float">
   <i class="fab fa-whatsapp fa-xl"></i>
 </a>
+</main>
 
 <script>
 (function () {
@@ -396,6 +400,9 @@ title: Kommu
       const t = (ts - startTime) / dur;
       if (t >= 1) {
         window.scrollTo(0, end);
+        if (options && typeof options.onDone === 'function') {
+          options.onDone();
+        }
         return;
       }
       // Convert t (0..1) to "seconds" domain for spring math
@@ -427,7 +434,18 @@ title: Kommu
       e.preventDefault();
       // Optional: account for any top padding you set via scroll-padding-top
       const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
-      springScrollToElement(target, { duration: 1200, stiffness: 190, damping: 22, mass: 1, offset });
+      const snapContainer = document.querySelector('.page-snap');
+      if (snapContainer) snapContainer.classList.add('snap-off');
+      springScrollToElement(target, {
+        duration: 1200,
+        stiffness: 190,
+        damping: 22,
+        mass: 1,
+        offset,
+        onDone: () => {
+          if (snapContainer) snapContainer.classList.remove('snap-off');
+        }
+      });
     }, { passive: false });
   }
 
