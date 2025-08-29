@@ -518,6 +518,14 @@ text-align: left;
   text-align: center; 
 }
 
+/* Lock .perception-tabs height to viewport using --vh on mobile to prevent Chrome address bar jump */
+@media (max-width: 1024px) {
+  .perception-tabs {
+    height: calc(var(--vh, 1vh) * 100);
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
 /* prevent wrap jitter on small screens */
 .frame-headline { min-width: 280px; }
 
