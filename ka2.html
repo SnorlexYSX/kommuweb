@@ -24,7 +24,7 @@ stylesheet: products
     }
     html, body { height: 100%; }
     /* Viewport height lock for mobile (prevents Chrome URL bar collapse from breaking vh) */
-    :root { --vh: 1vh; } /* fallback; real value set via JS */
+    /*:root { --vh: 1vh; } /* fallback; real value set via JS */
     /* Use the locked vh for key full-viewport elements */
     .s1-hero,
     .frame-sticky {
@@ -701,14 +701,6 @@ text-align: left;
 
 
   <script>
-    
-    function lockScreenHeight() {
-  document.documentElement.style
-    .setProperty('--vh', window.innerHeight * 0.01 + 'px');
-}
-lockScreenHeight();
-window.addEventListener('resize', lockScreenHeight);
-    
     // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
     document.addEventListener('DOMContentLoaded', function(){
       try {
@@ -737,22 +729,21 @@ window.addEventListener('resize', lockScreenHeight);
       } catch(e) { /* no-op */ }
     }, { once: true });
 
-        function goToBuyPage() {
+    function goToBuyPage() {
       window.location.href = "{{ '/product' | relative_url }}";
     }
   </script>
 
 <script>
-  // Lock viewport height to avoid Chrome URL bar auto-hide shrinking 'vh'
-  (function setLockedVH(){
-    function applyVH(){
-      var vh = window.innerHeight * 0.01; // 1% of layout viewport
+  // Hard-lock --vh once; only refresh on orientation change
+  (function lockOnce(){
+    const apply = () => {
+      const vh = window.innerHeight * 0.01; // 1% of current layout viewport
       document.documentElement.style.setProperty('--vh', vh + 'px');
-    }
-    window.addEventListener('resize', applyVH);
-    window.addEventListener('orientationchange', applyVH);
-    document.addEventListener('visibilitychange', applyVH, { passive: true });
-    applyVH();
+    };
+    apply();
+    // Update only on major changes like device rotation
+    window.addEventListener('orientationchange', apply);
   })();
 </script>
 
