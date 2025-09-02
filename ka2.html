@@ -647,6 +647,28 @@ text-align: left;
         padding-right: 1.5rem !important;
       }
     }
+
+    /* --- Scroll Snap (full-screen sections) --- */
+  /* Ensure each hero/feature section fills the viewport and snaps cleanly */
+  .dvh-100 {
+    height: 100dvh;   /* dynamic viewport height to avoid iOS URL bar issues */
+  }
+  .snap-off {
+    scroll-snap-type: none !important;
+  }
+  @media (max-width: 768px) {
+    .page-snap {
+      scroll-snap-type: y proximity;
+      scroll-behavior: smooth; /* gentle anchor jumps */
+      scroll-padding-top: 10vh;
+      scroll-padding-bottom: 12vh;
+    }
+    section.dvh-100,
+    section.dvh-110,
+    section.dvh-120 {
+      scroll-snap-align: start;
+    }
+  }
     </style>
 
 
@@ -700,7 +722,8 @@ text-align: left;
 </script>
 
 </head>
-<section class="ka1s-section">
+<main class="page-snap">
+<section class="ka1s-section dvh-100">
     <div class="module-content s1-hero">
         <div class="unit-image-wrapper">
             <h2 class="h3 text-white">KommuAssist 2</h2>
@@ -759,7 +782,7 @@ text-align: left;
         </div>
     </div>
 </section>
-<section class="performance-section" id="performance">
+<section class="performance-section dvh-100" id="performance">
   <div class="performance-header">
     <div class="h3 section-eyebrow">Performance</div>
     <h2 class="h1 section-title">Stronger. Faster.</h2>
@@ -820,7 +843,7 @@ text-align: left;
   </div>
 </section>
 <!-- SAFETY (tabs + looped video) -->
-<section class="safety-section" id="safety">
+<section class="safety-section dvh-100" id="safety">
   <div class="safety-header">
     <div class="h3 section-eyebrow">Safety</div>
     <h2 class="h1 section-title">Safety First. Always.</h2>
@@ -940,7 +963,7 @@ text-align: left;
   </figure>
   </div>
 </section>
-
+</main>
 
 <script>
   (function(){
@@ -1638,3 +1661,111 @@ text-align: left;
     window.addEventListener("resize", updateCapBias);
   });
 </script>
+
+
+<script>
+  (function () {
+    // Apply only on touch devices to mimic iOS-native feel
+    const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
+  
+    // Damped spring scroll (iOS-like): configurable mass-spring-damper
+    // Based on underdamped harmonic motion solution.
+    function springInterpolation(t, opts) {
+      const { stiffness = 170, damping = 26, mass = 1 } = opts || {};
+      // Convert to angular frequencies
+      const w0 = Math.sqrt(stiffness / mass);          // undamped natural frequency
+      const zeta = damping / (2 * Math.sqrt(stiffness * mass)); // damping ratio
+      if (zeta >= 1) {
+        // Critically/over-damped fallback to smooth easeOut
+        return 1 - Math.exp(-t * w0);
+      }
+      const wd = w0 * Math.sqrt(1 - zeta * zeta);      // damped natural frequency
+      // Normalized time in seconds (t in [0,1] assumed)
+      const A = 1;
+      const B = (zeta / Math.sqrt(1 - zeta * zeta));
+      // y(t) from 0 -> 1 with slight overshoot depending on zeta
+      return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + B * Math.sin(wd * t));
+    }
+  
+    // Main animator using requestAnimationFrame
+    function springScrollTo(targetY, options) {
+      const {
+        duration = 1200,                 // ms baseline for typical distances
+        stiffness = 180,                 // higher = snappier
+        damping = 24,                    // higher = less overshoot
+        mass = 1,
+        offset = 0                       // e.g., use to account for fixed headers
+      } = options || {};
+  
+      const start = window.scrollY || window.pageYOffset;
+      const end = Math.max(0, Math.min(
+        targetY - offset,
+        document.documentElement.scrollHeight - window.innerHeight
+      ));
+      const distance = end - start;
+      if (Math.abs(distance) < 1) return; // nothing to do
+  
+      // Optionally scale duration with distance for consistent feel
+      const px = Math.abs(distance);
+      const dur = Math.min(1800, Math.max(600, duration * (px / 1200) ** 0.5));
+  
+      let startTime = null;
+      function frame(ts) {
+        if (!startTime) startTime = ts;
+        const t = (ts - startTime) / dur;
+        if (t >= 1) {
+          window.scrollTo(0, end);
+          if (options && typeof options.onDone === 'function') {
+            options.onDone();
+          }
+          return;
+        }
+        // Convert t (0..1) to "seconds" domain for spring math
+        const seconds = t * 1.2; // stretch factor to tune feel
+        const p = springInterpolation(seconds, { stiffness, damping, mass });
+        window.scrollTo(0, start + distance * p);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+  
+    // Convenience: scroll to an element
+    function springScrollToElement(el, opts) {
+      const rect = el.getBoundingClientRect();
+      const targetY = rect.top + window.scrollY;
+      springScrollTo(targetY, opts);
+    }
+  
+    // Auto-bind anchor links like <a href="#section-id">...</a> on touch devices
+    if (isTouch) {
+      document.addEventListener('click', function (e) {
+        const a = e.target.closest('a[href^="#"]');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        const id = href.slice(1);
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        // Optional: account for any top padding you set via scroll-padding-top
+        const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
+        const snapContainer = document.querySelector('.page-snap');
+        if (snapContainer) snapContainer.classList.add('snap-off');
+        springScrollToElement(target, {
+          duration: 1200,
+          stiffness: 220,
+          damping: 30,
+          mass: 1,
+          offset,
+          onDone: () => {
+            if (snapContainer) snapContainer.classList.remove('snap-off');
+          }
+        });
+      }, { passive: false });
+    }
+  
+    // Expose programmatic API if you want to call it elsewhere:
+    window.springScrollTo = springScrollTo;
+    window.springScrollToElement = springScrollToElement;
+  })();
+  </script>
