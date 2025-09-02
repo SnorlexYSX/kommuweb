@@ -37,6 +37,17 @@ stylesheet: products
       .frame-sticky { height: calc(var(--vh, 1vh) * 100) !important; }
     }
 
+    .s-hero,
+    .frame-sticky {
+      height: calc(var(--vh, 1vh) * 100) !important;
+      min-height: calc(var(--vh, 1vh) * 100) !important;
+    }
+    /* Prevent Chrome/Android UI auto-hide from shifting layout */
+    @media (max-width: 1024px){
+      .s-hero { height: calc(var(--vh, 1vh) * 100); min-height: calc(var(--vh, 1vh) * 100); }
+      .frame-sticky { height: calc(var(--vh, 1vh) * 100) !important; }
+    }
+
       /* --- Performance meters --- */
 .perf-meters { max-width: 1100px; margin: 1.25rem auto 0; color:#b2b2b2;
   --meter-label-col: 220px; --meter-gap: 0.1rem; --meter-tip-gap: 20px;
@@ -126,6 +137,20 @@ stylesheet: products
         background-repeat: no-repeat, no-repeat, no-repeat;
       }
       .s1-hero .unit-image-wrapper {
+        width: 100%;
+        display: grid;
+        place-items: center;
+        padding: 6rem 0 3rem;
+      }
+      .s-hero {
+        position: relative;
+        min-height: calc(var(--vh, 1vh) * 100);
+        height: calc(var(--vh, 1vh) * 100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .s-hero .unit-image-wrapper {
         width: 100%;
         display: grid;
         place-items: center;
@@ -663,9 +688,11 @@ text-align: left;
       scroll-padding-top: 10vh;
       scroll-padding-bottom: 12vh;
     }
-    section.dvh-100,
-    section.dvh-110,
-    section.dvh-120 {
+    .performance-section,
+    .safety-section,
+    .perception-tabs,
+    .ports-section,
+    .frame-section{
       scroll-snap-align: start;
     }
   }
@@ -674,6 +701,14 @@ text-align: left;
 
 
   <script>
+    
+    function lockScreenHeight() {
+  document.documentElement.style
+    .setProperty('--vh', window.innerHeight * 0.01 + 'px');
+}
+lockScreenHeight();
+window.addEventListener('resize', lockScreenHeight);
+    
     // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
     document.addEventListener('DOMContentLoaded', function(){
       try {
@@ -721,9 +756,15 @@ text-align: left;
   })();
 </script>
 
+<style>
+  .fullscreen {
+  height: calc(var(--vh, 1vh) * 100);
+}
+</style>
+
 </head>
 <main class="page-snap">
-<section class="ka1s-section dvh-100">
+<section class="ka1s-section fullscreen">
     <div class="module-content s1-hero">
         <div class="unit-image-wrapper">
             <h2 class="h3 text-white">KommuAssist 2</h2>
@@ -782,12 +823,12 @@ text-align: left;
         </div>
     </div>
 </section>
-<section class="performance-section dvh-100" id="performance">
-  <div class="performance-header">
-    <div class="h3 section-eyebrow">Performance</div>
-    <h2 class="h1 section-title">Stronger. Faster.</h2>
-  </div>
-  <div class="module-content">
+<section class="performance-section overflow-y-visible" id="performance">
+  <div class="module-content s-hero"><div class="unit-image-wrapper">
+    <div class="performance-header place-self-start">
+      <div class="h3 section-eyebrow">Performance</div>
+      <h2 class="h1 section-title">Stronger. Faster.</h2>
+    </div>
     <video
       class="s2-video scroll-video"
       playsinline
@@ -841,39 +882,42 @@ text-align: left;
       </div>
     </div>
   </div>
+  </div>
 </section>
 <!-- SAFETY (tabs + looped video) -->
-<section class="safety-section dvh-100" id="safety">
-  <div class="safety-header">
-    <div class="h3 section-eyebrow">Safety</div>
-    <h2 class="h1 section-title">Safety First. Always.</h2>
-  </div>
-
-  <div class="safety-video-wrap">
-    <video class="safety-video" id="safetyVideo"
-           src="{{ '/assets/ka_ani_s3_1.webm' | relative_url }}"
-           autoplay muted loop playsinline
-           aria-label="Safety feature animation">
-    </video>
-  </div>
-
-  <div class="safety-tabs">
-    <div class="safety-tablist" role="tablist" aria-label="Safety features">
-      <button class="h4 font-bold safety-tab " id="safety-tab-attn"  role="tab" aria-selected="true"  aria-controls="safety-panel-attn">Driver Attentiveness Monitoring</button>
-      <button class="h4 font-bold safety-tab" id="safety-tab-failsafe" role="tab" aria-selected="false" aria-controls="safety-panel-failsafe">Fail-Safe Response</button>
-      <button class="h4 font-bold safety-tab" id="safety-tab-steer" role="tab" aria-selected="false" aria-controls="safety-panel-steer">Steering Limit</button>
+<section class="safety-section" id="safety">
+  <div class="module-content s-hero"><div class="unit-image-wrapper">
+    <div class="safety-header place-self-start">
+      <div class="h3 section-eyebrow">Safety</div>
+      <h2 class="h1 section-title">Safety First. Always.</h2>
     </div>
 
-    <div id="safety-panel-attn" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-attn">
-      <p>Using an infrared driver-facing camera, KommuAssist 2 tracks eye movement, head position, and facial cues in real time. If signs of distraction or drowsiness are detected, the system issues audible and visual alerts to bring attention back to the road.</p>
+    <div class="safety-video-wrap">
+      <video class="safety-video" id="safetyVideo"
+             src="{{ '/assets/ka_ani_s3_1.webm' | relative_url }}"
+             autoplay muted loop playsinline
+             aria-label="Safety feature animation">
+      </video>
     </div>
-    <div id="safety-panel-failsafe" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-failsafe" hidden>
-      <p>Continuous self-diagnostics monitor device temperature, camera health, and processing stability. In the event of a critical fault, KommuAssist 2 triggers a fail-safe mode, disabling only its autonomous functions while leaving all manual driving controls fully operational.</p>
+
+    <div class="safety-tabs">
+      <div class="safety-tablist" role="tablist" aria-label="Safety features">
+        <button class="h4 font-bold safety-tab " id="safety-tab-attn"  role="tab" aria-selected="true"  aria-controls="safety-panel-attn">Driver Attentiveness Monitoring</button>
+        <button class="h4 font-bold safety-tab" id="safety-tab-failsafe" role="tab" aria-selected="false" aria-controls="safety-panel-failsafe">Fail-Safe Response</button>
+        <button class="h4 font-bold safety-tab" id="safety-tab-steer" role="tab" aria-selected="false" aria-controls="safety-panel-steer">Steering Limit</button>
+      </div>
+
+      <div id="safety-panel-attn" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-attn">
+        <p>Using an infrared driver-facing camera, KommuAssist 2 tracks eye movement, head position, and facial cues in real time. If signs of distraction or drowsiness are detected, the system issues audible and visual alerts to bring attention back to the road.</p>
+      </div>
+      <div id="safety-panel-failsafe" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-failsafe" hidden>
+        <p>Continuous self-diagnostics monitor device temperature, camera health, and processing stability. In the event of a critical fault, KommuAssist 2 triggers a fail-safe mode, disabling only its autonomous functions while leaving all manual driving controls fully operational.</p>
+      </div>
+      <div id="safety-panel-steer" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-steer" hidden>
+        <p>When the system approaches its maximum steering capability during cornering, an audio warning alerts the driver to take over the wheel, ensuring smooth control and avoiding abrupt disengagements.</p>
+      </div>
     </div>
-    <div id="safety-panel-steer" class="h4 text-gray safety-panel" role="tabpanel" aria-labelledby="safety-tab-steer" hidden>
-      <p>When the system approaches its maximum steering capability during cornering, an audio warning alerts the driver to take over the wheel, ensuring smooth control and avoiding abrupt disengagements.</p>
-    </div>
-  </div>
+  </div></div>
 </section>
 <!-- Full-bleed cockpit section that shrinks into the page frame -->
 <section class="frame-section" id="perception-zoom" data-scale-to="1.50" data-text-in="0.20" data-overscan="0.05" data-cap-bias="-40" data-cap-min-vh="8" data-cap-bottom-pad="160" data-cap-gap-mul="1" data-tab-slow="20">
@@ -925,42 +969,44 @@ text-align: left;
 </section>
 <!-- PORTS & CONNECTIVITY (static image) -->
 <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
-  <div class="ports-sticky">
-    <div class="ports-header">
-    <div class="h3 section-eyebrow">Ports and Connectivity</div>
-    <h2 class="h1 section-title">Seamless Integration.</h2>
-    <p class="h4 font-bold text-gray text-left">
-      Equipped with <span class="h4 font-bold text-white">LTE, GPS, Wi-Fi, Bluetooth and local storage</span>, this unit is engineered
-      for low-latency connection with KommuAI app, ensuring seamless data exchange and
-      control between devices.
-    </p> 
-  </div>
-
-  <figure class="ports-figure">
-    <div class="ports-stage">
-      <img
-        class="ports-image"
-        src="{{ '/img/ka1s/s5.png' | relative_url }}"
-        alt="KommuAssist ports and labels: GPS, Wi-Fi & Bluetooth, Speaker, Nano SIM, MicroSD, Diagnostic USB-C, 12V USB-C"
-        loading="lazy"
-      />
-      <div class="ports-overlay" aria-hidden="true">
-<!-- Top labels -->
-<span class="port-label top" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00" data-anchor-y="28">GPS</span>
-<span class="port-label top" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi &amp; Bluetooth</span>
-<span class="port-label top" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
-<!-- Bottom labels -->
-<span class="port-label bottom" style="left: 32%; bottom: 5%; " data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
-<span class="port-label bottom" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
-<span class="port-label bottom" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">
-    Diagnostic<br><span>USB‑C</span>
-</span>
-<span class="port-label bottom" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">
-  12V USB‑C<br><span>(from Relay)</span>
-</span>
-      </div>
+  <div class="module-content s1-hero"><div class="unit-image-wrapper">
+    <div class="ports-sticky">
+      <div class="ports-header">
+      <div class="h3 section-eyebrow">Ports and Connectivity</div>
+      <h2 class="h1 section-title">Seamless Integration.</h2>
+      <p class="h4 font-bold text-gray text-left">
+        Equipped with <span class="h4 font-bold text-white">LTE, GPS, Wi-Fi, Bluetooth and local storage</span>, this unit is engineered
+        for low-latency connection with KommuAI app, ensuring seamless data exchange and
+        control between devices.
+      </p> 
     </div>
-  </figure>
+
+    <figure class="ports-figure">
+      <div class="ports-stage">
+        <img
+          class="ports-image"
+          src="{{ '/img/ka1s/s5.png' | relative_url }}"
+          alt="KommuAssist ports and labels: GPS, Wi-Fi & Bluetooth, Speaker, Nano SIM, MicroSD, Diagnostic USB-C, 12V USB-C"
+          loading="lazy"
+        />
+        <div class="ports-overlay" aria-hidden="true">
+  <!-- Top labels -->
+  <span class="port-label top" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00" data-anchor-y="28">GPS</span>
+  <span class="port-label top" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi &amp; Bluetooth</span>
+  <span class="port-label top" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
+  <!-- Bottom labels -->
+  <span class="port-label bottom" style="left: 32%; bottom: 5%; " data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
+  <span class="port-label bottom" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
+  <span class="port-label bottom" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">
+      Diagnostic<br><span>USB‑C</span>
+  </span>
+  <span class="port-label bottom" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">
+    12V USB‑C<br><span>(from Relay)</span>
+  </span>
+        </div>
+      </div>
+    </figure>
+    </div>
   </div>
 </section>
 </main>
