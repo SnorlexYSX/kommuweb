@@ -20,7 +20,7 @@
     left: 0;
     width: var(--width-video);
     height: var(--height-video);
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 #videoplayer{
@@ -157,11 +157,6 @@
     }
 }
     
-body,
-html {
-    width: 100%;
-    height: 100%;
-}
 
 
 .lead {
