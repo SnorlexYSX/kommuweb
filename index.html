@@ -159,6 +159,9 @@ title: Kommu
     section.dvh-120 {
       scroll-snap-align: start;
     }
+    section.dvh-110 {
+      min-height: 750px;
+    }
   }
   /* Horizontal carousel controls (Apple-style) */
   .carousel-wrap { position: relative; }
@@ -190,15 +193,9 @@ title: Kommu
   }
 
   @media (max-height: 1200px) and (min-width: 641px) {
-    section.car-compatible {
-      min-height: 1200px;
-      height: auto; /* override dvh-100 fixed height so min-height can apply */
-    }
-  } 
-
-  @media (max-height: 1100px) and (min-width: 1101px) {
-    .hero-overlay {
-      padding-bottom: 2rem; /* pb-8 */
+    .brand-logos-grid {
+      width: 100% !important;
+      max-width: none !important; /* override Tailwind's max-w-[720px] */
     }
   }
 </style>
@@ -232,7 +229,7 @@ title: Kommu
 </section>
 
 
-<section class="dvh-120 flex items-center">
+<section class="dvh-110 flex items-center">
   <div class="max-w-6xl mx-auto my-auto px-4">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
@@ -284,7 +281,7 @@ title: Kommu
   </div>
 </section>
 
-<section class="dvh-120 flex items-center">
+<section class="dvh-110 flex items-center">
   <div class="max-w-6xl mx-auto px-4">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
@@ -349,7 +346,7 @@ title: Kommu
         href="{{ '/support' | relative_url }}"
         class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full my-12 btn-check-models"
       >Check Car Models</a>
-      <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 max-w-[720px] mx-auto brand-logos-grid">
+      <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 mx-auto max-w-[720px] brand-logos-grid">
         <!-- logos -->
         <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="brand-logo object-contain" />
         <img src="{{ '/img/main/proton.png'  | relative_url }}" alt="Proton"  class="brand-logo object-contain" />
