@@ -165,26 +165,34 @@ title: Kommu
   .h-scroll { scroll-behavior: smooth; }
   .scroll-btn {
     position: absolute;
-    bottom: -12px; /* sit just under the cards row */
-    width: 36px; height: 36px; border-radius: 9999px;
+    bottom: -30px; /* sit just under the cards row */
+    width: 42px; height: 42px; border-radius: 9999px;
     display: grid; place-items: center;
-    background: rgb(255 255 255 / 0.9);
+    background: rgb(255 255 255 / 0.6);
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
     border: 1px solid rgb(0 0 0 / 0.1);
     z-index: 10;
     cursor: pointer;
     transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
   }
-  .scroll-btn:hover { transform: scale(1.06); background: #fff; }
+  .scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
   .scroll-btn:active { transform: scale(0.98); }
   .scroll-btn[disabled] { opacity: .4; pointer-events: none; }
-  .scroll-btn.prev { left: 50%; transform: translateX(calc(-50% - 24px)); }
-  .scroll-btn.next { left: 50%; transform: translateX(calc(-50% + 24px)); }
+  .scroll-btn.next { right: 1.25rem; transform: none; }
+  .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; } /* 36px button + 8px gap */
   .scroll-btn svg { width: 18px; height: 18px; }
 
   @media (max-width: 500px) {
-    .scroll-btn { bottom: -8px; width: 32px; height: 32px; }
+    .scroll-btn { bottom: -8px; width: 36px; height: 36px; }
     .scroll-btn svg { width: 16px; height: 16px; }
+    .scroll-btn.next { right: 0.5rem; }
+    .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); } /* 32px button + 8px gap */
+  }
+  @media (max-height: 1200px) and (min-width: 641px) {
+    section.car-compatible {
+      min-height: 1200px;
+      height: auto; /* override dvh-100 fixed height so min-height can apply */
+    }
   }
 </style>
 
@@ -196,7 +204,7 @@ title: Kommu
     autoplay muted loop playsinline
     src="{{ "/assets/ytvid.mp4" | relative_url }}"
   ></video>
-  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 md:pb-40 text-center px-4 hero-overlay">
+  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 text-center px-4 hero-overlay">
     <h2 class="h2 text-white">
       Elevate your driving experience with L2+ ADAS
     </h2>
@@ -226,7 +234,7 @@ title: Kommu
     </p>
     
    <div class="carousel-wrap">
-     <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-10" id="hw-cards">
+     <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-14" id="hw-cards">
       <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
         <h4 class="h3 font-bold text-white">RK3588 at the core.</h4>
@@ -278,7 +286,7 @@ title: Kommu
     </p>
     
     <div class="carousel-wrap">
-      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-10" id="sw-cards">
+      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
       <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
         <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
@@ -326,7 +334,7 @@ title: Kommu
 
 
 <!-- COMPATIBILITY -->
-<section class="dvh-100 flex items-center">
+<section class="dvh-100 flex items-center car-compatible">
   <div class="max-w-6xl mx-auto px-4">
     <div class="bg-card rounded-2xl py-8 px-12 md:py-12 md:px-16 text-center text-white">
       <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
@@ -610,6 +618,25 @@ title: Kommu
     const nextBtn = wrapper.querySelector('.scroll-btn.next');
     if (!prevBtn || !nextBtn) return;
 
+    // Measure a single card and the horizontal gap
+    const sampleCard = wrapper.querySelector('.fixed-card');
+    const getStep = () => {
+      const w = sampleCard ? sampleCard.getBoundingClientRect().width : 0;
+      const cs = getComputedStyle(scroller);
+      // gap can be defined as 'gap' or 'column-gap' depending on the browser
+      const gapStr = cs.columnGap || cs.gap || '0px';
+      const gap = parseFloat(gapStr) || 0;
+      return Math.round(w + gap);
+    };
+
+    // Clamp utility and alignment to nearest step
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const aligned = (x) => {
+      const step = getStep();
+      if (!step) return x;
+      return Math.round(x / step) * step;
+    };
+
     const updateDisabled = () => {
       const max = scroller.scrollWidth - scroller.clientWidth;
       const x = scroller.scrollLeft;
@@ -617,9 +644,18 @@ title: Kommu
       nextBtn.disabled = x >= max - 4;
     };
 
-    const step = () => Math.max(240, Math.round(scroller.clientWidth * 0.85));
-    prevBtn.addEventListener('click', () => scroller.scrollBy({ left: -step(), behavior: 'smooth' }));
-    nextBtn.addEventListener('click', () => scroller.scrollBy({ left:  step(), behavior: 'smooth' }));
+    const scrollByStep = (dir) => {
+      const step = getStep();
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const from = scroller.scrollLeft;
+      // Move exactly one step, then align to the nearest line
+      let target = aligned(from + dir * step);
+      target = clamp(target, 0, max);
+      scroller.scrollTo({ left: target, behavior: 'smooth' });
+    };
+
+    prevBtn.addEventListener('click', () => scrollByStep(-1));
+    nextBtn.addEventListener('click', () => scrollByStep(1));
 
     scroller.addEventListener('scroll', updateDisabled, { passive: true });
     window.addEventListener('resize', updateDisabled);

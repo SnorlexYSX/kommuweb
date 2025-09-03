@@ -69,6 +69,35 @@ title: Store | kommu.ai
   .product-card img.img-loaded {
     opacity: 1;
   }
+
+  /* Horizontal carousel controls (Apple-style) */
+  .carousel-wrap { position: relative; }
+  .h-scroll { scroll-behavior: smooth; }
+  .scroll-btn {
+    position: absolute;
+    bottom: -30px; /* sit just under the cards row */
+    width: 42px; height: 42px; border-radius: 9999px;
+    display: grid; place-items: center;
+    background: rgb(255 255 255 / 0.6);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+    border: 1px solid rgb(0 0 0 / 0.1);
+    z-index: 10;
+    cursor: pointer;
+    transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+  }
+  .scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
+  .scroll-btn:active { transform: scale(0.98); }
+  .scroll-btn[disabled] { opacity: .4; pointer-events: none; }
+  .scroll-btn.next { right: 1.25rem; transform: none; }
+  .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; }
+  .scroll-btn svg { width: 18px; height: 18px; }
+
+  @media (max-width: 500px) {
+    .scroll-btn { bottom: -12px; width: 36px; height: 36px; }
+    .scroll-btn svg { width: 16px; height: 16px; }
+    .scroll-btn.next { right: 0.5rem; }
+    .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); }
+  }
 </style>
 <style>
 @media (max-width: 500px) {
@@ -242,29 +271,91 @@ document.addEventListener("DOMContentLoaded", () => {
   {% assign categories = "Hardware,Cables & connectors,Others" | split: "," %}
   {% for category in categories %}
     <h3 class="h3 mt-4 mb-4 text-gray-300">{{ category }}</h3>
-    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible gap-8 scrollbar-hide full-bleed-row row-align pb-10">
-      {% for item in site.data.products %}
-        {% if item.category == category %}
-          <div onclick='openModal({
-            name: "{{ item.name }}",
-            prices: {{ item.prices | jsonify }},
-            image: "{{ item.image }}",
-            description: "{{ item.description }}",
-            includes: {{ item.includes | jsonify }}
-            ,dropdown: {{ item.dropdown | jsonify }}
-          })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer fixed-card transition-transform" data-prices='{{ item.prices | jsonify }}'>
-            <div class="h-[70%] flex items-center justify-center p-2">
-              <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="max-h-full object-contain rounded">
+    <div class="carousel-wrap">
+      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-8 scrollbar-hide full-bleed-row row-align pb-14" id="store-cards-{{ forloop.index0 }}">
+        {% for item in site.data.products %}
+          {% if item.category == category %}
+            <div onclick='openModal({
+              name: "{{ item.name }}",
+              prices: {{ item.prices | jsonify }},
+              image: "{{ item.image }}",
+              description: "{{ item.description }}",
+              includes: {{ item.includes | jsonify }}
+              ,dropdown: {{ item.dropdown | jsonify }}
+            })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer fixed-card transition-transform" data-prices='{{ item.prices | jsonify }}'>
+              <div class="h-[70%] flex items-center justify-center p-2">
+                <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="max-h-full object-contain rounded">
+              </div>
+              <div class="h-[30%] flex flex-col justify-center">
+                <div class="h4 font-bold text-white">{{ item.name }}</div>
+                <div class="h5 text-gray-300 product-price">Loading...</div>
+              </div>
             </div>
-            <div class="h-[30%] flex flex-col justify-center">
-              <div class="h4 font-bold text-white">{{ item.name }}</div>
-              <div class="h5 text-gray-300 product-price">Loading...</div>
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="scroll-btn prev" type="button" aria-label="Scroll left">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="scroll-btn next" type="button" aria-label="Scroll right">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
   {% endfor %}
+</div>
+</section>
+
+<script>
+(function(){
+  function bindScrollButtons(wrapper) {
+    const scroller = wrapper.querySelector('.h-scroll');
+    if (!scroller) return;
+    const prevBtn = wrapper.querySelector('.scroll-btn.prev');
+    const nextBtn = wrapper.querySelector('.scroll-btn.next');
+    if (!prevBtn || !nextBtn) return;
+
+    const sampleCard = wrapper.querySelector('.fixed-card');
+    const getStep = () => {
+      const w = sampleCard ? sampleCard.getBoundingClientRect().width : 0;
+      const cs = getComputedStyle(scroller);
+      const gapStr = cs.columnGap || cs.gap || '0px';
+      const gap = parseFloat(gapStr) || 0;
+      return Math.round(w + gap);
+    };
+
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const aligned = (x) => {
+      const step = getStep();
+      if (!step) return x;
+      return Math.round(x / step) * step;
+    };
+
+    const updateDisabled = () => {
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const x = scroller.scrollLeft;
+      prevBtn.disabled = x <= 4;
+      nextBtn.disabled = x >= max - 4;
+    };
+
+    const scrollByStep = (dir) => {
+      const step = getStep();
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const from = scroller.scrollLeft;
+      let target = aligned(from + dir * step);
+      target = clamp(target, 0, max);
+      scroller.scrollTo({ left: target, behavior: 'smooth' });
+    };
+
+    prevBtn.addEventListener('click', () => scrollByStep(-1));
+    nextBtn.addEventListener('click', () => scrollByStep(1));
+    scroller.addEventListener('scroll', updateDisabled, { passive: true });
+    window.addEventListener('resize', updateDisabled);
+    updateDisabled();
+  }
+
+  document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
+})();
+</script>
   </div>
 </section>
 
