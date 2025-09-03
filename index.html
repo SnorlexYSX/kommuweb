@@ -170,7 +170,7 @@ title: Kommu
     display: grid; place-items: center;
     background: rgb(255 255 255 / 0.6);
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
-    border: 1px solid rgb(0 0 0 / 0.1);
+    border: 0;
     z-index: 10;
     cursor: pointer;
     transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
@@ -188,10 +188,17 @@ title: Kommu
     .scroll-btn.next { right: 0.5rem; }
     .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); } /* 32px button + 8px gap */
   }
+
   @media (max-height: 1200px) and (min-width: 641px) {
     section.car-compatible {
       min-height: 1200px;
       height: auto; /* override dvh-100 fixed height so min-height can apply */
+    }
+  } 
+
+  @media (max-height: 1100px) and (min-width: 1101px) {
+    .hero-overlay {
+      padding-bottom: 2rem; /* pb-8 */
     }
   }
 </style>
