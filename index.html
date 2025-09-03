@@ -23,35 +23,14 @@ title: Kommu
     gap: 3.5rem;
   }
 
-  @media (max-width: 1200px) {
-    .row-align { 
-      gap: 2.5rem;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .row-align { 
-      gap: 1.5rem;
-    }
-  }
-
   html, body { overflow-x: hidden; }
 
   .fixed-card {
     width: 350px;
     min-width: 350px;
     max-width: 350px;
-    
   }
-  @media (max-width: 1200px) {
-    .fixed-card {
-      width: 250px;
-      min-width: 250px;
-      max-width: 250px;
-    }
-  }
-
-  @media (max-width: 389px) {
+  @media (max-width: 380px) {
     .fixed-card {
       width: 200px;
       min-width: 200px;
@@ -59,41 +38,12 @@ title: Kommu
     }
   }
 
-  .section-padding-y{
-    padding-top: 10rem;
-    padding-bottom: 10rem;
-  }
-
-  @media (max-width: 1200px) {
-    .section-padding-y {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    }
-  }
-
   .brand-logo {
-    width: 7.5rem;   /* 150px */
+    width: 7.5rem;   
     height: auto;
   }
 
-  @media (max-width: 1200px) {
-    .brand-logo {
-      width: 6rem; /* 100px */
-    }
-  }
-
-  @media (max-width: 500px) {
-    .brand-logos-grid {
-      display: grid !important;
-      grid-template-columns: repeat(2, 1fr);
-      justify-items: center;
-      gap: 0.5rem;
-    }
-    .hero-overlay {
-      padding-bottom: 3rem; /* pb-12 */
-    }
-  }
-
+  /*Whatsapp Chat Bot button*/
   .whatsapp-float {
     position: fixed;
     bottom: 40px;
@@ -118,50 +68,18 @@ title: Kommu
   }
 
   .whatsapp-float i {
-  color: rgb(255 255 255 / 0.6);; 
+    color: rgb(255 255 255 / 0.6); 
   }
 
   .whatsapp-float:hover i {
-  color: rgb(255 255 255 / 0.8);;
+    color: rgb(255 255 255 / 0.8);
   }
 
-  @media (max-width: 768px) {
-    .whatsapp-float {
-      bottom: 20px;
-      right: 20px;
-    }
-  }
-
-@media (max-width: 500px) {
-  .btn-check-models {
-    margin-top: 2rem; /* my-8 */
-    margin-bottom: 2rem; /* my-8 */
-  }
-}
 
   /* --- Scroll Snap (full-screen sections) --- */
   /* Ensure each hero/feature section fills the viewport and snaps cleanly */
-  .dvh-100 {
-    height: 100dvh;   /* dynamic viewport height to avoid iOS URL bar issues */
-  }
   .snap-off {
     scroll-snap-type: none !important;
-  }
-  @media (max-width: 768px) {
-    .page-snap {
-      scroll-snap-type: y proximity;
-      scroll-behavior: smooth; /* gentle anchor jumps */
-      scroll-padding-top: 10vh;
-      scroll-padding-bottom: 12vh;
-    }
-    section.dvh-100,
-    section.dvh-110,
-    section.dvh-120 {
-      scroll-snap-align: start;
-    }
-    section.dvh-110 {
-      min-height: 900px;
-    }
   }
   /* Horizontal carousel controls (Apple-style) */
   .carousel-wrap { position: relative; }
@@ -185,12 +103,69 @@ title: Kommu
   .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; } /* 36px button + 8px gap */
   .scroll-btn svg { width: 18px; height: 18px; }
 
-  @media (max-width: 500px) {
+
+  /* --- Consolidated Breakpoints --- */
+  @media (max-width: 1280px) {
+    .row-align { 
+      gap: 2.5rem;
+    }
+    .fixed-card {
+      width: 250px;
+      min-width: 250px;
+      max-width: 250px;
+    }
+    .brand-logo {
+      width: 6rem; /* 100px */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .row-align { 
+      gap: 1.5rem;
+    }
+    .brand-logos-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      gap: 0.5rem;
+    }
+    .hero-overlay {
+      padding-bottom: 3rem; /* pb-12 */
+    }
+    .whatsapp-float {
+      bottom: 20px;
+      right: 20px;
+    }
+    .btn-check-models {
+      margin-top: 2rem; /* my-8 */
+      margin-bottom: 2rem; /* my-8 */
+    }
+    .page-snap {
+      scroll-snap-type: y proximity;
+      scroll-behavior: smooth; /* gentle anchor jumps */
+      scroll-padding-top: 10vh;
+      scroll-padding-bottom: 12vh;
+    }
+    section.dvh-100,
+    section.dvh-110,
+    section.dvh-120 {
+      scroll-snap-align: start;
+    }
+    section.dvh-110 {
+      min-height: 900px;
+    }
     .scroll-btn { bottom: -8px; width: 36px; height: 36px; }
     .scroll-btn svg { width: 16px; height: 16px; }
     .scroll-btn.next { right: 0.5rem; }
     .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); } /* 32px button + 8px gap */
+    .software-section {
+      min-height: 900px;
+    }
+    .hardware-section {
+      min-height: 900px;
+    }
   }
+
 
 @media (max-height: 1100px) and (min-width: 1101px) {
   .hero-overlay {
@@ -204,16 +179,7 @@ title: Kommu
     min-height: 1100px;
   }
 }
-
-@media (max-width: 550px) {
-  .software-section {
-    min-height: 900px;
-  }
-  .hardware-section {
-    min-height: 900px;
-  }
-}
-
+  
 @media (max-height: 1200px) and (min-width: 641px) {
   .brand-logos-grid {
     width: 100% !important;
@@ -222,23 +188,24 @@ title: Kommu
 }
 
 @media (max-height: 1200px) and (min-width: 641px) {
-  section.car-compatible {
+  .car-compatible-section {
     min-height: 900px;
     height: auto; /* override dvh-100 fixed height so min-height can apply */
   }
 }
 
+/*Lock content height while browser UI hide/show*/
 :root { --vh: 1vh; }
-
 .hp1-content-height{
   min-height: calc(var(--vh, 1vh) * 100);
 }
-
 .hp2-content-height{
-  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: calc(var(--vh, 1vh) * 80);
 }
-
 .hp3-content-height{
+  min-height: calc(var(--vh, 1vh) * 80);
+}
+.hp4-content-height{
   min-height: calc(var(--vh, 1vh) * 100);
 }
 
@@ -257,7 +224,7 @@ title: Kommu
   })();
 </script>
 
-
+<!-- HOME VIDEO -->
 <main class="page-snap">
 <section id="home" class="relative overflow-hidden">
   <div class="hp1-content-height">
@@ -287,10 +254,9 @@ title: Kommu
   </div>
 </section>
 
-
+<!-- HARDWARE -->
 <section class="flex hardware-section">
-  <div class="hp2-content-height">
-  <div class="max-w-6xl mx-auto mt-40 px-4">
+  <div class="max-w-6xl mx-auto mt-40 px-4 hp2-content-height">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -339,12 +305,11 @@ title: Kommu
     </button>
   </div>
   </div>
-  </div>
 </section>
 
+<!-- SOFTWARE -->
 <section class="flex software-section">
-  <div class="hp3-content-height">
-  <div class="max-w-6xl mx-auto mt-20 px-4">
+  <div class="max-w-6xl mx-auto mt-20 mb-10 px-4 hp3-content-height">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -394,15 +359,11 @@ title: Kommu
     </button>
   </div>
   </div>
-  </div>
 </section>
 
-
-
-
 <!-- COMPATIBILITY -->
-<section class="dvh-100 flex items-center car-compatible">
-  <div class="max-w-6xl mx-auto px-4">
+<section class="flex items-center car-compatible-section">
+  <div class="max-w-6xl mx-auto px-4 hp4-content-height">
     <div class="bg-card rounded-2xl py-8 px-12 md:py-12 md:px-16 text-center text-white">
       <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
       <a
@@ -466,111 +427,6 @@ title: Kommu
 </a>
 </main>
 
-<script>
-(function () {
-  // Apply only on touch devices to mimic iOS-native feel
-  const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
-
-  // Damped spring scroll (iOS-like): configurable mass-spring-damper
-  // Based on underdamped harmonic motion solution.
-  function springInterpolation(t, opts) {
-    const { stiffness = 170, damping = 26, mass = 1 } = opts || {};
-    // Convert to angular frequencies
-    const w0 = Math.sqrt(stiffness / mass);          // undamped natural frequency
-    const zeta = damping / (2 * Math.sqrt(stiffness * mass)); // damping ratio
-    if (zeta >= 1) {
-      // Critically/over-damped fallback to smooth easeOut
-      return 1 - Math.exp(-t * w0);
-    }
-    const wd = w0 * Math.sqrt(1 - zeta * zeta);      // damped natural frequency
-    // Normalized time in seconds (t in [0,1] assumed)
-    const A = 1;
-    const B = (zeta / Math.sqrt(1 - zeta * zeta));
-    // y(t) from 0 -> 1 with slight overshoot depending on zeta
-    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + B * Math.sin(wd * t));
-  }
-
-  // Main animator using requestAnimationFrame
-  function springScrollTo(targetY, options) {
-    const {
-      duration = 1200,                 // ms baseline for typical distances
-      stiffness = 180,                 // higher = snappier
-      damping = 24,                    // higher = less overshoot
-      mass = 1,
-      offset = 0                       // e.g., use to account for fixed headers
-    } = options || {};
-
-    const start = window.scrollY || window.pageYOffset;
-    const end = Math.max(0, Math.min(
-      targetY - offset,
-      document.documentElement.scrollHeight - window.innerHeight
-    ));
-    const distance = end - start;
-    if (Math.abs(distance) < 1) return; // nothing to do
-
-    // Optionally scale duration with distance for consistent feel
-    const px = Math.abs(distance);
-    const dur = Math.min(1800, Math.max(600, duration * (px / 1200) ** 0.5));
-
-    let startTime = null;
-    function frame(ts) {
-      if (!startTime) startTime = ts;
-      const t = (ts - startTime) / dur;
-      if (t >= 1) {
-        window.scrollTo(0, end);
-        if (options && typeof options.onDone === 'function') {
-          options.onDone();
-        }
-        return;
-      }
-      // Convert t (0..1) to "seconds" domain for spring math
-      const seconds = t * 1.2; // stretch factor to tune feel
-      const p = springInterpolation(seconds, { stiffness, damping, mass });
-      window.scrollTo(0, start + distance * p);
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
-
-  // Convenience: scroll to an element
-  function springScrollToElement(el, opts) {
-    const rect = el.getBoundingClientRect();
-    const targetY = rect.top + window.scrollY;
-    springScrollTo(targetY, opts);
-  }
-
-  // Auto-bind anchor links like <a href="#section-id">...</a> on touch devices
-  if (isTouch) {
-    document.addEventListener('click', function (e) {
-      const a = e.target.closest('a[href^="#"]');
-      if (!a) return;
-      const href = a.getAttribute('href');
-      const id = href.slice(1);
-      if (!id) return;
-      const target = document.getElementById(id);
-      if (!target) return;
-      e.preventDefault();
-      // Optional: account for any top padding you set via scroll-padding-top
-      const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
-      const snapContainer = document.querySelector('.page-snap');
-      if (snapContainer) snapContainer.classList.add('snap-off');
-      springScrollToElement(target, {
-        duration: 1200,
-        stiffness: 220,
-        damping: 30,
-        mass: 1,
-        offset,
-        onDone: () => {
-          if (snapContainer) snapContainer.classList.remove('snap-off');
-        }
-      });
-    }, { passive: false });
-  }
-
-  // Expose programmatic API if you want to call it elsewhere:
-  window.springScrollTo = springScrollTo;
-  window.springScrollToElement = springScrollToElement;
-</script>
 
 <script>
 (function () {
