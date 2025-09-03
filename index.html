@@ -46,8 +46,12 @@ title: Kommu
   /*Whatsapp Chat Bot button*/
   .whatsapp-float {
     position: fixed;
-    bottom: 40px;
-    right: 40px;
+    /* base offset from the design baseline */
+    bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+    right: 32px;
+    /* counter the dynamic 100vh change so the button doesn't jump */
+    transform: translateY(calc(100vh - (var(--vh, 1vh) * 100)));
+    will-change: transform;
     z-index: 1000;
     width: 60px;
     height: 60px;
@@ -147,8 +151,9 @@ title: Kommu
       padding-bottom: 3rem; /* pb-12 */
     }
     .whatsapp-float {
-      bottom: 20px;
-      right: 20px;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      right: 16px;
+      transform: translateY(calc(100vh - (var(--vh, 1vh) * 100)));
     }
     .btn-check-models {
       margin-top: 2rem; /* my-8 */
