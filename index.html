@@ -214,25 +214,53 @@ title: Kommu
   }
 }
 
-  @media (max-height: 1200px) and (min-width: 641px) {
-    .brand-logos-grid {
-      width: 100% !important;
-      max-width: none !important; /* override Tailwind's max-w-[720px] */
-    }
+@media (max-height: 1200px) and (min-width: 641px) {
+  .brand-logos-grid {
+    width: 100% !important;
+    max-width: none !important; /* override Tailwind's max-w-[720px] */
   }
+}
 
-  @media (max-height: 1200px) and (min-width: 641px) {
-    section.car-compatible {
-      min-height: 900px;
-      height: auto; /* override dvh-100 fixed height so min-height can apply */
-    }
+@media (max-height: 1200px) and (min-width: 641px) {
+  section.car-compatible {
+    min-height: 900px;
+    height: auto; /* override dvh-100 fixed height so min-height can apply */
   }
+}
+
+:root { --vh: 1vh; }
+
+.hp1-content-height{
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.hp2-content-height{
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.hp3-content-height{
+  min-height: calc(var(--vh, 1vh) * 100);
+}
 
 </style>
 
+<script>
+  // Hard-lock --vh once; only refresh on orientation change
+  (function lockOnce() {
+    const apply = () => {
+      const vh = window.innerHeight * 0.01; // 1% of current layout viewport
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    };
+    apply();
+    // Update only on major changes like device rotation
+    window.addEventListener('orientationchange', apply);
+  })();
+</script>
+
 
 <main class="page-snap">
-<section id="home" class="relative dvh-100 overflow-hidden">
+<section id="home" class="relative overflow-hidden">
+  <div class="hp1-content-height">
   <video
     class="absolute inset-0 w-full h-full object-cover"
     autoplay muted loop playsinline
@@ -256,10 +284,12 @@ title: Kommu
       >Learn More ›</a>
     </div>
   </div>
+  </div>
 </section>
 
 
-<section class="dvh-100 flex hardware-section">
+<section class="flex hardware-section">
+  <div class="hp2-content-height">
   <div class="max-w-6xl mx-auto mt-40 px-4">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
@@ -309,9 +339,11 @@ title: Kommu
     </button>
   </div>
   </div>
+  </div>
 </section>
 
-<section class="dvh-100 flex software-section">
+<section class="flex software-section">
+  <div class="hp3-content-height">
   <div class="max-w-6xl mx-auto mt-20 px-4">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
@@ -360,6 +392,7 @@ title: Kommu
     <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="sw-cards">
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
+  </div>
   </div>
   </div>
 </section>
