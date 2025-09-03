@@ -160,7 +160,7 @@ title: Kommu
       scroll-snap-align: start;
     }
     section.dvh-110 {
-      min-height: 750px;
+      min-height: 900px;
     }
   }
   /* Horizontal carousel controls (Apple-style) */
@@ -192,12 +192,26 @@ title: Kommu
     .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); } /* 32px button + 8px gap */
   }
 
+@media (max-height: 1100px) and (min-width: 1101px) {
+  .hero-overlay {
+    padding-bottom: 2rem; /* pb-8 */
+  }
+}
+
   @media (max-height: 1200px) and (min-width: 641px) {
     .brand-logos-grid {
       width: 100% !important;
       max-width: none !important; /* override Tailwind's max-w-[720px] */
     }
   }
+
+  @media (max-height: 1200px) and (min-width: 641px) {
+    section.car-compatible {
+      min-height: 900px;
+      height: auto; /* override dvh-100 fixed height so min-height can apply */
+    }
+  }
+
 </style>
 
 
