@@ -103,6 +103,20 @@ title: Kommu
   .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; } /* 36px button + 8px gap */
   .scroll-btn svg { width: 18px; height: 18px; }
 
+  /*Lock content height while browser UI hide/show*/
+:root { --vh: 1vh; }
+.hp1-content-height{
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+.hp2-content-height{
+  min-height: calc(var(--vh, 1vh) * 80);
+}
+.hp3-content-height{
+  min-height: calc(var(--vh, 1vh) * 80);
+}
+.hp4-content-height{
+  min-height: calc(var(--vh, 1vh) * 100);
+}
 
   /* --- Consolidated Breakpoints --- */
   @media (max-width: 1280px) {
@@ -164,6 +178,9 @@ title: Kommu
     .hardware-section {
       min-height: 900px;
     }
+    .hp4-content-height{
+      min-height: calc(var(--vh, 1vh) * 80);
+    }
   }
 
 /* IPAD HORIZONTAL */
@@ -187,20 +204,7 @@ title: Kommu
 
 
 
-/*Lock content height while browser UI hide/show*/
-:root { --vh: 1vh; }
-.hp1-content-height{
-  min-height: calc(var(--vh, 1vh) * 100);
-}
-.hp2-content-height{
-  min-height: calc(var(--vh, 1vh) * 80);
-}
-.hp3-content-height{
-  min-height: calc(var(--vh, 1vh) * 80);
-}
-.hp4-content-height{
-  min-height: calc(var(--vh, 1vh) * 100);
-}
+
 
   /* Vignette overlay for home hero video (match ka2 s1) */
   .home-vignette {
