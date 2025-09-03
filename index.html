@@ -196,6 +196,22 @@ title: Kommu
   .hero-overlay {
     padding-bottom: 2rem; /* pb-8 */
   }
+  .software-section {
+    min-height: 1100px;
+    align-items: start;
+  }
+  .hardware-section {
+    min-height: 1100px;
+  }
+}
+
+@media (max-width: 550px) {
+  .software-section {
+    min-height: 900px;
+  }
+  .hardware-section {
+    min-height: 900px;
+  }
 }
 
   @media (max-height: 1200px) and (min-width: 641px) {
@@ -243,8 +259,8 @@ title: Kommu
 </section>
 
 
-<section class="dvh-110 flex items-center">
-  <div class="max-w-6xl mx-auto my-auto px-4">
+<section class="dvh-100 flex hardware-section">
+  <div class="max-w-6xl mx-auto mt-40 px-4">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -295,8 +311,8 @@ title: Kommu
   </div>
 </section>
 
-<section class="dvh-110 flex items-center">
-  <div class="max-w-6xl mx-auto px-4">
+<section class="dvh-100 flex software-section">
+  <div class="max-w-6xl mx-auto mt-20 px-4">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
     <p class="h4 font-bold text-gray mb-8">
