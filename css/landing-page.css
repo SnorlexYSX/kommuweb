@@ -477,6 +477,7 @@ html {
 }
 
 footer {
+    margin-top: 3rem;
     padding: 2rem 0;
     background-color: #1b1b1b;
 }
