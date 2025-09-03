@@ -160,6 +160,32 @@ title: Kommu
       scroll-snap-align: start;
     }
   }
+  /* Horizontal carousel controls (Apple-style) */
+  .carousel-wrap { position: relative; }
+  .h-scroll { scroll-behavior: smooth; }
+  .scroll-btn {
+    position: absolute;
+    bottom: -12px; /* sit just under the cards row */
+    width: 36px; height: 36px; border-radius: 9999px;
+    display: grid; place-items: center;
+    background: rgb(255 255 255 / 0.9);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+    border: 1px solid rgb(0 0 0 / 0.1);
+    z-index: 10;
+    cursor: pointer;
+    transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+  }
+  .scroll-btn:hover { transform: scale(1.06); background: #fff; }
+  .scroll-btn:active { transform: scale(0.98); }
+  .scroll-btn[disabled] { opacity: .4; pointer-events: none; }
+  .scroll-btn.prev { left: 50%; transform: translateX(calc(-50% - 24px)); }
+  .scroll-btn.next { left: 50%; transform: translateX(calc(-50% + 24px)); }
+  .scroll-btn svg { width: 18px; height: 18px; }
+
+  @media (max-width: 500px) {
+    .scroll-btn { bottom: -8px; width: 32px; height: 32px; }
+    .scroll-btn svg { width: 16px; height: 16px; }
+  }
 </style>
 
 
@@ -199,7 +225,8 @@ title: Kommu
       Whole new level of edge computing with 6 TOPS NPU and 3× automotive‑grade cameras. Designed for reliability, built for fast neural processing.
     </p>
     
-    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-10">
+   <div class="carousel-wrap">
+     <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-10" id="hw-cards">
       <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
         <h4 class="h3 font-bold text-white">RK3588 at the core.</h4>
@@ -232,6 +259,13 @@ title: Kommu
         </p>
       </div>
     </div>
+    <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="hw-cards">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="hw-cards">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
   </div>
 </section>
 
@@ -243,7 +277,8 @@ title: Kommu
       bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
     </p>
     
-    <div class="flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-10">
+    <div class="carousel-wrap">
+      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-10" id="sw-cards">
       <div class="rounded-lg fixed-card">
         <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
         <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
@@ -277,6 +312,13 @@ title: Kommu
         </p>
       </div>
     </div>
+    <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="sw-cards">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="sw-cards">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
   </div>
 </section>
 
@@ -453,5 +495,138 @@ title: Kommu
   // Expose programmatic API if you want to call it elsewhere:
   window.springScrollTo = springScrollTo;
   window.springScrollToElement = springScrollToElement;
+</script>
+
+<script>
+(function () {
+  // Apply only on touch devices to mimic iOS-native feel
+  const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
+
+  // Damped spring scroll (iOS-like): configurable mass-spring-damper
+  // Based on underdamped harmonic motion solution.
+  function springInterpolation(t, opts) {
+    const { stiffness = 170, damping = 26, mass = 1 } = opts || {};
+    // Convert to angular frequencies
+    const w0 = Math.sqrt(stiffness / mass);          // undamped natural frequency
+    const zeta = damping / (2 * Math.sqrt(stiffness * mass)); // damping ratio
+    if (zeta >= 1) {
+      // Critically/over-damped fallback to smooth easeOut
+      return 1 - Math.exp(-t * w0);
+    }
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);      // damped natural frequency
+    // Normalized time in seconds (t in [0,1] assumed)
+    const A = 1;
+    const B = (zeta / Math.sqrt(1 - zeta * zeta));
+    // y(t) from 0 -> 1 with slight overshoot depending on zeta
+    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + B * Math.sin(wd * t));
+  }
+
+  // Main animator using requestAnimationFrame
+  function springScrollTo(targetY, options) {
+    const {
+      duration = 1200,                 // ms baseline for typical distances
+      stiffness = 180,                 // higher = snappier
+      damping = 24,                    // higher = less overshoot
+      mass = 1,
+      offset = 0                       // e.g., use to account for fixed headers
+    } = options || {};
+
+    const start = window.scrollY || window.pageYOffset;
+    const end = Math.max(0, Math.min(
+      targetY - offset,
+      document.documentElement.scrollHeight - window.innerHeight
+    ));
+    const distance = end - start;
+    if (Math.abs(distance) < 1) return; // nothing to do
+
+    // Optionally scale duration with distance for consistent feel
+    const px = Math.abs(distance);
+    const dur = Math.min(1800, Math.max(600, duration * (px / 1200) ** 0.5));
+
+    let startTime = null;
+    function frame(ts) {
+      if (!startTime) startTime = ts;
+      const t = (ts - startTime) / dur;
+      if (t >= 1) {
+        window.scrollTo(0, end);
+        if (options && typeof options.onDone === 'function') {
+          options.onDone();
+        }
+        return;
+      }
+      // Convert t (0..1) to "seconds" domain for spring math
+      const seconds = t * 1.2; // stretch factor to tune feel
+      const p = springInterpolation(seconds, { stiffness, damping, mass });
+      window.scrollTo(0, start + distance * p);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Convenience: scroll to an element
+  function springScrollToElement(el, opts) {
+    const rect = el.getBoundingClientRect();
+    const targetY = rect.top + window.scrollY;
+    springScrollTo(targetY, opts);
+  }
+
+  // Auto-bind anchor links like <a href="#section-id">...</a> on touch devices
+  if (isTouch) {
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      const id = href.slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      // Optional: account for any top padding you set via scroll-padding-top
+      const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
+      const snapContainer = document.querySelector('.page-snap');
+      if (snapContainer) snapContainer.classList.add('snap-off');
+      springScrollToElement(target, {
+        duration: 1200,
+        stiffness: 220,
+        damping: 30,
+        mass: 1,
+        offset,
+        onDone: () => {
+          if (snapContainer) snapContainer.classList.remove('snap-off');
+        }
+      });
+    }, { passive: false });
+  }
+
+  // Expose programmatic API if you want to call it elsewhere:
+  window.springScrollTo = springScrollTo;
+  window.springScrollToElement = springScrollToElement;
+
+  // ---- Horizontal scroll buttons ----
+  function bindScrollButtons(wrapper) {
+    const scroller = wrapper.querySelector('.h-scroll');
+    if (!scroller) return;
+    const prevBtn = wrapper.querySelector('.scroll-btn.prev');
+    const nextBtn = wrapper.querySelector('.scroll-btn.next');
+    if (!prevBtn || !nextBtn) return;
+
+    const updateDisabled = () => {
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const x = scroller.scrollLeft;
+      prevBtn.disabled = x <= 4;
+      nextBtn.disabled = x >= max - 4;
+    };
+
+    const step = () => Math.max(240, Math.round(scroller.clientWidth * 0.85));
+    prevBtn.addEventListener('click', () => scroller.scrollBy({ left: -step(), behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => scroller.scrollBy({ left:  step(), behavior: 'smooth' }));
+
+    scroller.addEventListener('scroll', updateDisabled, { passive: true });
+    window.addEventListener('resize', updateDisabled);
+    // init
+    updateDisabled();
+  }
+
+  document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
 })();
 </script>
