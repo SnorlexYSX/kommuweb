@@ -166,33 +166,26 @@ title: Kommu
     }
   }
 
-
-@media (max-height: 1100px) and (min-width: 1101px) {
+/* IPAD HORIZONTAL */
+@media (max-height: 1100px) and (min-width: 1100px) {
   .hero-overlay {
     padding-bottom: 2rem; /* pb-8 */
   }
   .software-section {
-    min-height: 1100px;
-    align-items: start;
+    min-height: 900px;
   }
   .hardware-section {
-    min-height: 1100px;
+    min-height: 900px;
   }
 }
-  
-@media (max-height: 1200px) and (min-width: 641px) {
+@media (max-height: 1280px) and (min-width: 768px) {
   .brand-logos-grid {
     width: 100% !important;
     max-width: none !important; /* override Tailwind's max-w-[720px] */
   }
 }
 
-@media (max-height: 1200px) and (min-width: 641px) {
-  .car-compatible-section {
-    min-height: 900px;
-    height: auto; /* override dvh-100 fixed height so min-height can apply */
-  }
-}
+
 
 /*Lock content height while browser UI hide/show*/
 :root { --vh: 1vh; }
@@ -209,6 +202,19 @@ title: Kommu
   min-height: calc(var(--vh, 1vh) * 100);
 }
 
+  /* Vignette overlay for home hero video (match ka2 s1) */
+  .home-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5; /* below .hero-overlay (z-10), above video */
+    background-image:
+      radial-gradient(120% 120% at 50% 40%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%),
+      linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%);
+    background-size: 100% 100%, 100% 100%;
+    background-position: center center, center bottom;
+    background-repeat: no-repeat, no-repeat;
+  }
 </style>
 
 <script>
@@ -233,6 +239,7 @@ title: Kommu
     autoplay muted loop playsinline
     src="{{ "/assets/ytvid.mp4" | relative_url }}"
   ></video>
+  <div class="home-vignette" aria-hidden="true"></div>
   <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 text-center px-4 hero-overlay">
     <h2 class="h2 text-white">
       Elevate your driving experience with L2+ ADAS
@@ -256,7 +263,7 @@ title: Kommu
 
 <!-- HARDWARE -->
 <section class="flex hardware-section">
-  <div class="max-w-6xl mx-auto mt-40 px-4 hp2-content-height">
+  <div class="max-w-6xl mx-auto pt-35 px-4 hp2-content-height">
     <h4 class="h3 text-gray-300">Hardware</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -309,7 +316,7 @@ title: Kommu
 
 <!-- SOFTWARE -->
 <section class="flex software-section">
-  <div class="max-w-6xl mx-auto mt-20 mb-10 px-4 hp3-content-height">
+  <div class="max-w-6xl mx-auto pt-10 px-4 hp3-content-height">
     <h4 class="h3 text-gray-300">Software</h4>
     <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
     <p class="h4 font-bold text-gray mb-8">
@@ -363,7 +370,7 @@ title: Kommu
 
 <!-- COMPATIBILITY -->
 <section class="flex items-center car-compatible-section">
-  <div class="max-w-6xl mx-auto px-4 hp4-content-height">
+  <div class="max-w-6xl mx-auto pt-20 px-4 hp4-content-height">
     <div class="bg-card rounded-2xl py-8 px-12 md:py-12 md:px-16 text-center text-white">
       <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
       <a
