@@ -35,7 +35,7 @@ stylesheet: products
     /* Use the locked vh for key full-viewport elements */
 
     /* Prevent Chrome/Android UI auto-hide from shifting layout */
-    @media (max-width: 1024px) {
+    @media (max-width: 1280px) {
       .frame-sticky {
         height: calc(var(--vh, 1vh) * 100) !important;
       }
@@ -630,11 +630,8 @@ stylesheet: products
 
     .frame-container {
       position: relative;
-      /* centered by .frame-sticky grid */
-      width: min(1000px, 92vw);
-      /* final framed size */
-      aspect-ratio: 16 / 9;
-      /* match your design; adjust if needed */
+      /*width: min(800px, 70vw);
+      aspect-ratio: 16 / 9;*/
       overflow: hidden;
       border-radius: 16px;
       background: #000;
@@ -644,6 +641,9 @@ stylesheet: products
       z-index: 1;
       pointer-events: none;
       border: 0px solid rgba(255, 255, 255, 0.08);
+      height: calc(var(--vh, 1vh) * 56.25); /* lock height at 16:9 using --vh */
+      max-height: 100%;
+      margin: 0 1rem 0;
     }
 
     .frame-media {
@@ -790,10 +790,17 @@ stylesheet: products
     }
 
     /* Lock .perception-tabs height to viewport using --vh on mobile to prevent Chrome address bar jump */
-    @media (max-width: 1024px) {
+    @media (max-width: 1280px) {
       .perception-tabs {
-        height: calc(var(--vh, 1vh) * 100);
-        min-height: calc(var(--vh, 1vh) * 100);
+        height: calc(var(--vh, 1vh) * 1);
+        min-height: calc(var(--vh, 1vh) * 1);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .perception-tabs {
+        height: calc(var(--vh, 1vh) * 1);
+        min-height: calc(var(--vh, 1vh) * 1);
       }
     }
 
@@ -1228,8 +1235,30 @@ stylesheet: products
     </div>
   </section>
   <!-- Full-bleed cockpit section that shrinks into the page frame -->
-  <section class="frame-section" id="perception-zoom" data-scale-to="1.50" data-text-in="0.20" data-overscan="0.05"
-    data-cap-bias="-40" data-cap-min-vh="8" data-cap-bottom-pad="160" data-cap-gap-mul="1" data-tab-slow="20">
+    <section class="frame-section" id="perception-zoom"
+    data-overscan="0.05"
+    data-scale-end="0.80"          
+    data-offset-vh="3"             
+    data-offset-scale="0.5"        
+    data-offset-max="140"          
+    data-cap-bias="60" 
+    data-cap-min-vh="8"
+    data-cap-bottom-pad="160"
+    data-cap-gap-mul="1"
+    data-cap-reveal-start="0.50"
+    data-cap-reveal-step="0.06"
+    data-cap-reveal-ramp="0.14"
+    data-tab-start="500"
+
+    data-tab-end-xs="-120"        
+    data-tab-end-sm="-150"        
+    data-tab-end-md="-150"        
+    data-tab-end-lg="-250" 
+
+    data-tab-prog-start="0.30"
+    data-tab-prog-end="0.70"
+    data-tab-slow="5"
+    data-pin-vh="500">
     <div class="frame-sticky">
       <div class="frame-container">
         <img class="frame-media" src="{{ '/img/ka1s/s4_night.png' | relative_url }}"
@@ -1336,6 +1365,7 @@ stylesheet: products
 </main>
 
 <script>
+  // 🎥 Scroll-aware video autoplay
   (function () {
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const vids = Array.from(document.querySelectorAll("video.scroll-video"));
@@ -1379,6 +1409,7 @@ stylesheet: products
     }, { passive: true });
   })();
 
+  // 🖼 Sticky “Perception Zoom” scroll animation
   (() => {
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     /* ---------- helpers ---------- */
@@ -1395,6 +1426,14 @@ stylesheet: products
 
     /* ---------- scale + reveal logic ---------- */
     const frames = Array.from(document.querySelectorAll('.frame-section'));
+    // Allow per-section control of pin length (in viewport heights)
+    // Usage: <section class="frame-section" data-pin-vh="380"> ...
+    frames.forEach(sec => {
+      const pinVh = parseFloat(sec.dataset.pinVh || '');
+      if (!Number.isNaN(pinVh) && pinVh > 0) {
+        sec.style.minHeight = pinVh + 'vh';
+      }
+    });
     let ticking = false;
 
     function updateFrames() {
@@ -1403,7 +1442,10 @@ stylesheet: products
 
       for (const s of frames) {
         const p = sectionProgress(s); // 0..1
-        const eased = Math.min(1, Math.max(0, p * p * (3 - 2 * p))); // smoothstep
+        // Allow the scale to finish early. data-scale-end is the section progress at which scale reaches 1.0
+        const scaleEnd = parseFloat(s.dataset.scaleEnd || '1.0');
+        const pScaled = Math.min(1, Math.max(0, p / Math.max(0.0001, scaleEnd)));
+        const eased = pScaled * pScaled * (3 - 2 * pScaled); // smoothstep on the remapped progress
         s.dataset.progress = p.toFixed(3);
         const container = s.querySelector('.frame-container');
         const img = s.querySelector('.frame-media');
@@ -1458,10 +1500,14 @@ stylesheet: products
         // Interpolate scale from scaleFrom -> 1.00 using eased scroll progress
         const scale = scaleFrom + (endScale - scaleFrom) * eased;
 
-        // Base offset is 6vh; if we need more room for caption, add it progressively with eased.
-        const offsetVH = 6;
+        // Base offset is data-offset-vh (vh units); defaults to 6 if not provided.
+        const offsetVH = parseFloat(s.dataset.offsetVh || '6');
         const baseOffsetPx = (window.innerHeight * offsetVH) / 100;
-        const offsetPx = baseOffsetPx + extraOffsetNeeded * eased;
+        // Optional dampers for how much extra caption clearance pushes the frame down
+        const extraScale = parseFloat(s.dataset.offsetScale || '1'); // 1 = full, 0.5 = half, 0 = none
+        const extraCap   = parseFloat(s.dataset.offsetMax || Number.POSITIVE_INFINITY);
+        const extraApplied = Math.min(extraCap, Math.max(0, extraOffsetNeeded)) * Math.max(0, extraScale) * eased;
+        const offsetPx = baseOffsetPx + extraApplied;
         // --- Headline: fixed in center, fades away ---
         const headline = s.querySelector('.frame-headline');
         if (headline) {
@@ -1530,13 +1576,14 @@ stylesheet: products
           caption.style.width = Math.round(widthPx) + 'px';
           caption.style.textAlign = 'left';
 
-          // Staggered reveal after shrink is well underway
-          const start = 0.62;      // when the reveal begins
-          const step = 0.07;      // spacing between each line's reveal
+          // Staggered reveal (tunable via data attributes)
+          const capRevealStart = parseFloat(s.dataset.capRevealStart || '0.62'); // when the reveal begins (0..1)
+          const capRevealStep  = parseFloat(s.dataset.capRevealStep  || '0.07'); // spacing between lines (progress units)
+          const capRevealRamp  = parseFloat(s.dataset.capRevealRamp  || '0.12'); // ramp duration per line (progress units)
           const lines = Array.from(caption.querySelectorAll('.cap-line'));
           lines.forEach((el, i) => {
-            const t0 = start + step * i;                // reveal threshold per line
-            const t = clamp((eased - t0) / 0.12, 0, 1); // 0..1 ramp over ~12% progress
+            const t0 = capRevealStart + capRevealStep * i;         // reveal threshold per line
+            const t  = clamp((eased - t0) / capRevealRamp, 0, 1);  // 0..1 within line's window
             el.style.opacity = t.toFixed(3);
             el.style.transform = `translateY(${(1 - t) * 6}px)`;
           });
@@ -1561,27 +1608,23 @@ stylesheet: products
         s.dataset.scaleTo = endScale.toFixed(3);
         s.dataset.scale = scale.toFixed(3);
 
-        // Smoothly reduce sticky height as we approach the end of the pin,
-        // but do NOT change section min-height; only visually reduce gap by pulling up the next section.
-        const baseMinVH = 300;   // tall at start to provide scroll runway (unchanged)
-        const stickyStartVH = 100; // sticky viewport height at start (vh)
-        const stickyEndVH = 85;  // end height (gentler)
 
-        // Spread the shrink over a longer range and ease it to feel slower
-        const shrinkStart = 0.60; // begin easing earlier
-        const shrinkEnd = 1.00; // finish right at the end
-        const rawShrink = clamp((p - shrinkStart) / (shrinkEnd - shrinkStart), 0, 1);
-        const tShrink = rawShrink * rawShrink * (3 - 2 * rawShrink); // smoothstep easing
+        // --- Tabs lift progress (independent from sticky height shrink) ---
+        // Allow per-section control via data attributes:
+        //   data-tab-prog-start: when the tabs begin to lift (0..1 of section progress)
+        //   data-tab-prog-end:   when the tabs finish lifting (0..1)
+        // Defaults keep previous feel (0.60 -> 1.00) if not provided.
+        const tabProgStart = parseFloat(s.dataset.tabProgStart || '0.60');
+        const tabProgEnd   = parseFloat(s.dataset.tabProgEnd   || '1.00');
+        const rawTab = clamp((p - tabProgStart) / Math.max(0.0001, (tabProgEnd - tabProgStart)), 0, 1);
+        // Base easing for tab motion (smoothstep), then apply extra slow factor via exponent k later
+        const tTabsBase = rawTab * rawTab * (3 - 2 * rawTab);
 
         // Lerp helper
         const lerp = (a, b, t) => a + (b - a) * t;
 
         // Only shrink the sticky viewport height smoothly.
-        const sticky = s.querySelector('.frame-sticky');
-        if (sticky) {
-          const hVH = lerp(stickyStartVH, stickyEndVH, tShrink);
-          sticky.style.height = `calc(var(--vh) * ${hVH})`;
-        }
+        // (REMOVED: sticky height is now always 100vh via CSS)
 
         // Visually reduce the gap to the next section without changing layout
         // by translating the next element upward as the sticky shrinks.
@@ -1591,12 +1634,34 @@ stylesheet: products
           // Interpolate -80px -> -[end]px for perception tabs (with linear scroll); others 0 -> -160px
           let y;
           if (isPerceptionTabs) {
-            const start = 500;    // initial lift (before shrink)
-            const end = (window.innerWidth < 500) ? -190 : -120;   // final lift target
-            // Slow factor via exponent: keeps 0->1 mapping but moves slower early on.
-            // Tune with data-tab-slow on the section (default 1.5).
+            // Allow per-section tuning via data attributes on the .frame-section element
+            // data-tab-start: starting translateY in px (default 500)
+            // data-tab-end-mobile: final translateY for narrow screens (default -190)
+            // data-tab-end-desktop: final translateY for wider screens (default -120)
+            // data-tab-slow: exponent for easing (>1 slows the start)
+            // data-tab-prog-start: section progress where lift begins (0..1, default 0.60)
+            // data-tab-prog-end:   section progress where lift ends   (0..1, default 1.00)
+            const start = parseFloat(s.dataset.tabStart || '500');
+            const xs = parseFloat(s.dataset.tabEndXs || '-100');
+            const sm = parseFloat(s.dataset.tabEndSm || '-150');
+            const md = parseFloat(s.dataset.tabEndMd || '-200');
+            const lg = parseFloat(s.dataset.tabEndLg || '-250');
+
+            let end;
+              if (window.innerWidth < 375) {
+                end = xs;
+              } else if (window.innerWidth < 768) {
+                end = sm;
+              } else if (window.innerWidth < 1280) {
+                end = md;
+              } else {
+                end = lg;
+              }
+
+            // Slow factor via exponent (already tunable via data-tab-slow)
             const k = parseFloat(s.dataset.tabSlow || '1.5');
-            const progress = Math.pow(tShrink, isFinite(k) && k > 0 ? k : 1.5);
+            const progress = Math.pow(tTabsBase, isFinite(k) && k > 0 ? k : 1.5);
+
             y = start + (end - start) * progress;
           } else {
             const end = -160;
@@ -1624,6 +1689,7 @@ stylesheet: products
     updateFrames();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
+    // 🌙 Perception tabs (Night / Rain / Sun)
     // --- Perception tabs: swap image + copy ---
     const section = document.getElementById('perception-zoom');
     const img = section?.querySelector('.frame-media');
@@ -1756,6 +1822,7 @@ stylesheet: products
       window.addEventListener('resize', () => { positionBaseline(); positionActive(); }, { passive: true });
     })();
 
+    // 🛡 Safety tabs (Driver Attentiveness / Fail-Safe / Steering Limit)
     // --- Safety tabs: swap looped video + copy ---
     (function initSafetyTabs() {
       const video = document.getElementById('safetyVideo');
@@ -1862,6 +1929,7 @@ stylesheet: products
       window.addEventListener('resize', () => { positionBaseline(); positionActiveUnderline(); }, { passive: true });
       setTimeout(() => { positionBaseline(); positionActiveUnderline(); }, 0); // after initial layout
     })();
+    // 🔌 Ports & Connectivity label animations
     // --- Ports labels entrance (ordered, tunable, scroll‑linked) ---
     (function initPortsLabels() {
       const section = document.getElementById('ports');
@@ -1941,6 +2009,7 @@ stylesheet: products
         render();
       };
     })();
+    // 📊 Performance meters animation
     // --- Performance meters animation ---
     (function initPerfMeters() {
       const wrap = document.getElementById('perfMeters');
@@ -2018,13 +2087,14 @@ stylesheet: products
 </script>
 
 <script>
+  // 📱 Responsive perception caption tweak
   document.addEventListener("DOMContentLoaded", function () {
     const perceptionSection = document.getElementById("perception-zoom");
     function updateCapBias() {
       if (window.innerWidth < 500) {
-        perceptionSection.setAttribute("data-cap-bias", "10");
+        perceptionSection.setAttribute("data-cap-bias", "80");
       } else {
-        perceptionSection.setAttribute("data-cap-bias", "-30");
+        perceptionSection.setAttribute("data-cap-bias", "60");
       }
     }
     updateCapBias();
@@ -2034,6 +2104,7 @@ stylesheet: products
 
 
 <script>
+  // 🌊 Spring-physics smooth scrolling (touch only)
   (function () {
     // Apply only on touch devices to mimic iOS-native feel
     const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
