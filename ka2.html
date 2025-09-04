@@ -1431,7 +1431,7 @@ stylesheet: products
     frames.forEach(sec => {
       const pinVh = parseFloat(sec.dataset.pinVh || '');
       if (!Number.isNaN(pinVh) && pinVh > 0) {
-        sec.style.minHeight = pinVh + 'vh';
+        sec.style.minHeight = `calc(var(--vh, 1vh) * ${pinVh})`;
       }
     });
     let ticking = false;
