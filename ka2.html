@@ -641,7 +641,7 @@ stylesheet: products
       z-index: 1;
       pointer-events: none;
       border: 0px solid rgba(255, 255, 255, 0.08);
-      height: calc(var(--vh, 1vh) * 56.25); /* lock height at 16:9 using --vh */
+      height: calc(var(--vh, 1vh) * 40); /* lock height at 16:9 using --vh */
       max-height: 100%;
       margin: 0 1rem 0;
     }
@@ -743,9 +743,38 @@ stylesheet: products
     /* --- Perception tabs styles --- */
     .perception-tabs {
       max-width: 900px;
-      margin: 0.75rem auto 1.75rem;
       padding: 0 1rem;
       color: #eaeaea;
+      opacity: 0;                 /* start hidden */
+      transition: opacity .4s ease;
+      overflow: visible;
+      position: relative;         /* create a stacking context */
+      z-index: 6;                 /* above wrap background/neighbors */
+      margin: 0 auto;
+    }
+    .perception-tabs.perception-tabs-as-text {
+      margin: 0;
+      padding: 0 1rem;
+    }
+
+    .perception-tabs-as-text {
+      position: absolute;         /* overlay like frame-text */
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 6vh;                /* sit near bottom of the sticky viewport */
+      width: min(92vw, 900px);
+      margin: 0;                  /* override external margins */
+      z-index: 7;                 /* above image, below highest text if needed */
+      pointer-events: auto !important; /* re-enable interaction (frame-text disables by default) */
+      text-align: center;
+    }
+
+    /* Tighter spacing when overlaid */
+    .perception-tabs-as-text .perception-tablist {
+      margin: 0.25rem auto 0.25rem;
+    }
+    .perception-tabs-as-text .tab-panel {
+      margin-top: 0.75rem;
     }
 
     .perception-tabs .perception-tablist {
@@ -790,19 +819,6 @@ stylesheet: products
     }
 
     /* Lock .perception-tabs height to viewport using --vh on mobile to prevent Chrome address bar jump */
-    @media (max-width: 1280px) {
-      .perception-tabs {
-        height: calc(var(--vh, 1vh) * 1);
-        min-height: calc(var(--vh, 1vh) * 1);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .perception-tabs {
-        height: calc(var(--vh, 1vh) * 1);
-        min-height: calc(var(--vh, 1vh) * 1);
-      }
-    }
 
     /* prevent wrap jitter on small screens */
     .frame-headline {
@@ -1020,6 +1036,19 @@ stylesheet: products
         line-height: 3rem;
       }
     }
+
+    #perception-zoom {
+      position: relative; /* needed so absolute child is relative to section */
+    }
+
+    .perception-tabs-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 5;              /* ensure above next section/sticky elements */
+      pointer-events: auto;    /* allow interaction */
+    }
   </style>
 
 
@@ -1234,31 +1263,45 @@ stylesheet: products
       </div>
     </div>
   </section>
-  <!-- Full-bleed cockpit section that shrinks into the page frame -->
+    <!-- Full-bleed cockpit section that shrinks into the page frame -->
     <section class="frame-section" id="perception-zoom"
-    data-overscan="0.05"
+    data-overscan="0.5"
     data-scale-end="0.80"          
-    data-offset-vh="3"             
-    data-offset-scale="0.5"        
-    data-offset-max="140"          
-    data-cap-bias="60" 
+    data-offset-vh="0"             
+    data-offset-scale="1"        
+    data-offset-max="150"     
+
+    data-cap-bias="-10"
+    data-cap-bias-xs="80"
+    data-cap-bias-sm="70"
+    data-cap-bias-md="60"
+    data-cap-bias-lg="80"
+    data-cap-bias-xl="80"
+
+    data-frame-bias="0"
+    data-frame-bias-xs="80"
+    data-frame-bias-sm="40"
+    data-frame-bias-md="40"
+    data-frame-bias-lg="60"
+    data-frame-bias-xl="24"
+
+    data-tabs-bias="0"
+    data-tabs-bias-xs="-90"
+    data-tabs-bias-sm="10"
+    data-tabs-bias-md="200"
+    data-tabs-bias-lg="70"
+    data-tabs-bias-xl="150"
+
     data-cap-min-vh="8"
     data-cap-bottom-pad="160"
     data-cap-gap-mul="1"
     data-cap-reveal-start="0.50"
     data-cap-reveal-step="0.06"
     data-cap-reveal-ramp="0.14"
-    data-tab-start="500"
+    data-tab-start="0"
 
-    data-tab-end-xs="-120"        
-    data-tab-end-sm="-150"        
-    data-tab-end-md="-150"        
-    data-tab-end-lg="-250" 
-
-    data-tab-prog-start="0.30"
-    data-tab-prog-end="0.70"
-    data-tab-slow="5"
     data-pin-vh="500">
+    
     <div class="frame-sticky">
       <div class="frame-container">
         <img class="frame-media" src="{{ '/img/ka1s/s4_night.png' | relative_url }}"
@@ -1280,39 +1323,28 @@ stylesheet: products
         <span class="cap-line h4 font-bold text-gray">Precision-tuned for full lane coverage, driver monitoring, and
           low-light visibility.</span>
       </div>
+      <!-- Perception tabs moved below sticky -->
     </div>
-
-  </section>
-  <!-- Perception tabs -->
-  <section class="perception-tabs" aria-labelledby="perception-tabs-title">
-    <div class="tabs-wrap">
-      <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
-        <button class="h4 font-bold safety-tab" role="tab" aria-selected="true" aria-controls="tab-panel-night"
-          id="tab-night">Night</button>
-        <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain"
-          id="tab-rain">Rain</button>
-        <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun"
-          id="tab-sun">Sun</button>
-      </div>
-      <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="h4 text-gray tab-panel is-active">
-        <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both
-          dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and
-          vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from
-          pulsing headlights or traffic lights.</p>
-      </div>
-      <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="h4 text-gray tab-panel" hidden>
-        <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while
-          the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections
-          and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses
-          clear with wiper action and defogging.</p>
-      </div>
-      <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="h4 text-gray tab-panel" hidden>
-        <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and
-          object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such
-          as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still
-          provides usable vision for control.</p>
+    <div class="perception-tabs-wrap">
+    <div class="perception-tabs" aria-labelledby="perception-tabs-title">
+      <div class="tabs-wrap">
+        <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
+          <button class="h4 font-bold safety-tab" role="tab" aria-selected="true" aria-controls="tab-panel-night" id="tab-night">Night</button>
+          <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain" id="tab-rain">Rain</button>
+          <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun" id="tab-sun">Sun</button>
+        </div>
+        <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="h4 text-gray tab-panel is-active">
+          <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from pulsing headlights or traffic lights.</p>
+        </div>
+        <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="h4 text-gray tab-panel" hidden>
+          <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses clear with wiper action and defogging.</p>
+        </div>
+        <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="h4 text-gray tab-panel" hidden>
+          <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still provides usable vision for control.</p>
+        </div>
       </div>
     </div>
+  </div>
   </section>
   <!-- PORTS & CONNECTIVITY (static image) -->
   <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
@@ -1503,11 +1535,10 @@ stylesheet: products
         // Base offset is data-offset-vh (vh units); defaults to 6 if not provided.
         const offsetVH = parseFloat(s.dataset.offsetVh || '6');
         const baseOffsetPx = (window.innerHeight * offsetVH) / 100;
-        // Optional dampers for how much extra caption clearance pushes the frame down
-        const extraScale = parseFloat(s.dataset.offsetScale || '1'); // 1 = full, 0.5 = half, 0 = none
-        const extraCap   = parseFloat(s.dataset.offsetMax || Number.POSITIVE_INFINITY);
-        const extraApplied = Math.min(extraCap, Math.max(0, extraOffsetNeeded)) * Math.max(0, extraScale) * eased;
-        const offsetPx = baseOffsetPx + extraApplied;
+        // Clearance push disabled: ignore extraOffsetNeeded
+        const extraApplied = 0;
+        const frameBias = parseFloat(s.dataset.frameBias || '0'); // +down, -up in px
+        const offsetPx = baseOffsetPx + frameBias;
         // --- Headline: fixed in center, fades away ---
         const headline = s.querySelector('.frame-headline');
         if (headline) {
@@ -1628,49 +1659,15 @@ stylesheet: products
 
         // Visually reduce the gap to the next section without changing layout
         // by translating the next element upward as the sticky shrinks.
-        const nextEl = s.nextElementSibling;
-        if (nextEl) {
-          const isPerceptionTabs = nextEl.classList.contains('perception-tabs');
-          // Interpolate -80px -> -[end]px for perception tabs (with linear scroll); others 0 -> -160px
-          let y;
-          if (isPerceptionTabs) {
-            // Allow per-section tuning via data attributes on the .frame-section element
-            // data-tab-start: starting translateY in px (default 500)
-            // data-tab-end-mobile: final translateY for narrow screens (default -190)
-            // data-tab-end-desktop: final translateY for wider screens (default -120)
-            // data-tab-slow: exponent for easing (>1 slows the start)
-            // data-tab-prog-start: section progress where lift begins (0..1, default 0.60)
-            // data-tab-prog-end:   section progress where lift ends   (0..1, default 1.00)
-            const start = parseFloat(s.dataset.tabStart || '500');
-            const xs = parseFloat(s.dataset.tabEndXs || '-100');
-            const sm = parseFloat(s.dataset.tabEndSm || '-150');
-            const md = parseFloat(s.dataset.tabEndMd || '-200');
-            const lg = parseFloat(s.dataset.tabEndLg || '-250');
-
-            let end;
-              if (window.innerWidth < 375) {
-                end = xs;
-              } else if (window.innerWidth < 768) {
-                end = sm;
-              } else if (window.innerWidth < 1280) {
-                end = md;
-              } else {
-                end = lg;
-              }
-
-            // Slow factor via exponent (already tunable via data-tab-slow)
-            const k = parseFloat(s.dataset.tabSlow || '1.5');
-            const progress = Math.pow(tTabsBase, isFinite(k) && k > 0 ? k : 1.5);
-
-            y = start + (end - start) * progress;
-          } else {
-            const end = -160;
-            y = end * tShrink;
-          }
-          nextEl.style.transform = `translateY(${y}px)`;
-          nextEl.style.willChange = 'transform';
-          nextEl.style.position = 'relative';
-          if (isPerceptionTabs) nextEl.style.zIndex = 3; // ensure tabs render above the sticky frame
+        const tabsEl = s.querySelector('.perception-tabs');
+        if (tabsEl) {
+          // Fade in tabs starting at progress 0.8
+          const fadeStart = 0.97;
+          const t = clamp((p - fadeStart) / (1 - fadeStart), 0, 1);
+          tabsEl.style.opacity = t.toFixed(3);
+          tabsEl.style.transform = 'none';
+          tabsEl.style.willChange = 'opacity';
+          tabsEl.style.display = 'block'; // ensure not hidden by any layout CSS
         }
       }
     }
@@ -1689,98 +1686,39 @@ stylesheet: products
     updateFrames();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-    // 🌙 Perception tabs (Night / Rain / Sun)
-    // --- Perception tabs: swap image + copy ---
-    const section = document.getElementById('perception-zoom');
-    const img = section?.querySelector('.frame-media');
-    const tabWrap = document.querySelector('.perception-tabs .tabs-wrap');
-    if (!tabWrap) return;
 
-    const tabs = Array.from(tabWrap.querySelectorAll('[role="tab"]'));
-    const panels = {
-      night: document.getElementById('tab-panel-night'),
-      rain: document.getElementById('tab-panel-rain'),
-      sun: document.getElementById('tab-panel-sun')
-    };
-    const imgSrc = {
-      night: '{{ "/img/ka1s/s4_night.png" | relative_url }}',
-      rain: '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
-      sun: '{{ "/img/ka1s/s4_glare.png"   | relative_url }}'
-    };
-
-    function activate(name) {
-      tabs.forEach(btn => {
-        const isActive = btn.id === `tab-${name}`;
-        btn.classList.toggle('is-active', isActive);
-        btn.setAttribute('aria-selected', String(isActive));
-        btn.tabIndex = isActive ? 0 : -1;
-      });
-      Object.entries(panels).forEach(([key, el]) => {
-        const active = key === name;
-        if (!el) return;
-        el.hidden = !active;
-        el.classList.toggle('is-active', active);
-      });
-      if (img && imgSrc[name]) {
-        img.src = imgSrc[name];
-      }
-      // Update Perception underline segment after ARIA state changes
-      (function positionPerceptionUnderline() {
-        const tablist = document.querySelector('.perception-tabs .perception-tablist');
-        if (!tablist) return;
-        const active = tablist.querySelector('.safety-tab[aria-selected="true"]');
-        if (!active) return;
-        const cs = getComputedStyle(tablist);
-        const gapPx = parseFloat(cs.gap) || 0;
-        const extend = gapPx * 0.5; // match Safety behavior
-        const base = tablist.getBoundingClientRect();
-        const rect = active.getBoundingClientRect();
-        let left = (rect.left - base.left) - extend;
-        let right = (rect.right - base.left) + extend;
-        left = Math.max(0, left);
-        right = Math.min(base.width, right);
-        const width = Math.max(0, right - left);
-        tablist.style.setProperty('--active-left', `${Math.round(left)}px`);
-        tablist.style.setProperty('--active-width', `${Math.round(width)}px`);
-      })();
-    }
-
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const name = btn.id.replace('tab-', '');
-        activate(name);
-      });
-      btn.addEventListener('keydown', (e) => {
-        const idx = tabs.indexOf(btn);
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          const next = tabs[(idx + 1) % tabs.length];
-          next.focus(); next.click();
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
-          prev.focus(); prev.click();
-        }
-      });
-    });
-
-    // default
-    activate('night');
-
-    // --- Perception tabs: underline baseline + active segment (reuse Safety logic) ---
-    (function initPerceptionUnderline() {
-      const tablist = document.querySelector('.perception-tabs .perception-tablist');
+    // 🌙 Perception tabs (inside #perception-zoom)
+    (function initPerceptionTabs() {
+      const section = document.getElementById('perception-zoom');
+      if (!section) return;
+      const img = section.querySelector('.frame-media');
+      const tablist = section.querySelector('.perception-tablist');
       if (!tablist) return;
-      const tabs = Array.from(tablist.querySelectorAll('.safety-tab[role="tab"]'));
+
+      const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+      const panels = {
+        night: section.querySelector('#tab-panel-night'),
+        rain:  section.querySelector('#tab-panel-rain'),
+        sun:   section.querySelector('#tab-panel-sun')
+      };
+      // Still images were preloaded in <head>
+      const imgSrc = {
+        night: '{{ "/img/ka1s/s4_night.png" | relative_url }}',
+        rain:  '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
+        sun:   '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
+      };
 
       function px(n) { return `${Math.round(n)}px`; }
+
       function positionBaseline() {
-        if (tabs.length === 0) return;
-        const first = tabs[0];
-        const last = tabs[tabs.length - 1];
+        // Draw gray baseline spanning first↔last tab
+        const btns = tabs;
+        if (btns.length === 0) return;
+        const first = btns[0];
+        const last = btns[btns.length - 1];
         const cs = getComputedStyle(tablist);
         const gapPx = parseFloat(cs.gap) || 0;
-        const extend = gapPx * 0.5; // match Safety behavior
+        const extend = gapPx * 0.5;
         const baseRect = tablist.getBoundingClientRect();
         const f = first.getBoundingClientRect();
         const l = last.getBoundingClientRect();
@@ -1791,8 +1729,9 @@ stylesheet: products
         tablist.style.setProperty('--base-left', px(left));
         tablist.style.setProperty('--base-width', px(Math.max(0, right - left)));
       }
+
       function positionActive() {
-        const active = tablist.querySelector('.safety-tab[aria-selected="true"]');
+        const active = tablist.querySelector('[role="tab"][aria-selected="true"]');
         if (!active) return;
         const cs = getComputedStyle(tablist);
         const gapPx = parseFloat(cs.gap) || 0;
@@ -1803,23 +1742,61 @@ stylesheet: products
         let right = (rect.right - base.left) + extend;
         left = Math.max(0, left);
         right = Math.min(base.width, right);
-        const width = Math.max(0, right - left);
         tablist.style.setProperty('--active-left', px(left));
-        tablist.style.setProperty('--active-width', px(width));
+        tablist.style.setProperty('--active-width', px(Math.max(0, right - left)));
       }
 
-      // Hook into the existing Perception tab activation
+      function showPanel(name) {
+        Object.entries(panels).forEach(([key, el]) => {
+          if (!el) return;
+          const active = key === name;
+          el.hidden = !active;
+          el.classList.toggle('is-active', active);
+        });
+      }
+
+      function activate(name) {
+        // buttons
+        tabs.forEach(btn => {
+          const active = btn.id === `tab-${name}`;
+          btn.setAttribute('aria-selected', String(active));
+          btn.classList.toggle('is-active', active);
+          btn.tabIndex = active ? 0 : -1;
+        });
+        // image
+        if (img && imgSrc[name] && img.getAttribute('src') !== imgSrc[name]) {
+          img.setAttribute('src', imgSrc[name]);
+        }
+        // panel + underline
+        showPanel(name);
+        positionActive();
+      }
+
+      // Click + arrow-key support
       tabs.forEach(btn => {
-        btn.addEventListener('click', () => { setTimeout(positionActive, 0); });
-        btn.addEventListener('keydown', () => { setTimeout(positionActive, 0); });
+        btn.addEventListener('click', () => activate(btn.id.replace('tab-', '')));
+        btn.addEventListener('keydown', (e) => {
+          const i = tabs.indexOf(btn);
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const next = tabs[(i + 1) % tabs.length]; next.focus(); next.click();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prev = tabs[(i - 1 + tabs.length) % tabs.length]; prev.focus(); prev.click();
+          }
+        });
       });
 
-      // Initial layout + resize adjustments
+      // default state
+      activate('night');
       positionBaseline();
       positionActive();
-      const ro2 = new ResizeObserver(() => { positionBaseline(); positionActive(); });
-      ro2.observe(tablist);
+
+      // Keep underline aligned on resize/layout changes
+      const ro = new ResizeObserver(() => { positionBaseline(); positionActive(); });
+      ro.observe(tablist);
       window.addEventListener('resize', () => { positionBaseline(); positionActive(); }, { passive: true });
+      setTimeout(() => { positionBaseline(); positionActive(); }, 0);
     })();
 
     // 🛡 Safety tabs (Driver Attentiveness / Fail-Safe / Steering Limit)
@@ -2087,18 +2064,57 @@ stylesheet: products
 </script>
 
 <script>
-  // 📱 Responsive perception caption tweak
+  // 📱 Responsive perception caption, frame & tabs bias tweak (multi-band)
+  // Controls (declare on #perception-zoom):
+  //   Caption: data-cap-bias, data-cap-bias-xs/sm/md/lg/xl (fallback to -20)
+  //   Frame:   data-frame-bias, data-frame-bias-xs/sm/md/lg/xl (fallback to 0)
+  //   Tabs:    data-tabs-bias, data-tabs-bias-xs/sm/md/lg/xl (fallback to 0)
   document.addEventListener("DOMContentLoaded", function () {
-    const perceptionSection = document.getElementById("perception-zoom");
-    function updateCapBias() {
-      if (window.innerWidth < 500) {
-        perceptionSection.setAttribute("data-cap-bias", "80");
-      } else {
-        perceptionSection.setAttribute("data-cap-bias", "60");
+    const section = document.getElementById("perception-zoom");
+    if (!section) return;
+
+    function resolveBandValue(baseName, fallbackDefault) {
+      // Reads data-<baseName>[-xs/-sm/-md/-lg/-xl] from section.dataset with graceful fallback
+      const base = section.dataset[camel(baseName)] ?? String(fallbackDefault);
+      const xs = section.dataset[camel(baseName + '-xs')] ?? section.dataset[camel(baseName + '-mobile')] ?? base;
+      const sm = section.dataset[camel(baseName + '-sm')] ?? xs;
+      const md = section.dataset[camel(baseName + '-md')] ?? sm;
+      const lg = section.dataset[camel(baseName + '-lg')] ?? md;
+      const xl = section.dataset[camel(baseName + '-xl')] ?? lg;
+      const w = window.innerWidth;
+      if (w < 380) return xs;
+      if (w < 768) return sm;
+      if (w < 1024) return md;
+      if (w < 1280) return lg;
+      return xl;
+    }
+
+    function camel(attr) {
+      // convert kebab-case to dataset camelCase key
+      return attr.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    }
+
+    function applyBiases() {
+      // 1) Caption bias → writes back to data-cap-bias (read by scroll engine)
+      const capBias = resolveBandValue('cap-bias', -20);
+      section.dataset.capBias = String(capBias);
+
+      // 2) Frame bias (pixels): additional vertical push applied to frame-container translateY
+      //    Positive pushes the image DOWN; negative lifts it UP. Default 0.
+      const frameBias = resolveBandValue('frame-bias', 0);
+      section.dataset.frameBias = String(frameBias);
+
+      // 3) Tabs bias → vertical offset from the BOTTOM of the 500vh section
+      const tabsBias = resolveBandValue('tabs-bias', 0);
+      const tabsWrap = section.querySelector('.perception-tabs-wrap');
+      if (tabsWrap) {
+        // Positive = lift up from the very bottom; negative = push below (not recommended)
+        tabsWrap.style.bottom = `${parseFloat(tabsBias) || 0}px`;
       }
     }
-    updateCapBias();
-    window.addEventListener("resize", updateCapBias);
+
+    applyBiases();
+    window.addEventListener("resize", applyBiases, { passive: true });
   });
 </script>
 
