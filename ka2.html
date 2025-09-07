@@ -35,11 +35,11 @@ stylesheet: products
     /* Use the locked vh for key full-viewport elements */
 
     /* Prevent Chrome/Android UI auto-hide from shifting layout */
-    @media (max-width: 1280px) {
+    /* @media (max-width: 1280px) {
       .frame-sticky {
         height: calc(var(--vh, 1vh) * 100) !important;
       }
-    }
+    } */
 
     /* --- Performance meters --- */
     .perf-meters {
@@ -212,10 +212,11 @@ stylesheet: products
     .s2-content-height {
       position: relative;
       min-height: max(calc(var(--vh, 1vh) * 80),750px);
-      height: max(calc(var(--vh, 1vh) * 80),750px);
+      height: auto;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+      padding: 2rem 0;
     }
 
     .s3-content-height {
@@ -236,20 +237,25 @@ stylesheet: products
     }
 
     .s1-video {
-      width: min(1200px, 92vw);
-      height: auto;
+      /* width primarily controls size; aspect-ratio derives height */
+      width: clamp(520px, 72vw, 1100px);
+      height: auto;                 /* let aspect-ratio calculate from width */
+      aspect-ratio: 16 / 9;         /* reserve space before load */
       display: block;
-      aspect-ratio: 16 / 9;
-      /* reserve space before load */
-      background: transparent;
-      /* transparent so underlying purple bg shows through */
-      object-fit: cover;
-      /* fill frame consistently */
-      opacity: 0;
-      /* fade in once playable */
+      background: transparent;      /* transparent so underlying purple bg shows through */
+      object-fit: cover;            /* fill frame consistently */
+      opacity: 0;                   /* fade in once playable */
       transition: opacity .25s ease;
-      border-radius: 12px;
-      /* optional: match other media rounding */
+      border-radius: 12px;          /* optional: match other media rounding */
+      max-height: 58vh;             /* cap relative to viewport height */
+    }
+
+    /* On flatter/wider screens, keep the hero smaller by capping height more aggressively */
+    @media screen and (min-aspect-ratio: 16/9) {
+      .s1-video {
+        max-height: 65vh;           /* stronger cap when height is limited */
+        width: auto;                /* allow height cap to determine width via aspect-ratio */
+      }
     }
 
     .s2-video {
@@ -259,6 +265,7 @@ stylesheet: products
       display: block;
       min-height: 180px;
     }
+
 
     /* Ensure following blocks have space to let scroll logic breathe */
     .ka1s-section .module-content+.module-content {
@@ -408,8 +415,8 @@ stylesheet: products
         }
     }
 
-    /* IPAD HORIZONTAL */
-    @media (max-height: 1100px) and (min-width: 1100px) {
+    /* IPAD HORIZONTAL and other flat screens*/
+    @media (max-height: 1100px) and (max-aspect-ratio: 16/9) {
       .ka1s-section {
         height: calc(var(--vh, 1vh) * 130);
         min-height: calc(var(--vh, 1vh) * 130);
@@ -427,7 +434,7 @@ stylesheet: products
         min-height: calc(var(--vh, 1vh) * 120);
       }
       .s2-content-height {
-        height: calc(var(--vh, 1vh) * 120);
+        height: auto;
         min-height: calc(var(--vh, 1vh) * 120);
       }
       .s3-content-height {
@@ -844,7 +851,7 @@ stylesheet: products
     .ports-sticky {
       position: sticky;
       top: calc(var(--vh, 1vh) * 10);
-      height: calc(var(--vh, 1vh) * 68);
+      height: max(1000px, calc(var(--vh, 1vh) * 68));
       overflow: clip;
       /* use clip if you prefer */
       display: grid;
@@ -1042,12 +1049,29 @@ stylesheet: products
     }
 
     .perception-tabs-wrap {
-      position: absolute;
+      position: static;
       bottom: 0;
       left: 0;
       width: 100%;
       z-index: 5;              /* ensure above next section/sticky elements */
       pointer-events: auto;    /* allow interaction */
+    }
+
+    /* Standalone Perception tabs section (outside sticky) */
+    .perception-tabs-section {
+      position: relative;
+      z-index: 3;              /* above neighboring backgrounds */
+      padding: 0.75rem 0 2rem; /* breathing room */
+      background: transparent; /* don't cover previous section */
+    }
+    .perception-tabs-section .perception-tabs-wrap {
+      position: relative;      /* normal document flow */
+    }
+    .perception-tabs-section .perception-tabs {
+      opacity: 1 !important;   /* override sticky fade-in JS */
+      transform: none !important;
+      pointer-events: auto;    /* ensure clickable */
+      margin: 0 auto;          /* center within section */
     }
   </style>
 
@@ -1325,27 +1349,30 @@ stylesheet: products
       </div>
       <!-- Perception tabs moved below sticky -->
     </div>
+  </section>
+  <section class="perception-tabs-section">
     <div class="perception-tabs-wrap">
-    <div class="perception-tabs" aria-labelledby="perception-tabs-title">
-      <div class="tabs-wrap">
-        <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
-          <button class="h4 font-bold safety-tab" role="tab" aria-selected="true" aria-controls="tab-panel-night" id="tab-night">Night</button>
-          <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain" id="tab-rain">Rain</button>
-          <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun" id="tab-sun">Sun</button>
-        </div>
-        <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="h4 text-gray tab-panel is-active">
-          <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from pulsing headlights or traffic lights.</p>
-        </div>
-        <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="h4 text-gray tab-panel" hidden>
-          <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses clear with wiper action and defogging.</p>
-        </div>
-        <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="h4 text-gray tab-panel" hidden>
-          <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still provides usable vision for control.</p>
+        <div class="perception-tabs" aria-labelledby="perception-tabs-title">
+          <div class="tabs-wrap">
+            <div class="perception-tablist" role="tablist" aria-label="Perception conditions">
+              <button class="h4 font-bold safety-tab" role="tab" aria-selected="true" aria-controls="tab-panel-night" id="tab-night">Night</button>
+              <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-rain" id="tab-rain">Rain</button>
+              <button class="h4 font-bold safety-tab" role="tab" aria-selected="false" aria-controls="tab-panel-sun" id="tab-sun">Sun</button>
+            </div>
+            <div id="tab-panel-night" role="tabpanel" aria-labelledby="tab-night" class="h4 text-gray tab-panel is-active">
+              <p>With large 3.0 µm pixel HDR sensors (140 dB in OX03C10), KommuAssist’s 65° and 185° road cameras capture both dark roads and bright headlights without loss of detail. Multi-exposure fusion ensures lane markings and vehicles remain visible even under minimal ambient lighting. LED flicker mitigation prevents distraction from pulsing headlights or traffic lights.</p>
+            </div>
+            <div id="tab-panel-rain" role="tabpanel" aria-labelledby="tab-rain" class="h4 text-gray tab-panel" hidden>
+              <p>Wide 185° coverage maintains situational awareness even when raindrops distort part of the windshield, while the 65° telephoto view tracks distant vehicles and lanes. HDR sensors reduce bloom from wet-road reflections and oncoming headlights, preserving contrast in low visibility. Placement behind the windshield keeps lenses clear with wiper action and defogging.</p>
+            </div>
+            <div id="tab-panel-sun" role="tabpanel" aria-labelledby="tab-sun" class="h4 text-gray tab-panel" hidden>
+              <p>140 dB HDR imaging captures the bright sky and shadowed road simultaneously, preventing loss of lane and object detail in harsh sunlight. Multi-exposure capture adapts in real time to sudden brightness changes, such as driving toward the sun. The dual-FOV setup ensures that if one view is partially saturated, the other still provides usable vision for control.</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
   </section>
+  
   <!-- PORTS & CONNECTIVITY (static image) -->
   <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
     <div class="module-content s1-content-height">
@@ -1624,7 +1651,16 @@ stylesheet: products
           text.style.opacity = "0";
         }
 
-        container.style.transform = `translateY(${offsetPx}px) scale(${scale})`;
+        // Apply an extra translateY offset when sticky shrinks, to counter clipping
+        const sticky = s.querySelector('.frame-sticky');
+        let extraTranslate = 0;
+        if (sticky) {
+          const stickyH = parseFloat(sticky.style.height) || vh;
+          if (stickyH < vh) {
+            extraTranslate = (vh - stickyH) / 2; // push down proportionally
+          }
+        }
+        container.style.transform = `translateY(${offsetPx + extraTranslate}px) scale(${scale})`;
         if (img) img.style.transform = ""; // container owns the scale now
 
         if (text && !text.classList.contains('frame-headline')) {
@@ -1654,8 +1690,42 @@ stylesheet: products
         // Lerp helper
         const lerp = (a, b, t) => a + (b - a) * t;
 
-        // Only shrink the sticky viewport height smoothly.
-        // (REMOVED: sticky height is now always 100vh via CSS)
+        // 🔧 Post-zoom shrink: as scroll progresses after scale ends, reduce sticky height
+        (function shrinkStickyBottom() {
+          const sticky = s.querySelector('.frame-sticky');
+          const cap = s.querySelector('.frame-caption');
+          if (!sticky || !cap) return;
+
+          // Measure caption height at this viewport width (match earlier method)
+          const contentW2 = Math.min(window.innerWidth * 0.92, 1100);
+          const capPrevW = cap.style.width;
+          const capPrevX = cap.style.transform;
+          cap.style.width = Math.max(0, Math.round(contentW2 - 32)) + 'px';
+          cap.style.transform = 'translate(0, 0)';
+          const capH2 = Math.round(cap.getBoundingClientRect().height || cap.scrollHeight || 0);
+          cap.style.transform = capPrevX;
+          cap.style.width = capPrevW;
+
+          // Final content stack height when the image is fully shrunk (scale=1)
+          const imgH = baseHCache; // unscaled container height
+          const gapEnd = Math.max(100, Math.round(baseHCache * 0.03 * (parseFloat(s.dataset.capGapMul || '1'))));
+          const padBottom = 0; // breathing room below
+          const finalContentH = capH2 + gapEnd + imgH + padBottom;
+
+          const vhNow = window.innerHeight;
+          const startH = vhNow;                  // sticky starts at full viewport
+          const endH   = Math.min(finalContentH, vhNow); // only shrink downward
+
+          // Start shrinking once the zoom completes (p hits scaleEnd)
+          const scaleEndP = parseFloat(s.dataset.scaleEnd || '1.0');
+          const shrinkStart = clamp(scaleEndP, 0, 1);
+          const kRaw = clamp((p - shrinkStart) / Math.max(0.0001, 1 - shrinkStart), 0, 1);
+          const k = kRaw * kRaw * (3 - 2 * kRaw); // smoothstep easing for nicer feel
+
+          const lerp = (a,b,t)=> a + (b-a)*t;
+          const hNow = Math.round(lerp(startH, endH, k));
+          sticky.style.height = hNow + 'px';
+        })();
 
         // Visually reduce the gap to the next section without changing layout
         // by translating the next element upward as the sticky shrinks.
