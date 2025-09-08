@@ -837,9 +837,15 @@ stylesheet: products
       max-width: 1100px;
       margin: 5rem auto 5rem;
       color: #eaeaea;
-      min-height: 160vh;
+      min-height: 120vh;
       /* enough scroll room to reveal all labels */
       padding-bottom: 0;
+    }
+
+
+    /* Tablets/phones explicitly in landscape with limited height */
+    @media screen and (orientation: landscape) and (max-height: 900px) {
+      .ports-sticky { min-height: 200vh !important; }
     }
 
     .ports-section .section-content {
@@ -850,20 +856,22 @@ stylesheet: products
     /* Sticky viewport for Ports so image/labels stay while scrolling */
     .ports-sticky {
       position: sticky;
-      top: calc(var(--vh, 1vh) * 10);
-      height: max(1000px, calc(var(--vh, 1vh) * 68));
+      top: 0;                  /* pin to top of viewport */
+      height: 100vh;           /* occupy full viewport height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
       overflow: clip;
-      /* use clip if you prefer */
-      display: grid;
-      grid-template-rows: auto 1fr;
-      /* header then image area */
-      align-items: start;
-      /* stop vertical centering */
-      justify-items: center;
-      /* keep centered horizontally */
-      padding-top: 0.25rem;
-      /* small breathing room below header */
-      z-index: 1;
+      z-index: 2;
+    }
+
+    .ports-sticky .ports-header {
+      position: relative;
+      top: 0;                 /* header stays at top */
+      padding: 1rem 0;        /* comfortable spacing */
+      width: 100%;
+      z-index: 3;
     }
 
     .ports-sub {
@@ -875,17 +883,17 @@ stylesheet: products
     }
 
     .ports-figure {
+      position: sticky;        /* keep image fixed under the header */
+      top: 80px;               /* sits just below the pinned header */
       display: grid;
       place-items: center;
-      align-self: start;
-      /* anchor image area to top */
-      margin: 0.25rem 0 0;
-      /* tighter gap under subtext */
+      margin: 0;               /* tighter to header */
+      align-self: stretch;     /* fill sticky width */
+      z-index: 1;
     }
 
     .ports-header {
       align-self: start;
-
     }
 
     /* Ensure .ports-header is always contained within .ports-sticky */
@@ -894,8 +902,7 @@ stylesheet: products
       z-index: 2;
       /* keep it above the image */
       width: 100%;
-      /* contained within sticky grid */
-      align-self: start;
+
       /* stick to top of the grid area */
     }
 
@@ -935,8 +942,9 @@ stylesheet: products
       width: min(1100px, 80vw);
     }
 
-    .ports-figure {
-      position: relative;
+
+    @media (max-height: 700px) {
+      .ports-figure { top: 70px; }
     }
 
     .ports-overlay {
@@ -991,6 +999,31 @@ stylesheet: products
     .port-label.bottom::after {
       bottom: calc(100% + var(--gap, 8px));
       height: var(--line, 72px);
+    }
+
+    /* --- Mobile-specific overrides for Ports labels (class-based) --- */
+    .br-mobile { display: none; }
+
+    @media (max-width: 600px) {
+      .port-label { font-size: 0.7rem !important; }
+
+      /* show the forced line break only on mobile */
+      .br-mobile { display: inline; }
+      .label-wifi { white-space: normal !important; line-height: 1.2 !important; }
+
+      /* Top row */
+      .ports-overlay .label-gps     { left: 30% !important; top: 0% !important; }
+      .ports-overlay .label-wifi    { left: 40% !important; top: 0% !important; }
+      .ports-overlay .label-speaker { left: 60% !important; top: 0% !important; }
+
+      /* Bottom row */
+      .ports-overlay .label-nanosim    { left: 28% !important; bottom: 0% !important; }
+      .ports-overlay .label-microsd    { left: 41% !important; bottom: 20% !important; }
+      .ports-overlay .label-diagnostic { left: 53% !important; bottom: 0% !important; }
+      .ports-overlay .label-12v        { left: 65% !important; bottom: 20% !important; }
+
+      /* Ensure connector lines stay centered under/over the text */
+      .port-label::after { left: 50%; transform: translateX(-50%); }
     }
 
     /* Page-wide section padding on medium screens and below */
@@ -1375,10 +1408,13 @@ stylesheet: products
   
   <!-- PORTS & CONNECTIVITY (static image) -->
   <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
-    <div class="module-content s1-content-height">
+    <div class="module-content">
       <div class="unit-image-wrapper">
         <div class="ports-sticky">
-          <div class="ports-header">
+
+
+          <figure class="ports-figure">
+            <div class="ports-header">
             <div class="h3 section-eyebrow">Ports and Connectivity</div>
             <h2 class="h1 section-title">Seamless Integration.</h2>
             <p class="h4 font-bold text-gray text-left">
@@ -1388,33 +1424,20 @@ stylesheet: products
               control between devices.
             </p>
           </div>
-
-          <figure class="ports-figure">
             <div class="ports-stage">
               <img class="ports-image" src="{{ '/img/ka1s/s5.png' | relative_url }}"
                 alt="KommuAssist ports and labels: GPS, Wi-Fi & Bluetooth, Speaker, Nano SIM, MicroSD, Diagnostic USB-C, 12V USB-C"
                 loading="lazy" />
               <div class="ports-overlay" aria-hidden="true">
                 <!-- Top labels -->
-                <span class="port-label top" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00"
-                  data-anchor-y="28">GPS</span>
-                <span class="port-label top" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02"
-                  data-anchor-y="28">Wi‑Fi &amp; Bluetooth</span>
-                <span class="port-label top" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04"
-                  data-anchor-y="28">Speaker</span>
+                <span class="port-label top label-gps" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00" data-anchor-y="28">GPS</span>
+                <span class="port-label top label-wifi" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi <span class="br-mobile"><br></span>&amp; Bluetooth</span>
+                <span class="port-label top label-speaker" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
                 <!-- Bottom labels -->
-                <span class="port-label bottom" style="left: 32%; bottom: 5%; " data-order="1" data-delay="0.00"
-                  data-anchor-y="41.5">Nano SIM</span>
-                <span class="port-label bottom" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03"
-                  data-anchor-y="41">MicroSD</span>
-                <span class="port-label bottom" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05"
-                  data-anchor-y="41">
-                  Diagnostic<br><span>USB‑C</span>
-                </span>
-                <span class="port-label bottom" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08"
-                  data-anchor-y="41">
-                  12V USB‑C<br><span>(from Relay)</span>
-                </span>
+                <span class="port-label bottom label-nanosim" style="left: 32%; bottom: 5%;" data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
+                <span class="port-label bottom label-microsd" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
+                <span class="port-label bottom label-diagnostic" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">Diagnostic<br><span>USB‑C</span></span>
+                <span class="port-label bottom label-12v" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">12V USB‑C<br><span>(from Relay)</span></span>
               </div>
             </div>
           </figure>
