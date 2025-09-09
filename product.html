@@ -59,6 +59,11 @@ title: Buy KommuAssist 2
   .img-loaded {
     opacity: 1 !important;
   }
+  /* Make car model select border colorless on hover (keep focus visible for a11y) */
+  #carSelectList:hover {
+    border-color: transparent !important;
+    box-shadow: none; /* in case border color is simulated via shadow */
+  }
   </style>
 
 <!-- Product Page Full Layout -->
