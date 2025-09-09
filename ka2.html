@@ -15,6 +15,9 @@ stylesheet: products
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" type="video/webm">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" type="video/webm">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" type="video/webm">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" type="video/mp4">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" type="video/mp4">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" type="video/mp4">
 
   <style>
     body {
@@ -1284,12 +1287,36 @@ stylesheet: products
           <div class="h3 section-eyebrow">Performance</div>
           <h2 class="h1 section-title">Stronger. Faster.</h2>
         </div>
-        <video class="s2-video scroll-video" playsinline autoplay muted preload="metadata" data-autoplay="true"
+        <video id="s2Video" class="s2-video scroll-video" playsinline autoplay muted preload="metadata" data-autoplay="true"
           data-play-once="true" aria-label="KommuAssist unit performance highlight animation">
-          <!--<source src="{{ '/assets/ka_ani_s2.webm' | relative_url }}" type="video/webm">-->
-          <source src="{{ '/assets/ka_ani_s2_1.mp4' | relative_url }}" type="video/mp4">
-          Your browser does not support the video tag.
+          <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
         </video>
+        <script>
+          (function () {
+            var v = document.getElementById('s2Video');
+            if (!v) return;
+            var ua = navigator.userAgent;
+            var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+            var sources = isSafari
+              ? [
+                { src: "{{ '/assets/ka_ani_s2_1.mp4'  | relative_url }}", type: "video/mp4" },
+                { src: "{{ '/assets/ka_ani_s2_1.webm' | relative_url }}", type: "video/webm" }
+              ]
+              : [
+                { src: "{{ '/assets/ka_ani_s2_1.webm' | relative_url }}", type: "video/webm" },
+                { src: "{{ '/assets/ka_ani_s2_1.mp4'  | relative_url }}", type: "video/mp4" }
+              ];
+            while (v.firstChild) v.removeChild(v.firstChild);
+            sources.forEach(function (s) {
+              var el = document.createElement('source');
+              el.src = s.src; el.type = s.type; v.appendChild(el);
+            });
+            try { v.load(); } catch (e) { }
+            const onReady = () => { v.style.opacity = '1'; v.removeEventListener('canplay', onReady); };
+            v.addEventListener('canplay', onReady, { once: true });
+            if (v.readyState >= 3) { v.style.opacity = '1'; }
+          })();
+        </script>
         <div class="section-copy">
         <p class="h4 font-bold text-gray text-left">Powered by <span class="h4 font-bold text-white">Rockchip
             RK3588</span>. Whole new level of edge computing with <span class="h4 font-bold text-white">6 TOPS
@@ -1986,12 +2013,29 @@ stylesheet: products
         failsafe: document.getElementById('safety-panel-failsafe'),
         steer: document.getElementById('safety-panel-steer')
       };
-      const sources = {
-        attn: '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
-        failsafe: '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
-        steer: '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
-      };
       if (!video || tabs.length === 0) return;
+
+      // Safari detection and helper to inject sources in preferred order
+      const ua = navigator.userAgent;
+      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+      function setVideoSources(v, base) {
+        // base is a string like 'dm', 'failsafe', or 'steerlimit'
+        const paths = {
+          webm: `{{ '/assets/ka_ani_s3_' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`,
+          mp4:  `{{ '/assets/ka_ani_s3_' | relative_url }}`.replace(/\/$/, '') + `_${base}.mp4`
+        };
+        // Clear existing sources
+        while (v.firstChild) v.removeChild(v.firstChild);
+        // Append in preferred order
+        const order = isSafari ? ['mp4', 'webm'] : ['webm', 'mp4'];
+        order.forEach(fmt => {
+          const s = document.createElement('source');
+          s.src = paths[fmt];
+          s.type = fmt === 'mp4' ? 'video/mp4' : 'video/webm';
+          v.appendChild(s);
+        });
+        try { v.load(); } catch(e) {}
+      }
 
       const tablist = document.querySelector('.safety-tablist');
       function px(n) { return `${Math.round(n)}px`; }
@@ -2035,6 +2079,9 @@ stylesheet: products
         tablist.style.setProperty('--active-width', px(width));
       }
 
+      // Map tab names to source base
+      const sourceBase = { attn: 'dm', failsafe: 'failsafe', steer: 'steerlimit' };
+
       function activate(name) {
         tabs.forEach(btn => {
           const active = btn.id === `safety-tab-${name}`;
@@ -2045,21 +2092,21 @@ stylesheet: products
           const active = key === name;
           el.hidden = !active;
         });
-        const src = sources[name];
-        if (src && video.getAttribute('src') !== src) {
-          // Start fade out
+        const base = sourceBase[name];
+        if (base) {
+          // Fade out current video
           video.style.opacity = '0';
-          // After fade-out duration, swap source
           setTimeout(() => {
-            video.setAttribute('src', src);
-            // When ready, play and fade back in
+            setVideoSources(video, base);
             const onCanPlay = () => {
-              video.play().catch(() => { /* ignore autoplay rejections */ });
+              // Autoplay muted loop when ready, then fade back in
+              video.muted = true; video.playsInline = true; video.loop = true;
+              video.play().catch(() => {});
               requestAnimationFrame(() => { video.style.opacity = '1'; });
               video.removeEventListener('canplay', onCanPlay);
             };
             video.addEventListener('canplay', onCanPlay, { once: true });
-          }, 350); // match CSS transition duration
+          }, 350);
         }
         positionActiveUnderline();
       }
