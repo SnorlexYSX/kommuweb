@@ -752,7 +752,7 @@ stylesheet: products
       max-width: 900px;
       padding: 0 1rem;
       color: #eaeaea;
-      opacity: 0;                 /* start hidden */
+      opacity: 1;                 /* start hidden */
       transition: opacity .4s ease;
       overflow: visible;
       position: relative;         /* create a stacking context */
@@ -835,7 +835,7 @@ stylesheet: products
     .ports-section {
       position: relative;
       max-width: 1100px;
-      margin: 5rem auto 5rem;
+      margin: 10rem auto 8rem;
       color: #eaeaea;
       min-height: 120vh;
       /* enough scroll room to reveal all labels */
@@ -1093,7 +1093,8 @@ stylesheet: products
     /* Standalone Perception tabs section (outside sticky) */
     .perception-tabs-section {
       position: relative;
-      z-index: 3;              /* above neighboring backgrounds */
+      z-index: 10;             /* above any fixed/sticky frame elements */
+      isolation: isolate;      /* new stacking context; nothing from below sits on top */
       padding: 0.75rem 0 2rem; /* breathing room */
       background: transparent; /* don't cover previous section */
     }
@@ -1103,8 +1104,15 @@ stylesheet: products
     .perception-tabs-section .perception-tabs {
       opacity: 1 !important;   /* override sticky fade-in JS */
       transform: none !important;
-      pointer-events: auto;    /* ensure clickable */
+      pointer-events: auto !important; /* ensure clickable */
+      position: relative;
+      z-index: 11;             /* above fixed overlays */
       margin: 0 auto;          /* center within section */
+    }
+    .perception-tabs-section .perception-tabs .perception-tablist {
+      position: relative;
+      z-index: 12;
+      pointer-events: auto;    /* accept clicks */
     }
   </style>
 
@@ -1407,7 +1415,7 @@ stylesheet: products
   </section>
   
   <!-- PORTS & CONNECTIVITY (static image) -->
-  <section class="ports-section" id="ports" data-start="0.00" data-step="0.10" data-ramp="0.14">
+  <section class="ports-section" id="ports" data-start="0.00" data-step="0.12" data-ramp="0.2">
     <div class="module-content">
       <div class="unit-image-wrapper">
         <div class="ports-sticky">
@@ -1546,8 +1554,11 @@ stylesheet: products
           container.dataset.baseH = String(baseHCache);
         }
         const overscan = parseFloat(s.dataset.overscan || "0.00");
-        const scaleFrom = Math.max(window.innerWidth / baseWCache,
-          window.innerHeight / baseHCache) * (1 + overscan);
+        const scaleFromRaw = Math.max(
+          window.innerWidth / baseWCache,
+          window.innerHeight / baseHCache
+        ) * (1 + overscan);
+        const scaleFrom = Math.min(scaleFromRaw, 2); // cap the initial zoom
 
         // We want the final image/container width to always be baseWCache.
         // That means end scale MUST be 1.00. If the caption needs more room,
@@ -1559,18 +1570,18 @@ stylesheet: products
         const captionForMeasure = s.querySelector('.frame-caption');
         if (captionForMeasure) {
           const contentW = Math.min(window.innerWidth * 0.92, 1100);
-          const widthPx = Math.max(0, Math.round(contentW - 32));
+          const widthPx = Math.max(0, (contentW - 32));
           const prevWidth = captionForMeasure.style.width;
           const prevXform = captionForMeasure.style.transform;
           captionForMeasure.style.width = widthPx + 'px';
           captionForMeasure.style.transform = 'translate(0, 0)';
-          const capH = Math.round(captionForMeasure.getBoundingClientRect().height || captionForMeasure.scrollHeight || 0);
+          const capH = (captionForMeasure.getBoundingClientRect().height || captionForMeasure.scrollHeight || 0);
           captionForMeasure.style.transform = prevXform;
           captionForMeasure.style.width = prevWidth;
 
           // With endScale fixed at 1, compute the default end top position of the frame
           // and how much additional offset is required to keep: currTop_end >= topMargin + capH
-          const gapPx = Math.max(100, Math.round(baseHCache * 0.03));
+          const gapPx = Math.max(100, (baseHCache * 0.03));
           const vhNow = window.innerHeight;
           const topMargin = Math.max(60, vhNow * 0.08);
           const defaultOffsetPx = (vhNow * 6) / 100; // same 6vh baseline
@@ -1625,7 +1636,7 @@ stylesheet: products
           }
 
           // Compute where the scaled frame currently sits
-          const gap = Math.max(100, Math.round(baseH * 0.03 * (parseFloat(s.dataset.capGapMul || '1')))); // larger, responsive clearance above image
+          const gap = Math.max(100, (baseH * 0.03 * (parseFloat(s.dataset.capGapMul || '1')))); // larger, responsive clearance above image
           const currHeight = baseH * scale;
           const currWidth = baseW * scale;
           const currLeft = (window.innerWidth - currWidth) / 2;
@@ -1654,7 +1665,7 @@ stylesheet: products
           caption.style.left = leftPx + 'px';
           caption.style.top = capTop + 'px';
           caption.style.transform = 'translate(0%, -100%)';
-          caption.style.width = Math.round(widthPx) + 'px';
+          caption.style.width = widthPx + 'px';
           caption.style.textAlign = 'left';
 
           // Staggered reveal (tunable via data attributes)
@@ -1675,13 +1686,10 @@ stylesheet: products
         }
 
         // Apply an extra translateY offset when sticky shrinks, to counter clipping
-        const sticky = s.querySelector('.frame-sticky');
         let extraTranslate = 0;
-        if (sticky) {
-          const stickyH = parseFloat(sticky.style.height) || vh;
-          if (stickyH < vh) {
-            extraTranslate = (vh - stickyH) / 2; // push down proportionally
-          }
+        const stickyH = parseFloat(s.dataset.stickyH || '') || vh;
+        if (stickyH < vh) {
+          extraTranslate = (vh - stickyH) / 2; // sub‑px, no rounding
         }
         container.style.transform = `translateY(${offsetPx + extraTranslate}px) scale(${scale})`;
         if (img) img.style.transform = ""; // container owns the scale now
@@ -1723,15 +1731,15 @@ stylesheet: products
           const contentW2 = Math.min(window.innerWidth * 0.92, 1100);
           const capPrevW = cap.style.width;
           const capPrevX = cap.style.transform;
-          cap.style.width = Math.max(0, Math.round(contentW2 - 32)) + 'px';
+          cap.style.width = Math.max(0, (contentW2 - 32)) + 'px';
           cap.style.transform = 'translate(0, 0)';
-          const capH2 = Math.round(cap.getBoundingClientRect().height || cap.scrollHeight || 0);
+          const capH2 = (cap.getBoundingClientRect().height || cap.scrollHeight || 0);
           cap.style.transform = capPrevX;
           cap.style.width = capPrevW;
 
           // Final content stack height when the image is fully shrunk (scale=1)
           const imgH = baseHCache; // unscaled container height
-          const gapEnd = Math.max(100, Math.round(baseHCache * 0.03 * (parseFloat(s.dataset.capGapMul || '1'))));
+          const gapEnd = Math.max(100, (baseHCache * 0.03 * (parseFloat(s.dataset.capGapMul || '1'))));
           const padBottom = 0; // breathing room below
           const finalContentH = capH2 + gapEnd + imgH + padBottom;
 
@@ -1746,21 +1754,29 @@ stylesheet: products
           const k = kRaw * kRaw * (3 - 2 * kRaw); // smoothstep easing for nicer feel
 
           const lerp = (a,b,t)=> a + (b-a)*t;
-          const hNow = Math.round(lerp(startH, endH, k));
+          const hNow = lerp(startH, endH, k);
           sticky.style.height = hNow + 'px';
+          s.dataset.stickyH = String(hNow); // expose current sticky height without forcing a reflow
         })();
+        
 
         // Visually reduce the gap to the next section without changing layout
         // by translating the next element upward as the sticky shrinks.
         const tabsEl = s.querySelector('.perception-tabs');
         if (tabsEl) {
           // Fade in tabs starting at progress 0.8
-          const fadeStart = 0.97;
+          const fadeStart = 0.99;
           const t = clamp((p - fadeStart) / (1 - fadeStart), 0, 1);
           tabsEl.style.opacity = t.toFixed(3);
           tabsEl.style.transform = 'none';
           tabsEl.style.willChange = 'opacity';
           tabsEl.style.display = 'block'; // ensure not hidden by any layout CSS
+        }
+
+        // Safety: if section is not active/pinned, ensure frame is not fixed above next section
+        if (p <= 0 || p >= 1) {
+          const cont = s.querySelector('.frame-container');
+          if (cont) cont.classList.remove('frame-container--fixed');
         }
       }
     }
@@ -1780,20 +1796,25 @@ stylesheet: products
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
-    // 🌙 Perception tabs (inside #perception-zoom)
+    // 🌙 Perception tabs (standalone section; controls the image inside #perception-zoom)
     (function initPerceptionTabs() {
-      const section = document.getElementById('perception-zoom');
-      if (!section) return;
-      const img = section.querySelector('.frame-media');
-      const tablist = section.querySelector('.perception-tablist');
+      const tabsRoot = document.querySelector('.perception-tabs-section') || document.getElementById('perception-zoom');
+      if (!tabsRoot) return;
+
+      // The image we swap is still inside the sticky section
+      const img = document.querySelector('#perception-zoom .frame-media');
+
+      // Find the visible/permanent tablist (outside sticky)
+      const tablist = tabsRoot.querySelector('.perception-tablist');
       if (!tablist) return;
 
       const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
       const panels = {
-        night: section.querySelector('#tab-panel-night'),
-        rain:  section.querySelector('#tab-panel-rain'),
-        sun:   section.querySelector('#tab-panel-sun')
+        night: tabsRoot.querySelector('#tab-panel-night'),
+        rain:  tabsRoot.querySelector('#tab-panel-rain'),
+        sun:   tabsRoot.querySelector('#tab-panel-sun')
       };
+
       // Still images were preloaded in <head>
       const imgSrc = {
         night: '{{ "/img/ka1s/s4_night.png" | relative_url }}',
@@ -1856,7 +1877,7 @@ stylesheet: products
           btn.classList.toggle('is-active', active);
           btn.tabIndex = active ? 0 : -1;
         });
-        // image
+        // image (inside the sticky section)
         if (img && imgSrc[name] && img.getAttribute('src') !== imgSrc[name]) {
           img.setAttribute('src', imgSrc[name]);
         }
