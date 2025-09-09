@@ -553,6 +553,23 @@ stylesheet: products
       text-align: center;
       max-width: 980px;
       margin: 2rem auto 0;
+      min-height: 120px;   /* fixed minimum height so layout doesn't jump */
+      display: flex;
+      align-items: center; /* vertically center text inside */
+      justify-content: center; /* horizontally center if shorter than width */
+    }
+
+    /* Fix Safety panel jump on small screens: lock height and allow internal scroll if needed */
+    @media (max-width: 768px) {
+      .safety-panel {
+        min-height: 180px;    /* taller minimum height to fit descriptions */
+        max-height: 240px;    /* cap to avoid pushing layout too far */
+        overflow-y: auto;     /* scroll inside if text still overflows */
+        -webkit-overflow-scrolling: touch;
+        padding: 0 12px;
+        display: block;       /* allow natural flow instead of forced centering */
+        text-align: left;     /* better readability on narrow screens */
+      }
     }
 
     /* Tabs responsiveness: smaller gaps/padding on narrow screens */
@@ -1095,7 +1112,7 @@ stylesheet: products
       position: relative;
       z-index: 10;             /* above any fixed/sticky frame elements */
       isolation: isolate;      /* new stacking context; nothing from below sits on top */
-      padding: 0.75rem 0 2rem; /* breathing room */
+      padding: 0.1rem 0 0.1rem; /* breathing room */
       background: transparent; /* don't cover previous section */
     }
     .perception-tabs-section .perception-tabs-wrap {
@@ -1331,14 +1348,16 @@ stylesheet: products
     <!-- Full-bleed cockpit section that shrinks into the page frame -->
     <section class="frame-section" id="perception-zoom"
     data-overscan="0.1"
-    data-scale-end="0.80"          
-    data-offset-vh="0"             
-    data-offset-scale="1"        
-    data-offset-max="150"     
+    data-scale-end="0.95"
+    data-shrink-start="0"
+    data-shrink-end="1.0"
+    data-offset-vh="0"
+    data-offset-scale="1"
+    data-offset-max="150"
 
-    data-cap-bias="-10"
-    data-cap-bias-xs="80"
-    data-cap-bias-sm="70"
+    data-cap-bias="0"
+    data-cap-bias-xs="85"
+    data-cap-bias-sm="82"
     data-cap-bias-md="60"
     data-cap-bias-lg="80"
     data-cap-bias-xl="80"
@@ -1357,7 +1376,7 @@ stylesheet: products
     data-tabs-bias-lg="70"
     data-tabs-bias-xl="150"
 
-    data-cap-min-vh="8"
+    data-cap-min-vh="10"
     data-cap-bottom-pad="160"
     data-cap-gap-mul="1"
     data-cap-reveal-start="0.50"
@@ -1558,7 +1577,7 @@ stylesheet: products
           window.innerWidth / baseWCache,
           window.innerHeight / baseHCache
         ) * (1 + overscan);
-        const scaleFrom = Math.min(scaleFromRaw, 2); // cap the initial zoom
+        const scaleFrom = Math.min(scaleFromRaw, 2.5); // cap the initial zoom
 
         // We want the final image/container width to always be baseWCache.
         // That means end scale MUST be 1.00. If the caption needs more room,
@@ -1657,7 +1676,7 @@ stylesheet: products
           // Keep caption within viewport safe area (prevents large images from pushing it offscreen)
           const vhNow = window.innerHeight;
           const capBiasPx = parseFloat(s.dataset.capBias || '0');          // +down, -up (pixels)
-          const capMinVh = parseFloat(s.dataset.capMinVh || '8');         // % of viewport height
+          const capMinVh = parseFloat(s.dataset.capMinVh || '10');         // % of viewport height
           const capBottomPad = parseFloat(s.dataset.capBottomPad || '160');   // px
           const capTopMin = Math.max(60, vhNow * (capMinVh / 100));            // floor from top
           const capTopMax = Math.max(capTopMin + 40, vhNow - capBottomPad);    // keep off bottom
@@ -1747,11 +1766,15 @@ stylesheet: products
           const startH = vhNow;                  // sticky starts at full viewport
           const endH   = Math.min(finalContentH, vhNow); // only shrink downward
 
-          // Start shrinking once the zoom completes (p hits scaleEnd)
+          // Adjustable shrink window via data attributes:
+          //   data-shrink-start: progress when height reduction begins (default = data-scale-end)
+          //   data-shrink-end:   progress when height reduction finishes (default = 1.0)
           const scaleEndP = parseFloat(s.dataset.scaleEnd || '1.0');
-          const shrinkStart = clamp(scaleEndP, 0, 1);
-          const kRaw = clamp((p - shrinkStart) / Math.max(0.0001, 1 - shrinkStart), 0, 1);
-          const k = kRaw * kRaw * (3 - 2 * kRaw); // smoothstep easing for nicer feel
+          const shrinkStart = clamp(parseFloat(s.dataset.shrinkStart || String(scaleEndP)), 0, 1);
+          const shrinkEnd   = clamp(parseFloat(s.dataset.shrinkEnd   || '1.0'), 0, 1);
+          const denom = Math.max(0.0001, shrinkEnd - shrinkStart);
+          const kRaw = clamp((p - shrinkStart) / denom, 0, 1);
+          const k = kRaw * kRaw * (3 - 2 * kRaw); // smoothstep easing
 
           const lerp = (a,b,t)=> a + (b-a)*t;
           const hNow = lerp(startH, endH, k);
