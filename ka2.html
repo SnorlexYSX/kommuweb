@@ -8,10 +8,8 @@ stylesheet: products
   <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet">
   <!-- Preload Perception stills (used by tabs) -->
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.webm' | relative_url }}">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.mp4' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
 
   <!-- Preload Safety looped animations (used by tabs) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" type="video/webm">
@@ -25,7 +23,7 @@ stylesheet: products
     /* Mobile floating top panel (Apple-style) */
     .mobile-topbar { 
       position: fixed; 
-      top: 15px; left: 10px; right: 10px; 
+      top: 10px; left: 10px; right: 10px; 
       display: none; /* hidden by default; enabled via media query */
       align-items: center; 
       justify-content: space-between; 
@@ -1279,6 +1277,13 @@ stylesheet: products
         return;
       }
       const y = window.pageYOffset || 0;
+
+      // Always hide when close to the top
+      if (y < 80) {
+        bar.classList.remove('show');
+        lastY = y;
+        return;
+      }
 
       if (y > lastY + thresh) {
         // scrolling down → show
