@@ -20,6 +20,36 @@ stylesheet: products
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" type="video/mp4">
 
   <style>
+    /* Mobile floating top panel (Apple-style) */
+    .mobile-topbar { 
+      position: fixed; 
+      top: 15px; left: 10px; right: 10px; 
+      display: none; /* hidden by default; enabled via media query */
+      align-items: center; 
+      justify-content: space-between; 
+      gap: .5rem;
+      padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px; 
+      background: rgba(20,20,20,0.65); 
+      backdrop-filter: saturate(180%) blur(10px); 
+      -webkit-backdrop-filter: saturate(180%) blur(10px);
+      border-radius: 999px; 
+      z-index: 1000; 
+      transform: translateY(-100%); 
+      opacity: 0; 
+      transition: transform .28s ease, opacity .28s ease; 
+    }
+    .mobile-topbar.show { transform: translateY(0); opacity: 1; }
+    .mobile-topbar .brand { color: #f1f1f1; margin-left: 5px;}
+    .mobile-topbar .actions { display: flex;}
+    .mobile-topbar .btn-primary-top { 
+      background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1)); 
+      color: #f1f1f1; 
+      border: none; 
+      border-radius: 999px; 
+      padding: 0.5rem 1.5rem; 
+    }
+    @media (max-width: 768px) { .mobile-topbar { display: flex; } }
+
     body {
       background-color: #000;
     }
@@ -1231,6 +1261,39 @@ stylesheet: products
       animation: fadeInOpacity 0.6s ease-out forwards;
     }
   </style>
+
+<script>
+  // Show mobileTopBar when scrolling down, hide when scrolling up (mobile only)
+  document.addEventListener('DOMContentLoaded', function(){
+    const bar = document.getElementById('mobileTopBar');
+    if (!bar) return;
+
+    let lastY = window.pageYOffset || 0;
+    const thresh = 6; // pixel threshold to reduce jitter
+
+    function onScroll(){
+      if (window.innerWidth > 768) {
+        bar.classList.remove('show');
+        return;
+      }
+      const y = window.pageYOffset || 0;
+
+      if (y > lastY + thresh) {
+        // scrolling down → show
+        bar.classList.add('show');
+        lastY = y;
+      } else if (y < lastY - thresh) {
+        // scrolling up → hide
+        bar.classList.remove('show');
+        lastY = y;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { lastY = window.pageYOffset || 0; onScroll(); }, { passive: true });
+  });
+</script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const observer = new IntersectionObserver(entries => {
@@ -1246,7 +1309,8 @@ stylesheet: products
       if (
         el.closest('.frame-section') ||
         el.closest('.perception-tabs-section') ||
-        el.closest('.safety-tab')
+        el.closest('.safety-tab') ||
+        el.closest('.fixed')
       ) {
         // Ensure excluded headings are visible (remove any leftover class)
         el.classList.remove('fade-up-target', 'fade-up');
@@ -1326,6 +1390,12 @@ stylesheet: products
 
 </head>
 <main class="page-snap">
+  <div id="mobileTopBar" class="mobile-topbar" role="region" aria-label="Quick actions">
+    <div class="brand h5 font-bold">KommuAssist&nbsp;2</div>
+    <div class="actions">
+      <button class="btn-primary-top h5" type="button" onclick="goToBuyPage()">View pricing</button>
+    </div>
+  </div>
   <section class="ka1s-section">
     <div class="module-content s1-content-height">
       <div class="unit-image-wrapper">
@@ -1570,7 +1640,7 @@ stylesheet: products
       <div class="frame-text frame-caption" aria-hidden="false">
         <span class="cap-line h3 section-eyebrow">PERCEPTION</span>
         <span class="cap-line h1 section-title">3 Automotive Cameras.</span>
-        <span class="cap-line h2 text-white">2 on the road. 1 in-cabin.</span>
+        <span class="cap-line h2 text-white font-bold">2 on the road. 1 in-cabin.</span>
         <span class="cap-line h4 font-bold text-gray">Precision-tuned for full lane coverage, driver monitoring, and
           low-light visibility.</span>
       </div>
