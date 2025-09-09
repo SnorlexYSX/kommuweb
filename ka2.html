@@ -225,7 +225,7 @@ stylesheet: products
 
     .s3-content-height {
       position: relative;
-      min-height: max(calc(var(--vh, 1vh) * 80),750px);
+      min-height: max(calc(var(--vh, 1vh) * 80),700px);
       height: auto;
       display: flex;
       align-items: center;
@@ -396,7 +396,7 @@ stylesheet: products
       margin: calc(var(--vh, 1vh) * 10) auto 0;
       padding: 0 1rem;
       color: #eaeaea;
-      min-height: max(calc(var(--vh, 1vh) * 100),800px);
+      min-height: max(calc(var(--vh, 1vh) * 120),800px);
     }
 
     .safety-section {
@@ -404,23 +404,23 @@ stylesheet: products
       margin: calc(var(--vh, 1vh) * 10) auto;
       padding: 0 1rem;
       color: #eaeaea;
-      min-height: max(calc(var(--vh, 1vh) * 100),800px);
+      min-height: max(calc(var(--vh, 1vh) * 100),700px);
     }
 
     /* IPAD VERTICAL */
     @media (min-height: 1100px) and (max-width: 1100px) {
         .performance-section {
-          height: calc(var(--vh, 1vh) * 85);
-          min-height: calc(var(--vh, 1vh) * 85);
+          height: calc(var(--vh, 1vh) * 100);
+          min-height: calc(var(--vh, 1vh) * 100);
         }
         .safety-section {
-          height: calc(var(--vh, 1vh) * 85);
-          min-height: calc(var(--vh, 1vh) * 85);
+          height: calc(var(--vh, 1vh) * 80);
+          min-height: calc(var(--vh, 1vh) * 80);
         }
     }
 
     /* IPAD HORIZONTAL and other flat screens*/
-    @media screen and (orientation: landscape) and (max-height: 1100px) {
+    @media screen and (orientation: landscape) and (max-height: 800px) {
       .ka1s-section {
         height: calc(var(--vh, 1vh) * 130);
         min-height: calc(var(--vh, 1vh) * 130);
@@ -961,7 +961,7 @@ stylesheet: products
     }
 
     .ports-image {
-      width: min(1000px, 90vw);
+      width: min(900px, 85vw);
       height: auto;
       border-radius: 16px;
       /* match other sections */
@@ -981,7 +981,7 @@ stylesheet: products
     /* --- Ports labels overlay & animation --- */
     .ports-stage {
       position: relative;
-      width: min(1000px, 90vw);
+      width: min(900px, 85vw);
     }
 
 
@@ -1055,14 +1055,14 @@ stylesheet: products
 
       /* Top row */
       .ports-overlay .label-gps     { left: 40% !important; top: -10% !important; }
-      .ports-overlay .label-wifi    { left: 48% !important; top: 0% !important; }
-      .ports-overlay .label-speaker { left: 64% !important; top: -10% !important; }
+      .ports-overlay .label-wifi    { left: 46.5% !important; top: 0% !important; }
+      .ports-overlay .label-speaker { left: 63% !important; top: -10% !important; }
 
       /* Bottom row */
-      .ports-overlay .label-nanosim    { left: 28% !important; bottom: 0% !important; }
-      .ports-overlay .label-microsd    { left: 41.5% !important; bottom: 20% !important; }
-      .ports-overlay .label-diagnostic { left: 54% !important; bottom: -2% !important; }
-      .ports-overlay .label-12v        { left: 66% !important; bottom: 15% !important; }
+      .ports-overlay .label-nanosim    { left: 27% !important; bottom: 0% !important; }
+      .ports-overlay .label-microsd    { left: 40.8% !important; bottom: 20% !important; }
+      .ports-overlay .label-diagnostic { left: 53% !important; bottom: -2% !important; }
+      .ports-overlay .label-12v        { left: 65% !important; bottom: 15% !important; }
 
       /* Ensure connector lines stay centered under/over the text */
       .port-label::after { left: 50%; transform: translateX(-50%); }
@@ -1526,13 +1526,13 @@ stylesheet: products
               <div class="ports-overlay" aria-hidden="true">
                 <!-- Top labels -->
                 <span class="port-label top label-gps" style="left: 42.5%; top: 8%;" data-order="2" data-delay="0.00" data-anchor-y="28">GPS</span>
-                <span class="port-label top label-wifi" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi <span class="br-mobile"><br></span>&amp; Bluetooth</span>
-                <span class="port-label top label-speaker" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
+                <span class="port-label top label-wifi" style="left: 49.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi <span class="br-mobile"><br></span>&amp; Bluetooth</span>
+                <span class="port-label top label-speaker" style="left: 66%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
                 <!-- Bottom labels -->
-                <span class="port-label bottom label-nanosim" style="left: 32%; bottom: 20%;" data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
-                <span class="port-label bottom label-microsd" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
-                <span class="port-label bottom label-diagnostic" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">Diagnostic<br><span>USB‑C</span></span>
-                <span class="port-label bottom label-12v" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">12V USB‑C<br><span>(from Relay)</span></span>
+                <span class="port-label bottom label-nanosim" style="left: 31%; bottom: 20%;" data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
+                <span class="port-label bottom label-microsd" style="left: 44%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
+                <span class="port-label bottom label-diagnostic" style="left: 57.5%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">Diagnostic<br><span>USB‑C</span></span>
+                <span class="port-label bottom label-12v" style="left: 70%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">12V USB‑C<br><span>(from Relay)</span></span>
               </div>
             </div>
           </figure>
