@@ -1377,8 +1377,9 @@ stylesheet: products
         </div>
 
         <div class="safety-video-wrap">
-          <video class="safety-video" id="safetyVideo" src="{{ '/assets/ka_ani_s3_1.webm' | relative_url }}" autoplay
+          <video class="safety-video" id="safetyVideo" autoplay
             muted loop playsinline aria-label="Safety feature animation">
+            <!-- sources injected dynamically by initSafetyTabs() -->
           </video>
         </div>
 
@@ -2021,8 +2022,8 @@ stylesheet: products
       function setVideoSources(v, base) {
         // base is a string like 'dm', 'failsafe', or 'steerlimit'
         const paths = {
-          webm: `{{ '/assets/ka_ani_s3_' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`,
-          mp4:  `{{ '/assets/ka_ani_s3_' | relative_url }}`.replace(/\/$/, '') + `_${base}.mp4`
+          webm: `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`,
+          mp4:  `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.mp4`
         };
         // Clear existing sources
         while (v.firstChild) v.removeChild(v.firstChild);
