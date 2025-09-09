@@ -189,7 +189,7 @@ stylesheet: products
     .s1-content-height {
       position: relative;
       min-height: calc(var(--vh, 1vh) * 100);
-      height: calc(var(--vh, 1vh) * 100);
+      height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -222,7 +222,7 @@ stylesheet: products
     .s3-content-height {
       position: relative;
       min-height: max(calc(var(--vh, 1vh) * 80),750px);
-      height: max(calc(var(--vh, 1vh) * 80),750px);
+      height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -238,7 +238,7 @@ stylesheet: products
 
     .s1-video {
       /* width primarily controls size; aspect-ratio derives height */
-      width: clamp(520px, 72vw, 1100px);
+      width: min(1200px, 92vw);
       height: auto;                 /* let aspect-ratio calculate from width */
       aspect-ratio: 16 / 9;         /* reserve space before load */
       display: block;
@@ -416,7 +416,7 @@ stylesheet: products
     }
 
     /* IPAD HORIZONTAL and other flat screens*/
-    @media (max-height: 1100px) and (max-aspect-ratio: 16/9) {
+    /*@media (max-height: 1100px) and (max-aspect-ratio: 16/9) {
       .ka1s-section {
         height: calc(var(--vh, 1vh) * 130);
         min-height: calc(var(--vh, 1vh) * 130);
@@ -430,8 +430,8 @@ stylesheet: products
         min-height: calc(var(--vh, 1vh) * 130);
       }
       .s1-content-height {
-        height: calc(var(--vh, 1vh) * 120);
-        min-height: calc(var(--vh, 1vh) * 120);
+        height: calc(var(--vh, 1vh) * 130);
+        min-height: calc(var(--vh, 1vh) * 130);
       }
       .s2-content-height {
         height: auto;
@@ -441,7 +441,7 @@ stylesheet: products
         height: calc(var(--vh, 1vh) * 120);
         min-height: calc(var(--vh, 1vh) * 120);
       }
-  }
+  }*/
 
     .safety-video-wrap {
       display: grid;
@@ -630,7 +630,7 @@ stylesheet: products
       position: relative;
       min-height: 300vh;
       /* more scroll room for the pin */
-      overflow: visible;
+      overflow: clip;
       /* avoid ancestor clipping of sticky */
     }
 
@@ -936,7 +936,7 @@ stylesheet: products
     }
 
     .ports-image {
-      width: min(1100px, 80vw);
+      width: min(1100px, 90vw);
       height: auto;
       border-radius: 16px;
       /* match other sections */
@@ -956,7 +956,7 @@ stylesheet: products
     /* --- Ports labels overlay & animation --- */
     .ports-stage {
       position: relative;
-      width: min(1100px, 80vw);
+      width: min(1100px, 90vw);
     }
 
 
@@ -1022,22 +1022,22 @@ stylesheet: products
     .br-mobile { display: none; }
 
     @media (max-width: 600px) {
-      .port-label { font-size: 0.7rem !important; }
+      .port-label { font-size: 0.8rem !important; }
 
       /* show the forced line break only on mobile */
       .br-mobile { display: inline; }
       .label-wifi { white-space: normal !important; line-height: 1.2 !important; }
 
       /* Top row */
-      .ports-overlay .label-gps     { left: 30% !important; top: 0% !important; }
-      .ports-overlay .label-wifi    { left: 40% !important; top: 0% !important; }
-      .ports-overlay .label-speaker { left: 60% !important; top: 0% !important; }
+      .ports-overlay .label-gps     { left: 40% !important; top: -10% !important; }
+      .ports-overlay .label-wifi    { left: 48% !important; top: 0% !important; }
+      .ports-overlay .label-speaker { left: 64% !important; top: -10% !important; }
 
       /* Bottom row */
       .ports-overlay .label-nanosim    { left: 28% !important; bottom: 0% !important; }
-      .ports-overlay .label-microsd    { left: 41% !important; bottom: 20% !important; }
-      .ports-overlay .label-diagnostic { left: 53% !important; bottom: 0% !important; }
-      .ports-overlay .label-12v        { left: 65% !important; bottom: 20% !important; }
+      .ports-overlay .label-microsd    { left: 41.5% !important; bottom: 20% !important; }
+      .ports-overlay .label-diagnostic { left: 54% !important; bottom: -2% !important; }
+      .ports-overlay .label-12v        { left: 66% !important; bottom: 15% !important; }
 
       /* Ensure connector lines stay centered under/over the text */
       .port-label::after { left: 50%; transform: translateX(-50%); }
@@ -1187,8 +1187,9 @@ stylesheet: products
   <section class="ka1s-section">
     <div class="module-content s1-content-height">
       <div class="unit-image-wrapper">
-        <h2 class="h3 text-white">KommuAssist 2</h2>
-        <h1 class="h1 text-white">Built for Smarter Journey.</h1>
+        <h1 class="h4" style="color: #f06102;">New</h1>
+        <h2 class="h1 text-white">KommuAssist 2</h2>
+        <h1 class="h4 text-gray-light">Built for Smarter Journey.</h1>
         <video id="s1Video" class="s1-video scroll-video" playsinline autoplay muted preload="metadata" poster="{{ '/img/ka1s/s1_bg_2.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
           aria-label="KommuAssist unit rotating on purple glow background">
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
@@ -1257,7 +1258,7 @@ stylesheet: products
           10 watts of efficient power.</p>
         <div class="perf-meters" id="perfMeters">
           <div class="perf-group" aria-label="Throughput">
-            <h4 class="h3 font-bold text-white">7.5x faster than KA1 and KA1s</h4>
+            <h4 class="h3 font-bold text-white mt-16">7.5x faster than KA1 and KA1s</h4>
             <div class="meter-row" data-units="TOPS">
               <div class="h4 font-bold meter-label">Rockchip RK3588</div>
               <div class="meter-track">
@@ -1276,7 +1277,7 @@ stylesheet: products
             </div>
           </div>
           <div class="perf-group" aria-label="Efficiency">
-            <h4 class="h3 font-bold text-white">15x more power-efficient than KA1 and KA1s</h4>
+            <h4 class="h3 font-bold text-white mt-16">15x more power-efficient than KA1 and KA1s</h4>
             <div class="meter-row" data-units="TOPS/W">
               <div class="h4 font-bold meter-label">Rockchip RK3588</div>
               <div class="meter-track">
@@ -1402,8 +1403,7 @@ stylesheet: products
       <div class="frame-text frame-caption" aria-hidden="false">
         <span class="cap-line h3 section-eyebrow">PERCEPTION</span>
         <span class="cap-line h1 section-title">3 Automotive Cameras.</span>
-        <span class="cap-line h2 text-white">2 on the road.</span>
-        <span class="cap-line h2 text-white">1 in-cabin.</span>
+        <span class="cap-line h2 text-white">2 on the road. 1 in-cabin.</span>
         <span class="cap-line h4 font-bold text-gray">Precision-tuned for full lane coverage, driver monitoring, and
           low-light visibility.</span>
       </div>
@@ -1434,7 +1434,7 @@ stylesheet: products
   </section>
   
   <!-- PORTS & CONNECTIVITY (static image) -->
-  <section class="ports-section" id="ports" data-start="0.00" data-step="0.12" data-ramp="0.2">
+  <section class="ports-section" id="ports" data-start="0.00" data-step="0.12" data-ramp="0.22">
     <div class="module-content">
       <div class="unit-image-wrapper">
         <div class="ports-sticky">
