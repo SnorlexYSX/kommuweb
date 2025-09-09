@@ -205,7 +205,7 @@ stylesheet: products
       width: 100%;
       display: grid;
       place-items: center;
-      padding: 6rem 0 3rem;
+      padding: calc(var(--vh, 1vh) * 10) 0 0;
       overflow: visible;
     }
 
@@ -670,6 +670,17 @@ stylesheet: products
       margin: 0 1rem 0;
     }
 
+    /* Uniform 30% black overlay across the image */
+    .frame-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px; /* match container rounding */
+      background: rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+      z-index: 1; /* below vignette (::after), above image */
+    }
+
     .frame-media {
       display: block;
       width: 100%;
@@ -842,6 +853,14 @@ stylesheet: products
       text-align: center;
     }
 
+    @media (max-width: 768px) {
+      .tab-panel {
+        padding: 0 12px;
+        display: block;       /* allow natural flow instead of forced centering */
+        text-align: left;     /* better readability on narrow screens */
+      }
+    }
+
     /* Lock .perception-tabs height to viewport using --vh on mobile to prevent Chrome address bar jump */
 
     /* prevent wrap jitter on small screens */
@@ -901,7 +920,7 @@ stylesheet: products
 
     .ports-figure {
       position: sticky;        /* keep image fixed under the header */
-      top: 80px;               /* sits just below the pinned header */
+      top: 60px;               /* sits just below the pinned header */
       display: grid;
       place-items: center;
       margin: 0;               /* tighter to header */
@@ -936,7 +955,7 @@ stylesheet: products
     }
 
     .ports-image {
-      width: min(1100px, 90vw);
+      width: min(1000px, 90vw);
       height: auto;
       border-radius: 16px;
       /* match other sections */
@@ -956,11 +975,11 @@ stylesheet: products
     /* --- Ports labels overlay & animation --- */
     .ports-stage {
       position: relative;
-      width: min(1100px, 90vw);
+      width: min(1000px, 90vw);
     }
 
 
-    @media (max-height: 700px) {
+    @media (max-height: 768px) {
       .ports-figure { top: 70px; }
     }
 
@@ -1461,7 +1480,7 @@ stylesheet: products
                 <span class="port-label top label-wifi" style="left: 51.5%; top: 8%;" data-order="4" data-delay="0.02" data-anchor-y="28">Wi‑Fi <span class="br-mobile"><br></span>&amp; Bluetooth</span>
                 <span class="port-label top label-speaker" style="left: 67%; top: 8%;" data-order="6" data-delay="0.04" data-anchor-y="28">Speaker</span>
                 <!-- Bottom labels -->
-                <span class="port-label bottom label-nanosim" style="left: 32%; bottom: 5%;" data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
+                <span class="port-label bottom label-nanosim" style="left: 32%; bottom: 20%;" data-order="1" data-delay="0.00" data-anchor-y="41.5">Nano SIM</span>
                 <span class="port-label bottom label-microsd" style="left: 45%; bottom: 20%;" data-order="3" data-delay="0.03" data-anchor-y="41">MicroSD</span>
                 <span class="port-label bottom label-diagnostic" style="left: 58.75%; bottom: 18%;" data-order="5" data-delay="0.05" data-anchor-y="41">Diagnostic<br><span>USB‑C</span></span>
                 <span class="port-label bottom label-12v" style="left: 71.5%; bottom: 18%;" data-order="7" data-delay="0.08" data-anchor-y="41">12V USB‑C<br><span>(from Relay)</span></span>
