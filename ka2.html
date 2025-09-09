@@ -192,7 +192,7 @@ stylesheet: products
 
     .s1-content-height {
       position: relative;
-      min-height: calc(var(--vh, 1vh) * 120);
+      min-height: calc(var(--vh, 1vh) * 100);
       height: auto;
       display: flex;
       align-items: center;
@@ -426,8 +426,8 @@ stylesheet: products
         min-height: calc(var(--vh, 1vh) * 130);
       }
       .performance-section {
-        height: calc(var(--vh, 1vh) * 160);
-        min-height: calc(var(--vh, 1vh) * 160);
+        height: calc(var(--vh, 1vh) * 300);
+        min-height: calc(var(--vh, 1vh) * 300);
       }
       .safety-section {
         height: calc(var(--vh, 1vh) * 130);
@@ -660,10 +660,11 @@ stylesheet: products
 
     .frame-container {
       position: relative;
+      width: 100%;
       /*width: min(800px, 70vw);
       aspect-ratio: 16 / 9;*/
       overflow: hidden;
-      border-radius: 16px;
+      border-radius: 0;
       background: #000;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
       transform-origin: center center;
