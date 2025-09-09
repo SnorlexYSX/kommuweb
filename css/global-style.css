@@ -10,6 +10,7 @@
 .popupIconGrey { background-color: #606060; }
 .bg-transparent { background-color: transparent; }
 .text-gray { color: #86868b; } 
+.text-gray-light { color: #b2b2b2; } 
 .btn-border-gray {
   --tw-border-opacity: 0.2;
   border-color: rgb(178 178 178 / var(--tw-border-opacity, 1));
