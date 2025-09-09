@@ -555,6 +555,11 @@ stylesheet: products
     }
 
     /* no ::after on the button — underline is drawn by the tablist */
+    /* Fade-in animation for safety panels */
+    @keyframes fadeInPanel {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
     .safety-panel {
       text-align: center;
       max-width: 980px;
@@ -563,6 +568,12 @@ stylesheet: products
       display: flex;
       align-items: center; /* vertically center text inside */
       justify-content: center; /* horizontally center if shorter than width */
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+    .safety-panel.is-active {
+      opacity: 1;
+      animation: fadeInPanel 0.5s ease-out forwards;
     }
 
     /* Fix Safety panel jump on small screens: lock height and allow internal scroll if needed */
@@ -855,9 +866,20 @@ stylesheet: products
       box-shadow: 0 0 0 1px rgba(204, 43, 43, 0.25) inset;
     }
 
+    @keyframes fadeInTabPanel {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
     .tab-panel {
       margin-top: 2rem;
       text-align: center;
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+    .tab-panel.is-active {
+      opacity: 1;
+      animation: fadeInTabPanel 0.5s ease-out forwards;
     }
 
     @media (max-width: 768px) {
@@ -1166,7 +1188,7 @@ stylesheet: products
     -10px 0 30px #4B0082,   /* color glow */
     10px 0 40px #4B0082;   /* larger spread */
 }
-.shadow {
+    .shadow {
   color: #f1f1f1; /* base text color */
   text-shadow: 
     0 0 25px #000000,   /* medium glow */
@@ -1175,7 +1197,83 @@ stylesheet: products
     0 0 75px #000000,
     0 0 100px #000000; 
 }
+
+    /* Apple's font fade up animation for h1, h2, h3, and h4 */
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Only elements explicitly marked as fade targets start hidden */
+    .fade-up-target {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .fade-up {
+      animation: fadeUp 0.8s ease-out forwards;
+    }
+
+    /* Simple fade-in animation for safety tabs */
+    @keyframes fadeInOpacity {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .safety-tab.fade-in {
+      opacity: 0; /* start hidden */
+      animation: fadeInOpacity 0.6s ease-out forwards;
+    }
   </style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-up');
+          observer.unobserve(entry.target); // animate only once
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.h1, .h2, .h3, .h4').forEach(el => {
+      // Skip headings inside excluded sections
+      if (
+        el.closest('.frame-section') ||
+        el.closest('.perception-tabs-section') ||
+        el.closest('.safety-tab')
+      ) {
+        // Ensure excluded headings are visible (remove any leftover class)
+        el.classList.remove('fade-up-target', 'fade-up');
+        el.style.opacity = '';
+        el.style.transform = '';
+        return;
+      }
+      // Mark as animation targets and observe
+      el.classList.add('fade-up-target');
+      observer.observe(el);
+    });
+
+    // Fade in safety tabs when they enter the viewport
+    document.querySelectorAll('.safety-tab').forEach(el => {
+      const observerTab = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+            observerTab.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      observerTab.observe(el);
+    });
+  });
+</script>
+
 
 
 
@@ -2092,7 +2190,13 @@ stylesheet: products
         Object.entries(panels).forEach(([key, el]) => {
           if (!el) return;
           const active = key === name;
-          el.hidden = !active;
+          if (active) {
+            el.hidden = false;
+            requestAnimationFrame(() => el.classList.add('is-active'));
+          } else {
+            el.classList.remove('is-active');
+            el.hidden = true;
+          }
         });
         const base = sourceBase[name];
         if (base) {
