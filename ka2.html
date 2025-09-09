@@ -1409,7 +1409,7 @@ stylesheet: products
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
         <h1 class="h4 text-white">Built for Smarter Journey.</h1>
-        <video id="s1Video" class="s1-video scroll-video" playsinline muted preload="auto" poster="{{ '/img/ka1s/s1_bg_2.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
+        <video id="s1Video" class="s1-video scroll-video" playsinline autoplay muted preload="metadata" poster="{{ '/img/ka1s/s1_bg_2.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
           aria-label="KommuAssist unit rotating on purple glow background">
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
         </video>
@@ -1430,14 +1430,6 @@ stylesheet: products
                 { src: "{{ '/assets/ka_ani_s1.mp4' | relative_url }}", type: "video/mp4" }
               ];
 
-            // Ensure we don't autoplay until fully ready
-            v.autoplay = false;
-            try { v.pause(); } catch(e) {}
-            v.preload = 'auto';
-            v.muted = true;
-            v.playsInline = true;
-
-            // Clear and inject sources
             while (v.firstChild) v.removeChild(v.firstChild);
             sources.forEach(function (s) {
               var el = document.createElement('source');
@@ -1447,25 +1439,12 @@ stylesheet: products
             // Load after sources are appended
             try { v.load(); } catch (e) { }
 
-            function startPlayback(){
-              // Fade in and play once we have enough data to play through
-              v.style.opacity = '1';
-              v.play().catch(function(){ /* ignore autoplay policy rejections */ });
-            }
+            // Keep layout stable and fade in once ready
 
-            // Prefer canplaythrough (roughly means we can play to end without stalling)
-            const onCPT = function(){
-              v.removeEventListener('canplaythrough', onCPT);
-              startPlayback();
-            };
-            v.addEventListener('canplaythrough', onCPT, { once: true });
-
-            // If the browser already buffered enough, start immediately
-            // HAVE_ENOUGH_DATA === 4
-            if (v.readyState >= 4) {
-              v.removeEventListener('canplaythrough', onCPT);
-              startPlayback();
-            }
+            const onReady = () => { v.style.opacity = '1'; v.removeEventListener ( 'canplay', onReady); };
+            v.addEventListener ('canplay', onReady, { once: true });
+            // If cached and instantly ready, force style now
+            if (v.readyState >= 3) { v.style.opacity = '1'; }
           })();
         </script>
         <div class="s1-section-copy section-copy--center">
