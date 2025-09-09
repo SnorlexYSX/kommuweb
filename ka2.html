@@ -45,10 +45,10 @@ stylesheet: products
     .perf-meters {
       width: 100%;
       max-width: 1100px;
-      margin: 1.25rem auto 0;
+      margin: 1.25rem 2rem 0;
       color: #b2b2b2;
       --meter-label-col: 220px;
-      --meter-gap: 0.1rem;
+      --meter-gap: 0rem;
       --meter-tip-gap: 20px;
     }
 
@@ -147,6 +147,7 @@ stylesheet: products
     @media (max-width: 1000px) {
       #perfMeters {
         --meter-gap: .4rem;
+        margin: 1.25rem auto 0;
         /* shorter gap between label and bar */
       }
     }
@@ -238,7 +239,7 @@ stylesheet: products
 
     .s1-video {
       /* width primarily controls size; aspect-ratio derives height */
-      width: min(1200px, 92vw);
+      width: min(1100px, 92vw);
       height: auto;                 /* let aspect-ratio calculate from width */
       aspect-ratio: 16 / 9;         /* reserve space before load */
       display: block;
@@ -397,7 +398,7 @@ stylesheet: products
 
     .safety-section {
       max-width: 1100px;
-      margin: calc(var(--vh, 1vh) * 10) auto 0;
+      margin: calc(var(--vh, 1vh) * 10) auto;
       padding: 0 1rem;
       color: #eaeaea;
       min-height: max(calc(var(--vh, 1vh) * 100),800px);
@@ -416,7 +417,7 @@ stylesheet: products
     }
 
     /* IPAD HORIZONTAL and other flat screens*/
-    /*@media (max-height: 1100px) and (max-aspect-ratio: 16/9) {
+    @media screen and (orientation: landscape) and (max-height: 1100px) {
       .ka1s-section {
         height: calc(var(--vh, 1vh) * 130);
         min-height: calc(var(--vh, 1vh) * 130);
@@ -441,7 +442,7 @@ stylesheet: products
         height: calc(var(--vh, 1vh) * 120);
         min-height: calc(var(--vh, 1vh) * 120);
       }
-  }*/
+  }
 
     .safety-video-wrap {
       display: grid;
@@ -461,6 +462,8 @@ stylesheet: products
       /* maintain height even while loading */
       min-height: 180px;
       /* safety floor on very small viewports */
+      opacity: 1;                     /* default visible */
+      transition: opacity .35s ease;  /* fade in/out when switching */
     }
 
     /* Tabs under the safety video */
@@ -1150,6 +1153,24 @@ stylesheet: products
       z-index: 12;
       pointer-events: auto;    /* accept clicks */
     }
+
+    .glow {
+  color: #f1f1f1; /* base text color */
+  text-shadow: 
+    0 0 8px  #4B0082,   /* close glow */
+    0 0 10px #4B0082,   /* medium glow */
+    -10px 0 30px #4B0082,   /* color glow */
+    10px 0 40px #4B0082;   /* larger spread */
+}
+.shadow {
+  color: #f1f1f1; /* base text color */
+  text-shadow: 
+    0 0 15px  #000000,   /* close glow */
+    0 0 20px #000000,
+    0 0 25px #000000,   /* medium glow */
+    -10px 0 30px #000000,   /* color glow */
+    10px 0 50px #000000;   /* larger spread */
+}
   </style>
 
 
@@ -1207,8 +1228,8 @@ stylesheet: products
     <div class="module-content s1-content-height">
       <div class="unit-image-wrapper">
         <h1 class="h4" style="color: #f06102;">New</h1>
-        <h2 class="h1 text-white">KommuAssist 2</h2>
-        <h1 class="h4 text-gray-light">Built for Smarter Journey.</h1>
+        <h2 class="h1 text-white glow">KommuAssist 2</h2>
+        <h1 class="h4 text-white">Built for Smarter Journey.</h1>
         <video id="s1Video" class="s1-video scroll-video" playsinline autoplay muted preload="metadata" poster="{{ '/img/ka1s/s1_bg_2.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
           aria-label="KommuAssist unit rotating on purple glow background">
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
@@ -1266,7 +1287,7 @@ stylesheet: products
         <video class="s2-video scroll-video" playsinline autoplay muted preload="metadata" data-autoplay="true"
           data-play-once="true" aria-label="KommuAssist unit performance highlight animation">
           <!--<source src="{{ '/assets/ka_ani_s2.webm' | relative_url }}" type="video/webm">-->
-          <source src="{{ '/assets/ka_ani_s2.mp4' | relative_url }}" type="video/mp4">
+          <source src="{{ '/assets/ka_ani_s2_1.mp4' | relative_url }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <div class="section-copy">
@@ -1277,9 +1298,9 @@ stylesheet: products
           10 watts of efficient power.</p>
         <div class="perf-meters" id="perfMeters">
           <div class="perf-group" aria-label="Throughput">
-            <h4 class="h3 font-bold text-white mt-16">7.5x faster than KA1 and KA1s</h4>
+            <h4 class="h2 font-bold text-white mt-16"><span class="font-bold h2 glow" style="color: #f1f1f1;">7.5x compute speed</span> vs KA1 & KA1s</h4>
             <div class="meter-row" data-units="TOPS">
-              <div class="h4 font-bold meter-label">Rockchip RK3588</div>
+              <div class="h5 meter-label">Rockchip RK3588</div>
               <div class="meter-track">
                 <div class="meter-fill" data-pct="100" data-target="6"></div>
                 <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span
@@ -1287,7 +1308,7 @@ stylesheet: products
               </div>
             </div>
             <div class="meter-row" data-units="TOPS">
-              <div class="h4 font-bold meter-label">Snapdragon 821</div>
+              <div class="h5 meter-label">Snapdragon 821</div>
               <div class="meter-track">
                 <div class="meter-fill" data-pct="13.333" data-target="0.8"></div>
                 <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span
@@ -1296,9 +1317,9 @@ stylesheet: products
             </div>
           </div>
           <div class="perf-group" aria-label="Efficiency">
-            <h4 class="h3 font-bold text-white mt-16">15x more power-efficient than KA1 and KA1s</h4>
+            <h4 class="h2 font-bold text-white mt-16"><span class="font-bold h2 glow" style="color: #f1f1f1;">15x power-efficiency</span> vs KA1 & KA1s</h4>
             <div class="meter-row" data-units="TOPS/W">
-              <div class="h4 font-bold meter-label">Rockchip RK3588</div>
+              <div class="h5 meter-label">Rockchip RK3588</div>
               <div class="meter-track">
                 <div class="meter-fill" data-pct="100" data-target="0.6"></div>
                 <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span
@@ -1306,7 +1327,7 @@ stylesheet: products
               </div>
             </div>
             <div class="meter-row" data-units="TOPS/W">
-              <div class="h4 font-bold meter-label">Snapdragon 821</div>
+              <div class="h5 meter-label">Snapdragon 821</div>
               <div class="meter-track">
                 <div class="meter-fill" data-pct="6.667" data-target="0.04"></div>
                 <div class="h7 text-gray meter-tip"><span class="meter-value">0</span> <span
@@ -1414,9 +1435,9 @@ stylesheet: products
 
       <!-- Top text that starts centered (3 lines) and ends left-aligned above the image -->
       <div class="frame-text frame-headline" aria-hidden="false">
-        <span class="h1 font-bold text-white line line1">3 Automotive Cameras.</span>
-        <span class="h2 font-bold text-white line line2">2 on the road.</span>
-        <span class="h2 font-bold text-white line line3">1 in-cabin.</span>
+        <span class="h1 font-bold text-white line line1 shadow">3 Automotive Cameras.</span>
+        <span class="h2 font-bold text-white line line2 shadow">2 on the road.</span>
+        <span class="h2 font-bold text-white line line3 shadow">1 in-cabin.</span>
       </div>
       <!-- 5-row caption that appears above the image post-shrink -->
       <div class="frame-text frame-caption" aria-hidden="false">
@@ -2026,12 +2047,19 @@ stylesheet: products
         });
         const src = sources[name];
         if (src && video.getAttribute('src') !== src) {
-          // Swap the source; avoid explicit load() to prevent collapse/flicker —
-          // the fixed aspect-ratio keeps the box stable while the new source buffers.
-          video.setAttribute('src', src);
-          // Nudge playback once metadata is ready
-          const onCanPlay = () => { video.play().catch(() => { }); video.removeEventListener('canplay', onCanPlay); };
-          video.addEventListener('canplay', onCanPlay, { once: true });
+          // Start fade out
+          video.style.opacity = '0';
+          // After fade-out duration, swap source
+          setTimeout(() => {
+            video.setAttribute('src', src);
+            // When ready, play and fade back in
+            const onCanPlay = () => {
+              video.play().catch(() => { /* ignore autoplay rejections */ });
+              requestAnimationFrame(() => { video.style.opacity = '1'; });
+              video.removeEventListener('canplay', onCanPlay);
+            };
+            video.addEventListener('canplay', onCanPlay, { once: true });
+          }, 350); // match CSS transition duration
         }
         positionActiveUnderline();
       }
