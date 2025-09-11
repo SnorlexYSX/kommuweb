@@ -11,16 +11,16 @@
   type: one_off
   label: "Trade-in"
   valid_from: 2025-08-01
-  valid_until: 2025-12-31
+  valid_until: 2025-11-22
   prices:
-    MYR: 2999.00
+    MYR: 3299.00
     USD: 699.00
 
 - product: KommuAssist2
   type: subscription
   label: "Trade-in"
-  valid_from: 2025-08-01
-  valid_until: 2025-12-31
+  valid_from: 2025-11-22
+  valid_until: 2099-12-31
   month: 36
   id: plan_RArSzTfEiEsykX
   monthly_price:

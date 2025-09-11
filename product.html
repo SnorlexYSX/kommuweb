@@ -179,14 +179,21 @@ title: Buy KommuAssist 2
           <span id="payOneOffPrice" class="w-[40%] h6 text-white text-right"></span>
         </button>
         <button 
-          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center relative opacity-50 cursor-not-allowed pointer-events-none"
           data-summary="Rent-to-own"
-        >          
+          disabled
+          aria-disabled="true"
+          data-locked-permanent="true"
+        >
           <div class="text-left w-[60%]">
             <p class="h5 text-white">Rent-to-own**</p>
             <p class="h6 text-gray">Flexible 36-month instalment</p>
           </div>
           <span id="payRtoPrice" class="w-[40%] h6 text-white text-right ml-2"></span>
+
+          <div class="kommu-lock-overlay absolute inset-0 bg-gray-600/40 backdrop-blur-sm rounded-product-select flex items-center justify-center pointer-events-none">
+            <div class="h5 text-white font-normal text-center">Only available after 22nd Nov</div>
+          </div>
         </button>
         <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="rto">
           <div class="flex flex-col items-start text-left">
@@ -375,7 +382,8 @@ title: Buy KommuAssist 2
 
     const handleSelection = (selector, summaryId) => {
       document.querySelectorAll(selector).forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+          if (btn.disabled || btn.getAttribute('aria-disabled') === 'true' || btn.classList.contains('pointer-events-none')) { e.preventDefault(); return; }
           document.querySelectorAll(selector).forEach(b => {
             b.classList.remove("ring", "ring-blue-500", "border-white", "ring-1");
             b.removeAttribute("data-selected");
@@ -446,10 +454,13 @@ title: Buy KommuAssist 2
     const btns = Array.from(document.querySelectorAll(selector));
     if (!btns.length) return null;
 
+    const eligible = btns.filter(b => !b.disabled && b.getAttribute('aria-disabled') !== 'true' && !b.classList.contains('pointer-events-none'));
     const wantedLC = String(wanted||'').toLowerCase();
     const current = document.querySelector(`${selector}[data-selected="true"]`);
-    const match = btns.find(b => String(b.dataset.summary||b.innerText||'').toLowerCase().includes(wantedLC));
-    const chosen = match || btns[0];
+    const match = eligible.find(b => String(b.dataset.summary||b.innerText||'').toLowerCase().includes(wantedLC));
+    const chosen = match || eligible[0];
+
+    if (!chosen) return null;
 
     // If the currently-selected button already matches the wanted value, avoid DOM churn & event loops
     if (current === chosen) {
@@ -512,10 +523,18 @@ title: Buy KommuAssist 2
   function lockGroup(selector, chosenBtn, locked, message) {
     const btns = document.querySelectorAll(selector);
     btns.forEach(b => {
+      const isPermanent = b.getAttribute('data-locked-permanent') === 'true' || b.querySelector(':scope > .kommu-lock-overlay');
       if (!locked) {
-        b.disabled = false;
-        b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
-        clearButtonOverlay(b);
+        if (isPermanent) {
+          // keep it disabled and overlaid
+          b.disabled = true;
+          b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
+          setButtonOverlay(b, message || 'Only available after 22nd Nov');
+        } else {
+          b.disabled = false;
+          b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
+          clearButtonOverlay(b);
+        }
         return;
       }
       if (b !== chosenBtn) {
@@ -523,9 +542,16 @@ title: Buy KommuAssist 2
         b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
         setButtonOverlay(b, message);
       } else {
-        b.disabled = false;
-        b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
-        clearButtonOverlay(b);
+        // chosen remains enabled unless it's permanently locked
+        if (isPermanent) {
+          b.disabled = true;
+          b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
+          setButtonOverlay(b, message || 'Only available after 22nd Nov');
+        } else {
+          b.disabled = false;
+          b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
+          clearButtonOverlay(b);
+        }
       }
     });
   }

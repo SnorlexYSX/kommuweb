@@ -227,20 +227,37 @@ stylesheet: products
       display: flex;
       align-items: center;
       justify-content: center;
-      background-image: radial-gradient(120% 120% at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, .9) 100%),
-      url('{{ "/img/ka1s/s1_bg_low.png" | relative_url }}');
-      background-size: 100% 100%, 100% 100%, cover;
-      background-position: center, center, center;
-      background-repeat: no-repeat, no-repeat, no-repeat;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
     }
+
+    /* Foreground vignette that sits above bg video but below text */
+    .s1-content-height::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1; /* above #bgGlowVideo (z-index:0), below content (z>1) */
+      background-image:
+        radial-gradient(120% 120% at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, .9) 100%);
+      background-size: 100% 100%, 100% 100%;
+      background-position: center, center;
+      background-repeat: no-repeat, no-repeat;
+    }
+
+    /* Ensure hero texts/buttons render above vignette overlay */
+    .s1-content-height .unit-image-wrapper { position: relative; z-index: 3; }
+
 
     @media (max-width: 768px) {
       .s1-content-height {
         background-image:
           radial-gradient(120% 120% at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%),
           linear-gradient(to bottom, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, .9) 100%),
-          url('{{ "/img/ka1s/s1_bg_high.png" | relative_url }}');
+          /*url('{{ "/img/ka1s/s1_bg_high.png" | relative_url }}');*/
       }
     }
 
@@ -281,8 +298,8 @@ stylesheet: products
 
     .s1-video {
       /* width primarily controls size; aspect-ratio derives height */
-      width: min(1100px, 92vw);
-      height: auto;                 /* let aspect-ratio calculate from width */
+      width: auto;
+      height: calc(var(--vh, 1vh) * 60);                /* let aspect-ratio calculate from width */
       aspect-ratio: 16 / 9;         /* reserve space before load */
       display: block;
       background: transparent;      /* transparent so underlying purple bg shows through */
@@ -293,6 +310,11 @@ stylesheet: products
       max-height: 58vh;             /* cap relative to viewport height */
     }
 
+    @media (max-width: 768px) {
+      .s1-video {
+        height: calc(var(--vh, 1vh) * 35); ;
+      }
+    }
     /* On flatter/wider screens, keep the hero smaller by capping height more aggressively */
     @media screen and (min-aspect-ratio: 16/9) {
       .s1-video {
@@ -385,7 +407,7 @@ stylesheet: products
 
     .unit-image-wrapper {
       position: relative;
-      z-index: 0;
+      z-index: 2;
     }
 
     video.scroll-video,
@@ -1037,7 +1059,7 @@ stylesheet: products
 
     .unit-image-wrapper {
       position: relative;
-      z-index: 0;
+      z-index: 3;
     }
 
     /* --- Ports labels overlay & animation --- */
@@ -1414,7 +1436,42 @@ stylesheet: products
     </div>
   </div>
   <section class="ka1s-section">
+
     <div class="module-content s1-content-height">
+      <!-- Background glow video behind content -->
+      <video id="bgGlowVideo" class="scroll-video" playsinline autoplay muted preload="metadata"
+        data-autoplay="true" data-play-once="true"
+        style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; border-radius:0; pointer-events:none;"
+        aria-label="Background glow animation">
+      </video>
+      <script>
+        (function () {
+          var v = document.getElementById('bgGlowVideo');
+          if (!v) return;
+          var ua = navigator.userAgent;
+          var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+          var sources = isSafari
+            ? [
+              { src: "{{ '/assets/bg-glow-big.mp4' | relative_url }}", type: "video/mp4" },
+              { src: "{{ '/assets/bg-glow-big.webm' | relative_url }}", type: "video/webm" }
+            ]
+            : [
+              { src: "{{ '/assets/bg-glow-big.webm' | relative_url }}", type: "video/webm" },
+              { src: "{{ '/assets/bg-glow-big.mp4' | relative_url }}", type: "video/mp4" }
+            ];
+          while (v.firstChild) v.removeChild(v.firstChild);
+          sources.forEach(function (s) {
+            var el = document.createElement('source');
+            el.src = s.src; el.type = s.type; v.appendChild(el);
+          });
+          try { v.load(); } catch (e) { }
+          const onReady = () => { v.style.opacity = '1'; v.removeEventListener('canplay', onReady); v.play().catch(()=>{}); };
+          v.addEventListener('canplay', onReady, { once: true });
+          if (v.readyState >= 3) { v.style.opacity = '1'; v.play().catch(()=>{}); }
+          v.addEventListener('ended', () => { v.dataset.played = 'true'; v.pause(); });
+        })();
+      </script>
+
       <div class="unit-image-wrapper">
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
