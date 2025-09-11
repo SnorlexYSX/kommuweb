@@ -1450,14 +1450,17 @@ stylesheet: products
           if (!v) return;
           var ua = navigator.userAgent;
           var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+          var isMobileWidth = window.innerWidth < 768;
+          var mp4Src  = isMobileWidth ? "{{ '/assets/bg-glow-mobile-2.mp4' | relative_url }}" : "{{ '/assets/bg-glow-big.mp4' | relative_url }}";
+          var webmSrc = isMobileWidth ? "{{ '/assets/bg-glow-mobile-2.webm' | relative_url }}" : "{{ '/assets/bg-glow-big.webm' | relative_url }}";
           var sources = isSafari
             ? [
-              { src: "{{ '/assets/bg-glow-big.mp4' | relative_url }}", type: "video/mp4" },
-              { src: "{{ '/assets/bg-glow-big.webm' | relative_url }}", type: "video/webm" }
+              { src: mp4Src,  type: "video/mp4" },
+              { src: webmSrc, type: "video/webm" }
             ]
             : [
-              { src: "{{ '/assets/bg-glow-big.webm' | relative_url }}", type: "video/webm" },
-              { src: "{{ '/assets/bg-glow-big.mp4' | relative_url }}", type: "video/mp4" }
+              { src: webmSrc, type: "video/webm" },
+              { src: mp4Src,  type: "video/mp4" }
             ];
           while (v.firstChild) v.removeChild(v.firstChild);
           sources.forEach(function (s) {
@@ -1465,9 +1468,10 @@ stylesheet: products
             el.src = s.src; el.type = s.type; v.appendChild(el);
           });
           try { v.load(); } catch (e) { }
-          const onReady = () => { v.style.opacity = '1'; v.removeEventListener('canplay', onReady); v.play().catch(()=>{}); };
+          // Updated: do not auto play or fade-in here; just mark ready
+          const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
           v.addEventListener('canplay', onReady, { once: true });
-          if (v.readyState >= 3) { v.style.opacity = '1'; v.play().catch(()=>{}); }
+          if (v.readyState >= 3) { v.dataset.ready = 'true'; }
           v.addEventListener('ended', () => { v.dataset.played = 'true'; v.pause(); });
         })();
       </script>
@@ -1506,14 +1510,46 @@ stylesheet: products
             // Load after sources are appended
             try { v.load(); } catch (e) { }
 
-            // Keep layout stable and fade in once ready
-
-            const onReady = () => { v.style.opacity = '1'; v.removeEventListener ( 'canplay', onReady); };
-            v.addEventListener ('canplay', onReady, { once: true });
-            // If cached and instantly ready, force style now
-            if (v.readyState >= 3) { v.style.opacity = '1'; }
+            // Updated: do not fade in here; just mark ready
+            const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
+            v.addEventListener('canplay', onReady, { once: true });
+            if (v.readyState >= 3) { v.dataset.ready = 'true'; }
           })();
         </script>
+        <script>
+  // Start bgGlowVideo and s1Video together once both are ready
+  (function(){
+    const bg = document.getElementById('bgGlowVideo');
+    const s1 = document.getElementById('s1Video');
+    if (!bg || !s1) return;
+
+    // prevent the IntersectionObserver from auto-playing these two
+    bg.dataset.autoplay = 'false';
+    s1.dataset.autoplay = 'false';
+
+    function isReady(v){ return v.readyState >= 3 || v.dataset.ready === 'true'; }
+    function whenReady(v, cb){ if (isReady(v)) cb(); else v.addEventListener('canplay', cb, { once: true }); }
+
+    function startBoth(){
+      [bg, s1].forEach(v => { v.muted = true; v.playsInline = true; });
+      Promise.allSettled([bg.play(), s1.play()]).finally(() => {
+        bg.style.opacity = '1';
+        s1.style.opacity = '1';
+        // mark as played for play-once logic
+        if (bg.dataset.playOnce === 'true') bg.dataset.played = 'true';
+        if (s1.dataset.playOnce === 'true') s1.dataset.played = 'true';
+      });
+    }
+
+    // Start together once both can play
+    let flags = { bg:false, s1:false };
+    whenReady(bg, () => { flags.bg = true; if (flags.bg && flags.s1) startBoth(); });
+    whenReady(s1, () => { flags.s1 = true; if (flags.bg && flags.s1) startBoth(); });
+
+    // Safety fallback: if one stalls, start after a short timeout
+    setTimeout(() => { if (!(flags.bg && flags.s1)) startBoth(); }, 2000);
+  })();
+</script>
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
             class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
