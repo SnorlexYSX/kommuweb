@@ -1,14 +1,14 @@
 - name: KommuAssist2
   category: Device
   prices:
-    MYR: 3999.00
-    USD: 999.00
+    MYR: 3699.00
+    USD: 899.00
   subscription:
     id: plan_QyljeG4K1bOoHG
     name: Rent-to-Own
     month: 36
     monthly_price:
-      MYR: 150.00
+      MYR: 125.00
 
 - name: Sim Card
   category: Add-on

@@ -10,9 +10,9 @@ stylesheet: products
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
   <link rel="preload" as="video" href="{{ '/assets/bg-glow-big.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-big.webm' | relative_url }}" type="video/webm">
+
   <link rel="preload" as="video" href="{{ '/assets/bg-glow-mobile.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-mobile.webm' | relative_url }}" type="video/webm">
+ 
   <!-- Preload Perception stills (used by tabs) -->
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
@@ -1455,25 +1455,15 @@ stylesheet: products
         (function () {
           var v = document.getElementById('bgGlowVideo');
           if (!v) return;
-          var ua = navigator.userAgent;
-          var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
           var isMobileWidth = window.innerWidth < 768;
-          var mp4Src  = isMobileWidth ? "{{ '/assets/bg-glow-mobile-2.mp4' | relative_url }}" : "{{ '/assets/bg-glow-big.mp4' | relative_url }}";
-          var webmSrc = isMobileWidth ? "{{ '/assets/bg-glow-mobile-2.webm' | relative_url }}" : "{{ '/assets/bg-glow-big.webm' | relative_url }}";
-          var sources = isSafari
-            ? [
-              { src: mp4Src,  type: "video/mp4" },
-              { src: webmSrc, type: "video/webm" }
-            ]
-            : [
-              { src: webmSrc, type: "video/webm" },
-              { src: mp4Src,  type: "video/mp4" }
-            ];
+          var webmSrc = isMobileWidth
+            ? "{{ '/assets/bg-glow-mobile-2.webm' | relative_url }}"
+            : "{{ '/assets/bg-glow-big.webm' | relative_url }}";
           while (v.firstChild) v.removeChild(v.firstChild);
-          sources.forEach(function (s) {
-            var el = document.createElement('source');
-            el.src = s.src; el.type = s.type; v.appendChild(el);
-          });
+          var el = document.createElement('source');
+          el.src = webmSrc;
+          el.type = "video/webm";
+          v.appendChild(el);
           try { v.load(); } catch (e) { }
           // Updated: do not auto play or fade-in here; just mark ready
           const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
