@@ -9,9 +9,8 @@ stylesheet: products
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-big.mp4' | relative_url }}" type="video/mp4">
-
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-mobile.mp4' | relative_url }}" type="video/mp4">
+  <link rel="preload" as="video" href="{{ '/assets/bg-glow-big.webm' | relative_url }}" type="video/mp4">
+  <link rel="preload" as="video" href="{{ '/assets/bg-glow-mobile.webm' | relative_url }}" type="video/mp4">
  
   <!-- Preload Perception stills (used by tabs) -->
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
@@ -319,7 +318,7 @@ stylesheet: products
 
     @media (max-width: 768px) {
       .s1-video {
-        height: calc(var(--vh, 1vh) * 35); ;
+        height: calc(var(--vh, 1vh) * 40); ;
       }
     }
     /* On flatter/wider screens, keep the hero smaller by capping height more aggressively */
@@ -1514,7 +1513,7 @@ stylesheet: products
           })();
         </script>
         <script>
-  // Start bgGlowVideo and s1Video together once both are ready
+  // Start bgGlowVideo and s1Video together once both are ready (idempotent)
   (function(){
     const bg = document.getElementById('bgGlowVideo');
     const s1 = document.getElementById('s1Video');
@@ -1527,7 +1526,14 @@ stylesheet: products
     function isReady(v){ return v.readyState >= 3 || v.dataset.ready === 'true'; }
     function whenReady(v, cb){ if (isReady(v)) cb(); else v.addEventListener('canplay', cb, { once: true }); }
 
+    let started = false;   // guard to ensure we only start once
+    let flags = { bg:false, s1:false };
+    let fallbackTimer = null;
+
     function startBoth(){
+      if (started) return; // idempotent guard
+      started = true;
+      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
       [bg, s1].forEach(v => { v.muted = true; v.playsInline = true; });
       Promise.allSettled([bg.play(), s1.play()]).finally(() => {
         bg.style.opacity = '1';
@@ -1538,13 +1544,13 @@ stylesheet: products
       });
     }
 
-    // Start together once both can play
-    let flags = { bg:false, s1:false };
-    whenReady(bg, () => { flags.bg = true; if (flags.bg && flags.s1) startBoth(); });
-    whenReady(s1, () => { flags.s1 = true; if (flags.bg && flags.s1) startBoth(); });
+    function tryStart(){ if (!started && flags.bg && flags.s1) startBoth(); }
 
-    // Safety fallback: if one stalls, start after a short timeout
-    setTimeout(() => { if (!(flags.bg && flags.s1)) startBoth(); }, 2000);
+    whenReady(bg, () => { flags.bg = true; tryStart(); });
+    whenReady(s1, () => { flags.s1 = true; tryStart(); });
+
+    // Safety fallback: if one stalls, start once after a short timeout (won't retrigger)
+    fallbackTimer = setTimeout(() => { if (!started) startBoth(); }, 2000);
   })();
 </script>
         <div class="s1-section-copy section-copy--center">
