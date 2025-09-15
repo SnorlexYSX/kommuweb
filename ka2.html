@@ -9,8 +9,6 @@ stylesheet: products
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-big.webm' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/bg-glow-mobile.webm' | relative_url }}" type="video/mp4">
  
   <!-- Preload Perception stills (used by tabs) -->
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
@@ -1444,34 +1442,6 @@ stylesheet: products
   <section class="ka1s-section">
 
     <div class="module-content s1-content-height">
-      <!-- Background glow video behind content -->
-      <video id="bgGlowVideo" class="scroll-video" playsinline autoplay muted preload="metadata"
-        data-autoplay="true" data-play-once="true"
-        style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; border-radius:0; pointer-events:none;"
-        aria-label="Background glow animation">
-      </video>
-      <script>
-        (function () {
-          var v = document.getElementById('bgGlowVideo');
-          if (!v) return;
-          var isMobileWidth = window.innerWidth < 768;
-          var webmSrc = isMobileWidth
-            ? "{{ '/assets/bg-glow-mobile-2.webm' | relative_url }}"
-            : "{{ '/assets/bg-glow-big.webm' | relative_url }}";
-          while (v.firstChild) v.removeChild(v.firstChild);
-          var el = document.createElement('source');
-          el.src = webmSrc;
-          el.type = "video/webm";
-          v.appendChild(el);
-          try { v.load(); } catch (e) { }
-          // Updated: do not auto play or fade-in here; just mark ready
-          const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
-          v.addEventListener('canplay', onReady, { once: true });
-          if (v.readyState >= 3) { v.dataset.ready = 'true'; }
-          v.addEventListener('ended', () => { v.dataset.played = 'true'; v.pause(); });
-        })();
-      </script>
-
       <div class="unit-image-wrapper">
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
@@ -1513,46 +1483,29 @@ stylesheet: products
           })();
         </script>
         <script>
-  // Start bgGlowVideo and s1Video together once both are ready (idempotent)
-  (function(){
-    const bg = document.getElementById('bgGlowVideo');
-    const s1 = document.getElementById('s1Video');
-    if (!bg || !s1) return;
+    (function(){
+      const s1 = document.getElementById('s1Video');
+      if (!s1) return;
 
-    // prevent the IntersectionObserver from auto-playing these two
-    bg.dataset.autoplay = 'false';
-    s1.dataset.autoplay = 'false';
+      function isReady(v) {
+        return v.readyState >= 3 || v.dataset.ready === 'true';
+      }
 
-    function isReady(v){ return v.readyState >= 3 || v.dataset.ready === 'true'; }
-    function whenReady(v, cb){ if (isReady(v)) cb(); else v.addEventListener('canplay', cb, { once: true }); }
+      function whenReady(v, cb) {
+        if (isReady(v)) cb();
+        else v.addEventListener('canplay', cb, { once: true });
+      }
 
-    let started = false;   // guard to ensure we only start once
-    let flags = { bg:false, s1:false };
-    let fallbackTimer = null;
-
-    function startBoth(){
-      if (started) return; // idempotent guard
-      started = true;
-      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
-      [bg, s1].forEach(v => { v.muted = true; v.playsInline = true; });
-      Promise.allSettled([bg.play(), s1.play()]).finally(() => {
-        bg.style.opacity = '1';
-        s1.style.opacity = '1';
-        // mark as played for play-once logic
-        if (bg.dataset.playOnce === 'true') bg.dataset.played = 'true';
-        if (s1.dataset.playOnce === 'true') s1.dataset.played = 'true';
+      whenReady(s1, () => {
+        s1.muted = true;
+        s1.playsInline = true;
+        s1.play().finally(() => {
+          s1.style.opacity = '1';
+          if (s1.dataset.playOnce === 'true') s1.dataset.played = 'true';
+        });
       });
-    }
-
-    function tryStart(){ if (!started && flags.bg && flags.s1) startBoth(); }
-
-    whenReady(bg, () => { flags.bg = true; tryStart(); });
-    whenReady(s1, () => { flags.s1 = true; tryStart(); });
-
-    // Safety fallback: if one stalls, start once after a short timeout (won't retrigger)
-    fallbackTimer = setTimeout(() => { if (!started) startBoth(); }, 2000);
-  })();
-</script>
+    })();
+  </script>
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
             class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
@@ -1585,10 +1538,10 @@ stylesheet: products
             var sources = isSafari
               ? [
                 { src: "{{ '/assets/ka_ani_s2_1.mp4'  | relative_url }}", type: "video/mp4" },
-                { src: "{{ '/assets/ka_ani_s2.webm' | relative_url }}", type: "video/webm" }
+                { src: "{{ '/assets/ka_ani_s2_1.webm' | relative_url }}", type: "video/webm" }
               ]
               : [
-                { src: "{{ '/assets/ka_ani_s2.webm' | relative_url }}", type: "video/webm" },
+                { src: "{{ '/assets/ka_ani_s2_1.webm' | relative_url }}", type: "video/webm" },
                 { src: "{{ '/assets/ka_ani_s2_1.mp4'  | relative_url }}", type: "video/mp4" }
               ];
             while (v.firstChild) v.removeChild(v.firstChild);
