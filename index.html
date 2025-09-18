@@ -308,8 +308,11 @@ title: Kommu
   <video
     class="absolute inset-0 w-full h-full object-cover"
     autoplay muted loop playsinline
-    src="{{ "/assets/ytvid.mp4" | relative_url }}"
-  ></video>
+    preload="auto"
+  >
+    <source src="{{ '/assets/ytvid-small.mp4' | relative_url }}" type="video/mp4" media="(max-width: 768px)">
+    <source src="{{ '/assets/ytvid.mp4' | relative_url }}" type="video/mp4">
+  </video>
   <div class="home-vignette" aria-hidden="true"></div>
   <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 text-center px-4 hero-overlay">
     <h2 class="h2 text-white">
