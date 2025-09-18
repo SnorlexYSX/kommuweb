@@ -81,8 +81,11 @@ title: Kommu
   .h-scroll {
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;         /* enable horizontal paging-style snapping */
-    overscroll-behavior-x: contain;                                      /* contain fling on mobile */
+    overscroll-behavior-x: contain;        /* contain fling on mobile */
     -webkit-overflow-scrolling: touch;     /* iOS momentum */
+    /* Align snap positions to the same left/right inset as .row-align paddings */
+    scroll-padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
+    scroll-padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
   }
   .scroll-btn {
     position: absolute;
@@ -215,6 +218,17 @@ title: Kommu
 
   }
 
+  /* --- Horizontal snap scrolling for .fixed-card --- */
+  /* Ensure each card is a fixed-width snap point and never stretches */
+  .h-scroll .fixed-card {
+    flex: 0 0 var(--card-w);        /* do not grow; fixed basis equals card width */
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .h-scroll .fixed-card.wide {
+    flex-basis: calc(var(--card-w) * 2);
+  }
+
   /* Ensure images don’t grow the card vertically. Keep same height for normal and wide cards */
   .fixed-card img {
     height: var(--card-img-h);
@@ -230,6 +244,8 @@ title: Kommu
       min-width: calc(var(--card-w) * 1);
       max-width: calc(var(--card-w) * 1);
     }
+    /* match flex-basis to keep snap sizing consistent on mobile */
+    .h-scroll .fixed-card.wide { flex-basis: var(--card-w); }
   }
 
 
