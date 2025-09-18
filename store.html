@@ -20,9 +20,11 @@ title: Store | kommu.ai
 
   body {
     background-color: #000;
+    overflow-x: hidden;  /* prevent horizontal overflow from full-bleed rows */
   }
   html {
     background-color: #000;
+    overflow-x: hidden;  /* prevent horizontal overflow from full-bleed rows */
   }
   
   .fixed-card {
@@ -71,11 +73,19 @@ title: Store | kommu.ai
   }
 
   /* Horizontal carousel controls (Apple-style) */
-  .carousel-wrap { position: relative; }
-  .h-scroll { scroll-behavior: smooth; }
+  .carousel-wrap { position: relative; padding-bottom: 3.25rem; } /* reserve space for buttons */
+  .h-scroll {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;         /* enable horizontal snap scrolling */
+    overscroll-behavior-x: contain;        /* contain fling on mobile */
+    -webkit-overflow-scrolling: touch;     /* iOS momentum */
+    /* align snap with same left/right inset as .row-align paddings; clamp to >= 0 */
+    scroll-padding-left: max(0px, calc((100vw - 1100px) / 2), 1.5rem);
+    scroll-padding-right: max(0px, calc((100vw - 1100px) / 2), 1.5rem);
+  }
   .scroll-btn {
     position: absolute;
-    bottom: -30px; /* sit just under the cards row */
+    bottom: 1rem; /* inside reserved padding area */
     width: 42px; height: 42px; border-radius: 9999px;
     display: grid; place-items: center;
     background: rgb(255 255 255 / 0.6);
@@ -92,12 +102,23 @@ title: Store | kommu.ai
   .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; }
   .scroll-btn svg { width: 18px; height: 18px; }
 
+  /* Make each product card a fixed snap point and prevent flex-grow */
+  .h-scroll .fixed-card {
+    flex: 0 0 auto;               /* keep card's intrinsic width (350/300px) */
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
   @media (max-width: 500px) {
-    .scroll-btn { bottom: -12px; width: 36px; height: 36px; }
+    .carousel-wrap { padding-bottom: 2.25rem; } /* slightly smaller reserved space */
+    .scroll-btn { bottom: 0.5rem; width: 36px; height: 36px; }
     .scroll-btn svg { width: 16px; height: 16px; }
     .scroll-btn.next { right: 0.5rem; }
     .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); }
   }
+  /* Prevent wrapping for single-line titles and keep them fitting on small screens */
+  .nowrap { white-space: nowrap; }
+  .store-hero-title { font-size: clamp(1.75rem, 6vw, 2.25rem); }
 </style>
 <style>
 @media (max-width: 500px) {
@@ -253,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- Hero -->
 <section class="flex justify-center py-20 px-4">
   <div class="bg-card rounded-lg-store py-8 px-16 max-w-3xl w-full text-center">
-    <h2 class="h2 font-bold mb-4 text-white">KommuAssist 2.0</h2>
+    <h2 class="h2 font-bold mb-4 text-white store-hero-title nowrap">KommuAssist 2.0</h2>
     <div class="aspect-[4/3] w-full mb-4">
       <img src="{{ "" | relative_url }}/img/products/device/checkout_img.webp" alt="KommuAssist 2.0 device" class="w-full h-full object-contain rounded">
     </div>
