@@ -122,7 +122,7 @@ title: Kommu
 
   :root { 
     --card-w: 350px; 
-    --card-h: 700px;          /* total card height */
+    --card-h: 600px;          /* total card height */
     --card-img-h: 437.5px;      /* image height inside the card */
   }
 
@@ -132,7 +132,7 @@ title: Kommu
     }
     :root { 
       --card-w: 300px;
-      --card-h: 600px;
+      --card-h: 550px;
       --card-img-h: 375px; }
     .brand-logo {
       width: 6rem; /* 100px */
@@ -141,7 +141,7 @@ title: Kommu
   @media (max-width: 380px) {
     :root { 
       --card-w: 280px; 
-      --card-h: 600px; 
+      --card-h: 500px; 
       --card-img-h: 350px; 
     }
   }
@@ -345,7 +345,10 @@ title: Kommu
       </div>
 
       <div class=" fixed-card wide">
-        <img src="{{ '/img/main/hw3-2.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded-3xl">
+        <picture class="w-full mb-4 block rounded-3xl">
+          <source media="(max-width: 768px)" srcset="{{ '/img/main/hw3-portrait.png' | relative_url }}">
+          <img src="{{ '/img/main/hw3.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded-3xl">
+        </picture>
         <h4 class="h3 font-bold text-white">Cool by design.</h4>
         <p class="h5 text-gray mt-2">
           CNC-machined aluminum unibody doubles as a passive heatsink for sustained performance.
@@ -382,7 +385,7 @@ title: Kommu
 <section class="flex software-section">
   <div class="max-w-6xl mx-auto pt-10 px-4 hp3-content-height">
     <h4 class="h3 text-gray-light">Software</h4>
-    <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot v10</h1>
+    <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot</h1>
     <p class="h4 font-bold text-gray mb-8">
       bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
     </p>
@@ -390,7 +393,7 @@ title: Kommu
     <div class="carousel-wrap">
       <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
       <div class=" fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
+        <img src="{{ '/img/main/sw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
         <p class="h5 text-gray mt-2">
           End‑to‑end neural network. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
@@ -399,7 +402,7 @@ title: Kommu
       </div>
 
       <div class=" fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
+        <img src="{{ '/img/main/sw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">Understands the road.</h4>
         <p class="h5 text-gray mt-2">
           Smart enough to spot traffic lights, speed bumps, and safely change lanes.
@@ -407,7 +410,10 @@ title: Kommu
       </div>
 
       <div class=" fixed-card wide">
-        <img src="{{ '/img/main/hw1.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
+        <picture class="w-full mb-4 block rounded-3xl">
+          <source media="(max-width: 768px)" srcset="{{ '/img/main/sw3-portrait.png' | relative_url }}">
+          <img src="{{ '/img/main/sw3.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
+        </picture>
         <h4 class="h3 font-bold text-white">Driven by Kommunity.</h4>
         <p class="h5 text-gray mt-2">
           Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
@@ -415,7 +421,7 @@ title: Kommu
       </div>
 
       <div class=" fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
+        <img src="{{ '/img/main/sw4.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
         <p class="h5 text-gray mt-2">
           Observed ISO26262 Functional Safety Standard & MISRA C code compliant.
