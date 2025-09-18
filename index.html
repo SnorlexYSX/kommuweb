@@ -25,18 +25,9 @@ title: Kommu
 
   html, body { overflow-x: hidden; }
 
-  .fixed-card {
-    width: 350px;
-    min-width: 350px;
-    max-width: 350px;
-  }
-  @media (max-width: 380px) {
-    .fixed-card {
-      width: 200px;
-      min-width: 200px;
-      max-width: 200px;
-    }
-  }
+  
+
+  
 
   .brand-logo {
     width: 7.5rem;   
@@ -123,17 +114,30 @@ title: Kommu
 }
 
   /* --- Consolidated Breakpoints --- */
+
+  :root { 
+    --card-w: 350px; 
+    --card-h: 700px;          /* total card height */
+    --card-img-h: 437.5px;      /* image height inside the card */
+  }
+
   @media (max-width: 1280px) {
     .row-align { 
       gap: 2.5rem;
     }
-    .fixed-card {
-      width: 250px;
-      min-width: 250px;
-      max-width: 250px;
-    }
+    :root { 
+      --card-w: 300px;
+      --card-h: 500px;
+      --card-img-h: 375px; }
     .brand-logo {
       width: 6rem; /* 100px */
+    }
+  }
+  @media (max-width: 380px) {
+    :root { 
+      --card-w: 280px; 
+      --card-h: 500px; 
+      --card-img-h: 350px; 
     }
   }
 
@@ -187,6 +191,41 @@ title: Kommu
       min-height: calc(var(--vh, 1vh) * 80);
     }
   }
+
+  .fixed-card {
+    width: var(--card-w);
+    min-width: var(--card-w);
+    max-width: var(--card-w);
+    height: var(--card-h);
+    overflow: hidden;           /* keep consistent height */
+    display: flex;
+    flex-direction: column;
+  }
+  /* Double-width variation */
+  .fixed-card.wide {
+    width: calc(var(--card-w) * 2);
+    min-width: calc(var(--card-w) * 2);
+    max-width: calc(var(--card-w) * 2);
+  }
+
+  /* Ensure images don’t grow the card vertically. Keep same height for normal and wide cards */
+  .fixed-card img {
+    height: var(--card-img-h);
+    width: 100%;
+    object-fit: cover;
+    flex: 0 0 auto;
+    background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
+  }
+
+  @media (max-width: 768px) {
+      .fixed-card.wide {
+      width: calc(var(--card-w) * 1);
+      min-width: calc(var(--card-w) * 1);
+      max-width: calc(var(--card-w) * 1);
+    }
+  }
+
+
 
 /* IPAD HORIZONTAL */
 @media (max-height: 1100px) and (min-width: 1100px) {
@@ -281,35 +320,44 @@ title: Kommu
     
    <div class="carousel-wrap">
      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-14" id="hw-cards">
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
+      <div class="fixed-card">
+        <img src="{{ '/img/main/hw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">RK3588 at the core.</h4>
         <p class="h5 text-gray mt-2">
           On-device neural processing. 6 TOPS NPU acceleration for real‑time vision inference.
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded">
+
+      <div class="fixed-card">
+        <img src="{{ '/img/main/hw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">3× automotive cameras.</h4>
         <p class="h5 text-gray mt-2">
           Synchronized wide‑angle and long range perception built for automotive‑grade vision.
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded">
+      <div class=" fixed-card wide">
+        <img src="{{ '/img/main/hw3-2.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">Cool by design.</h4>
         <p class="h5 text-gray mt-2">
           CNC-machined aluminum unibody doubles as a passive heatsink for sustained performance.
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded">
-        <h4 class="h3 font-bold text-white">Mounts like magic.</h4>
+      <div class=" fixed-card">
+        <img src="{{ '/img/main/hw4.png' | relative_url }}" alt="Sleek curves" class="w-full mb-4 rounded-3xl">
+        <h4 class="h3 font-bold text-white">Sleek curves.</h4>
         <p class="h5 text-gray mt-2">
-          Magnetic mount for effortless installation and release. Snap and go.
+          Fanless, screenless module that tucks behind the mirror—no clutter, just capability.
+        </p>
+      </div>
+
+      <div class=" fixed-card">
+        <img src="{{ '/img/main/hw5.png' | relative_url }}" alt="Seamless connectivity" class="w-full mb-4 rounded-3xl">
+        <h4 class="h3 font-bold text-white">Seamless connectivity.</h4>
+        <p class="h5 text-gray mt-2">
+          Equipped with LTE, GPS, Wi-Fi, Bluetooth and local storage. Also works with the new KommuAI app.
         </p>
       </div>
     </div>
@@ -334,8 +382,8 @@ title: Kommu
     
     <div class="carousel-wrap">
       <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded">
+      <div class=" fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
         <p class="h5 text-gray mt-2">
           End‑to‑end neural network. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
@@ -343,24 +391,24 @@ title: Kommu
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded">
+      <div class=" fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">Understands the road.</h4>
         <p class="h5 text-gray mt-2">
           Smart enough to spot traffic lights, speed bumps, and safely change lanes.
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded">
-        <h4 class="h3 font-bold text-white">Driven by community.</h4>
+      <div class=" fixed-card wide">
+        <img src="{{ '/img/main/hw1.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
+        <h4 class="h3 font-bold text-white">Driven by Kommunity.</h4>
         <p class="h5 text-gray mt-2">
           Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
         </p>
       </div>
 
-      <div class="rounded-lg fixed-card">
-        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded">
+      <div class=" fixed-card">
+        <img src="{{ '/img/main/sample.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
         <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
         <p class="h5 text-gray mt-2">
           Observed ISO26262 Functional Safety Standard & MISRA C code compliant.
@@ -557,40 +605,41 @@ title: Kommu
     const nextBtn = wrapper.querySelector('.scroll-btn.next');
     if (!prevBtn || !nextBtn) return;
 
-    // Measure a single card and the horizontal gap
-    const sampleCard = wrapper.querySelector('.fixed-card');
-    const getStep = () => {
-      const w = sampleCard ? sampleCard.getBoundingClientRect().width : 0;
-      const cs = getComputedStyle(scroller);
-      // gap can be defined as 'gap' or 'column-gap' depending on the browser
-      const gapStr = cs.columnGap || cs.gap || '0px';
-      const gap = parseFloat(gapStr) || 0;
-      return Math.round(w + gap);
-    };
+    // Collect all card elements and compute their left offsets for precise snapping
+    const cards = Array.from(scroller.querySelectorAll('.fixed-card'));
 
-    // Clamp utility and alignment to nearest step
     const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-    const aligned = (x) => {
-      const step = getStep();
-      if (!step) return x;
-      return Math.round(x / step) * step;
+
+    const getStops = () => {
+      // account for left padding on the scroller (.row-align adds it)
+      const cs = getComputedStyle(scroller);
+      const padL = parseFloat(cs.paddingLeft) || 0;
+      return cards.map(el => Math.round(el.offsetLeft - padL));
     };
+    const getMax = () => scroller.scrollWidth - scroller.clientWidth;
 
     const updateDisabled = () => {
-      const max = scroller.scrollWidth - scroller.clientWidth;
+      const max = getMax();
       const x = scroller.scrollLeft;
       prevBtn.disabled = x <= 4;
       nextBtn.disabled = x >= max - 4;
     };
 
     const scrollByStep = (dir) => {
-      const step = getStep();
-      const max = scroller.scrollWidth - scroller.clientWidth;
-      const from = scroller.scrollLeft;
-      // Move exactly one step, then align to the nearest line
-      let target = aligned(from + dir * step);
-      target = clamp(target, 0, max);
-      scroller.scrollTo({ left: target, behavior: 'smooth' });
+      const stops = getStops();
+      const max = getMax();
+      const from = Math.round(scroller.scrollLeft);
+
+      // Find the next or previous stop relative to current position
+      let target;
+      if (dir > 0) {
+        target = stops.find(s => s > from + 4); // forward
+        if (target === undefined) target = max; // end
+      } else {
+        const prevs = stops.filter(s => s < from - 4);
+        target = prevs.length ? prevs[prevs.length - 1] : 0; // start
+      }
+      scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
     };
 
     prevBtn.addEventListener('click', () => scrollByStep(-1));
