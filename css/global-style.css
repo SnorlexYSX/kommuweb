@@ -124,7 +124,7 @@ select.store-select::-ms-expand { display: none; }
   .main-grid {
     /* Squeeze left column harder: can go down to 240px; prefer ~45vw below 1500px */
     grid-template-columns: minmax(clamp(240px, 45vw, 1040px), 1fr) 337px;
-    gap: 2.5rem !important; padding-left: 1rem !important; padding-right: 1rem !important;
+    gap: 2.5rem !important; padding-left: 1.5rem !important; padding-right: 1.5rem !important;
   }
 }
 
