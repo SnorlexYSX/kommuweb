@@ -1740,7 +1740,7 @@ stylesheet: products
   </section>
   
   <!-- PORTS & CONNECTIVITY (static image) -->
-  <section class="ports-section" id="ports" data-start="0.00" data-step="0.12" data-ramp="0.22">
+  <section class="ports-section" id="ports" data-start="0.05" data-step="0.18" data-ramp="0.30">
     <div class="module-content">
       <div class="unit-image-wrapper">
         <div class="ports-sticky">
@@ -1777,6 +1777,87 @@ stylesheet: products
         </div>
       </div>
   </section>
+  <script>
+    // Ports labels scroll-reveal with auto-normalization
+    (function () {
+      const sec = document.querySelector('.ports-section');
+      if (!sec) return;
+
+      const labels = Array.from(sec.querySelectorAll('.ports-overlay .port-label'));
+      if (labels.length === 0) return;
+
+      const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+      // Read tunables
+      let start = parseFloat(sec.dataset.start || '0');
+      let step  = parseFloat(sec.dataset.step  || '0.12');
+      let ramp  = parseFloat(sec.dataset.ramp  || '0.22');
+
+      // Highest order defined in the DOM
+      const maxOrder = labels.reduce((m, el) => Math.max(m, parseInt(el.dataset.order || '1', 10)), 1);
+
+      // If the sequence would overflow past progress=1, compress step so the last label still appears.
+      // We reserve a small tail (0.02) to guarantee full opacity at the end.
+      (function normalize() {
+        const tail = 0.02;
+        const usable = Math.max(0.0, 1.0 - start - ramp - tail);
+        const needed = Math.max(0, (maxOrder - 1)) * step;
+        if (needed > 0 && usable < needed) {
+          const scale = usable / needed;
+          step *= scale;  // compress spacing uniformly
+        }
+      })();
+
+      function sectionProgress(el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const pin = Math.max(1, rect.height - vh);
+        const scrolled = clamp(-rect.top, 0, pin);
+        return clamp(scrolled / pin, 0, 1);
+      }
+
+      function update() {
+        const p = sectionProgress(sec);
+
+        for (const el of labels) {
+          const order = parseInt(el.dataset.order || '1', 10);
+          const delay = parseFloat(el.dataset.delay || '0'); // optional fine‑tuning per label
+          const anchorY = parseFloat(el.dataset.anchorY || '0'); // keeps same API if used elsewhere
+
+          const t0 = start + (order - 1) * step + delay;
+          const t  = clamp((p - t0) / Math.max(0.0001, ramp), 0, 1);
+
+          // opacity & gentle lift
+          el.style.opacity = t.toFixed(3);
+          el.style.transform = `translateY(${(1 - t) * 8}px)`;
+
+          // Keep connector lines centered under/over text regardless of transform
+          // (no-op here since ::after uses left:50%; translateX(-50%))
+        }
+
+        // Fail‑safe: force all labels fully visible at end of section.
+        if (p >= 0.985) {
+          for (const el of labels) {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }
+        }
+      }
+
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => { update(); ticking = false; });
+        }
+      }
+
+      // init
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    })();
+  </script>
 </main>
 
 <script>
