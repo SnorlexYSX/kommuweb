@@ -127,7 +127,7 @@ title: Kommu
     }
     :root { 
       --card-w: 300px;
-      --card-h: 500px;
+      --card-h: 600px;
       --card-img-h: 375px; }
     .brand-logo {
       width: 6rem; /* 100px */
@@ -136,7 +136,7 @@ title: Kommu
   @media (max-width: 380px) {
     :root { 
       --card-w: 280px; 
-      --card-h: 500px; 
+      --card-h: 600px; 
       --card-img-h: 350px; 
     }
   }
@@ -618,6 +618,27 @@ title: Kommu
     };
     const getMax = () => scroller.scrollWidth - scroller.clientWidth;
 
+    // Prevent snap-from-scroll from fighting programmatic scrolls
+    let ignoreSnapUntil = 0; // timestamp via performance.now()
+    const blockSnap = (ms = 600) => { ignoreSnapUntil = performance.now() + ms; };
+
+    // Snap to the nearest card start based on current scrollLeft
+    const snapToNearest = () => {
+      const now = performance.now();
+      if (now < ignoreSnapUntil) return; // skip while a programmatic scroll is in flight
+      const stops = getStops();
+      if (!stops.length) return;
+      const max = getMax();
+      const from = Math.round(scroller.scrollLeft);
+      let target = stops[0];
+      let best = Math.abs(from - target);
+      for (let i = 1; i < stops.length; i++) {
+        const d = Math.abs(from - stops[i]);
+        if (d < best) { best = d; target = stops[i]; }
+      }
+      scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
+    };
+
     const updateDisabled = () => {
       const max = getMax();
       const x = scroller.scrollLeft;
@@ -639,13 +660,26 @@ title: Kommu
         const prevs = stops.filter(s => s < from - 4);
         target = prevs.length ? prevs[prevs.length - 1] : 0; // start
       }
+      blockSnap(700);
       scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
     };
 
     prevBtn.addEventListener('click', () => scrollByStep(-1));
     nextBtn.addEventListener('click', () => scrollByStep(1));
 
-    scroller.addEventListener('scroll', updateDisabled, { passive: true });
+    // Debounce manual scroll to detect scroll end, then snap
+    let scrollDebounce = null;
+    const SCROLL_IDLE_MS = 120; // tune for momentum scrolling
+
+    scroller.addEventListener('scroll', () => {
+      updateDisabled();
+      if (scrollDebounce) clearTimeout(scrollDebounce);
+      scrollDebounce = setTimeout(() => {
+        scrollDebounce = null;
+        snapToNearest();
+      }, SCROLL_IDLE_MS);
+    }, { passive: true });
+
     window.addEventListener('resize', updateDisabled);
     // init
     updateDisabled();
