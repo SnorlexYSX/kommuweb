@@ -78,7 +78,12 @@ title: Kommu
   }
   /* Horizontal carousel controls (Apple-style) */
   .carousel-wrap { position: relative; }
-  .h-scroll { scroll-behavior: smooth; }
+  .h-scroll {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;         /* enable horizontal paging-style snapping */
+    overscroll-behavior-x: contain;        /* contain fling on mobile */
+    -webkit-overflow-scrolling: touch;     /* iOS momentum */
+  }
   .scroll-btn {
     position: absolute;
     bottom: -30px; /* sit just under the cards row */
@@ -200,12 +205,15 @@ title: Kommu
     overflow: hidden;           /* keep consistent height */
     display: flex;
     flex-direction: column;
+    scroll-snap-align: start;              /* snap each card to the leading edge */
+    scroll-snap-stop: always;              /* force stopping at each card */
   }
   /* Double-width variation */
   .fixed-card.wide {
     width: calc(var(--card-w) * 2);
     min-width: calc(var(--card-w) * 2);
     max-width: calc(var(--card-w) * 2);
+    scroll-snap-align: start;
   }
 
   /* Ensure images don’t grow the card vertically. Keep same height for normal and wide cards */
@@ -618,27 +626,6 @@ title: Kommu
     };
     const getMax = () => scroller.scrollWidth - scroller.clientWidth;
 
-    // Prevent snap-from-scroll from fighting programmatic scrolls
-    let ignoreSnapUntil = 0; // timestamp via performance.now()
-    const blockSnap = (ms = 600) => { ignoreSnapUntil = performance.now() + ms; };
-
-    // Snap to the nearest card start based on current scrollLeft
-    const snapToNearest = () => {
-      const now = performance.now();
-      if (now < ignoreSnapUntil) return; // skip while a programmatic scroll is in flight
-      const stops = getStops();
-      if (!stops.length) return;
-      const max = getMax();
-      const from = Math.round(scroller.scrollLeft);
-      let target = stops[0];
-      let best = Math.abs(from - target);
-      for (let i = 1; i < stops.length; i++) {
-        const d = Math.abs(from - stops[i]);
-        if (d < best) { best = d; target = stops[i]; }
-      }
-      scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
-    };
-
     const updateDisabled = () => {
       const max = getMax();
       const x = scroller.scrollLeft;
@@ -660,26 +647,13 @@ title: Kommu
         const prevs = stops.filter(s => s < from - 4);
         target = prevs.length ? prevs[prevs.length - 1] : 0; // start
       }
-      blockSnap(700);
       scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
     };
 
     prevBtn.addEventListener('click', () => scrollByStep(-1));
     nextBtn.addEventListener('click', () => scrollByStep(1));
 
-    // Debounce manual scroll to detect scroll end, then snap
-    let scrollDebounce = null;
-    const SCROLL_IDLE_MS = 120; // tune for momentum scrolling
-
-    scroller.addEventListener('scroll', () => {
-      updateDisabled();
-      if (scrollDebounce) clearTimeout(scrollDebounce);
-      scrollDebounce = setTimeout(() => {
-        scrollDebounce = null;
-        snapToNearest();
-      }, SCROLL_IDLE_MS);
-    }, { passive: true });
-
+    scroller.addEventListener('scroll', updateDisabled, { passive: true });
     window.addEventListener('resize', updateDisabled);
     // init
     updateDisabled();
