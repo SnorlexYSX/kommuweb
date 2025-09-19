@@ -59,22 +59,41 @@ title: Buy KommuAssist 2
   .img-loaded {
     opacity: 1 !important;
   }
+
+  .slashed-price{
+  position:relative;
+  display:inline-block;
+  margin-right:.5rem;
+}
+.slashed-price::after{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  top:50%;
+  height:2px;
+  background: linear-gradient(to right, transparent, rgba(178,178,178,1), transparent);
+  transform: rotate(-12deg);     /* tweak angle as desired */
+  transform-origin:center;
+}
+
   </style>
 
 <!-- Product Page Full Layout -->
 <div class="w-full mt-80px">
   <!-- Title above everything -->
-  <div class="text-left mb-8 px-[9rem] main-grid">
+  <div class="text-left mb-8 main-grid place-self-start">
     <h1 class="h4" style="color: #f06102;">New</h1>
     <h1 class="h1 font-bold text-white mb-2">KommuAssist 2</h1>
     <p class="h5 text-gray-light">
-      <span id="heroOneOffPrice"></span>
-      <span id="heroMonthly"></span>
+      <!--<span id="heroOneOffPrice"></span>-->
+      <span>RM 3,699.00</span><br>
+      <span class="slashed-price">RM 4,499.00</span><span>(incl. RM409.00 SST)</span><span id="heroMonthly"></span>
     </p>
   </div>
 
   <!-- Main content: Image and Options Side-by-Side -->
-  <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 px-[9rem] main-grid">
+  <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 main-grid">
     <!-- Product Image -->
     <div class="img-container p-6 product-image-shell place-self-center">
       <img id="mainProductImg" src="{{ "/img/products/device/s1-static-pd256.webp" | relative_url }}" class="rounded" alt="Main product image">
@@ -129,11 +148,11 @@ title: Buy KommuAssist 2
   </div>
 
   <!-- Selection Sections -->
-  <div class="space-y-20 text-white max-w-[90rem] mx-auto mt-80px mb-100px main-grid">
+  <div class="space-y-20 text-white max-w-[80rem] mx-auto mt-80px mb-100px main-grid">
     <!-- Trade-in Section -->
     <div>
       <p class="h3 font-bold text-white">Trade-in</p>
-      <p class="h5 text-gray mb-4">Upgrade hassle-free — just return KommuAssist 2 and keep your existing setup.</p>
+      <p class="h5 text-gray mb-4">Upgrade hassle-free — just return KA1/KA1s device and keep your existing setup.</p>
       <div class="flex flex-col md:flex-row gap-4 items-start w-full">
         <button 
           class="tradeBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
@@ -141,7 +160,7 @@ title: Buy KommuAssist 2
         >
           <div>
             <p class="h5 text-white">Trade-in KA1/KA1s device*</p>
-            <p class="h6 text-gray">Only available for one-off purchase</p>
+            <p class="h6 text-gray">Save RM400 for one-off purchase</p>
           </div>
         </button>
         <button 
@@ -175,7 +194,8 @@ title: Buy KommuAssist 2
         >
           <div class="text-left w-[60%]">
             <p class="h5 text-white">One-off</p>
-            <p class="h6 text-gray">With 1 year warranty included**</p>
+            <p class="h6 text-gray">Save RM800 during pre-order launch until 22nd Oct</p>
+          
           </div>
           <span id="payOneOffPrice" class="w-[40%] h6 text-white text-right"></span>
         </button>
@@ -219,7 +239,7 @@ title: Buy KommuAssist 2
         > 
           <div>
             <p class="h5 text-white">Self-installation</p>
-            <p class="h6 text-gray">We’ll send you a guide for DIY setup</p>
+            <p class="h6 text-gray">Follow our step‑by‑step video guide</p>
           </div>
         </button>
         <button 
@@ -342,6 +362,7 @@ title: Buy KommuAssist 2
 
 <!-- Footnotes & T&C -->
 <div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
+  <p>Product usage terms <a href="{{ '/terms' | relative_url }}" class="underline text-gray-light">Product T&amp;C</a> apply.</p>
   <p>* Trade-in eligible</p>
   <p>** 3-year warranty included</p>
   <p>*** Rent-to-own terms and conditions <a href="{{ '/rto-terms' | relative_url }}" class="underline text-gray-light">RTO T&amp;C</a> apply.<br>
@@ -353,7 +374,7 @@ title: Buy KommuAssist 2
     <br>after 3, Kommu may repossess the product, terminate the agreement, list with a CRA, and forfeit the deposit (forfeiture also occurs 90 days after first default). 
     <br><br>Early termination by the customer triggers a fee equal to 12 months of MRF, settled from the deposit; termination is effective upon returning the product. Customer must not modify or service the product and is liable for loss/damage and full fees of 36 months of MRF if the unit is lost; Kommu may terminate for abnormal use or 3+ months’ arrears. Credit checks (e.g., via CRA/CCRIS) and PDPA-compliant data processing apply, and all other limits, warranties, and non-return terms in the policy govern.
   </p>
-  <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
+  
 
 </div>
 
@@ -653,7 +674,7 @@ title: Buy KommuAssist 2
       if (heroOneOffEl) heroOneOffEl.textContent = fmt.format(device);
       if (heroMonthlyEl) {
         if (monthly > 0) {
-          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/month with rent-to-own*` : ` or ${fmt.format(monthly)}/month*`;
+          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/mo. for 36 months with rent-to-own*` : ` or ${fmt.format(monthly)}/month*`;
         } else {
           heroMonthlyEl.textContent = '';
         }
@@ -725,30 +746,46 @@ title: Buy KommuAssist 2
     const COPY = {
       tradein: {
         title: 'How does trade‑in work?',
-        body: `Return your previous KommuAssist (KA1/KA1s) when you receive KA2.
-               • Only available for one‑off purchase.
-               • You keep your current accessories and setup.
-               • We’ll email return instructions after checkout.`
+        body: `Return your previous KommuAssist (KA1/KA1s) upon KA2 checkout.
+               <ul class="list-disc pl-5 mt-2">
+           <br><li>Only available for one‑off purchase.</li>
+           <br><li>Trade-in option will only include the new KA2 device and mount. Use existing setup and connectors.</li>
+           <br><li>We’ll email return instructions after checkout.<br>
+            Installation at Kommu HQ: post device before installation appointment.<br>
+            Ship to you: we will post KA2 after receiving your KA1/KA1s.</li>
+         </ul>
+         <p class="mt-3">
+           <a href="{{ '/rto-terms' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener">Full Rent-to-own Terms &amp; Conditions</a>
+         </p>`
       },
       rto: {
-        title: 'Rent‑to‑own policy',
-        body: `Pay monthly over 36 months. Device warranty is included for 3 years.
-               • Cancel anytime by returning the device.
-               • Missed payments may pause service until resolved.
-               • Full terms are shown during checkout.`
+        title: 'How does rent‑to‑own work?',
+        body: `3-year rental tenure.
+         <ul class="list-disc pl-5 mt-2">
+           <br><li>Pay 12 months initial deposit and monthly payment over 24 months.</li>
+           <br><li>Deposit is applied to the final 12 months of the 36-month term, and you own the device.</li>
+           <br><li>Device warranty is included for 3 years.</li>
+         </ul>
+         <p class="mt-3">
+           <a href="{{ '/rto-terms' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener">Full Rent-to-own Terms &amp; Conditions</a>
+         </p>`
       },
       install: {
         title: 'Self‑installation help',
-        body: `Prefer DIY? We’ll email a step‑by‑step video guide after purchase.
-               • Install at Kommu HQ is also available by appointment.
-               • Reach support if you need help during setup.`
+        body: `Prefer DIY? Follow our step‑by‑step video guide.
+               <ul class="list-disc pl-5 mt-2">
+           <br><li>Installation video <a href="{{ 'https://www.youtube.com/watch?v=2EpnMwpINpE' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener">youtube link</a></li>
+           <br><li>Use the same setup and connectors as KA1/KA1s except for a new mount.</li>
+           <br><li>Reach support if you need help during setup.</li>
+         </ul>
+        `
       }
     };
 
     function openHelp(kind){
       const c = COPY[kind] || {title:'Help', body:'…'};
       titleEl.textContent = c.title;
-      bodyEl.innerText = c.body;
+      bodyEl.innerHTML = c.body;
       overlay.classList.remove('hidden');
       modal.classList.remove('hidden');
       document.body.classList.add('overflow-hidden');

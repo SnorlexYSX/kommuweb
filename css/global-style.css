@@ -97,9 +97,22 @@ select.store-select::-ms-expand { display: none; }
 ================================ */
 
 /* Match main content margins/padding to Selection Section below 1800px */
+@media (max-width: 3000px) {
+  .main-grid {
+    max-width: 100rem; margin-left: auto; margin-right: auto; place-self: center;
+    padding-left: 0 !important; padding-right: 0 !important;
+    
+  }
+}
 @media (max-width: 1800px) {
   .main-grid {
-    max-width: 90rem; margin-left: auto; margin-right: auto;
+    max-width: 100rem; margin-left: 3rem !important; margin-right: 3rem !important;
+    padding-left: 0 !important; padding-right: 0 !important;
+  }
+}
+@media (max-width: 768px) {
+  .main-grid {
+    max-width: 100rem; margin-left: 0 !important; margin-right: 0 !important;
     padding-left: 0 !important; padding-right: 0 !important;
   }
 }
@@ -114,12 +127,12 @@ select.store-select::-ms-expand { display: none; }
 }
 
 /* Below 1500px: square container and scalable grid prioritizing right column */
-@media (max-width: 1500px) {
+@media (max-width: 1800px) {
   .product-image-shell {
-    width: 100%; height: auto; aspect-ratio: 1 / 1;  /* enforce 1:1 only here */
+    width: 100%; height: auto; aspect-ratio: 1.2/ 1;  /* enforce 1:1 only here */
   }
   .product-image-shell > img {
-    width: 100%; height: auto; max-width: 100%; max-height: 100%;
+    width: 90%; height: auto; max-width: 100%; max-height: 100%;
   }
   .main-grid {
     /* Squeeze left column harder: can go down to 240px; prefer ~45vw below 1500px */
