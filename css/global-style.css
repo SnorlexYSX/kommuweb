@@ -97,25 +97,43 @@ select.store-select::-ms-expand { display: none; }
 ================================ */
 
 /* Match main content margins/padding to Selection Section below 1800px */
-@media (max-width: 3000px) {
+@media (max-width: 5000px) {
+  .main-grid-top {
+    max-width: 100rem; 
+    width: 90vw;
+    margin-left: auto; 
+    margin-right: auto; 
+  }
+}
+@media (max-width: 1800px) {
+  .main-grid-top {
+    max-width: 80rem;
+    width: 90vw; 
+  }
+}
+@media (max-width: 768px) {
+  .main-grid-top {
+    max-width: 80rem;
+    width: 90vw; 
+  }
+}
+
+@media (max-width: 5000px) {
   .main-grid {
-    max-width: 100rem; margin-left: auto; margin-right: auto; place-self: center;
-    padding-left: 0 !important; padding-right: 0 !important;
-    
+    max-width: 80rem; 
+    width: 82vw;
+    margin-left: auto; 
+    margin-right: auto; 
   }
 }
 @media (max-width: 1800px) {
   .main-grid {
-    max-width: 100rem; margin-left: 3rem !important; margin-right: 3rem !important;
-    padding-left: 0 !important; padding-right: 0 !important;
+    max-width: 80rem;
+    width: 82vw; 
   }
 }
-@media (max-width: 768px) {
-  .main-grid {
-    max-width: 100rem; margin-left: 0 !important; margin-right: 0 !important;
-    padding-left: 0 !important; padding-right: 0 !important;
-  }
-}
+
+
 
 /* Fix large-screen image size (container stays flexible) */
 @media (min-width: 1800px) {
@@ -132,7 +150,7 @@ select.store-select::-ms-expand { display: none; }
     width: 100%; height: auto; aspect-ratio: 1.2/ 1;  /* enforce 1:1 only here */
   }
   .product-image-shell > img {
-    width: 90%; height: auto; max-width: 100%; max-height: 100%;
+    width: 85%; height: auto; max-width: 100%; max-height: 100%;
   }
   .main-grid {
     /* Squeeze left column harder: can go down to 240px; prefer ~45vw below 1500px */
@@ -140,6 +158,14 @@ select.store-select::-ms-expand { display: none; }
     gap: 2.5rem !important; padding-left: 1.5rem !important; padding-right: 1.5rem !important;
   }
 }
+
+@media (max-width: 768px) {
+  .main-grid {
+    max-width: 80rem;
+    width: 90vw; 
+    padding-left: 0 !important; padding-right: 0 !important;
+  }
+  }
 
 /* Below 1250px: reduce main content grid gap from gap-20 (5rem) to gap-14 (3.5rem) */
 @media (max-width: 1250px) {
