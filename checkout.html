@@ -193,16 +193,10 @@ title: Checkout
   </div>
 </section>
 
-  <!-- Footnotes & T&C -->
-  <div class="w-screen bg-black">
-    <div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
-      <p>* Trade-in eligible</p>
-      <p>** 3-year warranty included</p>
-      <p>*** Rent-to-own plan terms apply</p>
-      <p><a href="{{ '/product-tc' | relative_url }}" class="underline">Product T&amp;C</a></p>
-      <p><a href="{{ '/rto-tc' | relative_url }}" class="underline">RTO T&amp;C</a></p>
-    </div>
-  </div>
+<!-- Footnotes & T&C -->
+<div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
+  <p>Product usage terms <a href="{{ '/terms' | relative_url }}" class="underline text-gray-light">Product T&amp;C</a> apply. Read T&C before you purchase. Accept T&C before you use.</p>
+</div>
 
 <script>
   const shippingConfig = {{ site.data.shipping | jsonify }};
