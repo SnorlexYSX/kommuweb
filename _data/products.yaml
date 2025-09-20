@@ -20,7 +20,7 @@
     MYR: 320.00
     USD: 120.00  
   category: Hardware
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/set.png
   description: Full set of connectors and mount for your other car.
   includes:
   - ADAS relay and OBD connector
@@ -39,7 +39,7 @@
     MYR: 50.00
     USD: 10.00
   category: Hardware
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/mount.png
   description: Mount to setup KA2 device onto windshield.
   includes:
   - Mount
@@ -57,7 +57,7 @@
     MYR: 150.00
     USD: 33.00
   category: Hardware
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/relay.png
   description: Hardware to communicate with car ADAS system.
   includes:
   - ADAS relay unit
@@ -68,7 +68,7 @@
     MYR: 150.00
     USD: 12.00
   category: Cables & connectors
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/adas-connector.png
   description: Connect ADAS relay to car ADAS.
   includes:
   - Car brand specific ADAS connector
@@ -84,27 +84,27 @@
     MYR: 100.00
     USD: 33.00
   category: Cables & connectors
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/obd.png
   description: To power the entire system from OBD port.
   includes:
   - OBD connector unit
 
-- name: Short 3.1 USB-C Cable
+- name: Short USB-C 3.1 Cable
   prices:
     MYR: 30.00
     USD: 33.00
   category: Cables & connectors
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/short-c.png
   description: Connection between ADAS relay to KA device.
   includes:
   - Relay-to-KA USB-C Cable
 
-- name: Long 3.1 USB-C Cable
+- name: Long USB-C 3.1 Cable
   prices:
     MYR: 40.00
     USD: 33.00
   category: Cables & connectors
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/long-c.png
   description: Connection between OBD unit and ADAS relay.
   includes:
   - OBD-to-Relay USB-C Cable
@@ -114,7 +114,7 @@
     MYR: 10.00
     USD: 10.00
   category: Others
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/nanosim.png
   description: For 24/7 connectivity; enables subscription features.
   includes:
   - U-mobile prepaid SIM card
@@ -125,7 +125,7 @@
     MYR: 30.00
     USD: 30.00
   category: Others
-  image: /img/products/accessories/sample.png
+  image: /img/products/accessories/microsd.png
   description: For local storage of drive logs.
   includes:
   - 64gb micro SD card

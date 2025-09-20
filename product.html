@@ -96,7 +96,7 @@ title: Buy KommuAssist 2
   <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 main-grid-top">
     <!-- Product Image -->
     <div class="img-container p-6 product-image-shell place-self-center">
-      <img id="mainProductImg" src="{{ "/img/products/device/s1-static-pd256.webp" | relative_url }}" class="rounded" alt="Main product image">
+      <img id="mainProductImg" src="{{ '/img/products/device/product-page-2.webp' | relative_url }}" class="rounded" alt="Main product image">
 
       <!-- Prev / Next arrows -->
       <button id="prodPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous image">
@@ -137,7 +137,7 @@ title: Buy KommuAssist 2
           >            
               <div class="text-left">
               <p class="h5 text-white">SIM card included</p>
-              <p class="h6 text-gray">User self-activate RM25/month CelcomDigi plan</p>
+              <p class="h6 text-gray">User self-activate RM25/month prepaid data plan</p>
               <!-- <p class="text-sm text-gray-300 font-medium">RM20/mth for 20gb</p> -->
             </div>
             <span id="simPrice" class="h6 ml-2"></span>
@@ -274,7 +274,7 @@ title: Buy KommuAssist 2
       <h2 class="h3 h3-summary-mobile font-bold text-white mb-2">Your new KommuAssist.</h2>
       <p class="h5 h5-summary-mobile text-gray-light mb-6">Cruise with intelligence.</p>
       <img
-        src="{{ '/img/products/device/checkout_img_2.webp' | relative_url }}"
+        src="{{ '/img/products/device/checkout_img_cut.webp' | relative_url }}"
         alt="Summary image"
         class="w-full rounded"
       >
@@ -319,8 +319,8 @@ title: Buy KommuAssist 2
 
   <!-- Mobile: Carousel (below md) -->
   <div class="md:hidden">
-    <div class="img-container p-6 product-image-shell relative" id="boxCarousel">
-      <img id="boxImg" src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" class="rounded" alt="What's in the box item">
+    <div class="img-container p-6 product-image-shell relative h-80 md:h-auto" id="boxCarousel">
+      <img id="boxImg" src="{{ '/img/products/device/wib-1.png' | relative_url }}" class="h-full w-auto max-h-full object-contain rounded" alt="What's in the box item">
       <!-- Prev / Next arrows -->
       <button id="boxPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous item">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.5 4.5L7.5 10l5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -330,31 +330,28 @@ title: Buy KommuAssist 2
       </button>
       <div id="boxDots" class="absolute bottom-10 left-0 right-0 flex justify-center gap-4 pointer-events-auto"></div>
     </div>
-    <div id="boxCaption" class="h5 text-gray-300 my-4 text-center">Vision 2</div>
+    <div id="boxCaption" class="h5 text-gray-light my-4 text-center">KommuAssist 2</div>
   </div>
 
-  <!-- Desktop/tablet: original grid -->
-  <div class="img-container hidden md:grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Vision 2 -->
-    <div class="text-center">
-      <div class="p-4">
-        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="Vision 2" class="w-full h-48 object-contain">
+  <!-- Desktop/tablet: grid with captions outside image container -->
+  <div class="hidden md:block">
+    <!-- images inside the dark container -->
+    <div class="img-container grid grid-cols-1 md:grid-cols-3 gap-6 h-80 overflow-clip">
+      <div class="flex items-center justify-center pl-10 md:pl-16">
+        <img src="{{ '/img/products/device/wib-1.png' | relative_url }}" alt="KA2" class="h-full w-auto max-h-full object-contain">
       </div>
-      <p class="h5 text-gray-light my-4">Vision 2</p>
+      <div class="flex items-center justify-center">
+        <img src="{{ '/img/products/device/wib-2.png' | relative_url }}" alt="ADAS connector" class="h-full w-auto max-h-full object-contain">
+      </div>
+      <div class="flex items-center justify-center">
+        <img src="{{ '/img/products/device/wib-3.png' | relative_url }}" alt="OBD connector" class="h-full w-auto max-h-full object-contain">
+      </div>
     </div>
-    <!-- ADAS connector -->
-    <div class="text-center">
-      <div class="p-4">
-        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="ADAS connector" class="w-full h-48 object-contain">
-      </div>
-      <p class="h5 text-gray-light my-4">ADAS connector</p>
-    </div>
-    <!-- OBD connector -->
-    <div class="text-center">
-      <div class="p-4">
-        <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="OBD connector" class="w-full h-48 object-contain">
-      </div>
-      <p class="h5 text-gray-light my-4">OBD connector</p>
+    <!-- captions below, outside the container -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mt-4">
+      <p class="h5 text-gray-light pl-10 md:pl-16">KommuAssist 2</p>
+      <p class="h5 text-gray-light">ADAS connector (with USB-C cable)</p>
+      <p class="h5 text-gray-light">OBD connector (with USB-C cable)</p>
     </div>
   </div>
 </div>
@@ -685,7 +682,7 @@ title: Buy KommuAssist 2
       if (heroOneOffEl) heroOneOffEl.textContent = fmt.format(device);
       if (heroMonthlyEl) {
         if (monthly > 0) {
-          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/mo. for 36 months with rent-to-own*` : ` or ${fmt.format(monthly)}/month*`;
+          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/mo. for 36 months with rent-to-own***` : ` or ${fmt.format(monthly)}/month*`;
         } else {
           heroMonthlyEl.textContent = '';
         }
@@ -761,9 +758,9 @@ title: Buy KommuAssist 2
                <ul class="list-disc pl-5 mt-2">
            <br><li>Only available for one‑off purchase.</li>
            <br><li>Trade-in option will only include the new KA2 device and mount. Use existing setup and connectors.</li>
-           <br><li>We’ll email return instructions after checkout.<br>
-            Installation at Kommu HQ: post device before installation appointment.<br>
-            Ship to you: we will post KA2 after receiving your KA1/KA1s.</li>
+           <br><li>We’ll email return instructions after checkout.<br><br>
+            Installation at Kommu HQ: post device before installation appointment.<br><br>
+            Shipping option: we will post KA2 after we receive and check your KA1/KA1s.</li>
          </ul>
          <p class="mt-3">
            <a href="{{ '/trade-in' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener">Full Trade-in Policy</a>
@@ -817,8 +814,7 @@ title: Buy KommuAssist 2
 <script>
   (function(){
     const imgs = [
-      "{{ '/img/products/device/s1-static-pd256.webp' | relative_url }}",
-      "{{ '/img/products/device/checkout_img_2.webp' | relative_url }}",
+      "{{ '/img/products/device/product-page-2.webp' | relative_url }}",
       "{{ '/img/products/device/checkout_img.webp' | relative_url }}"
     ];
     const imgEl = document.getElementById('mainProductImg');
@@ -928,9 +924,9 @@ title: Buy KommuAssist 2
 <script>
   (function(){
     const items = [
-      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'Vision 2', alt: 'Vision 2' },
-      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'ADAS connector', alt: 'ADAS connector' },
-      { src: "{{ '/img/products/device/checkout_img.webp' | relative_url }}", caption: 'OBD connector', alt: 'OBD connector' }
+      { src: "{{ '/img/products/device/wib-1.png' | relative_url }}", caption: 'KommuAssist 2', alt: 'KommuAssist 2' },
+      { src: "{{ '/img/products/device/wib-2.png' | relative_url }}", caption: 'ADAS connector (with USB-C cable)', alt: 'ADAS connector' },
+      { src: "{{ '/img/products/device/wib-3.png' | relative_url }}", caption: 'OBD connector (with USB-C cable)', alt: 'OBD connector' }
     ];
     const imgEl = document.getElementById('boxImg');
     const dotsEl = document.getElementById('boxDots');
