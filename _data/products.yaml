@@ -19,7 +19,7 @@
   prices:
     MYR: 320.00
     USD: 120.00  
-  category: Hardware
+  category: Parts
   image: /img/products/accessories/set.png
   description: Full set of connectors and mount for your other car.
   includes:
@@ -38,7 +38,7 @@
   prices:
     MYR: 50.00
     USD: 10.00
-  category: Hardware
+  category: Parts
   image: /img/products/accessories/mount.png
   description: Mount to setup KA2 device onto windshield.
   includes:
@@ -56,7 +56,7 @@
   prices:
     MYR: 150.00
     USD: 33.00
-  category: Hardware
+  category: Parts
   image: /img/products/accessories/relay.png
   description: Hardware to communicate with car ADAS system.
   includes:
@@ -83,7 +83,7 @@
   prices:
     MYR: 100.00
     USD: 33.00
-  category: Cables & connectors
+  category: Parts
   image: /img/products/accessories/obd.png
   description: To power the entire system from OBD port.
   includes:
@@ -117,8 +117,8 @@
   image: /img/products/accessories/nanosim.png
   description: For 24/7 connectivity; enables subscription features.
   includes:
-  - U-mobile prepaid SIM card
-   (user to self-activate and subscribe to RM25/month plan for 40gb data) 
+  - Prepaid SIM card
+   (user to self-activate and subscribe to RM25/month prepaid plan for 40gb data) 
 
 - name: Micro SD card
   prices:

@@ -287,9 +287,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <section class="px-4 flex justify-center">
   <div class="w-full max-w-[1100px]">
 
-  <h1 class="h1 font-bold mb-6 text-white">Shop Parts</h1>
+  <h1 class="h1 font-bold mb-6 text-white">Shop Accessories</h1>
 
-  {% assign categories = "Hardware,Cables & connectors,Others" | split: "," %}
+  {% assign categories = "Parts,Cables & connectors,Others" | split: "," %}
   {% for category in categories %}
     <h3 class="h3 mt-4 mb-4 text-gray-300">{{ category }}</h3>
     <div class="carousel-wrap">
