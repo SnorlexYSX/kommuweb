@@ -17,8 +17,8 @@
 
 - name: Second Car Kit
   prices:
-    MYR: 320.00
-    USD: 120.00  
+    MYR: 360.00
+    USD: 85.00  
   category: Parts
   image: /img/products/accessories/set.png
   description: Full set of connectors and mount for your other car.
@@ -36,8 +36,8 @@
 
 - name: KA2 Mount
   prices:
-    MYR: 50.00
-    USD: 10.00
+    MYR: 30.00
+    USD: 8.00
   category: Parts
   image: /img/products/accessories/mount.png
   description: Mount to setup KA2 device onto windshield.
@@ -54,8 +54,8 @@
 
 - name: ADAS Relay
   prices:
-    MYR: 150.00
-    USD: 33.00
+    MYR: 50.00
+    USD: 12.00
   category: Parts
   image: /img/products/accessories/relay.png
   description: Hardware to communicate with car ADAS system.
@@ -66,7 +66,7 @@
 - name: ADAS Connector
   prices:
     MYR: 150.00
-    USD: 12.00
+    USD: 40.00
   category: Cables & connectors
   image: /img/products/accessories/adas-connector.png
   description: Connect ADAS relay to car ADAS.
@@ -81,8 +81,8 @@
 
 - name: OBD Connector
   prices:
-    MYR: 100.00
-    USD: 33.00
+    MYR: 50.00
+    USD: 12.00
   category: Parts
   image: /img/products/accessories/obd.png
   description: To power the entire system from OBD port.
@@ -92,7 +92,7 @@
 - name: Short USB-C 3.1 Cable
   prices:
     MYR: 30.00
-    USD: 33.00
+    USD: 8.00
   category: Cables & connectors
   image: /img/products/accessories/short-c.png
   description: Connection between ADAS relay to KA device.
@@ -101,8 +101,8 @@
 
 - name: Long USB-C 3.1 Cable
   prices:
-    MYR: 40.00
-    USD: 33.00
+    MYR: 50.00
+    USD: 12.00
   category: Cables & connectors
   image: /img/products/accessories/long-c.png
   description: Connection between OBD unit and ADAS relay.
@@ -123,7 +123,7 @@
 - name: Micro SD card
   prices:
     MYR: 30.00
-    USD: 30.00
+    USD: 8.00
   category: Others
   image: /img/products/accessories/microsd.png
   description: For local storage of drive logs.
