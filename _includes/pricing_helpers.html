@@ -1,0 +1,174 @@
+<script>
+  // ----- Data (available on any page that includes this file)
+  const products    = {{ site.data.products | jsonify }};
+  const promotions  = {{ site.data.promotions | jsonify }};
+  const rulesConfig = {{ site.data.checkout_rules | jsonify }};
+
+  // ----- Locale & currency helpers
+  function getPreferredLocale(){
+    return localStorage.getItem('preferredLocale') || navigator.language || 'en-US';
+  }
+
+  // ----- Product pricing helpers
+  function getProductPriceByNameCurrency(name, curr){
+    try{
+      const ccy = (curr||'').toUpperCase();
+      const p = (products||[]).find(pp => (pp.name||'').toLowerCase() === String(name||'').toLowerCase());
+      if (!p) return 0;
+      const prices = p.prices || {};
+      return parseFloat(prices[ccy] ?? prices.USD ?? 0) || 0;
+    } catch(_) { return 0; }
+  }
+  function getBaseDevicePriceByCurrency(curr){
+    try{
+      const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+      if (!dev) return 0;
+      const prices = dev.prices || {};
+      const c = (curr||'').toUpperCase();
+      return parseFloat(prices[c] ?? prices.USD ?? 0) || 0;
+    } catch(_) { return 0; }
+  }
+
+  // ----- Promotions helpers (multi-currency aware)
+  function isPromoActive(promo, now = new Date()){
+    try{
+      const from  = promo.valid_from  ? new Date(promo.valid_from  + 'T00:00:00Z') : null;
+      const until = promo.valid_until ? new Date(promo.valid_until + 'T23:59:59Z') : null;
+      if (from && now < from) return false;
+      if (until && now > until) return false;
+      return true;
+    } catch(_) { return false; }
+  }
+  function activePromoFor(productName, type, currency, preferredLabels){
+    const ccy = (currency||'').toUpperCase();
+    // Promo label is now mandatory: if no labels specified, do not apply any promo
+    if (!Array.isArray(preferredLabels) || preferredLabels.length === 0) return null;
+
+    if (!Array.isArray(promotions)) return null;
+    const now = new Date();
+
+    // Normalize preferred labels (case-insensitive)
+    const labelSet = new Set(preferredLabels.map(s => String(s).toLowerCase()));
+
+    let candidates = promotions.filter(p =>
+      (p.product||'').toLowerCase() === (productName||'').toLowerCase() &&
+      (p.type||'').toLowerCase() === (type||'').toLowerCase() &&
+      isPromoActive(p, now) &&
+      labelSet.has(String(p.label||'').toLowerCase())
+    ).filter(p => {
+      if (p.currency) return (p.currency||'').toUpperCase() === ccy;
+      if (p.prices && typeof p.prices === 'object') return p.prices[ccy] != null;
+      if (p.monthly_prices && typeof p.monthly_prices === 'object') return p.monthly_prices[ccy] != null;
+      return true;
+    });
+
+    if (!candidates.length) return null;
+    candidates.sort((a,b)=> new Date(a.valid_until||'2100-01-01') - new Date(b.valid_until||'2100-01-01'));
+    return candidates[0];
+  }
+  function getDevicePriceByCurrency(curr, labels){
+    const ccy = (curr||'').toUpperCase();
+    const base = getBaseDevicePriceByCurrency(ccy);
+    const promo = activePromoFor('KommuAssist2','one_off',ccy,labels);
+    if (promo){
+      if (promo.prices && promo.prices[ccy] != null) return parseFloat(promo.prices[ccy]) || base;
+      if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.price != null) return parseFloat(promo.price) || base;
+    }
+    return base;
+  }
+  function getDeviceMonthlyByCurrency(curr, labels){
+    try{
+      const ccy = (curr||'').toUpperCase();
+      const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+      const sub = dev?.subscription || {};
+      const baseMonthly = parseFloat((sub.monthly_price||{})[ccy] ?? 0) || 0;
+      const promo = activePromoFor('KommuAssist2','subscription',ccy,labels);
+      if (promo){
+        // monthly_price can be either a per-ccy map or a scalar
+        if (promo.monthly_price && typeof promo.monthly_price === 'object' && promo.monthly_price[ccy] != null) {
+          return parseFloat(promo.monthly_price[ccy]) || baseMonthly;
+        }
+        if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.monthly_price != null && typeof promo.monthly_price !== 'object') {
+          return parseFloat(promo.monthly_price) || baseMonthly;
+        }
+      }
+      return baseMonthly || 0;
+    } catch(_) { return 0; }
+  }
+  // Resolve subscription override (id, months, monthly) from promotions by label
+  function getSubscriptionPromoFromLabels(labels, curr){
+    const ccy = (curr||'').toUpperCase();
+    if (!Array.isArray(labels) || !labels.length) return null;
+    const promo = activePromoFor('KommuAssist2','subscription',ccy,labels);
+    if (!promo) return null;
+    const out = {
+      id: promo.id || promo.subscriptionId || '',
+      months: parseInt(promo.month || promo.months || 0, 10) || null,
+      monthly: null
+    };
+    if (promo.monthly_price && typeof promo.monthly_price === 'object' && promo.monthly_price[ccy] != null) {
+      out.monthly = parseFloat(promo.monthly_price[ccy]) || null;
+    } else if (promo.currency && (promo.currency||'').toUpperCase()===ccy && promo.monthly_price != null && typeof promo.monthly_price !== 'object') {
+      out.monthly = parseFloat(promo.monthly_price) || null;
+    }
+    return out;
+  }
+
+  // ----- Rules matcher (for product/cart flows)
+  function matchRule(ctx){
+    const cfg = (rulesConfig && rulesConfig.rules) ? rulesConfig.rules : (Array.isArray(rulesConfig) ? rulesConfig : []);
+    if (!Array.isArray(cfg)) return null;
+    const ordered = [...cfg].sort((a,b)=>(a.priority||0)-(b.priority||0));
+    const inSet = (val, arr=[]) => {
+      if (!arr.length) return true;
+      const v = String(val||'');
+      const negs = arr.filter(x => String(x).startsWith('!')).map(x=>String(x).slice(1));
+      const poss = arr.filter(x => !String(x).startsWith('!')).map(String);
+      if (negs.length && negs.includes(v)) return false;
+      if (poss.length) return poss.includes(v);
+      return true;
+    };
+    const ddMatch = (need, have) => {
+      if (!need) return true;
+      const h = have||{};
+      return Object.entries(need).every(([k,v]) => String(h[k]||'').toLowerCase() === (String(v).toLowerCase()));
+    };
+    for (const r of ordered){
+      const w = r.when||{};
+      const ok = (!w.source || w.source===ctx.source) &&
+                 inSet(ctx.currency, w.currency_in||[]) &&
+                 (!w.payment_in || (w.payment_in||[]).includes(ctx.payment)) &&
+                 ddMatch(w.dropdowns, ctx.dropdowns);
+      if (ok) return (r.then||{});
+    }
+    return null;
+  }
+
+  // ----- Add-on bundling (fold into product amount)
+  function getAddonSurchargeFromSelections(selections, curr, ruleThen){
+    const ccy = (curr||'').toUpperCase();
+    let total = 0; const names = [];
+    const autoAdd = ruleThen?.selections?.addons?.auto_add || ruleThen?.auto_apply?.addons || [];
+    autoAdd.forEach(n => { const price = getProductPriceByNameCurrency(n, ccy); if (price>0){ total += price; names.push(n); } });
+    return { total, names };
+  }
+
+  // ----- Export a tiny API for pages to use
+  window.KommuPricing = {
+    getPreferredLocale, getCurrencyCode, getFormatter,
+    getProductPriceByNameCurrency, getBaseDevicePriceByCurrency,
+    getDevicePriceByCurrency, getDeviceMonthlyByCurrency,
+    matchRule, getAddonSurchargeFromSelections, getSubscriptionPromoFromLabels
+  };
+
+  // Optional: react to locale changes without reload (if caller dispatches this event)
+  window.addEventListener('locale:changed', () => {
+    document.dispatchEvent(new CustomEvent('kommu:pricing:locale_changed'));
+  });
+  // Also react when another tab updates localStorage
+  window.addEventListener('storage', (e)=>{
+    if (e.key === 'preferredLocale') {
+      document.dispatchEvent(new CustomEvent('kommu:pricing:locale_changed'));
+    }
+  });
+</script>

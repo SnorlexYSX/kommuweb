@@ -4,8 +4,8 @@
 - label: Home
   url: /
 
-- label: KommuAssist 1s
-  url: /ka1s
+- label: KommuAssist
+  url: /ka2
 
 - label: Store
   url: /products

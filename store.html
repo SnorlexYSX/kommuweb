@@ -1,0 +1,408 @@
+---
+layout: default
+title: Store | kommu.ai
+---
+{% include pricing_helpers.html %}
+<style>
+  .rounded-lg-store{
+    border-radius: 1.5625rem;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Full-bleed row that doesn’t expand page width */
+  .full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+
+  .row-align {
+  padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
+  padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
+}
+
+  body {
+    background-color: #000;
+    overflow-x: hidden;  /* prevent horizontal overflow from full-bleed rows */
+  }
+  html {
+    background-color: #000;
+    overflow-x: hidden;  /* prevent horizontal overflow from full-bleed rows */
+  }
+  
+  .fixed-card {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    height: 423px;
+    min-height: 423px;
+    max-height: 423px;
+  }
+  @media (max-width: 1200px) {
+    .fixed-card {
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+      height: 363px;
+      min-height: 363px;
+      max-height: 363px;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .modal-container {
+      width: 750px;   /* fixed width */
+    }
+  }
+
+  @media (max-width: 950px) {
+    .modal-container {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+    }
+  }
+
+  select.store-select.store-select-tight {
+    background-position: right 0.6rem center;
+  }
+
+  /* Added for image fade-in */
+  .product-card img {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .product-card img.img-loaded {
+    opacity: 1;
+  }
+
+  /* Horizontal carousel controls (Apple-style) */
+  .carousel-wrap { position: relative; padding-bottom: 3.25rem; } /* reserve space for buttons */
+  .h-scroll {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;         /* enable horizontal snap scrolling */
+    overscroll-behavior-x: contain;        /* contain fling on mobile */
+    -webkit-overflow-scrolling: touch;     /* iOS momentum */
+    /* align snap with same left/right inset as .row-align paddings; clamp to >= 0 */
+    scroll-padding-left: max(0px, calc((100vw - 1100px) / 2), 1.5rem);
+    scroll-padding-right: max(0px, calc((100vw - 1100px) / 2), 1.5rem);
+  }
+  .scroll-btn {
+    position: absolute;
+    bottom: 1rem; /* inside reserved padding area */
+    width: 42px; height: 42px; border-radius: 9999px;
+    display: grid; place-items: center;
+    background: rgb(255 255 255 / 0.6);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+    border: 0;
+    z-index: 10;
+    cursor: pointer;
+    transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+  }
+  .scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
+  .scroll-btn:active { transform: scale(0.98); }
+  .scroll-btn[disabled] { opacity: .4; pointer-events: none; }
+  .scroll-btn.next { right: 1.25rem; transform: none; }
+  .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; }
+  .scroll-btn svg { width: 18px; height: 18px; }
+
+  /* Make each product card a fixed snap point and prevent flex-grow */
+  .h-scroll .fixed-card {
+    flex: 0 0 auto;               /* keep card's intrinsic width (350/300px) */
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  @media (max-width: 500px) {
+    .carousel-wrap { padding-bottom: 2.25rem; } /* slightly smaller reserved space */
+    .scroll-btn { bottom: 0.5rem; width: 36px; height: 36px; }
+    .scroll-btn svg { width: 16px; height: 16px; }
+    .scroll-btn.next { right: 0.5rem; }
+    .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); }
+  }
+  /* Prevent wrapping for single-line titles and keep them fitting on small screens */
+  .nowrap { white-space: nowrap; }
+  .store-hero-title { font-size: clamp(1.75rem, 6vw, 2.25rem); }
+</style>
+<style>
+@media (max-width: 500px) {
+  .modal-container {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+</style>
+<style>
+@media (max-width: 500px) {
+  #modalImage {
+    max-height: 250px;
+  }
+}
+</style>
+<script>
+let _modalResizeHandler = null;
+
+function openModal(item) {
+
+  document.getElementById('modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modalImage').src = `${BASEURL}${item.image}`;
+  document.getElementById('modalTitle').textContent = item.name;
+  document.getElementById('modalPrice').textContent = formatPrice(item.prices);
+  document.getElementById('modalDesc').textContent = item.description;
+  document.getElementById('modalIncludes').innerHTML = item.includes
+    .filter(i => typeof i === 'string' && i.trim() !== '')
+    .map(i => `<li>${i}</li>`)
+    .join('');
+  document.getElementById('modalAddBtn').onclick = function() {
+    const selEl = document.getElementById('modalDropdown');
+    const selection = selEl ? selEl.value : '';
+    addToCart({ ...item, selection });
+    closeModal();
+  };
+  // Populate or hide vehicle dropdown
+  const ddContainer = document.getElementById('modalDropdownContainer');
+  const ddSelect    = document.getElementById('modalDropdown');
+  if (item.dropdown && item.dropdown.source) {
+    // set dynamic label
+    document.getElementById('modalDropdownLabel').innerText = item.dropdown.title || 'Select';
+    ddContainer.classList.remove('hidden');
+    ddSelect.innerHTML = '';
+    fetch(item.dropdown.source)
+      .then(res => res.json())
+      .then(data => {
+        (data[item.dropdown.list_key] || []).forEach(entry => {
+          const opt = document.createElement('option');
+          opt.value = item.dropdown.value_template
+            .replace(/\{\{\s*brand\s*\}\}/g, entry.brand)
+            .replace(/\{\{\s*model\s*\}\}/g, entry.model)
+            .replace(/\{\{\s*year\s*\}\}/g, entry.year)
+            .replace(/\{\{\s*variant\s*\}\}/g, entry.variant)
+            .trim();
+          opt.text = opt.value;
+          ddSelect.appendChild(opt);
+        });
+      });
+  } else {
+    // hide and clear dropdown
+    ddContainer.classList.add('hidden');
+    document.getElementById('modalDropdownLabel').innerText = '';
+    ddSelect.innerHTML = '';
+  }
+
+  const descBlock = document.getElementById('modalDescBlock');
+  if (window.innerWidth < 500) {
+    descBlock.classList.add('hidden');
+  } else {
+    descBlock.classList.remove('hidden');
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+  document.body.style.overflow = '';
+  const descBlock = document.getElementById('modalDescBlock');
+  if (descBlock) descBlock.classList.remove('hidden');
+}
+
+function goToBuyPage() {
+  window.location.href = "{{ '/product' | relative_url }}";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+  const currency = getCurrencyCode(locale);
+  const formatter = getFormatter(locale);
+
+  // --- Hero price line using pricing helpers ---
+  try {
+    const productsData = {{ site.data.products | jsonify }};
+    const dev = (productsData||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
+    const months = parseInt(dev?.subscription?.month || 36, 10) || 36;
+
+    // No preferred promo labels on store hero; show base pricing for the currency
+    const oneOff  = KommuPricing.getDevicePriceByCurrency(currency, []);
+    const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, []);
+
+    const tighten = (amt) => formatter.format(amt).replace(/\s+(?=\d)/g, '');
+    let heroText = tighten(oneOff);
+    if (monthly && monthly > 0) {
+      heroText += ` or ${tighten(monthly)}/month with rent-to-own`;
+    }
+    const heroEl = document.getElementById('heroPriceLine');
+    if (heroEl) heroEl.textContent = heroText;
+  } catch(_) {}
+
+  function updateHeroPriceLine(){
+    try {
+      const locale = localStorage.getItem('preferredLocale') || navigator.language || 'en-US';
+      const currency = getCurrencyCode(locale);
+      const formatter = getFormatter(locale);
+
+      const oneOff  = KommuPricing.getDevicePriceByCurrency(currency, []);
+      const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, []);
+      const tighten = (amt) => formatter.format(amt).replace(/\s+(?=\d)/g, '');
+
+      let heroText = tighten(oneOff);
+      if (monthly && monthly > 0) {
+        heroText += ` or ${tighten(monthly)}/month with rent-to-own`;
+      }
+      const heroEl = document.getElementById('heroPriceLine');
+      if (heroEl) heroEl.textContent = heroText;
+    } catch(_) {}
+  }
+  document.addEventListener('kommu:pricing:locale_changed', updateHeroPriceLine);
+  window.addEventListener('storage', (e)=>{ if (e.key==='preferredLocale') updateHeroPriceLine(); });
+
+  document.querySelectorAll(".product-card").forEach(card => {
+    const prices = JSON.parse(card.dataset.prices);
+    const price = prices[currency] || prices["USD"] || 0;
+    const priceEl = card.querySelector(".product-price");
+    if (priceEl) priceEl.innerText = formatter.format(price).replace(/\s+/g, "");
+
+    // Add fade-in for images
+    const img = card.querySelector("img");
+    if (img) {
+      if (img.complete && img.naturalWidth !== 0) {
+        img.classList.add("img-loaded");
+      } else {
+        img.addEventListener("load", () => {
+          img.classList.add("img-loaded");
+        });
+      }
+    }
+  });
+});
+</script>
+
+<!-- Hero -->
+<section class="flex justify-center py-20 px-4">
+  <div class="bg-card rounded-lg-store py-8 px-16 max-w-3xl w-full text-center">
+    <h2 class="h2 font-bold mb-4 text-white store-hero-title nowrap">KommuAssist 2.0</h2>
+    <div class="aspect-[4/3] w-full mb-4">
+      <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="KommuAssist 2.0 device" class="w-full h-full object-contain rounded">
+    </div>
+    <p id="heroPriceLine" class="h5 mb-4 text-gray-300">Loading price…</p>    
+    <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
+  </div>
+</section>
+
+<!-- Accessories -->
+<section class="px-4 flex justify-center">
+  <div class="w-full max-w-[1100px]">
+
+  <h1 class="h1 font-bold mb-6 text-white">Shop Accessories</h1>
+
+  {% assign categories = "Parts,Cables & connectors,Others" | split: "," %}
+  {% for category in categories %}
+    <h3 class="h3 mt-4 mb-4 text-gray-300">{{ category }}</h3>
+    <div class="carousel-wrap">
+      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-8 scrollbar-hide full-bleed-row row-align pb-14" id="store-cards-{{ forloop.index0 }}">
+        {% for item in site.data.products %}
+          {% if item.category == category %}
+            <div onclick='openModal({
+              name: "{{ item.name }}",
+              prices: {{ item.prices | jsonify }},
+              image: "{{ item.image }}",
+              description: "{{ item.description }}",
+              includes: {{ item.includes | jsonify }}
+              ,dropdown: {{ item.dropdown | jsonify }}
+            })' class="product-card bg-card p-4 rounded-lg-store text-center cursor-pointer fixed-card transition-transform" data-prices='{{ item.prices | jsonify }}'>
+              <div class="h-[70%] flex items-center justify-center p-2">
+                <img src="{{ item.image | relative_url}}" alt="{{ item.name }}" class="max-h-full object-contain rounded">
+              </div>
+              <div class="h-[30%] flex flex-col justify-center">
+                <div class="h4 font-bold text-white">{{ item.name }}</div>
+                <div class="h5 text-gray-300 product-price">Loading...</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="scroll-btn prev" type="button" aria-label="Scroll left">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="scroll-btn next" type="button" aria-label="Scroll right">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  {% endfor %}
+</div>
+</section>
+
+<script>
+(function(){
+  function bindScrollButtons(wrapper) {
+    const scroller = wrapper.querySelector('.h-scroll');
+    if (!scroller) return;
+    const prevBtn = wrapper.querySelector('.scroll-btn.prev');
+    const nextBtn = wrapper.querySelector('.scroll-btn.next');
+    if (!prevBtn || !nextBtn) return;
+
+    const sampleCard = wrapper.querySelector('.fixed-card');
+    const getStep = () => {
+      const w = sampleCard ? sampleCard.getBoundingClientRect().width : 0;
+      const cs = getComputedStyle(scroller);
+      const gapStr = cs.columnGap || cs.gap || '0px';
+      const gap = parseFloat(gapStr) || 0;
+      return Math.round(w + gap);
+    };
+
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const aligned = (x) => {
+      const step = getStep();
+      if (!step) return x;
+      return Math.round(x / step) * step;
+    };
+
+    const updateDisabled = () => {
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const x = scroller.scrollLeft;
+      prevBtn.disabled = x <= 4;
+      nextBtn.disabled = x >= max - 4;
+    };
+
+    const scrollByStep = (dir) => {
+      const step = getStep();
+      const max = scroller.scrollWidth - scroller.clientWidth;
+      const from = scroller.scrollLeft;
+      let target = aligned(from + dir * step);
+      target = clamp(target, 0, max);
+      scroller.scrollTo({ left: target, behavior: 'smooth' });
+    };
+
+    prevBtn.addEventListener('click', () => scrollByStep(-1));
+    nextBtn.addEventListener('click', () => scrollByStep(1));
+    scroller.addEventListener('scroll', updateDisabled, { passive: true });
+    window.addEventListener('resize', updateDisabled);
+    updateDisabled();
+  }
+
+  document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
+})();
+</script>
+  </div>
+</section>
+
+<!-- Accessory Modal -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden" onclick="closeModal()">
+  <div class="bg-card px-8 py-10 rounded-lg-store w-full max-w-3xl relative modal-container" onclick="event.stopPropagation()">
+    <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/30 text-black flex items-center justify-center shadow-md hover:bg-white hover:scale-105 transition">✕</button>
+    <div class="flex flex-col md:flex-row md:items-center  gap-6">
+      <div class="md:w-1/2">
+        <img id="modalImage" src="" class="w-full h-60 object-contain rounded">
+      </div>
+      <div class="md:w-1/2">
+        <h3 id="modalTitle" class="h3 font-bold mb-1 text-white"></h3>
+        <p id="modalPrice" class="h5 text-gray mb-4"></p>
+        <div id="modalDropdownContainer" class="mb-4 hidden">
+          <label id="modalDropdownLabel" for="modalDropdown" class="h5 block font-normal text-white mb-1"></label>
+          <select id="modalDropdown" class="store-select store-select-tight w-full bg-card border-1 border-gray-600 rounded px-3 py-2 text-white font-normal"></select>
+        </div>
+        <div id="modalDescBlock">
+          <p class="h5 font-normal text-white mb-1">Description</p>
+          <p id="modalDesc" class="h5 font-normal text-gray mb-4"></p>
+        </div>
+        <p class="h5 font-normal text-white mb-1">Included:</p>
+        <ol id="modalIncludes" class="h5 font-normal list-disc list-inside space-y-1 text-gray mb-6"></ol>
+        <button id="modalAddBtn" class="h5 block mx-auto bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>

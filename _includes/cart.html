@@ -1,0 +1,319 @@
+<!-- Cart Drawer -->
+<div id="cartDrawer" class="fixed top-0 max-h-screen bg-card shadow-lg p-6 hidden z-50 overflow-y-auto pt-8 inline-block w-screen">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="h3 font-bold text-white">Your Cart</h2>
+    <button onclick="closeCart()" class="close-btn rounded-full bg-white/10 hover:bg-white/20 transition" aria-label="Close">
+      <svg class="w-6 h-6 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+  </div>
+  <div id="cartRows" class="flex flex-col w-full sm:w-max"></div>
+  <div id="cartNote"></div>
+  <div class="mt-6 text-center">
+    <button id="checkoutBtn" onclick="goToCheckoutFromCart()" class="bg-blue-600 hover:bg-blue-700 w-full py-2 rounded-checkout text-white">Checkout</button>
+  </div>
+</div>
+
+<style>
+  /* Make close button a 36x36px circle, with a 24x24px centered SVG icon */
+  #cartDrawer .close-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0;
+    margin: 0;
+    line-height: 0; /* prevent glyph overflow */
+    -webkit-text-size-adjust: 100%;
+    flex: 0 0 32px; /* lock flex sizing */
+  }
+  #cartDrawer .close-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+</style>
+
+<!-- Cart Logic -->
+<script>
+  const BASEURL = "{{ site.baseurl }}";
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let cartOpenGuard = false; // prevents immediate close from the opening click
+  let blockCartInsideClick = null;
+
+  function getCurrencyCode(locale) {
+    const country = locale.split("-")[1] || "US";
+    const currencyMap = {
+      MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP"
+    };
+    return currencyMap[country] || "USD";
+  }
+
+  function getFormatter(locale) {
+    const currency = getCurrencyCode(locale);
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2
+    });
+  }
+
+  function formatPrice(prices) {
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+    const price = prices[currency] || prices["USD"] || 0;
+    const parts = formatter.formatToParts(price);
+    // Concatenate currency and number parts without space
+    let result = "";
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (part.type === "currency") {
+        result += part.value;
+        // Check next part, if it's a literal space, skip it
+        if (i + 1 < parts.length && parts[i + 1].type === "literal" && parts[i + 1].value === " ") {
+          i++; // skip space
+        }
+      } else if (part.type !== "literal") {
+        result += part.value;
+      }
+    }
+    return result;
+  }
+
+  function addToCart(product) {
+    const normSel = (product.selection || "").toString().trim();
+    product.selection = normSel;
+
+    const existingIndex = cart.findIndex(i =>
+      i.name === product.name && ((i.selection || "").toString().trim() === normSel)
+    );
+
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    } else {
+      const toStore = { ...product };
+      toStore.quantity = 1;
+      toStore.selection = normSel;
+      cart.push(toStore);
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+    openCart();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+  }
+
+  function updateQuantity(index, change) {
+    if (!cart[index].quantity) cart[index].quantity = 1;
+    const newQty = cart[index].quantity + change;
+    if (newQty >= 1) {
+      cart[index].quantity = newQty;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+      updateCartCount();
+    }
+  }
+
+  function renderCart() {
+    const rows = document.getElementById('cartRows');
+    const noteContainer = document.getElementById('cartNote');
+    if (!rows || !noteContainer) return;
+    rows.innerHTML = '';
+    noteContainer.innerHTML = '';
+
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Empty state (no items)
+    if (!cart || cart.length === 0) {
+      rows.innerHTML = '<div class="h5 text-gray mt-2">Your cart is empty.</div>';
+
+      // Hide customs note when empty
+      noteContainer.innerHTML = '';
+
+      // Disable & gray out the checkout button
+      if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-40', 'cursor-not-allowed', 'bg-gray-600');
+        checkoutBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+      }
+
+      adjustCartWidth();
+      return;
+    } else if (checkoutBtn) {
+      // Re‑enable checkout when items exist
+      checkoutBtn.disabled = false;
+      checkoutBtn.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-gray-600');
+      if (!checkoutBtn.classList.contains('bg-blue-600')) checkoutBtn.classList.add('bg-blue-600');
+      if (!checkoutBtn.classList.contains('hover:bg-blue-700')) checkoutBtn.classList.add('hover:bg-blue-700');
+    }
+
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const btnBase = 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition';
+
+    let total = 0;
+    cart.forEach((item, index) => {
+      if (!item.quantity) item.quantity = 1;
+      const priceValue = item.prices?.[currency] || item.prices?.USD || 0;
+      total += priceValue * item.quantity;
+
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-4 text-white py-4 border-t first:border-t-0 border-[rgba(255,255,255,.08)] w-full min-w-[260px]';
+      const minusBtn = item.quantity === 1
+        ? `<button onclick="removeFromCart(${index})" class="${btnBase}" aria-label="Remove item">−</button>`
+        : `<button onclick="updateQuantity(${index}, -1)" class="${btnBase}" aria-label="Decrease quantity">−</button>`;
+      div.innerHTML = `
+        <img src="${BASEURL}${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded"/>
+        <div class="min-w-0">
+          <div class="h4 font-bold text-white whitespace-nowrap">${item.name}</div>
+          ${item.selection ? `<div class="h6 text-gray break-words whitespace-normal">${item.selection}</div>` : ''}
+          <div class="h5 text-gray whitespace-nowrap">${formatPrice({ [currency]: priceValue })}</div>
+        </div>
+        <div class="ml-auto flex items-center gap-2 shrink-0">
+          ${minusBtn}
+          <span class="h5 text-white min-w-[1.5rem] text-center">${item.quantity}</span>
+          <button onclick="updateQuantity(${index}, 1)" class="${btnBase}" aria-label="Increase quantity">+</button>
+        </div>
+      `;
+      rows.appendChild(div);
+    });
+
+    const summary = document.createElement('div');
+    summary.className = 'h5 text-white text-right mt-4';
+    summary.innerHTML = `Subtotal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${formatPrice({ [currency]: total })}`;
+    rows.appendChild(summary);
+
+    const note = document.createElement('div');
+    note.className = 'h6 text-gray mt-2 break-words whitespace-normal max-w-full';
+    note.textContent = 'Customs duties and import taxes for international orders are not included and may be charged separately by your local authorities.';
+    note.style.wordBreak = 'break-word';
+    noteContainer.appendChild(note);
+
+    adjustCartWidth();
+  }
+
+  function handleOutsideClick(event) {
+    if (cartOpenGuard) return; // don't close from the same click that opened it
+    const drawer = document.getElementById('cartDrawer');
+    if (!drawer) return;
+
+    // If the original click started inside the drawer, do nothing.
+    // Using composedPath keeps the ancestors from the original dispatch
+    // even if the DOM gets re-rendered during the click handler.
+    const path = event.composedPath ? event.composedPath() : [];
+    const clickedInside = path && path.some(node => node === drawer || (node && node.closest && node.closest && node.closest === drawer));
+    if (clickedInside) return;
+
+    // Fallback to contains check
+    if (drawer.contains(event.target)) return;
+
+    closeCart();
+  }
+
+  function closeCart() {
+    const drawer = document.getElementById('cartDrawer');
+    if (drawer) drawer.classList.add('hidden');
+    document.body.classList.remove('cart-overlay-active');
+    if (blockCartInsideClick) {
+      drawer.removeEventListener('click', blockCartInsideClick);
+    }
+    document.removeEventListener('click', handleOutsideClick);
+  }
+
+  function openCart() {
+    const drawer = document.getElementById('cartDrawer');
+    if (!drawer) return;
+    drawer.classList.remove('hidden');
+    document.body.classList.add('cart-overlay-active');
+    adjustCartWidth();
+    if (!blockCartInsideClick) {
+      blockCartInsideClick = (e) => e.stopPropagation();
+    }
+    drawer.addEventListener('click', blockCartInsideClick);
+    cartOpenGuard = true;
+    setTimeout(() => {
+      document.addEventListener('click', handleOutsideClick);
+      cartOpenGuard = false;
+    }, 0);
+  }
+
+  function toggleCart() {
+    const drawer = document.getElementById('cartDrawer');
+    if (!drawer) return;
+    const willOpen = drawer.classList.contains('hidden');
+    if (willOpen) {
+      openCart();
+    } else {
+      closeCart();
+    }
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    const count = (cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const badge = document.getElementById('cartCount');
+    const badgeDesktop = document.getElementById('cartCountDesktop');
+
+    if (badge) badge.textContent = count;
+    if (badgeDesktop) badgeDesktop.textContent = count;
+
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCart();
+    updateCartCount();
+    adjustCartWidth();
+  });
+
+  window.addEventListener('resize', adjustCartWidth);
+
+  function goToCheckoutFromCart() {
+    // Mark navigation as coming from Cart (not Product)
+    sessionStorage.setItem('fromProductPage', 'false');
+    // Also force the cart mode via URL so checkout overrides any stale state
+    window.location.href = "{{ '/checkout' | relative_url }}?mode=cart";
+  }
+
+  function adjustCartWidth() {
+    const drawer = document.getElementById('cartDrawer');
+    const rows = document.getElementById('cartRows');
+    if (!drawer || !rows) return;
+    // Explicitly control pinning to avoid class conflicts
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    if (vw < 600) {
+      drawer.style.left = '0';
+      drawer.style.right = '0';
+      drawer.style.width = '100vw';
+      return;
+    } else {
+      drawer.style.left = 'auto';
+      drawer.style.right = '0';
+    }
+    requestAnimationFrame(() => {
+      const styles = getComputedStyle(drawer);
+      const padL = parseFloat(styles.paddingLeft) || 0;
+      const padR = parseFloat(styles.paddingRight) || 0;
+      let maxChild = 0;
+      Array.from(rows.children).forEach(ch => {
+        maxChild = Math.max(maxChild, ch.scrollWidth || ch.offsetWidth || 0);
+      });
+      // Fallback to rows width if no children yet
+      if (maxChild === 0) maxChild = rows.scrollWidth || rows.offsetWidth || 0;
+      const target = maxChild + padL + padR;
+      drawer.style.width = `${Math.max(320, Math.ceil(target))}px`;
+    });
+  }
+</script>

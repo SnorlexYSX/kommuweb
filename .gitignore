@@ -5,4 +5,8 @@ _posts
 .jekyll-metadata
 kommuweb.code-workspace
 vendor
-
+Gemfile
+Gemfile.lock
+.DS_Store
+img/.DS_Store
+assets/.DS_Store

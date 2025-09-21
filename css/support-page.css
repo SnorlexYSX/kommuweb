@@ -1,3 +1,4 @@
+/*
 .section-support {
     margin-top: 40px;
 }
@@ -45,11 +46,6 @@
 .card-data { 
     font-family: "Glacial Indifference-Regular";
     font-size: 1rem;
-}
-
-h1 {
-    font-size: calc(1rem + 1.5vw);
-    font-family: "Glacial Indifference-Bold";
 }
 
 .table{
@@ -136,3 +132,4 @@ th {
         overflow:scroll;
     }
 }
+*/

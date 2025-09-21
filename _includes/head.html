@@ -10,66 +10,89 @@
     <!-- Bootstrap Core CSS -->
     <link href="{{ "/css/bootstrap.min.css" | relative_url }}" rel="stylesheet">
 
-    <!-- Custom CSS TODO: split by page sometime later?-->
-    
+    <!-- Tailwind CDN -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            colors: {
+            card: {
+                DEFAULT: '#1b1b1b',
+            },
+            highlight: '#fffbcc',
+            }
+        }
+        }
+    }
+    </script>
+
     <!-- <link href="{{ "" | relative_url }}/css/{{ page.stylesheet}}-page.css" rel="stylesheet"> -->
     <link href="{{ "/css/common.css" | relative_url }}" rel="stylesheet">
     <link href="{{ "/css/landing-page.css" | relative_url }}" rel="stylesheet">
-    <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
-    <link href="{{ "/img/favicon.png" | relative_url }} "  type="image/png" rel="shortcut icon">
+    <link href="{{ "/css/global-style.css" | relative_url }}" rel="stylesheet">
+ 
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/img/favicon_io/favicon-16x16.png' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/img/favicon_io/favicon-32x32.png' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ '/img/favicon_io/android-chrome-192x192.png' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ '/img/favicon_io/android-chrome-512x512.png' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/img/favicon_io/apple-touch-icon.png' | relative_url }}">
+    <link rel="icon" href="{{ '/img/favicon_io/favicon.ico' | relative_url }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ '/img/favicon_io/favicon.ico' | relative_url }}">
+    <link rel="manifest" href="{{ '/img/favicon_io/site.webmanifest' | relative_url }}">
 
-    <!-- Custom Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,700,800,300italic,400italic,700italic">
- <!-- CrazyEgg -->
-    <!-- <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/6872.js" async="async"></script> -->
-    <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '586857186218202');
-fbq('track', 'PageView');
-</script>
     
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=586857186218202&ev=PageView&noscript=1"
-/></noscript>
+    <!-- CrazyEgg -->
+    <!-- <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/6872.js" async="async"></script> -->
+   
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '586857186218202');
+    fbq('track', 'PageView');
+    </script>
+    
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=586857186218202&ev=PageView&noscript=1"
+    /></noscript>
     <!-- End Meta Pixel Code -->
     
     <!-- Retrieve Client IP Address -->  
-<script>
+    <script>
     fetch('https://www.cloudflare.com/cdn-cgi/trace')
-.then(res => res.text() ).then(t => {
-    var data = t.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
-        data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
-    var jsondata = JSON.parse(data);
-    console.log(jsondata.loc);
-    console.log(jsondata.ip);
-})
-</script>
+    .then(res => res.text() ).then(t => {
+        var data = t.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
+            data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
+        var jsondata = JSON.parse(data);
+        console.log(jsondata.loc);
+        console.log(jsondata.ip);
+    })
+    </script>
 
     <!-- JQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SXGMS3DFH6">
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SXGMS3DFH6">
+    </script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-SXGMS3DFH6');
-</script>
+    gtag('config', 'G-SXGMS3DFH6');
+    </script>
     
 </head>

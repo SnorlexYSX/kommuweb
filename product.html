@@ -1,0 +1,1013 @@
+---
+layout: default
+title: Buy KommuAssist 2
+---
+{% include pricing_helpers.html %}
+
+<style>
+  body {
+    background-color: #000;
+  }
+  html {
+    background-color: #000;
+  }
+
+  /* Apple-like mobile summary pane */
+  @media (max-width: 768px) {
+    /* Turn the whole section into a single card */
+    .summary-pane { 
+      background: transparent;          /* let the card stand out */
+      padding-top: 1rem; 
+    }
+    .summary-card {
+      background: #1b1b1b;              /* matches your card tone; change to #fff if desired */
+      padding: 3rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      gap: 0;
+    }
+  
+    /* Stack the columns and add soft separators between blocks */
+    .summary-col + .summary-col {
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin-top: .75rem;
+      padding-top: 1rem;
+    }
+  
+    /* Make the checkout button full-width and single line */
+    #summaryCheckoutBtn {
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .h3-summary-mobile{
+      font-size: calc(1.5rem + .6vw)
+    }
+
+    .h5-summary-mobile{
+      font-size: calc(1.1rem + .6vw)
+    }
+
+  }
+  /* Fade-in behaviour for product/box images (match supported vehicle) */
+  .product-image-shell img,
+  #boxImg,
+  #mainProductImg {
+    opacity: 0;
+    transition: opacity .35s ease;
+    will-change: opacity;
+  }
+  .img-loaded {
+    opacity: 1 !important;
+  }
+
+  .slashed-price{
+  position:relative;
+  display:inline-block;
+  margin-right:.5rem;
+}
+.slashed-price::after{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  top:50%;
+  height:2px;
+  background: linear-gradient(to right, transparent, rgba(178,178,178,1), transparent);
+  transform: rotate(-12deg);     /* tweak angle as desired */
+  transform-origin:center;
+}
+
+  </style>
+
+<!-- Product Page Full Layout -->
+<div class="w-full mt-80px">
+  <!-- Title above everything -->
+  <div class="text-left mb-8 main-grid-top">
+    <h1 class="h4" style="color: #f06102;">New</h1>
+    <h1 class="h1 font-bold text-white mb-2">KommuAssist 2</h1>
+    <p class="h5 text-gray-light">
+      <!--<span id="heroOneOffPrice"></span>-->
+      <span>RM 3,699.00</span><br>
+      <span class="slashed-price">RM 4,499.00</span><span>(incl. RM409.00 SST)</span><span id="heroMonthly"></span>
+    </p>
+    <p class="h5 text-gray-light mt-2">
+      Pre-order now. Ship before December 2025.
+    </p>
+  </div>
+
+  <!-- Main content: Image and Options Side-by-Side -->
+  <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 main-grid-top">
+    <!-- Product Image -->
+    <div class="img-container p-6 product-image-shell place-self-center">
+      <img id="mainProductImg" src="{{ '/img/products/device/product_page_1.webp' | relative_url }}" class="rounded" alt="Main product image">
+
+      <!-- Prev / Next arrows -->
+      <button id="prodPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous image">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.5 4.5L7.5 10l5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="prodNext" type="button" class="carousel-arrow carousel-arrow-right" aria-label="Next image">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.5 4.5L12.5 10l-5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div id="productDots" class="absolute bottom-10 left-0 right-0 flex justify-center gap-4 pointer-events-auto"></div>
+    </div>
+
+    <!-- Car Model and Connectivity Right Column -->
+   <div class="text-white space-y-20 flex flex-col justify-center">
+      <!-- Car Model Selection -->
+      <div>
+        <label for="carSelectList" class="h3 block font-bold text-white">Car model</label>
+        <p class="h5 text-gray mb-4">Select your car model:</p>
+        <select id="carSelectList" class="h5 store-select w-full btn-bg-gray border-1 btn-border-gray rounded-product-select btn-padding-store text-white"></select>
+      </div>
+
+      <!-- Connectivity -->
+      <div>
+        <p class="h3 font-bold text-white">Connectivity</p>
+        <p class="h5 text-gray mb-4">Keep device online for undisrupted upload of drive log to Kommu app.</p>
+        <div class="flex flex-col gap-4">
+          <button 
+            class="connectBtn w-full btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center"
+            data-summary="without SIM Card"
+          >
+            <div class="text-center">
+              <p class="h5 text-white">Use my own SIM card</p>
+            </div>
+          </button>
+          <button 
+            class="connectBtn w-full btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-between items-center"
+            data-summary="with SIM Card"
+          >            
+              <div class="text-left">
+              <p class="h5 text-white">SIM card included</p>
+              <p class="h6 text-gray">User self-activate RM25/month prepaid data plan</p>
+              <!-- <p class="text-sm text-gray-300 font-medium">RM20/mth for 20gb</p> -->
+            </div>
+            <span id="simPrice" class="h6 ml-2"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Sections -->
+  <div class="space-y-20 text-white mx-auto mt-80px mb-100px main-grid">
+    <!-- Trade-in Section -->
+    <div>
+      <p class="h3 font-bold text-white">Trade-in</p>
+      <p class="h5 text-gray mb-4">Upgrade hassle-free — just return KA1/KA1s device and keep your existing setup.</p>
+      <div class="flex flex-col md:flex-row gap-4 items-start w-full">
+        <button 
+          class="tradeBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          data-summary="Trade-in KA1/KA1s"
+        >
+          <div>
+            <p class="h5 text-white">Trade-in KA1/KA1s device*</p>
+            <p class="h6 text-gray">Save RM400 for one-off purchase</p>
+          </div>
+        </button>
+        <button 
+          class="tradeBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          data-summary="No Trade-in"
+        >          
+          <div>
+            <p class="h5 text-white">No trade-in</p>
+          </div>
+        </button>
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="tradein">
+          <div class="flex flex-col items-start text-left">
+            <p class="h6 text-white">How does trade-in work?</p>
+            <p class="h6 text-gray">Trade-in policy</p>
+          </div>
+          <div class="ml-4 self-center">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Payment Section -->
+    <div>
+      <p class="h3 font-bold text-white">Payment</p>
+      <p class="h5 text-gray mb-4">Choose your preferred payment method.</p>
+      <div class="flex flex-col md:flex-row gap-4 items-start w-full">
+        <button 
+          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          data-summary="One-off Purchase"
+        >
+          <div class="text-left w-[60%]">
+            <p class="h5 text-white">One-off</p>
+            <p class="h6 text-gray">Save RM800 during pre-order launch until 22nd Oct</p>
+          
+          </div>
+          <span id="payOneOffPrice" class="w-[40%] h6 text-white text-right"></span>
+        </button>
+        <button 
+          class="payBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center relative opacity-50 cursor-not-allowed pointer-events-none"
+          data-summary="Rent-to-own"
+          disabled
+          aria-disabled="true"
+          data-locked-permanent="true"
+        >
+          <div class="text-left w-[60%]">
+            <p class="h5 text-white">Rent-to-own***</p>
+            <p class="h6 text-gray">With 3 years warranty included**</p>
+          </div>
+          <span id="payRtoPrice" class="w-[40%] h6 text-white text-right ml-2"></span>
+
+          <div class="kommu-lock-overlay absolute inset-0 bg-gray-600/40 backdrop-blur-sm rounded-product-select flex items-center justify-center pointer-events-none">
+            <div class="h5 text-white font-normal text-center">RTO only available after 22nd Nov</div>
+          </div>
+        </button>
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="rto">
+          <div class="flex flex-col items-start text-left">
+            <p class="h6 text-white">How does rent-to-own work?</p>
+            <p class="h6 text-gray">Rent-to-own policy***</p>
+          </div>
+          <div class="ml-4 self-center">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Installation Section -->
+    <div>
+      <p class="h3 font-bold text-white">Installation</p>
+      <p class="h5 text-gray mb-4">Choose how you'd like your device installed.</p>
+      <div class="flex flex-col md:flex-row gap-4 items-start w-full">
+        <button 
+          class="installBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          data-summary="Self-installation"
+        > 
+          <div>
+            <p class="h5 text-white">Self-installation</p>
+            <p class="h6 text-gray">Follow our step‑by‑step video guide</p>
+          </div>
+        </button>
+        <button 
+          class="installBtn btn-fixed-height w-full md:w-[37.5%] btn-bg-gray text-white btn-padding-store rounded-product-select border-1 btn-border-gray flex justify-center items-center text-center"
+          data-summary="Installation at Kommu HQ - set appointment with link in e-receipt"
+        > 
+          <div>
+            <p class="h5 text-white">Installation at Kommu HQ</p>
+            <p class="h6 text-gray">Let our team handle it for you</p>
+          </div>
+        </button>
+        <button class="popupCardGrey md:w-[25%] text-white popup-padding-store rounded-product-select border-0 flex items-center justify-between" data-help="install">
+          <div class="flex flex-col items-start text-left">
+            <p class="h6 text-white">How to perform self-installation?</p>
+            <p class="h6 text-gray">Watch our step-by-step video</p>
+          </div>
+          <div class="ml-4 self-center">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full popupIconGrey text-white h5">?</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Summary section-->
+<section class="w-full summaryCard-bg-gray pt-20 summary-pane">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-8 summary-card">
+
+    <div class="md:w-[40%] summary-col">
+      <h2 class="h3 h3-summary-mobile font-bold text-white mb-2">Your new KommuAssist.</h2>
+      <p class="h5 h5-summary-mobile text-gray-light mb-6">Cruise with intelligence.</p>
+      <img
+        src="{{ '/img/products/device/checkout_img_cut.webp' | relative_url }}"
+        alt="Summary image"
+        class="w-full rounded"
+      >
+    </div>
+
+    <div class="md:w-[30%] mt-1 summary-col">
+      <div>
+        <h3 class="h4 font-bold mb-2 text-white">KommuAssist 2</h3>
+        <p class="h5 text-gray-light" id="summaryModel">Please select a car model</p>
+        <p class="h5 text-gray-light" id="summaryConnectivity">Please select a SIM card Option</p>
+      </div>
+      <div>
+        <h3 class="h4 font-bold mb-2 text-white pt-4">Installation</h3>
+        <p class="h5 text-gray-light mb-2" id="summaryInstallation">Please select an installation method</p>
+      </div>
+    </div>
+
+    <div class="md:w-[30%] mt-1 summary-col">
+      <h3 class="h4 font-bold mb-2 text-white">Payment</h3>
+      <p id="summaryPayment"  class="h5 text-gray-light">Please select a payment method</p>
+      <p id="productDynamicTotal" class="h5 text-gray-light mb-2"></p>
+      <p id="summaryTradeIn"  class="h5 text-gray-light">Please select a trade-in option</p>
+      
+      <div class="mt-10 flex justify-center">
+        <button
+          id="summaryCheckoutBtn"
+          onclick="goToCheckout()"
+          type="button"
+          value=""                         
+          class="h5 bg-blue-600 hover:bg-blue-700 text-white px-20 w-full py-2 rounded-checkout whitespace-nowrap"
+        >
+          Check Out
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- What's in the box -->
+<div class="max-w-6xl mx-auto px-4">
+  <h2 class="text-center h2 font-bold text-white mt-80px mb-8">What’s in the box</h2>
+
+  <!-- Mobile: Carousel (below md) -->
+  <div class="md:hidden">
+    <div class="img-container p-6 product-image-shell relative h-80 md:h-auto" id="boxCarousel">
+      <img id="boxImg" src="{{ '/img/products/device/wib-1.png' | relative_url }}" class="h-full w-auto max-h-full object-contain rounded" alt="What's in the box item">
+      <!-- Prev / Next arrows -->
+      <button id="boxPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.5 4.5L7.5 10l5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="boxNext" type="button" class="carousel-arrow carousel-arrow-right" aria-label="Next item">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.5 4.5L12.5 10l-5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="boxDots" class="absolute bottom-10 left-0 right-0 flex justify-center gap-4 pointer-events-auto"></div>
+    </div>
+    <div id="boxCaption" class="h5 text-gray-light my-4 text-center">KommuAssist 2</div>
+  </div>
+
+  <!-- Desktop/tablet: grid with captions outside image container -->
+  <div class="hidden md:block">
+    <!-- images inside the dark container -->
+    <div class="img-container grid grid-cols-1 md:grid-cols-3 gap-6 h-80 overflow-clip">
+      <div class="flex items-center justify-center pl-10 md:pl-16">
+        <img src="{{ '/img/products/device/wib-1.png' | relative_url }}" alt="KA2" class="h-full w-auto max-h-full object-contain">
+      </div>
+      <div class="flex items-center justify-center">
+        <img src="{{ '/img/products/device/wib-2.png' | relative_url }}" alt="ADAS connector" class="h-full w-auto max-h-full object-contain">
+      </div>
+      <div class="flex items-center justify-center">
+        <img src="{{ '/img/products/device/wib-3.png' | relative_url }}" alt="OBD connector" class="h-full w-auto max-h-full object-contain">
+      </div>
+    </div>
+    <!-- captions below, outside the container -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mt-4">
+      <p class="h5 text-gray-light pl-10 md:pl-16">KommuAssist 2</p>
+      <p class="h5 text-gray-light">ADAS relay (with connector & USB-C cable)</p>
+      <p class="h5 text-gray-light">OBD connector (with USB-C cable)</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Footnotes & T&C -->
+<div class="max-w-6xl mx-auto px-4 py-12 h6 text-gray space-y-8">
+  <p>Product usage terms <a href="{{ '/terms' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">Product T&amp;C</a> apply. Read T&C before you purchase. Accept T&C before you use.</p>
+  
+  <p>* Trade-in terms <a href="{{ '/trade-in' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">Trade-in Policy</a> apply.
+    <br>•	Return-first policy: Your KA1/KA1s must be returned and received by Kommu before we ship your new KA2.
+    <br>•	If you choose installation at Kommu HQ: After checking out KA2, you’ll post your trade-in device to us using the instructions provided in your e-receipt. Please send it before your installation appointment.
+    <br>•	No walk-in returns on installation day: We cannot accept trade-in devices brought on the day. We require time to inspect condition; failing to return in advance forfeits the trade-in discount.
+    <br>•	What stays with you: Keep your existing wiring/connectors; trade-in covers the device unit only.
+    <br>•	Condition check: Discount is confirmed after our inspection per the trade-in policy.
+  </p>
+
+  <p>** Device Warranty.
+    <br>KommuAssist comes with a 1-year warranty for one-off purchases, or a 3-year warranty under the rent-to-own plan. The warranty covers hardware manufacturing defects and software-related issues, but does not extend to human-caused damage (e.g., knocks, drops, improper handling & usage, car accidents) or third-party/external events such as natural disasters (typhoons, floods, lightning, etc.). Proof of purchase is required, and diagnostics will determine eligibility of warranty claim. Request for a 1-to-1 device swap will not be entertained unless deemed necessary by Kommu during diagnostics. In cases where diagnostics confirm human-caused error, the user may choose to proceed with repair upon acknowledging the repair cost. If the user decides not to proceed, Kommu will impose a workmanship fee of RM100. Paid extended warranty options may be introduced in the future.
+  </p>
+
+  <p>*** Rent-to-own terms and conditions <a href="{{ '/rto-terms' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">RTO T&amp;C</a> apply.<br>
+    Kommu’s Rent-to-own plan is a 3-year rental tenure where the device remains Kommu’s property. 
+    Upon the expiry of the 3-year rental period, Customer shall continue to use the Product without rental payment to Kommu, and ownership of the Product will be transferred to the Customer. Installation happens after credit checks and payment of an Initial Deposit equal to 12 months of the Monthly Rental Fee (MRF).
+     A 10-day cooling-off period applies before installation; after expiry of the 3-year term, rental payments stop and Product warranty ends. The deposit is applied to the final 12 months of the 36-month term, not applicaple to early or missed payments, and—once installed—is non-refundable. Payments are via auto-debit of credit card only; if a payment fails, Kommu may retry charges, report to credit agencies, and pursue collections.
+    <br><br>After 1 missed MRF, a 30-day reminder is issued;
+    <br>after 2, features are suspended;
+    <br>after 3, Kommu may repossess the product, terminate the agreement, list with a CRA, and forfeit the deposit (forfeiture also occurs 90 days after first default). 
+    <br><br>Early termination by the customer triggers a fee equal to 12 months of MRF, settled from the deposit; termination is effective upon returning the product. Customer must not modify or service the product and is liable for loss/damage and full fees of 36 months of MRF if the unit is lost; Kommu may terminate for abnormal use or 3+ months’ arrears. Credit checks (e.g., via CRA/CCRIS) and PDPA-compliant data processing apply, and all other limits, warranties, and non-return terms in the policy govern.
+  </p>
+  
+
+</div>
+
+
+
+<script>
+  async function load() {
+    const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
+    const resp = await (await fetch(remote)).json();
+    const carSelectList = document.getElementById("carSelectList");
+
+    const placeholderOption = document.createElement("option");
+    placeholderOption.innerText = "Please select a car model";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    placeholderOption.value = "";
+
+    carSelectList.appendChild(placeholderOption);
+
+    resp.standard.forEach((vehicle) => {
+      const option = document.createElement("option");
+      option.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
+      option.innerText = option.value;
+      carSelectList.appendChild(option);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    load();
+
+    document.getElementById("carSelectList").addEventListener("change", function () {
+      document.getElementById("summaryModel").innerText = this.value;
+      document.dispatchEvent(new CustomEvent('kommu:selection_changed', { detail: { group: 'model', value: this.value } }));
+    });
+
+    const handleSelection = (selector, summaryId) => {
+      document.querySelectorAll(selector).forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          if (btn.disabled || btn.getAttribute('aria-disabled') === 'true' || btn.classList.contains('pointer-events-none')) { e.preventDefault(); return; }
+          document.querySelectorAll(selector).forEach(b => {
+            b.classList.remove("ring", "ring-blue-500", "border-white", "ring-1");
+            b.removeAttribute("data-selected");
+            b.setAttribute("aria-pressed", "false");
+          });
+          btn.classList.add("ring-1", "ring-blue-500");
+          btn.setAttribute("data-selected", "true");
+          btn.setAttribute("aria-pressed", "true");
+
+          const summaryText = btn.dataset.summary || btn.innerText;
+          document.getElementById(summaryId).innerText = summaryText;
+          document.dispatchEvent(new CustomEvent('kommu:selection_changed', { detail: { group: selector, value: summaryText } }));
+        });
+      });
+    };
+
+    handleSelection(".connectBtn", "summaryConnectivity");
+    handleSelection(".tradeBtn", "summaryTradeIn");
+    handleSelection(".payBtn", "summaryPayment");
+    handleSelection(".installBtn", "summaryInstallation");
+  });
+
+  function readSelectionsFromButtons() {
+    const getSelected = (sel) => {
+      const el = document.querySelector(sel + '[data-selected="true"]');
+      return el ? (el.dataset.summary || el.innerText || '').trim() : '';
+    };
+    return {
+      model:   (document.getElementById('summaryModel')?.innerText || '').trim(),
+      sim:     getSelected('.connectBtn'),
+      tradeIn: getSelected('.tradeBtn'),
+      payment: getSelected('.payBtn'),
+      install: getSelected('.installBtn')
+    };
+  }
+
+  function goToCheckout() {
+    const selections = readSelectionsFromButtons();
+
+    // validate selections
+    const required = ['model','sim','tradeIn','payment','install'];
+    for (const key of required) {
+      const val = (selections[key]||'').trim();
+      if (!val || /^please select/i.test(val)) {
+        alert(`Please select a ${key} before checking out.`);
+        return;
+      }
+    }
+
+    const btn = document.getElementById('summaryCheckoutBtn');
+    btn.value = JSON.stringify(selections);
+    sessionStorage.setItem('checkoutSelections', btn.value);
+
+    const checkoutURL = `{{ '/checkout' | relative_url }}?mode=product`;
+    sessionStorage.setItem('fromProductPage', 'true');
+    window.location.href = checkoutURL;
+  }
+
+  // --- Product locks (force selections and disable groups) ---
+  const GROUP_MAP = {
+    sim: { selector: '.connectBtn', summaryId: 'summaryConnectivity' },
+    tradeIn: { selector: '.tradeBtn', summaryId: 'summaryTradeIn' },
+    payment: { selector: '.payBtn', summaryId: 'summaryPayment' },
+    install: { selector: '.installBtn', summaryId: 'summaryInstallation' },
+  };
+
+  function selectButtonAndUpdateSummary(selector, summaryId, wanted, opts = {}) {
+    const btns = Array.from(document.querySelectorAll(selector));
+    if (!btns.length) return null;
+
+    const eligible = btns.filter(b => !b.disabled && b.getAttribute('aria-disabled') !== 'true' && !b.classList.contains('pointer-events-none'));
+    const wantedLC = String(wanted||'').toLowerCase();
+    const current = document.querySelector(`${selector}[data-selected="true"]`);
+    const match = eligible.find(b => String(b.dataset.summary||b.innerText||'').toLowerCase().includes(wantedLC));
+    const chosen = match || eligible[0];
+
+    if (!chosen) return null;
+
+    // If the currently-selected button already matches the wanted value, avoid DOM churn & event loops
+    if (current === chosen) {
+      // Ensure summary is correct
+      const txtNow = chosen.dataset.summary || chosen.innerText || '';
+      const sumEl = document.getElementById(summaryId);
+      if (sumEl && sumEl.innerText !== txtNow) sumEl.innerText = txtNow;
+      return chosen;
+    }
+
+    // clear state
+    btns.forEach(b => {
+      if (b === chosen) return; // skip chosen for now
+      b.classList.remove('ring','ring-blue-500','ring-1','border-white');
+      if (b.hasAttribute('data-selected')) b.removeAttribute('data-selected');
+      b.setAttribute('aria-pressed','false');
+    });
+    // set chosen
+    chosen.classList.add('ring','ring-blue-500','ring-1');
+    chosen.setAttribute('data-selected','true');
+    chosen.setAttribute('aria-pressed','true');
+
+    // update summary text
+    const txt = chosen.dataset.summary || chosen.innerText || '';
+    const sumEl = document.getElementById(summaryId);
+    if (sumEl) sumEl.innerText = txt;
+
+    if (!opts.suppressEvent) {
+      // emit selection changed so pricing/UI recomputes after the DOM settles
+      requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('kommu:selection_changed', { detail: { group: selector, value: txt } })));
+    }
+    return chosen;
+  }
+
+  // --- Overlay helpers for per-button overlays ---
+  function setButtonOverlay(btn, message){
+    if (!btn) return;
+    btn.classList.add('relative');
+    let overlay = btn.querySelector(':scope > .kommu-lock-overlay');
+    if (!overlay){
+      overlay = document.createElement('div');
+      overlay.className = 'kommu-lock-overlay absolute inset-0 bg-gray-600/40 backdrop-blur-sm rounded-product-select flex items-center justify-center pointer-events-none';
+      const badge = document.createElement('div');
+      badge.className = 'h5 text-white font-normal text-center';
+      badge.textContent = message || '';
+      overlay.appendChild(badge);
+      btn.appendChild(overlay);
+    } else {
+      const badge = overlay.firstElementChild;
+      if (badge && badge.textContent !== (message||'')) badge.textContent = message || '';
+    }
+  }
+
+  function clearButtonOverlay(btn){
+    if (!btn) return;
+    const overlay = btn.querySelector(':scope > .kommu-lock-overlay');
+    if (overlay) overlay.remove();
+  }
+
+  function lockGroup(selector, chosenBtn, locked, message) {
+    const btns = document.querySelectorAll(selector);
+    btns.forEach(b => {
+      const isPermanent = b.getAttribute('data-locked-permanent') === 'true' || b.querySelector(':scope > .kommu-lock-overlay');
+      if (!locked) {
+        if (isPermanent) {
+          // keep it disabled and overlaid
+          b.disabled = true;
+          b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
+          setButtonOverlay(b, message || 'RTO only available after 22nd Nov');
+        } else {
+          b.disabled = false;
+          b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
+          clearButtonOverlay(b);
+        }
+        return;
+      }
+      if (b !== chosenBtn) {
+        b.disabled = true;
+        b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
+        setButtonOverlay(b, message);
+      } else {
+        // chosen remains enabled unless it's permanently locked
+        if (isPermanent) {
+          b.disabled = true;
+          b.classList.add('opacity-50','pointer-events-none','cursor-not-allowed');
+          setButtonOverlay(b, message || 'RTO only available after 22nd Nov');
+        } else {
+          b.disabled = false;
+          b.classList.remove('opacity-50','pointer-events-none','cursor-not-allowed');
+          clearButtonOverlay(b);
+        }
+      }
+    });
+  }
+
+  function ensureLockBanner() {
+    let banner = document.getElementById('productLockBanner');
+    if (!banner) {
+      const container = document.querySelector('.max-w-6xl.mx-auto.px-4.py-12 > .text-left.mb-8');
+      banner = document.createElement('div');
+      banner.id = 'productLockBanner';
+      banner.className = 'mt-2 text-sm text-amber-300';
+      if (container) container.appendChild(banner);
+    }
+    return banner;
+  }
+
+  function clearLockBanner(){
+    const banner = document.getElementById('productLockBanner');
+    if (banner) banner.textContent = '';
+  }
+
+  let __lastAppliedLocksKey = '';
+
+  function applyProductLocks(thenBlock){
+    const locks = thenBlock?.locks_product || {};
+    const dd = locks.dropdowns || {};
+
+    // Compute a stable key to detect repeats
+    const key = JSON.stringify({dd, msg: locks.lock_message || ''});
+    const isRepeat = key === __lastAppliedLocksKey;
+    if (isRepeat) return;
+
+    // For each declared dropdown lock, force selection and disable others + overlay
+    Object.entries(dd).forEach(([k, wanted]) => {
+      const map = GROUP_MAP[k];
+      if (!map) return;
+      const chosen = selectButtonAndUpdateSummary(map.selector, map.summaryId, wanted, { suppressEvent: true });
+      lockGroup(map.selector, chosen, true, locks.lock_message);
+    });
+
+    // If no dropdown locks provided, clear any previous disables and overlays for all groups
+    if (!Object.keys(dd).length) {
+      Object.values(GROUP_MAP).forEach(({selector}) => {
+        lockGroup(selector, null, false);
+      });
+    }
+
+    __lastAppliedLocksKey = key;
+  }
+
+  // --- Dynamic price render (device + bundled addons, promo-aware) ---
+  (function(){
+    const tgt = document.getElementById('productDynamicTotal');
+    if (!tgt || !window.KommuPricing) return;
+
+    function renderPrice(){
+      const locale   = KommuPricing.getPreferredLocale();
+      const currency = KommuPricing.getCurrencyCode(locale);
+      const fmt      = KommuPricing.getFormatter(locale);
+      const sel      = readSelectionsFromButtons();
+      const ctx = {
+        source: 'product',
+        currency,
+        payment: /rent-to-own/i.test(sel.payment||'') ? 'Rent-to-own' : 'One-off purchase',
+        dropdowns: sel
+      };
+      const thenBlock   = KommuPricing.matchRule(ctx) || {};
+
+      applyProductLocks(thenBlock);
+
+      const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
+      const device      = KommuPricing.getDevicePriceByCurrency(currency, promoLabels);
+      const bundled     = KommuPricing.getAddonSurchargeFromSelections(sel, currency, thenBlock);
+      const total       = device + (bundled.total||0);
+
+      // --- Hero headline: one-off and monthly (if available) ---
+      const heroOneOffEl = document.getElementById('heroOneOffPrice');
+      const heroMonthlyEl = document.getElementById('heroMonthly');
+
+      // Monthly pricing (promo-aware)
+      const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels) || 0;
+      // Pull months from products data (default 36)
+      let months = 36;
+      try {
+        const dev = (window.products||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
+        months = parseInt(dev?.subscription?.month || months, 10) || months;
+      } catch(_) {}
+      const years = (months % 12 === 0) ? (months/12) : null;
+
+      if (heroOneOffEl) heroOneOffEl.textContent = fmt.format(device);
+      if (heroMonthlyEl) {
+        if (monthly > 0) {
+          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/mo. for 36 months with rent-to-own***` : ` or ${fmt.format(monthly)}/month*`;
+        } else {
+          heroMonthlyEl.textContent = '';
+        }
+      }
+
+      // --- Connectivity: SIM price ---
+      const simEl = document.getElementById('simPrice');
+      if (simEl) {
+        let simPrice = KommuPricing.getProductPriceByNameCurrency('Sim Card', currency);
+        if (!simPrice) simPrice = KommuPricing.getProductPriceByNameCurrency('nanoSIM card', currency);
+        simEl.textContent = simPrice ? fmt.format(simPrice) : '';
+      }
+
+      // --- Payment button prices ---
+      const payOneOffEl = document.getElementById('payOneOffPrice');
+      if (payOneOffEl) payOneOffEl.textContent = fmt.format(device);
+
+      const payRtoEl = document.getElementById('payRtoPrice');
+      if (payRtoEl) {
+        if (monthly > 0) {
+          payRtoEl.textContent = years ? `${fmt.format(monthly)}/mth for ${years} years` : `${fmt.format(monthly)}/mth`;
+        } else {
+          payRtoEl.textContent = '';
+        }
+      }
+
+      let next;
+      const isRto = /rent-to-own/i.test(sel.payment||'');
+      if (isRto && monthly > 0) {
+        const durationText = years ? `${years} years` : `${months} months`;
+        next = `${fmt.format(monthly)}/mth for ${durationText}`;
+      } else {
+        next = fmt.format(total);
+      }
+      if (tgt.textContent !== next) tgt.textContent = next;
+    }
+
+    // Initial and reactive updates
+    renderPrice();
+    document.addEventListener('kommu:pricing:locale_changed', renderPrice);
+    document.addEventListener('kommu:selection_changed', () => {
+      // Defer to next frame to ensure DOM attributes are fully updated
+      requestAnimationFrame(renderPrice);
+    });
+  })();
+</script>
+<!-- Help Modal (shared) -->
+<div id="helpOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onclick="closeHelpModal()"></div>
+<div id="helpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6" onclick="if(event.target===this) closeHelpModal()">
+  <div class="bg-[#1b1b1b] text-white rounded-2xl w-full max-w-xl shadow-xl relative" onclick="event.stopPropagation()">
+    <button id="helpClose" type="button" aria-label="Close help" class="absolute top-9 right-4 carousel-arrow" onclick="closeHelpModal()">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="px-12 py-9 space-y-4">
+      <h3 id="helpTitle" class="h3 font-bold">Help</h3>
+      <div id="helpBody" class="h5 text-gray"></div>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const overlay = document.getElementById('helpOverlay');
+    const modal   = document.getElementById('helpModal');
+    const titleEl = document.getElementById('helpTitle');
+    const bodyEl  = document.getElementById('helpBody');
+
+    if (!overlay || !modal) return;
+
+    const COPY = {
+      tradein: {
+        title: 'How does trade‑in work?',
+        body: `Return your previous KommuAssist (KA1/KA1s) upon KA2 checkout.
+               <ul class="list-disc pl-5 mt-2">
+           <br><li>Only available for one‑off purchase.</li>
+           <br><li>Trade-in option will only include the new KA2 device and mount. Use existing setup and connectors.</li>
+           <br><li>We’ll email return instructions after checkout.<br><br>
+            Installation at Kommu HQ: post device before installation appointment.<br><br>
+            Shipping option: we will post KA2 after we receive and check your KA1/KA1s.</li>
+         </ul>
+         <p class="mt-3">
+           <a href="{{ '/trade-in' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">Full Trade-in Policy</a>
+         </p>`
+      },
+      rto: {
+        title: 'How does rent‑to‑own work?',
+        body: `3-year rental tenure.
+         <ul class="list-disc pl-5 mt-2">
+           <br><li>Pay 12 months initial deposit and monthly payment over 24 months.</li>
+           <br><li>Deposit is applied to the final 12 months of the 36-month term, and you own the device.</li>
+           <br><li>Device warranty** is included for 3 years.</li>
+         </ul>
+         <p class="mt-3">
+           <a href="{{ '/rto-terms' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">Full Rent-to-own Terms &amp; Conditions</a>
+         </p>`
+      },
+      install: {
+        title: 'Self‑installation help',
+        body: `Prefer DIY? Follow our step‑by‑step video guide.
+               <ul class="list-disc pl-5 mt-2">
+           <br><li>Installation video <a href="{{ 'https://www.youtube.com/watch?v=2EpnMwpINpE' | relative_url }}" class="underline text-gray-light" target="_blank" rel="noopener noreferrer">youtube link</a></li>
+           <br><li>Use the same setup and connectors as KA1/KA1s except for a new mount.</li>
+           <br><li>Reach support if you need help during setup.</li>
+         </ul>
+        `
+      }
+    };
+
+    function openHelp(kind){
+      const c = COPY[kind] || {title:'Help', body:'…'};
+      titleEl.textContent = c.title;
+      bodyEl.innerHTML = c.body;
+      overlay.classList.remove('hidden');
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    window.closeHelpModal = function(){
+      overlay.classList.add('hidden');
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    document.querySelectorAll('button.popupCardGrey[data-help]').forEach(btn => {
+      btn.addEventListener('click', () => openHelp(btn.dataset.help));
+    });
+
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeHelpModal(); });
+  })();
+</script>
+<script>
+  (function(){
+    const imgs = [
+      "{{ '/img/products/device/product_page_1.webp' | relative_url }}",
+      "{{ '/img/products/device/checkout_img.webp' | relative_url }}"
+    ];
+    const imgEl = document.getElementById('mainProductImg');
+    const dotsEl = document.getElementById('productDots');
+    if (!imgEl || !dotsEl) return;
+
+    // Initial fade-in for first load
+    if (imgEl) {
+      if (imgEl.complete) imgEl.classList.add('img-loaded');
+      else imgEl.addEventListener('load', () => imgEl.classList.add('img-loaded'), { once: true });
+    }
+
+    let idx = 0;
+    function updateArrows(){
+      const prev = document.getElementById('prodPrev');
+      const next = document.getElementById('prodNext');
+      const last = imgs.length - 1;
+      if (prev) {
+        if (idx <= 0) { prev.classList.add('is-hidden'); } else { prev.classList.remove('is-hidden'); }
+      }
+      if (next) {
+        if (idx >= last) { next.classList.add('is-hidden'); } else { next.classList.remove('is-hidden'); }
+      }
+    }
+
+    function renderDots(){
+      dotsEl.innerHTML = '';
+      imgs.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'carousel-dot' + (i===idx ? ' carousel-dot-active' : '');
+        b.setAttribute('aria-label', 'Show image ' + (i+1));
+        b.addEventListener('click', () => { setIndex(i); });
+        dotsEl.appendChild(b);
+      });
+    }
+    function setIndex(i){
+      const last = imgs.length - 1;
+      // clamp instead of wrap
+      if (i < 0) i = 0;
+      if (i > last) i = last;
+      if (i === idx) { updateArrows(); return; }
+      idx = i;
+      // fade swap
+      imgEl.classList.remove('img-loaded');
+      setTimeout(() => {
+        imgEl.src = imgs[idx];
+        imgEl.onload = () => { imgEl.classList.add('img-loaded'); };
+        renderDots();
+        updateArrows();
+      }, 60);
+    }
+
+    // --- Touch swipe support ---
+    function addSwipeSupport(el, onLeft, onRight){
+      if (!el) return;
+      let startX = 0, startY = 0, tracking = false;
+      el.addEventListener('touchstart', (e)=>{
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        startX = t.clientX; startY = t.clientY; tracking = true;
+      }, {passive:true});
+      el.addEventListener('touchend', (e)=>{
+        if (!tracking) return;
+        const t = e.changedTouches && e.changedTouches[0];
+        tracking = false;
+        if (!t) return;
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return; // ignore short/vertical swipes
+        if (dx < 0) onLeft && onLeft(); else onRight && onRight();
+      }, {passive:true});
+    }
+
+    // arrow buttons
+    const prevBtn = document.getElementById('prodPrev');
+    const nextBtn = document.getElementById('prodNext');
+    if (prevBtn) prevBtn.addEventListener('click', () => setIndex(idx-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => setIndex(idx+1));
+
+    // allow Enter/Space to activate when focused
+    [prevBtn, nextBtn].forEach(btn => {
+      if (!btn) return;
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    // Touch swipe: attach to image container
+    const container = imgEl.closest('.img-container') || imgEl.parentElement;
+    addSwipeSupport(container, ()=> setIndex(idx+1), ()=> setIndex(idx-1));
+
+    // keyboard nav
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowRight') setIndex(idx+1);
+      if (e.key === 'ArrowLeft') setIndex(idx-1);
+    });
+
+    // init
+    renderDots();
+    updateArrows();
+  })();
+</script>
+<script>
+  (function(){
+    const items = [
+      { src: "{{ '/img/products/device/wib-1.png' | relative_url }}", caption: 'KommuAssist 2', alt: 'KommuAssist 2' },
+      { src: "{{ '/img/products/device/wib-2.png' | relative_url }}", caption: 'ADAS relay (with connector & USB-C cable)', alt: 'ADAS connector' },
+      { src: "{{ '/img/products/device/wib-3.png' | relative_url }}", caption: 'OBD connector (with USB-C cable)', alt: 'OBD connector' }
+    ];
+    const imgEl = document.getElementById('boxImg');
+    const dotsEl = document.getElementById('boxDots');
+    const capEl = document.getElementById('boxCaption');
+    if (!imgEl || !dotsEl || !capEl) return; // only exists on mobile
+
+    // Initial fade-in for first load
+    if (imgEl) {
+      if (imgEl.complete) imgEl.classList.add('img-loaded');
+      else imgEl.addEventListener('load', () => imgEl.classList.add('img-loaded'), { once: true });
+    }
+
+    let idx = 0;
+    function updateArrows(){
+      const prev = document.getElementById('boxPrev');
+      const next = document.getElementById('boxNext');
+      const last = items.length - 1;
+      if (prev) { (idx <= 0) ? prev.classList.add('is-hidden') : prev.classList.remove('is-hidden'); }
+      if (next) { (idx >= last) ? next.classList.add('is-hidden') : next.classList.remove('is-hidden'); }
+    }
+    function renderDots(){
+      dotsEl.innerHTML = '';
+      items.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'carousel-dot' + (i===idx ? ' carousel-dot-active' : '');
+        b.setAttribute('aria-label', 'Show item ' + (i+1));
+        b.addEventListener('click', ()=> setIndex(i));
+        dotsEl.appendChild(b);
+      });
+    }
+    function setIndex(i){
+      const last = items.length - 1;
+      if (i < 0) i = 0; if (i > last) i = last;
+      if (i === idx) { updateArrows(); return; }
+      idx = i;
+      imgEl.classList.remove('img-loaded');
+      setTimeout(()=>{
+        imgEl.src = items[idx].src;
+        imgEl.alt = items[idx].alt;
+        capEl.textContent = items[idx].caption;
+        imgEl.onload = ()=>{ imgEl.classList.add('img-loaded'); };
+        renderDots();
+        updateArrows();
+      }, 60);
+    }
+
+    // --- Touch swipe support ---
+    function addSwipeSupport(el, onLeft, onRight){
+      if (!el) return;
+      let startX = 0, startY = 0, tracking = false;
+      el.addEventListener('touchstart', (e)=>{
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        startX = t.clientX; startY = t.clientY; tracking = true;
+      }, {passive:true});
+      el.addEventListener('touchend', (e)=>{
+        if (!tracking) return;
+        const t = e.changedTouches && e.changedTouches[0];
+        tracking = false;
+        if (!t) return;
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return; // ignore short/vertical swipes
+        if (dx < 0) onLeft && onLeft(); else onRight && onRight();
+      }, {passive:true});
+    }
+
+    // Touch swipe: attach to image container
+    const container = imgEl.closest('.img-container') || imgEl.parentElement;
+    addSwipeSupport(container, ()=> setIndex(idx+1), ()=> setIndex(idx-1));
+
+    // init
+    renderDots();
+    updateArrows();
+    const prevBtn = document.getElementById('boxPrev');
+    const nextBtn = document.getElementById('boxNext');
+    if (prevBtn) prevBtn.addEventListener('click', ()=> setIndex(idx-1));
+    if (nextBtn) nextBtn.addEventListener('click', ()=> setIndex(idx+1));
+  })();
+</script>

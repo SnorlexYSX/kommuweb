@@ -1,0 +1,131 @@
+- name: KommuAssist2
+  category: Device
+  prices:
+    MYR: 3699.00
+    USD: 899.00
+  subscription:
+    id: plan_QyljeG4K1bOoHG
+    name: Rent-to-Own
+    month: 36
+    monthly_price:
+      MYR: 125.00
+
+- name: Sim Card
+  category: Add-on
+  prices:
+    MYR: 10.00
+
+- name: Second Car Kit
+  prices:
+    MYR: 320.00
+    USD: 120.00  
+  category: Parts
+  image: /img/products/accessories/set.png
+  description: Full set of connectors and mount for your other car.
+  includes:
+  - ADAS relay and OBD connector
+  - Full set of cables
+  - Mount, sticker, wipes
+
+  dropdown:
+    title: Select car model
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
+
+- name: KA2 Mount
+  prices:
+    MYR: 50.00
+    USD: 10.00
+  category: Parts
+  image: /img/products/accessories/mount.png
+  description: Mount to setup KA2 device onto windshield.
+  includes:
+  - Mount
+  - Electrostatic sticker
+  - Wipes
+  dropdown:
+    title: Select car model
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
+
+- name: ADAS Relay
+  prices:
+    MYR: 150.00
+    USD: 33.00
+  category: Parts
+  image: /img/products/accessories/relay.png
+  description: Hardware to communicate with car ADAS system.
+  includes:
+  - ADAS relay unit
+   (DOES NOT come with ADAS connector)
+  
+- name: ADAS Connector
+  prices:
+    MYR: 150.00
+    USD: 12.00
+  category: Cables & connectors
+  image: /img/products/accessories/adas-connector.png
+  description: Connect ADAS relay to car ADAS.
+  includes:
+  - Car brand specific ADAS connector
+  dropdown:
+    title: Select car model
+    placeholder: Car model
+    source: "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json"
+    list_key: "standard"
+    value_template: "{{brand}} {{model}} {{year}} {{variant}}"
+
+- name: OBD Connector
+  prices:
+    MYR: 100.00
+    USD: 33.00
+  category: Parts
+  image: /img/products/accessories/obd.png
+  description: To power the entire system from OBD port.
+  includes:
+  - OBD connector unit
+
+- name: Short USB-C 3.1 Cable
+  prices:
+    MYR: 30.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/short-c.png
+  description: Connection between ADAS relay to KA device.
+  includes:
+  - Relay-to-KA USB-C Cable
+
+- name: Long USB-C 3.1 Cable
+  prices:
+    MYR: 40.00
+    USD: 33.00
+  category: Cables & connectors
+  image: /img/products/accessories/long-c.png
+  description: Connection between OBD unit and ADAS relay.
+  includes:
+  - OBD-to-Relay USB-C Cable
+
+- name: Nano SIM card
+  prices:
+    MYR: 10.00
+    USD: 10.00
+  category: Others
+  image: /img/products/accessories/nanosim.png
+  description: For 24/7 connectivity; enables subscription features.
+  includes:
+  - Prepaid SIM card
+   (user to self-activate and subscribe to RM25/month prepaid plan for 40gb data) 
+
+- name: Micro SD card
+  prices:
+    MYR: 30.00
+    USD: 30.00
+  category: Others
+  image: /img/products/accessories/microsd.png
+  description: For local storage of drive logs.
+  includes:
+  - 64gb micro SD card
