@@ -88,16 +88,17 @@
 
 
 <script>
+
   // Keep existing locale/currency helpers; moved selector into the menu
   const localeSelectorMobile = document.getElementById("localeSelectorMobile");
   const localeSelectorDesktop = document.getElementById("localeSelectorDesktop");
 
-  (function(){
-    if (!localStorage.getItem("preferredLocale")) {
-      // Hide page until we resolve locale (max 500ms)
-      document.documentElement.style.visibility = 'hidden';
-    }
-  })();
+  // (function(){
+  //   if (!localStorage.getItem("preferredLocale")) {
+  //     // Hide page until we resolve locale (max 500ms)
+      
+  //   }
+  // })();
   async function getGeoLocale() {
     const saved = localStorage.getItem("preferredLocale");
     if (saved) return saved;
@@ -129,6 +130,8 @@
   }
 
   (async () => {
+    document.documentElement.style.visibility = 'hidden';
+
     const locale = await getGeoLocale();
 
     if (localeSelectorMobile)  localeSelectorMobile.value    = locale;
