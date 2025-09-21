@@ -52,12 +52,18 @@ title: Supported cars | kommu.ai
         const lkaSpeedRange = document.getElementById("lka-spd-rng-txt");
         const lkaSteerTorque = document.getElementById("lka-str-trq-txt");
         const lkaAngle = document.getElementById("lka-ang-txt");
+        const support = document.getElementById("support-txt");
+        const note = document.getElementById("note-txt");
+
         const carImage =  document.getElementById("support-car-img");
         accSpeedRange.innerText = `${carSelected.acc_speed_range} km/h`;
         accStopGo.innerText = `${carSelected.acc_stop_and_go ? "✔" : "✘" }`;
         lkaSpeedRange.innerText = `${carSelected.lkc_speed_range} km/h`;
         lkaSteerTorque.innerText = `${carSelected.lkc_torque}`;
-        lkaAngle.innerText = `${carSelected.max_steering_angle}`
+        lkaAngle.innerText = `${carSelected.max_steering_angle}`;
+        support.innerText = `${carSelected.support}`;
+        note.innerText = `${carSelected.note}`;
+
         carImage.style.opacity = 0;
         carImage.src = `{{ "" | relative_url }}/img/support/${carSelected.model}.png`;
     }
@@ -118,8 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="bg-card p-6 rounded-product-select">
                 <h2 class="h4 font-bold text-white mb-1">Support</h2>
-                <p class="h5 text-gray font-normal">
-                bukapilot will work with all packages and trims of this car.
+                <p id="support-txt" class="h5 text-gray font-normal">
+                Loading
                 </p>
             </div>
 
@@ -153,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="bg-card p-6 rounded-product-select">
                 <h2 class="h4 font-bold text-white mb-1">Note:</h2>
-                <p class="h5 text-gray font-normal">
-                By default, this car will use the stock Adaptive Cruise Control (ACC) for longitudinal control. If the Driver Support Unit (DSU) is disconnected, openpilot ACC will replace stock ACC.
+                <p id="note-txt" class="h5 text-gray font-normal">
+                Loading
                 </p>
             </div>
 
