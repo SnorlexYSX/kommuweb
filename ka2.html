@@ -3,9 +3,10 @@ layout: default
 title: KommuAssist | kommu.ai
 stylesheet: products
 ---
+{% include pricing_helpers.html %}
 
 <head>
-  <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet">
+  <!-- <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet"> -->
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
@@ -1508,8 +1509,48 @@ stylesheet: products
   </script>
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
-            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
-          <p class="h5 text-gray-light pt-4">RM3,699 or RM125/mo. for 36 months (RTO only available after 22nd Nov)</p>
+            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Pre-order</button>
+          <p id="heroPriceLineKA2" class="h5 text-gray-light pt-4">RM3,699 or RM125/mo. for 36 months (RTO only available after 22nd Nov)</p>
+        <script>
+          (function(){
+            function renderKA2HeroPrice(){
+              if (!window.KommuPricing) return; // silently no-op if helper hasn't loaded yet
+              try {
+                const locale   = KommuPricing.getPreferredLocale();
+                const currency = KommuPricing.getCurrencyCode(locale);
+                const fmt      = KommuPricing.getFormatter(locale);
+
+                // Optional promo awareness (kept, but we only display the three numbers)
+                const ruleCtx   = { source: 'ka2-hero', currency };
+                const thenBlock = KommuPricing.matchRule(ruleCtx) || {};
+                const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
+
+                const device  = KommuPricing.getDevicePriceByCurrency(currency, promoLabels);
+                const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels) || 0;
+
+                // Default to 36 months unless product data specifies otherwise
+                let months = 36;
+                try {
+                  const dev = (window.products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+                  months = parseInt(dev?.subscription?.month || months, 10) || months;
+                } catch(_) {}
+
+                const p = document.getElementById('heroPriceLineKA2');
+                if (!p) return;
+
+                if (monthly > 0) {
+                  p.textContent = `${fmt.format(device)} or ${fmt.format(monthly)}/mo. for ${months} months (RTO only available after 22nd Nov)`;
+                } else {
+                  // Fallback: show one-off price only
+                  p.textContent = `${fmt.format(device)}`;
+                }
+              } catch(_) { /* no-op */ }
+            }
+
+            // Initial render and re-render on locale/currency change
+            renderKA2HeroPrice();
+          })();
+        </script>
           <p class="h4 font-bold text-gray text-center pt-10">KommuAssist is precision-engineered from a solid aluminum
             unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under
             intense sunlight. Its <span class="h4 font-bold text-white">compact, windshield-parallel design

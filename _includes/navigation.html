@@ -56,92 +56,6 @@
   <div id="mobileOverlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30" onclick="closeMobileNav()"></div>
 </nav>
 
-<script>
-  // -- Burger toggle logic --
-  (function () {
-    const toggle = document.getElementById('navToggle');
-    const panel  = document.getElementById('mobileNav');
-    const openI  = document.getElementById('iconOpen');
-    const closeI = document.getElementById('iconClose');
-    const overlay = document.getElementById('mobileOverlay');
-    let open = false;
-
-    function setOpen(v) {
-      open = v;
-      panel.classList.toggle('hidden', !open);
-      openI.classList.toggle('hidden', open);
-      closeI.classList.toggle('hidden', !open);
-      toggle?.setAttribute('aria-expanded', String(open));
-      document.documentElement.classList.toggle('overflow-hidden', open); // lock scroll when open
-      overlay?.classList.toggle('hidden', !open);
-    }
-
-    toggle?.addEventListener('click', () => setOpen(!open));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) setOpen(false); });
-
-    window.closeMobileNav = () => setOpen(false);
-  })();
-</script>
-
-<script>
-  // Keep existing locale/currency helpers; moved selector into the menu
-  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
-
-  async function detectCountryCode() {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      if (!res.ok) throw new Error("geo lookup failed");
-      const { country_code } = await res.json();
-      return country_code;               // e.g. "MY", "US", "GB"
-    } catch {
-      return null;
-    }
-  }
-
-  async function getGeoLocale() {
-    const saved = localStorage.getItem("preferredLocale");
-    if (saved) return saved;
-
-    const browserLang = navigator.language.split("-")[0] || "en";
-    const geoCC = await detectCountryCode();
-    const locale = geoCC 
-      ? `${browserLang}-${geoCC}`
-      : navigator.language || "en-US";
-
-    localStorage.setItem("preferredLocale", locale);
-    return locale;
-  }
-
-  (async () => {
-    if (!localeSelectorMobile) return;
-    const locale = await getGeoLocale();
-    localeSelectorMobile.value = locale;
-
-    localeSelectorMobile.addEventListener("change", e => {
-      localStorage.setItem("preferredLocale", e.target.value);
-      location.reload();
-    });
-  })();
-
-  function getCurrencyCode(locale) {
-    const country = locale.split("-")[1] || "US";
-    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
-    return currencyMap[country] || "USD";
-  }
-
-  function getFormatter(locale) {
-    const currency = getCurrencyCode(locale);
-    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
-  }
-
-  function formatPrice(prices) {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-    const currency = getCurrencyCode(locale);
-    const formatter = getFormatter(locale);
-    const price = prices[currency] || prices["USD"] || 0;
-    return formatter.format(price);
-  }
-</script>
 </div>
 
 <!-- Desktop / Tablet Navigation -->
@@ -172,22 +86,109 @@
   </nav>
 </div>
 
-<script>
-  (async () => {
-    const saved = localStorage.getItem("preferredLocale") || (navigator.language || "en-US");
-    const mobileSel = document.getElementById("localeSelectorMobile");
-    const deskSel   = document.getElementById("localeSelectorDesktop");
 
-    if (mobileSel) mobileSel.value = saved;
-    if (deskSel)   deskSel.value   = saved;
+<script>
+  // Keep existing locale/currency helpers; moved selector into the menu
+  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
+  const localeSelectorDesktop = document.getElementById("localeSelectorDesktop");
+
+  (function(){
+    if (!localStorage.getItem("preferredLocale")) {
+      // Hide page until we resolve locale (max 500ms)
+      document.documentElement.style.visibility = 'hidden';
+    }
+  })();
+  async function getGeoLocale() {
+    const saved = localStorage.getItem("preferredLocale");
+    if (saved) return saved;
+
+    const browserLang = (navigator.language && navigator.language.split("-")[0]) || "en";
+    let locale = navigator.language || "en-US";
+
+    function timeout(ms){
+      return new Promise(resolve => setTimeout(() => resolve("__TIMEOUT__"), ms));
+    }
+
+    try {
+      const winner = await Promise.race([
+        fetch("https://ipapi.co/json/"),
+        timeout(500)
+      ]);
+
+      if (winner !== "__TIMEOUT__" && winner && winner.ok) {
+        const { country_code } = await winner.json();
+        if (country_code) {
+          locale = `${browserLang}-${country_code}`;
+        }
+      }
+    } catch(_) { /* ignore network errors */ }
+
+    localStorage.setItem("preferredLocale", locale);
+    location.reload();
+    return locale;
+  }
+
+  (async () => {
+    const locale = await getGeoLocale();
+
+    if (localeSelectorMobile)  localeSelectorMobile.value    = locale;
+    if (localeSelectorDesktop) localeSelectorDesktop.value   = locale;
+
+    // Reveal page now that locale is ready (or timed out)
+    document.documentElement.style.visibility = '';
 
     function onChange(val){
       localStorage.setItem("preferredLocale", val);
-      window.dispatchEvent(new CustomEvent('locale:changed'));
+     // window.dispatchEvent(new CustomEvent('locale:changed'));
       location.reload();
     }
 
-    mobileSel?.addEventListener("change", e => onChange(e.target.value));
-    deskSel?.addEventListener("change",   e => onChange(e.target.value));
+    localeSelectorMobile?.addEventListener("change", e => onChange(e.target.value));
+    localeSelectorDesktop?.addEventListener("change",   e => onChange(e.target.value));
+  })();
+
+  function getCurrencyCode(locale) {
+    const country = locale.split("-")[1] || "US";
+    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
+    return currencyMap[country] || "USD";
+  }
+
+  function getFormatter(locale) {
+    const currency = getCurrencyCode(locale);
+    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
+  }
+
+  function formatPrice(prices) {
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+    const price = prices[currency] || prices["USD"] || 0;
+    return formatter.format(price);
+  }
+</script>
+<script>
+  // -- Burger toggle logic --
+  (function () {
+    const toggle = document.getElementById('navToggle');
+    const panel  = document.getElementById('mobileNav');
+    const openI  = document.getElementById('iconOpen');
+    const closeI = document.getElementById('iconClose');
+    const overlay = document.getElementById('mobileOverlay');
+    let open = false;
+
+    function setOpen(v) {
+      open = v;
+      panel.classList.toggle('hidden', !open);
+      openI.classList.toggle('hidden', open);
+      closeI.classList.toggle('hidden', !open);
+      toggle?.setAttribute('aria-expanded', String(open));
+      document.documentElement.classList.toggle('overflow-hidden', open); // lock scroll when open
+      overlay?.classList.toggle('hidden', !open);
+    }
+
+    toggle?.addEventListener('click', () => setOpen(!open));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) setOpen(false); });
+
+    window.closeMobileNav = () => setOpen(false);
   })();
 </script>

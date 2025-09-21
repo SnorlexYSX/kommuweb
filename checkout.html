@@ -150,11 +150,11 @@ title: Checkout
           {% endfor %}
         </select>
       </div>
-      <div id="checkoutPromoGroup" class="mt-4">
+      <!-- <div id="checkoutPromoGroup" class="mt-4">
         <label for="checkoutPromoInput" class="block h5 font-bold text-gray mb-1">Promo code</label>
         <input id="checkoutPromoInput" type="text" class="w-full fillform-black border-1 btn-border-gray px-4 py-2 rounded-checkoutform">
         <p id="checkoutPromoValidity" class="text-yellow-400 mt-1" hidden></p>
-      </div>
+      </div> -->
     </div>
 
     <!-- Right Cart Summary -->
@@ -408,7 +408,7 @@ title: Checkout
       if (locks.icRequired === true) { icGroup.classList.remove('hidden'); icInput.required = true; }
       else { icGroup.classList.add('hidden'); icInput.required = false; }
       // Hide promo (cart flows)
-      if (locks.hidePromo === true) { promoGroup.classList.add('hidden'); } else { promoGroup.classList.remove('hidden'); }
+      // if (locks.hidePromo === true) { promoGroup.classList.add('hidden'); } else { promoGroup.classList.remove('hidden'); }
 
       // Force selections for product flow (if rules ask for it)
       if (isFromProduct) {
@@ -497,11 +497,11 @@ title: Checkout
       icInput.required = false;
     }
 
-    if (isFromProduct) {
-      promoGroup.classList.remove("hidden");
-    } else {
-      promoGroup.classList.add("hidden");
-    }
+    // if (isFromProduct) {
+    //   promoGroup.classList.remove("hidden");
+    // } else {
+    //   promoGroup.classList.add("hidden");
+    // }
     
     // set default country based on user locale
     const countryInput = document.getElementById("checkoutCountry");

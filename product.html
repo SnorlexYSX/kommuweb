@@ -86,9 +86,8 @@ title: Buy KommuAssist 2
     <h1 class="h4" style="color: #f06102;">New</h1>
     <h1 class="h1 font-bold text-white mb-2">KommuAssist 2</h1>
     <p class="h5 text-gray-light">
-      <!--<span id="heroOneOffPrice"></span>-->
-      <span>RM 3,699.00</span><br>
-      <span class="slashed-price">RM 4,499.00</span><span>(incl. RM409.00 SST)</span><span id="heroMonthly"></span>
+      <span id="heroOneOffPrice" ></span><br>
+      <span id="heroSlashedPrice" class="slashed-price"></span><span id="heroTax"></span><span id="heroMonthly"></span>
     </p>
     <p class="h5 text-gray-light mt-2">
       Pre-order now. Ship before December 2025.
@@ -665,17 +664,23 @@ title: Buy KommuAssist 2
 
       const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
       const device      = KommuPricing.getDevicePriceByCurrency(currency, promoLabels);
+      const slashed      = KommuPricing.getSlashedDevicePriceByCurrency(currency);
+
       const bundled     = KommuPricing.getAddonSurchargeFromSelections(sel, currency, thenBlock);
       const total       = device + (bundled.total||0);
 
       // --- Hero headline: one-off and monthly (if available) ---
       const heroOneOffEl = document.getElementById('heroOneOffPrice');
       const heroMonthlyEl = document.getElementById('heroMonthly');
+      const heroSlashedEl = document.getElementById('heroSlashedPrice');
+      const heroTaxEl = document.getElementById('heroTax');
 
       // Monthly pricing (promo-aware)
       const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels) || 0;
       // Pull months from products data (default 36)
       let months = 36;
+      let sst = KommuPricing.getSSTDevicePriceByCurrency(currency)
+
       try {
         const dev = (window.products||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
         months = parseInt(dev?.subscription?.month || months, 10) || months;
@@ -683,13 +688,24 @@ title: Buy KommuAssist 2
       const years = (months % 12 === 0) ? (months/12) : null;
 
       if (heroOneOffEl) heroOneOffEl.textContent = fmt.format(device);
+      if (heroSlashedEl) heroSlashedEl.textContent = fmt.format(slashed);
+      if (heroTaxEl) {
+        if (sst != 0) {
+          heroTaxEl.textContent = `(incl. ${fmt.format(sst)} SST) `;
+        } else {
+          heroTaxEl.textContent = '';
+        }
+      }
+
+      //Logic does not make sense, guess the text changed because of RTO.
       if (heroMonthlyEl) {
         if (monthly > 0) {
-          heroMonthlyEl.textContent = years ? ` or ${fmt.format(monthly)}/mo. for 36 months with rent-to-own***` : ` or ${fmt.format(monthly)}/month*`;
+          heroMonthlyEl.textContent = years ? `or ${fmt.format(monthly)}/mo. for ${months} months with rent-to-own***` : ` or ${fmt.format(monthly)}/month*`;
         } else {
           heroMonthlyEl.textContent = '';
         }
       }
+
 
       // --- Connectivity: SIM price ---
       const simEl = document.getElementById('simPrice');
@@ -725,7 +741,7 @@ title: Buy KommuAssist 2
 
     // Initial and reactive updates
     renderPrice();
-    document.addEventListener('kommu:pricing:locale_changed', renderPrice);
+    //document.addEventListener('kommu:pricing:locale_changed', renderPrice);
     document.addEventListener('kommu:selection_changed', () => {
       // Defer to next frame to ensure DOM attributes are fully updated
       requestAnimationFrame(renderPrice);

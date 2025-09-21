@@ -247,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (heroEl) heroEl.textContent = heroText;
     } catch(_) {}
   }
-  document.addEventListener('kommu:pricing:locale_changed', updateHeroPriceLine);
+  //document.addEventListener('kommu:pricing:locale_changed', updateHeroPriceLine);
   window.addEventListener('storage', (e)=>{ if (e.key==='preferredLocale') updateHeroPriceLine(); });
 
   document.querySelectorAll(".product-card").forEach(card => {
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="aspect-[4/3] w-full mb-4">
       <img src="{{ '/img/products/device/checkout_img.webp' | relative_url }}" alt="KommuAssist 2.0 device" class="w-full h-full object-contain rounded">
     </div>
-    <p id="heroPriceLine" class="h5 mb-4 text-gray-300">Loading price…</p>    
+    <p id="heroPriceLine" class="h5 mb-4 text-gray-300">.</p>    
     <button onclick="goToBuyPage()" class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
   </div>
 </section>

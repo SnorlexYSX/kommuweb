@@ -19,11 +19,31 @@
       return parseFloat(prices[ccy] ?? prices.USD ?? 0) || 0;
     } catch(_) { return 0; }
   }
+
+  //TODO: Can refactor all three of these
   function getBaseDevicePriceByCurrency(curr){
     try{
       const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
       if (!dev) return 0;
       const prices = dev.prices || {};
+      const c = (curr||'').toUpperCase();
+      return parseFloat(prices[c] ?? prices.USD ?? 0) || 0;
+    } catch(_) { return 0; }
+  }
+  function getSlashedDevicePriceByCurrency(curr){
+    try{
+      const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+      if (!dev) return 0;
+      const prices = dev.slashed_prices || {};
+      const c = (curr||'').toUpperCase();
+      return parseFloat(prices[c] ?? prices.USD ?? 0) || 0;
+    } catch(_) { return 0; }
+  }
+  function getSSTDevicePriceByCurrency(curr){
+    try{
+      const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+      if (!dev) return 0;
+      const prices = dev.sst || {};
       const c = (curr||'').toUpperCase();
       return parseFloat(prices[c] ?? prices.USD ?? 0) || 0;
     } catch(_) { return 0; }
@@ -158,7 +178,7 @@
     getPreferredLocale, getCurrencyCode, getFormatter,
     getProductPriceByNameCurrency, getBaseDevicePriceByCurrency,
     getDevicePriceByCurrency, getDeviceMonthlyByCurrency,
-    matchRule, getAddonSurchargeFromSelections, getSubscriptionPromoFromLabels
+    matchRule, getAddonSurchargeFromSelections, getSubscriptionPromoFromLabels, getSlashedDevicePriceByCurrency, getSSTDevicePriceByCurrency
   };
 
   // Optional: react to locale changes without reload (if caller dispatches this event)
