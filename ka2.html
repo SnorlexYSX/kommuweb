@@ -965,7 +965,7 @@ stylesheet: products
     .ports-section {
       position: relative;
       max-width: 1100px;
-      margin: 10rem auto 8rem;
+      margin: 10rem auto 0rem;
       color: #eaeaea;
       min-height: 120vh;
       /* enough scroll room to reveal all labels */
@@ -1295,6 +1295,156 @@ stylesheet: products
       opacity: 0; /* start hidden */
       animation: fadeInOpacity 0.6s ease-out forwards;
     }
+
+    /* --- Horizontal carousel copied from index.html --- */
+.full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+.row-align { 
+  padding-left: max(calc((100vw - 1100px) / 2), 1.5rem); 
+  padding-right: max(calc((100vw - 1100px) / 2), 1.5rem); 
+  gap: 3.5rem;
+}
+
+.carousel-wrap { position: relative; }
+.h-scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
+  scroll-padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
+}
+.scroll-btn {
+  position: absolute;
+  bottom: -30px;
+  width: 42px; height: 42px; border-radius: 9999px;
+  display: grid; place-items: center;
+  background: rgb(255 255 255 / 0.6);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  border: 0;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+}
+.scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
+.scroll-btn:active { transform: scale(0.98); }
+.scroll-btn[disabled] { opacity: .4; pointer-events: none; }
+.scroll-btn.next { right: 1.25rem; transform: none; }
+.scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; }
+.scroll-btn svg { width: 18px; height: 18px; }
+
+:root { 
+  --card-w: 350px; 
+  --card-h: 600px;
+  --card-img-h: 437.5px;
+}
+@media (max-width: 1280px) {
+  .row-align { gap: 2.5rem; }
+  :root { 
+    --card-w: 300px;
+    --card-h: 525px;
+    --card-img-h: 375px;
+  }
+}
+@media (max-width: 380px) {
+  :root { 
+    --card-w: 280px; 
+    --card-h: 500px; 
+    --card-img-h: 350px; 
+  }
+}
+
+.fixed-card {
+  width: var(--card-w);
+  min-width: var(--card-w);
+  max-width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.fixed-card.wide {
+  width: calc(var(--card-w) * 2);
+  min-width: calc(var(--card-w) * 2);
+  max-width: calc(var(--card-w) * 2);
+}
+.h-scroll .fixed-card {
+  flex: 0 0 var(--card-w);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.h-scroll .fixed-card.wide { flex-basis: calc(var(--card-w) * 2); }
+
+.fixed-card img {
+  height: var(--card-img-h);
+  width: 100%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
+}
+
+@media (max-width: 768px) {
+  .fixed-card.wide {
+    width: var(--card-w);
+    min-width: var(--card-w);
+    max-width: var(--card-w);
+  }
+  .h-scroll .fixed-card.wide { flex-basis: var(--card-w); }
+  .scroll-btn { bottom: -8px; width: 36px; height: 36px; }
+  .scroll-btn svg { width: 16px; height: 16px; }
+  .scroll-btn.next { right: 0.5rem; }
+  .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); }
+}
+
+/* --- Compatibility section (from index.html) --- */
+.brand-logo {
+  width: 7.5rem;
+  height: auto;
+}
+@media (max-width: 768px) {
+  .brand-logos-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    gap: 0.5rem;
+  }
+  .summary-section { min-height: 900px; }
+}
+/* Height helper used by the section */
+.hp4-content-height{ min-height: calc(var(--vh, 1vh) * 100); }
+@media (max-height: 1100px) and (min-width: 1100px) {
+  .summary-section { min-height: 900px; }
+}
+.rounded-lg-store{
+    border-radius: 1.5625rem;
+  }
+
+  @media (max-width: 768px) {
+  .summary-section .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 0.5rem !important; /* adjust spacing between cards */
+  }
+  .summary-section .grid > div {
+    width: 100%; /* each card fills its column */
+  }
+  .summary-section .grid > div {
+    height: 200px; /* fixed card height on mobile */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rounded-lg-store{
+    border-radius: 0rem;
+  }
+}
+@media (min-width: 769px) {
+  .summary-section .grid > div {
+    height: 280px; /* fixed card height on desktop/tablet */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
   </style>
 
 <script>
@@ -1353,7 +1503,8 @@ stylesheet: products
         el.closest('.perception-tabs-section') ||
         el.closest('.safety-tab') ||
         el.closest('.fixed') ||
-        el.closest('.footer')
+        el.closest('.footer') ||
+        el.closest('.summary-section')
       ) {
         // Ensure excluded headings are visible (remove any leftover class)
         el.classList.remove('fade-up-target', 'fade-up');
@@ -1508,7 +1659,7 @@ stylesheet: products
   </script>
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
-            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
+            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Pre-order</button>
           <p class="h5 text-gray-light pt-4">RM3,699 or RM125/mo. for 36 months (RTO only available after 22nd Nov)</p>
           <p class="h4 font-bold text-gray text-center pt-10">KommuAssist is precision-engineered from a solid aluminum
             unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under
@@ -1777,6 +1928,125 @@ stylesheet: products
         </div>
       </div>
   </section>
+
+  <section class="flex software-section">
+    <div class="max-w-6xl mx-auto pt-10 px-4 hp3-content-height">
+      <h4 class="h3 text-gray-light">Software</h4>
+      <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot</h1>
+      <p class="h4 font-bold text-gray mb-8">
+        bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
+      </p>
+      
+      <div class="carousel-wrap">
+        <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
+          <p class="h5 text-gray mt-2">
+            End‑to‑end neural network. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
+          </p>
+          </p>
+        </div>
+  
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">Understands the road.</h4>
+          <p class="h5 text-gray mt-2">
+            Smart enough to spot traffic lights, speed bumps, and safely change lanes.
+          </p>
+        </div>
+  
+        <div class=" fixed-card wide">
+          <picture class="w-full block rounded-3xl">
+            <source media="(max-width: 768px)" srcset="{{ '/img/main/sw3-portrait.png' | relative_url }}">
+            <img src="{{ '/img/main/sw3.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
+          </picture>
+          <h4 class="h3 font-bold text-white">Driven by Kommunity.</h4>
+          <p class="h5 text-gray mt-2">
+            Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
+          </p>
+        </div>
+  
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw4.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
+          <p class="h5 text-gray mt-2">
+            Observed ISO26262 Functional Safety Standard & MISRA C code compliant.
+          </p>
+        </div>
+      </div>
+      <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="sw-cards">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="sw-cards">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    </div>
+  </section>
+
+  <!-- COMPATIBILITY (copied from index.html) -->
+<!-- COMPATIBILITY (Apple-style redesign) -->
+<section class="flex items-center summary-section bg-black text-white mt-[10rem] md:mt-[20rem]">
+  <div class="max-w-6xl mx-auto pt-12 md:pt-20 pb-8 md:pb-12 px-4 md:px-[7rem] text-center bg-card rounded-lg-store">
+    <h2 class="h1 font-bold mb-4 text-white place-self-start text-left px-2">Upgrade from KA1 or KA1s.</h2>
+    <p class="h4 font-bold text-gray mb-12 place-self-start px-2">
+      Just a lot more capable.
+    </p>
+
+    <!-- Feature Grid -->
+    <div class="grid md:grid-cols-3 gap-3 text-center">
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <h3 class="h3 font-bold">Aluminum unibody</h3>
+        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="w-20">
+        
+        
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/main/proton.png' | relative_url }}" alt="Proton" class="w-20">
+        <h3 class="h3 font-bold">Rockchip RK3588</h3>
+        <p class="h5 text-gray mt-2">6 TOPS below 10 watts</p>
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/main/honda.png' | relative_url }}" alt="Honda" class="w-20">
+        <h3 class="h3 font-bold">3x Autmotive Cameras</h3>
+        
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <h3 class="h3 font-bold">bukapilot v10</h3>
+        <img src="{{ '/img/main/toyota.png' | relative_url }}" alt="Toyota" class="w-20">
+        <p class="h5 text-gray mt-2">end-to-end driving model</p>
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <h3 class="h3 font-bold">New KommuAI app</h3>
+        <img src="{{ '/img/main/byd.png' | relative_url }}" alt="BYD" class="w-20">
+        
+        
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/main/lexus.png' | relative_url }}" alt="Lexus" class="w-20">
+        <h3 class="h3 font-bold">Dashcam feature</h3>
+        <p class="h5 text-gray mt-2">Retrieve driving footage locally</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-12">
+      <a href="{{ '/product' | relative_url }}" class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full">
+        Pre-order
+      </a>
+      <p class="h5 text-gray mt-6">
+        Pre-order now. Ship before Dec 2025.
+      </p>
+    </div>
+  </div>
+</section>
+
   <script>
     // Ports labels scroll-reveal with auto-normalization
     (function () {
@@ -2783,3 +3053,58 @@ stylesheet: products
     window.springScrollToElement = springScrollToElement;
   })();
 </script>
+
+<script>
+  (function () {
+    function bindScrollButtons(wrapper) {
+      const scroller = wrapper.querySelector('.h-scroll');
+      if (!scroller) return;
+      const prevBtn = wrapper.querySelector('.scroll-btn.prev');
+      const nextBtn = wrapper.querySelector('.scroll-btn.next');
+      if (!prevBtn || !nextBtn) return;
+  
+      const cards = Array.from(scroller.querySelectorAll('.fixed-card'));
+  
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  
+      const getStops = () => {
+        const cs = getComputedStyle(scroller);
+        const padL = parseFloat(cs.paddingLeft) || 0;
+        return cards.map(el => Math.round(el.offsetLeft - padL));
+      };
+      const getMax = () => scroller.scrollWidth - scroller.clientWidth;
+  
+      const updateDisabled = () => {
+        const max = getMax();
+        const x = scroller.scrollLeft;
+        prevBtn.disabled = x <= 4;
+        nextBtn.disabled = x >= max - 4;
+      };
+  
+      const scrollByStep = (dir) => {
+        const stops = getStops();
+        const max = getMax();
+        const from = Math.round(scroller.scrollLeft);
+  
+        let target;
+        if (dir > 0) {
+          target = stops.find(s => s > from + 4);
+          if (target === undefined) target = max;
+        } else {
+          const prevs = stops.filter(s => s < from - 4);
+          target = prevs.length ? prevs[prevs.length - 1] : 0;
+        }
+        scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
+      };
+  
+      prevBtn.addEventListener('click', () => scrollByStep(-1));
+      nextBtn.addEventListener('click', () => scrollByStep(1));
+  
+      scroller.addEventListener('scroll', updateDisabled, { passive: true });
+      window.addEventListener('resize', updateDisabled);
+      updateDisabled();
+    }
+  
+    document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
+  })();
+  </script>

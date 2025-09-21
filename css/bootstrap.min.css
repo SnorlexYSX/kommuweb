@@ -8379,14 +8379,15 @@ fieldset:disabled .btn {
 }
 
 .px-4 {
-    padding-right: 1.5rem !important;
-    padding-left: 1.5rem !important
+    padding-right: 1.5rem ;
+    padding-left: 1.5rem
 }
 
 .px-5 {
     padding-right: 3rem !important;
     padding-left: 3rem !important
 }
+
 
 .py-0 {
     padding-top: 0 !important;
