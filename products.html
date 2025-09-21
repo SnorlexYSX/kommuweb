@@ -1,0 +1,812 @@
+---
+layout: default
+title: Products | kommu.ai
+stylesheet: products
+---
+<div class="modal fade" id="instalmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px" id="closeInstalmentModal">X</button>
+            </div> 
+            <div class="row">
+                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                    <h2>Order now. Ship in 1 week.</h2>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="{{ "" | relative_url }}/img/products/placeorder.png" class = "img-fluid" style="border-radius:0.5rem">
+                        </div>
+                        <div class="col-6">
+                            <p>KommuAssist 1s</p>
+                        </div>
+                        <div class="col-4" style="justify-content: end; display: grid;">
+                            <p id="instalmentCurrentPrice">RM3,799.00</p>
+                        </div> 
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Due now <br><span><span class="monthlyInstalmentPrice">RM211.06</span>/mo. x <span id="instalmentMonth">18</span> mo.</span></p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p class="monthlyInstalmentPrice">RM211.06</p>
+                        </div> 
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">                    
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Shipping to Malaysia</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p>Free</p>
+                        </div> 
+                    </div>
+                    <p>Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Total due now</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p class="monthlyInstalmentPrice">RM211.06</p>
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <h2>Customer information.</h2>
+                    </div>
+                    <form id="instalmentForm" class="needs-validation" novalidate onsubmit="instalmentSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form34">Name</label>
+                            <input type="text" id="instalmentName" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide your name.
+                            </div>
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Malaysian IC No.(without -)</label>
+                            <input type="number" id="instalmentIC" min=100000000 max=999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid IC.
+                            </div>
+                        </div>    
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form29">Email</label>
+                            <input type="email" id="instalmentEmail" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                            <input type="number" id="instalmentMobile" min=10000000 max=999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid phone number.
+                            </div>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form8">Address</label>
+                            <input type="text" id="instalmentAddress1" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid address.
+                            </div>
+                        </div>
+        
+                        <div class="md-form mb-2" style="display: none;">  
+                            <input type="text" id="instalmentAddress2" class="form-control">
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                            <input type="number" id="instalmentPostcode" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a postcode.
+                            </div>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" disabled>
+                                <option value="MY">Malaysia</option>
+                            </select>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right">Harness</label>
+                            <select class="form-select" id="instalmentHarness" required>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select your car model.
+                            </div>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label for="form32">Installation</label>
+                            <select class="form-select" id="instalmentInstallation">
+                                <option value="HQ-Installation">Install at Kommu HQ</option>
+                                <option value="Shipping">Ship to Address</option>
+                            </select>
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Promo Code</label>
+                            <div class="row">
+                                <div class="col-8 m-0">
+                                    <input type="text" id="instalmentPromoInput" class="form-control validate">
+                                </div>
+                                <div class="col-2 p-0">
+                                    <button type="button" class="btn btn-tertiary" id="instalmentPromoBtn" style="line-height: 0px; font-size: 15px; height: 38px; padding-left: 20px;padding-right: 20px;">Verify</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div >
+                            <p id="instalmentPromoValidity" hidden="true">This promo code is invalid.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-tertiary" id="instalmentSubmitBtn" disabled>Place Order</button>
+                            <p style="font-size: 9px;">
+                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
+                            </p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content container" style="background-color: #f5f5f7; border-width: 0px;">
+            <div class="modal-close-btn">
+                <button type="button" class="btn" data-bs-dismiss="modal" style="font-weight: 1000; font-size: 25px">X</button>
+            </div> 
+            <div class="row">
+                <div class="col-md-6 col-sm-12" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                    <h2>Order now. Ship in 1 week.</h2>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="{{ "" | relative_url }}/img/products/placeorder.png" class = "img-fluid" style="border-radius:0.5rem">
+                        </div>
+                        <div class="col-6">
+                            <p>KommuAssist 1s</p>
+                        </div>
+                        <div class="col-4" style="justify-content: end; display: grid;">
+                            <p class="otpCurrentPrice">RM3,799.00</p>
+                        </div> 
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Due now </p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p class="otpCurrentPrice">RM3,799.00</p>
+                        </div> 
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">
+                    <br class="br-mobile-thin">                    
+                    <div class="row">
+                        <div class="col-6">
+                            <p id="otpShippingText">Shipping to Malaysia</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;">
+                            <p id="otpShippingRate">Free</p>
+                        </div> 
+                    </div>
+                    <p id="otpDeliveryParagraph">Free delivery in Malaysia. <br>Free installation at our workplace with appointment after purchase. </p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p>Total due now</p>
+                        </div>
+                        <div class="col-6" style="justify-content: end; display: grid;" >
+                            <p id="otpFinalTotal">RM3,799.00</p>
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <h2>Customer information.</h2>
+                    </div>
+                    <form id="otpForm" class="needs-validation" novalidate onsubmit="otpSubmit();return false" style="font-family: GlacialIndifference-Regular; font-weight:300; color:#86868B;">
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-succes="right" for="form34">Name</label>
+                            <input type="text" id="otpName" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide your name.
+                            </div>
+                        </div>
+               
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form29">Email</label>
+                            <input type="email" id="otpEmail" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Mobile Number</label>
+                            <input type="number" id="otpMobile" min=10000000 max=999999999999999 class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid phone number.
+                            </div>
+                        </div>
+                
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form8">Address</label>
+                            <input type="text" id="otpAddress1" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid address.
+                            </div>
+                        </div>
+        
+                        <div class="md-form mb-2" style="display: none;">  
+                            <input type="text" id="otpAddress2" class="form-control">
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Postcode</label>
+                            <input type="number" id="otpPostcode" class="form-control validate" required>
+                            <div class="invalid-feedback">
+                                Please provide a postcode.
+                            </div>
+                        </div>
+                        
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right" for="form32">Country</label>
+                            <select class="form-select" id="otpCountry" onChange="updateOtpModal()">
+                                <option value="MY">Malaysia</option>
+                                <option value="AUS">Australia</option>
+                                <option value="IND">Indonesia</option>
+                                <option value="SG">Singapore</option>
+                                <option value="TH">Thailand</option>
+                                <option value="UK">United Kingdom</option>
+                            </select>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label data-error="wrong" data-success="right">Harness</label>
+                            <select class="form-select" id="otpHarness" required>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select your car model.
+                            </div>
+                        </div>
+                        <div class="md-form mb-2">
+                            <label for="form32">Installation</label>
+                            <select class="form-select"  id="otpInstallation">
+                                <option value="HQ-Installation">Install at Kommu HQ</option>
+                                <option value="Shipping">Ship to Address</option>
+                            </select>
+                        </div>
+        
+                        <div class="md-form mb-2">
+                            <label for="form32">Promo Code</label>
+                            <div class="row">
+                                <div class="col-8 m-0">
+                                    <input type="text" id="otpPromoInput" class="form-control validate">
+                                </div>
+                                <div class="col-2 p-0">
+                                    <button type="button" class="btn btn-tertiary" id="otpPromoBtn" style="line-height: 0px; font-size: 15px; height: 38px; padding-left: 20px;padding-right: 20px;">Verify</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div >
+                            <p id="otpPromoValidity" hidden="true">This promo code is invalid.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-tertiary" id="otpSubmitBtn" disabled>Place Order</button>
+                            <p style="font-size: 9px;">
+                                By clicking the 'Place Order' button, you accept and agree to all terms of Kommu's T&C and Privacy Policy. A receipt will be provided to you electronically that contains these terms and an itemised list of your purchase including taxes and shipping charges, if any.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" style="margin-top:20px">
+        <link href="{{ "/css/products-page.css" | relative_url }}" rel="stylesheet">
+        <div class="col-lg-5 col-md-12 col-12 mb-4 pr-5">
+            <div>
+                <h6 style="color: orangered;">New</h6>
+                <h1>KommuAssist 1s</h1>
+                <h6>RM3,799</h6>
+                <h6>Order now. Ship in 1 week.</h6>
+            </div>
+            <div class="row" style="justify-content: center;">
+                <img src="{{ "" | relative_url }}/img/products/standard/1.png" class = "img-fluid w-95" id= "MainImage"  style="margin-bottom: 10px;border-radius: 25px;padding-left: 0px;padding-right: 0px;">
+            </div>
+            <div class="small-img-group" style="margin-bottom: 10px;">
+                <div class="small-img-col">
+                    <img src="{{ "" | relative_url }}/img/products/standard/1.png" width="100%" class="small-img" style="border-style: solid; border-color: #33B9FF; border-width: 5px;" >
+                </div>
+                <div class="small-img-col">
+                    <img src="{{ "" | relative_url }}/img/products/standard/2.png" width="100%" class="small-img">
+                </div>
+                <div class="small-img-col">
+                    <img src="{{ "" | relative_url }}/img/products/standard/3.png" width="100%" class="small-img">
+                </div>
+                <div class="small-img-col">
+                    <img src="{{ "" | relative_url }}/img/products/standard/4.png" width="100%" class="small-img">
+                </div>
+                <div class="small-img-col">
+                    <img src="{{ "" | relative_url }}/img/products/standard/5.png" width="100%" class="small-img">
+                </div>
+            </div>
+            <h6 class="disc-header">Warranty</h6>
+            <p class="disc-content">1 year hardware warranty. Long term software & firmware support.</p>
+            <h6 class="disc-header">Safety</h6>
+            <p class="disc-content">Non-intrusive installation with no risk of jam-brake, unintended acceleration, unintended cornering etc.</p>
+            <h6 class="disc-header">Insurance</h6>
+            <p class="disc-content">Supported cars have built-in L2 ADAS which are covered by motor insurance; KA1s has the same features, just smarter. </p>
+            <h6 class="disc-header">Legal</h6>
+            <p class="disc-content">It's illegal to drive handsfree. Read T&C before you purchase. Accept T&C before you use. </p>
+        </div>
+        <div class="col col-lg-7">
+            <div class="card-itb">
+                <h4 class="itb-main-text">In the box.</h4>
+                <div class="container">
+                <div class="row" id="includes">
+                    <div class="col-md-6 col-sm-12">
+                        <h6 class="itb-header">Vision</h6>
+                        <p class="itb-content">Qualcomm Snapdragon 821</p>
+                        <p class="itb-content">Sony IMX219 12MP road facing camera</p>
+                        <p class="itb-content">OV8865 8MP driver facing camera</p>
+                        <p class="itb-content">Cooling fan & heat sinks</p>
+                        <p class="itb-content">Dual IR LED for interior night vision</p>
+                        <p class="itb-content">USB-C (3.1) port</p>
+                        <h6 class="itb-header">Relay</h6>
+                        <p class="itb-content">ADAS CAN Bus communication.</p>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <h6 class="itb-header">Power</h6>
+                        <p class="itb-content">Supply 12V and CAN signals.</p>
+                        <h6 class="itb-item">Vision mount</h6>
+                        <h6 class="itb-item">Relay harness</h6>
+                        <h6 class="itb-item">2.5m USB C-C 3.1 Cable</h6>
+                        <h6 class="itb-item">0.5m USB C-C 3.1 Cable</h6>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="card-itb-2">
+                <h2 style="color: #86868B">Select car model harness:</h2>
+                    <div class="col-xl-6 col-lg-12" style="max-width:1000px;">
+                        <select aria-label="Select car model harness" class="form-select mb-4 mt-2" id="car-select" onchange="updateCarSelects()">
+                        </select>
+                    </div>
+            </div>
+            <div>
+                    <h6 style="font-size: 11px; color: #86868B">Free delivery in Malaysia. Free installation at our workplace with appointment after purchase.</h6>
+                    <h6>RM3,799</h6>
+                    <hr>
+                    <h6>Continue with your preferred payment option:</h6>
+                    <h6 class="disc-content">Instalment options are only available for Malaysians. Only credit card is accepted.</h6>
+                    <div class="row">
+                        <div class="col-3"><button class="btn" id="visa18Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm1.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="visa12Btn" data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm2.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="visa3Btn"  data-bs-toggle="modal" data-bs-target="#instalmentModal"><img src="{{ "" | relative_url }}/img/products/pm3.png" class = "img-fluid"></button></div>
+                        <div class="col-3"><button class="btn" id="otpBtn"    data-bs-toggle="modal" data-bs-target="#otpModal"><img src="{{ "" | relative_url }}/img/products/pm4.png" class = "img-fluid"></button></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <h2 style="margin-top: 25px;">
+                Installation:
+            </h2>
+            <h4 style="font-size:1rem; font-weight:300; color:#86868B;">
+                Perform 15 minutes self-installation following our video guide: 
+            </h4>
+            <br>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <iframe class="installationyoutube" src="https://www.youtube.com/embed/2EpnMwpINpE">
+                </iframe>    
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const visaUrl = "https://aws.kommu.ai/curlec/visa?";
+    const otpUrl = "https://aws.kommu.ai/curlec/otp?";
+    const carSelectList = document.getElementById("car-select");
+    const instalmentCarList = document.getElementById("instalmentHarness");
+    const otpCarList = document.getElementById("otpHarness");
+
+
+    const instalmentButton = document.getElementById("instalmentButton");
+
+    const visa18Btn = document.getElementById("visa18Btn");
+    const visa12Btn = document.getElementById("visa12Btn");
+    const visa3Btn = document.getElementById("visa3Btn");
+
+    const otpBtn = document.getElementById("otpBtn");
+
+
+    const productPrice = 3799;
+    const subscriptionCurlec3 = "plan_OQHSbSwfch5AGw";
+    const subscriptionCurlec12 = "plan_OLkOD0mGLBHUlb";
+    const subscriptionCurlec18 = "plan_OLltDcnwctR2vw";
+
+    const promoCodeDict = {
+        "2NDBUY":{"price": 3599, "status":"ACTIVE", "subscriptionCurlec3": "plan_PYZ2rP9jkEebEd", "subscriptionCurlec12": "plan_PYZ3Qm8KoxmYxi", "subscriptionCurlec18": "plan_PYZ41IapLXka6D"},
+        "ISKA200":{"price": 3599, "status":"ACTIVE", "subscriptionCurlec3": "plan_PYZ2rP9jkEebEd", "subscriptionCurlec12": "plan_PYZ3Qm8KoxmYxi", "subscriptionCurlec18": "plan_PYZ41IapLXka6D"},
+        "BETA300":{"price": 3499, "status":"ACTIVE", "subscriptionCurlec3": "plan_PSw8M2idmOZzho", "subscriptionCurlec12": "plan_PSw78R0LvRA5DA", "subscriptionCurlec18": "plan_PSw6JYQjAtt6VF"},
+        "X50KDH":{"price": 3649, "status":"ACTIVE", "subscriptionCurlec3": "plan_PC1jm57RFu005N", "subscriptionCurlec12": "plan_PC1kkJDCSk1mD1", "subscriptionCurlec18": "plan_PC1lX1QFmLJQTB"},
+        "LUTF100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "NASA100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "ZULK100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "ARIF100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "ADRM100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "MUST100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "SAIF100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "LUQM100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "KEAN1":{"price": 1, "status":"ACTIVE", "subscriptionCurlec3": "plan_P992Haxnf6jxAN", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"}, 
+        "TING100":{"price": 3699, "status":"ACTIVE", "subscriptionCurlec3": "plan_OelUh25FEszZyi", "subscriptionCurlec12": "plan_OelVm9saoVCFih", "subscriptionCurlec18": "plan_OelWMNXUriFkBW"},
+        "INVALID":{"price": productPrice, "status":"INVALID", "subscriptionCurlec3": subscriptionCurlec3, "subscriptionCurlec12": subscriptionCurlec12, "subscriptionCurlec18": subscriptionCurlec18},
+    }
+
+    var currentSubscription = subscriptionCurlec18;
+    var currentInstalmentPrice = productPrice;
+    var currentDuration = 18;
+    var currentPromoCode = "";
+    var monthlyPayment = 198.28;
+    var currentOtpPrice = productPrice;
+    var finalOtpAmount = 3799;
+    var currentCarSelected = "";
+
+    const shippingRate = {
+            MY: "0.00",
+            AUS: "422.73",
+            IND: "209.99",
+            SG: "245.63",
+            TH: "209.99",
+            UK: "395.00",
+        }
+    const countries = {
+        MY: "Malaysia",
+        AUS: "Australia",
+        IND: "Indonesia",
+        SG: "Singapore",
+        TH: "Thailand",
+        UK: "United Kingdom",
+    }
+
+    async function load() {
+        const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
+        const resp = await (await fetch(remote)).json();
+        
+        
+        let list = resp.standard;
+        const placeholderOption = document.createElement("option");
+        placeholderOption.innerText = "Please select a car model";
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        placeholderOption.value = "";
+
+        const otpPlaceholder = placeholderOption.cloneNode(true);
+        const instalmentPlaceholder = placeholderOption.cloneNode(true);
+        
+        otpPlaceholder.selected = true;
+        instalmentPlaceholder.selected = true;
+        carSelectList.appendChild(placeholderOption);
+        instalmentCarList.appendChild(instalmentPlaceholder);
+        otpCarList.appendChild(otpPlaceholder);
+
+        list.forEach((vehicle) => {
+            const option1 = document.createElement("option");
+
+            option1.value = `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`;
+            option1.innerText = option1.value;
+            
+            carSelectList.appendChild(option1);
+            instalmentCarList.appendChild(option1.cloneNode(true));
+            otpCarList.appendChild(option1.cloneNode(true));
+        });
+    }
+
+    window.onload = load;
+
+
+    visa18Btn.onclick = function() {updateInstalmentModal(18,productPrice,subscriptionCurlec18);};
+    visa12Btn.onclick = function() {updateInstalmentModal(12,productPrice,subscriptionCurlec12);};
+    visa3Btn.onclick = function() {updateInstalmentModal(3,productPrice,subscriptionCurlec3);};
+    otpBtn.onclick = function() {currentOtpPrice = productPrice;updateOtpModal();};
+    
+    function updateInstalmentModal(month, totalPrice, subscription) {
+        var instalmentPrice = document.getElementsByClassName("monthlyInstalmentPrice");
+        currentSubscription = subscription;
+        currentInstalmentPrice = totalPrice;
+        currentDuration = month;
+        monthlyPayment = (totalPrice/month)
+        document.getElementById("instalmentMonth").innerHTML = month;
+        document.getElementById("instalmentCurrentPrice").innerHTML = "RM " + totalPrice.toFixed(2);
+        for (var i = 0; i < instalmentPrice.length; i++) {
+            instalmentPrice[i].innerHTML = "RM " + monthlyPayment.toFixed(2);
+        }
+    }
+
+    function updateOtpModal() {
+        
+        var otpPriceDisplay = document.getElementsByClassName("otpCurrentPrice");
+        var otpCountry = document.getElementById("otpCountry").value;
+        for (var i = 0; i < otpPriceDisplay.length; i++) {
+            otpPriceDisplay[i].innerHTML = "RM " + currentOtpPrice.toFixed(2);
+        }
+
+        finalOtpAmount = currentOtpPrice + parseFloat(shippingRate[otpCountry]);
+        document.getElementById("otpShippingText").innerText = "Ship to " + countries[otpCountry];
+        document.getElementById("otpShippingRate").innerText = "RM" + shippingRate[otpCountry];
+        document.getElementById("otpFinalTotal").innerText = "RM" + finalOtpAmount.toFixed(2);
+        document.getElementById("otpDeliveryParagraph").hidden = true;
+        if (otpCountry == "MY") {
+            document.getElementById("otpShippingRate").innerText = "Free";
+            document.getElementById("otpDeliveryParagraph").hidden = false;
+        }
+    }
+
+    var instalmentPromoBtn = document.getElementById("instalmentPromoBtn");
+    var otpPromoBtn = document.getElementById("otpPromoBtn");
+
+    instalmentPromoBtn.onclick = function(){
+        var instalmentPromoInput = document.getElementById("instalmentPromoInput");
+        var instalmentPromoValidity = document.getElementById("instalmentPromoValidity");
+        var currentModalMonth = document.getElementById("instalmentMonth").innerHTML;
+        var appliedInstalmentPromo = checkPromoCode(instalmentPromoInput.value);
+
+        instalmentPromoValidity.hidden = false;
+        if (appliedInstalmentPromo.status == "ACTIVE") {
+            instalmentPromoValidity.textContent = "This promo code is valid.";
+        } else if (appliedInstalmentPromo.status == "EXPIRED"){
+            instalmentPromoValidity.textContent = "This promo code has expired."
+        } else {
+            instalmentPromoValidity.textContent = "This promo code is invalid."
+        }
+
+        if (currentModalMonth == "3") {
+            updateInstalmentModal(currentModalMonth,appliedInstalmentPromo.price,appliedInstalmentPromo.subscriptionCurlec3)
+        } else if (currentModalMonth == "12") {
+            updateInstalmentModal(currentModalMonth,appliedInstalmentPromo.price,appliedInstalmentPromo.subscriptionCurlec12)
+        } else if (currentModalMonth == "18") { 
+            updateInstalmentModal(currentModalMonth,appliedInstalmentPromo.price,appliedInstalmentPromo.subscriptionCurlec18)
+        }
+    }
+
+    otpPromoBtn.onclick = function(){
+        var otpPromoInput = document.getElementById("otpPromoInput");
+        var otpPromoValidity = document.getElementById("otpPromoValidity");
+        var appliedOtpPromo = checkPromoCode(otpPromoInput.value);
+
+        otpPromoValidity.hidden = false;
+        if (appliedOtpPromo.status == "ACTIVE") {
+            otpPromoValidity.textContent = "This promo code is valid.";
+        } else if (appliedOtpPromo.status == "EXPIRED"){
+            otpPromoValidity.textContent = "This promo code has expired."
+        } else {
+            otpPromoValidity.textContent = "This promo code is invalid."
+        }
+        currentOtpPrice = appliedOtpPromo.price;
+        updateOtpModal();
+    }
+
+
+    function checkPromoCode(inputPromo) {
+        if(inputPromo in promoCodeDict) {
+            currentPromoCode = inputPromo;
+
+            return promoCodeDict[inputPromo]
+        } else {
+            return promoCodeDict.INVALID
+        }
+    }
+    
+    function instalmentSubmit()  {
+
+ 
+        var instalmentForm = document.getElementById("instalmentForm");
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (instalmentForm.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            instalmentForm.classList.add('was-validated');
+            return false
+        }
+
+        var instalmentName = document.getElementById("instalmentName").value;
+        var instalmentIC = document.getElementById("instalmentIC").value;
+        var instalmentEmail = document.getElementById("instalmentEmail").value;
+        var instalmentMobile = document.getElementById("instalmentMobile").value;
+        var instalmentAddress1 = document.getElementById("instalmentAddress1").value;
+        var instalmentAddress2 = document.getElementById("instalmentAddress2").value;
+        var instalmentPostcode = document.getElementById("instalmentPostcode").value;
+        var instalmentCarType = document.getElementById("instalmentHarness").value;
+        var instalmentInstallation = document.getElementById("instalmentInstallation").value;
+
+
+        const params = new URLSearchParams();
+        params.append("name", instalmentName);
+        params.append("email", instalmentEmail);
+        params.append("mobile", instalmentMobile);
+        params.append("address1", instalmentAddress1);
+        params.append("address2", instalmentAddress2);
+        params.append("postcode", instalmentPostcode);
+        params.append("nric", instalmentIC);
+        params.append("duration", currentDuration);
+        params.append("subscription",currentSubscription);
+        params.append("harness", instalmentCarType);
+        params.append("amount", currentInstalmentPrice.toFixed(2));
+        params.append("monthlyPayment", monthlyPayment.toFixed(2));
+        params.append("installation", instalmentInstallation);
+        params.append("promoCode", currentPromoCode);
+
+
+        localStorage.setItem("customerName", instalmentName);
+
+        const url = visaUrl + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+    
+    $("#instalmentModal").on('hide.bs.modal', function(){
+        var instalmentPromoValidity = document.getElementById("instalmentPromoValidity");
+        currentPromoCode = "";
+        instalmentPromoValidity.hidden = true;     
+    });
+
+     $("#otpModal").on('hide.bs.modal', function(){
+        var otpPromoValidity = document.getElementById("otpPromoValidity");
+        currentPromoCode = "";
+        otpPromoValidity.hidden = true;
+     });
+
+    function otpSubmit() {
+        var otpForm = document.getElementById("otpForm");
+
+
+        // Loop over them and prevent submission
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (otpForm.checkValidity() === false) {
+            event.stopPropagation();
+            event.preventDefault();
+            otpForm.classList.add('was-validated');
+            return false
+        }
+        var otpName = document.getElementById("otpName").value;
+        var otpEmail = document.getElementById("otpEmail").value;
+        var otpMobile = document.getElementById("otpMobile").value;
+        var otpAddress1 = document.getElementById("otpAddress1").value;
+        var otpAddress2 = document.getElementById("otpAddress2").value;
+        var otpPostcode = document.getElementById("otpPostcode").value;
+        var otpCountry = document.getElementById("otpCountry").value;
+        var otpCarType = document.getElementById("otpHarness").value;
+        var otpShippingRate = shippingRate[otpCountry];
+        var otpDevicePrice = currentOtpPrice;
+        var otpInstallation = document.getElementById("otpInstallation").value;
+        
+        // var otpPrice = document.getElementById("otpPrice").value;
+
+        const params = new URLSearchParams();
+        params.append("name", otpName);
+        params.append("email", otpEmail);
+        params.append("mobile", otpMobile);
+        params.append("address1", otpAddress1);
+        params.append("address2", otpAddress2);
+        params.append("postcode", otpPostcode);
+        params.append("country", countries[otpCountry]);
+        params.append("harness", otpCarType);
+        params.append("shippingrate", otpShippingRate);
+        params.append("amount", finalOtpAmount.toFixed(2));
+        params.append("deviceprice", otpDevicePrice.toFixed(2));
+        params.append("installation", otpInstallation);
+        params.append("promoCode", currentPromoCode);
+
+        localStorage.setItem("customerName", otpName);
+
+        const url = otpUrl + params.toString();
+        console.log(url)
+        window.open(url, "_blank");
+    };
+
+
+    var mainImg = document.getElementById('MainImage');
+    var smallImg = document.getElementsByClassName('small-img');
+
+    // Disgusting codes. will refactor if i feel like it.
+    smallImg[0].onclick = function(){
+        mainImg.src = smallImg[0].src;
+        
+        smallImg[0].style.border = "5px solid #33B9FF";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
+
+    smallImg[1].onclick = function(){
+        mainImg.src = smallImg[1].src;
+
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "5px solid #33B9FF";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
+    smallImg[2].onclick = function(){
+        mainImg.src = smallImg[2].src;
+
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "5px solid #33B9FF";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "0px";
+    }
+    smallImg[3].onclick = function(){
+        mainImg.src = smallImg[3].src;
+
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "5px solid #33B9FF";
+        smallImg[4].style.border = "0px";
+
+    }
+    smallImg[4].onclick = function(){
+        mainImg.src = smallImg[4].src;
+
+        smallImg[0].style.border = "0px";
+        smallImg[1].style.border = "0px";
+        smallImg[2].style.border = "0px";
+        smallImg[3].style.border = "0px";
+        smallImg[4].style.border = "5px solid #33B9FF";
+
+    }
+
+    function updateCarSelects() {
+        instalmentCarList.value = carSelectList.value;
+        otpCarList.value = carSelectList.value;
+    }
+
+</script>

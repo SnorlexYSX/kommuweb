@@ -4,35 +4,22 @@ layout: default
 ---
 
 <style type="text/css" media="screen">
-
-  body {
-    background-color: #000;
+  .container {
+    margin: 10px auto;
+    max-width: 600px;
+    text-align: center;
   }
-  html {
-    background-color: #000;
+  h1 {
+    margin: 30px 0;
+    font-size: 4em;
+    line-height: 1;
+    letter-spacing: -1px;
   }
-
-
-  .error-container {
-  display: flex;
-  flex-direction: column;   /* stack h1 + p */
-  justify-content: center;  /* vertical center */
-  align-items: center;      /* horizontal center */
-  margin: auto;
-  height: 80vh;
-  max-width: 600px;
-  text-align: center;
-  color: #f1f1f1;
-  padding: 6rem;
-}
-  
-
 </style>
 
-<div class="error-container">
-  <h1 class="h1 text-white py-6">404</h1>
+<div class="container">
+  <h1>404</h1>
 
-  <p class="h3 font-bold text-white">Page not found :(</p>
-  
-  <p class="h4 text-gray pt-6">The requested page could not be found.</p>
+  <p><strong>Page not found :(</strong></p>
+  <p>The requested page could not be found.</p>
 </div>

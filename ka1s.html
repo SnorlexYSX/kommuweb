@@ -1,0 +1,130 @@
+---
+layout: default
+title: KA1s | kommu.ai
+stylesheet: products
+---
+<head>
+    <link href="{{ "/css/ka1s.css" | relative_url }}" rel="stylesheet">
+</head>
+<section class="ka1s-section">
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-1.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+        <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
+            <div class="row" id="margin-top-ka1s-btns"style="padding: 0px;">
+              <div class="col-6">
+                <a role="button" class="btn btn-secondary btn-order" id="" href="{{ "/products" | relative_url }}" target="_blank">Order Now</a>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-2.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-3.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-4.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-5.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-6.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-7.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-8.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>    
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-9.png" vertical-align="middle"
+            display="inline-block">
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <video class="full-width-img" playsinline loop autoplay muted>
+                <source src={{ "/assets/ka1s-10.mp4" | relative_url }}>
+            </video> 
+        </div>
+    </div>
+    <div class="module-content">
+        <div class="unit-image-wrapper">
+            <img class="full-width-img" src="{{ "" | relative_url }}/img/ka1s/ka1s-11.png" vertical-align="middle"
+            display="inline-block">
+            <div class="container" style="width:325px; height:410px;display: grid; justify-content: center;">
+                <div class="row" id="margin-top-ka1s-btns-2"style="padding: 0px;">
+                  <div class="col-6">
+                    <a role="button" class="btn btn-secondary btn-order" id="" href="{{ "/products" | relative_url }}" target="_blank">Order Now</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<script>
+    const localizerer = document.getElementById("localizerer");
+    const localizer = document.getElementById("localizer");
+
+    async function load() {
+        const remote = "https://raw.githubusercontent.com/kommuai/bukapilot/snapshot/selfdrive/car/supported_vehicle.json";
+        const resp = await (await fetch(remote)).json();
+
+        const product_urls = {
+        {% for product in site.products %}
+            {{ product.key }}: "{{ product.url | relative_url }}",
+        {% endfor %}
+        };
+
+        []
+            .concat(
+                resp.standard.map(vehicle => ({
+                        label: `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.variant}`,
+                        key: "standard"
+                    }))
+                )
+            .sort((a, b) => { return b.label < a.label })
+            .forEach((item) => {
+                    const option = document.createElement("option");
+                    option.value = product_urls[item.key];
+                    option.innerText = item.label;
+                    localizer.appendChild(option);
+                });
+    }
+
+    window.onload = load;
+
+    localizerer.onclick = () => {
+            const params = new URLSearchParams();
+            params.append("car", localizer.selectedOptions[0].innerText);
+            window.location.href = `${localizer.value}?${params.toString()}`;
+        };
+</script>

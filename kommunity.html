@@ -1,0 +1,111 @@
+---
+layout: default
+title: Kommunity
+---
+<head>
+  <link href="{{ "/css/common.css" | relative_url }}" rel="stylesheet">
+  <link href="{{ "/css/kommunity-page.css" | relative_url }}" rel="stylesheet">
+</head>
+<section id="about" class="content-section text-center" style="margin-left: 0px; margin-right: 0px;padding-left: 0px; padding-right: 0px;">
+
+  <div class="card-video-row" style="margin-top: 25px;">
+    <h1 style="color: white; text-align: left;">Kommunity.</h1>
+    <h2 style="color: #86868B; text-align: left;">In the last 30 days.</h2>
+  </div>
+  <div class="card-video-row" style="padding-bottom: 0px;">
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/5X0pzUWIk/kommumap?orgId=2&panelId=2" style="pointer-events: none;" id="iframe-grafana-map-pc">
+    </iframe>
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/wIsTYUWIk/kommumap-mobile?orgId=2&panelId=2" style="pointer-events: none;" id="iframe-grafana-map-mobile">
+    </iframe>
+  </div>
+  <div class="card-video-row">
+    <iframe 
+    src="https://graph.kommu.ai/d-solo/oZ4Rt8WIk/kommustats?orgId=2&panelId=2" style="pointer-events: none;" id="iframe-grafana-stats">
+    </iframe>
+  </div>  
+  <!-- <div class="module-content">
+    <div class="unit-image-wrapper">
+        <img class="full-width-img" src="{{ "" | relative_url }}/img/about/grafana.png" vertical-align="middle"
+        display="inline-block">
+    </div>
+  </div> -->
+  <br><br>
+  <div class="row card-video-row" style="text-align: left;">
+    <h1 class="main-text" style="color: white;">
+      Only possible with end-to-end model training, with a community.
+    </h1>
+    <h2  class="sub-text" style="color: #86868B;">
+      Cruise anywhere, anytime
+    </h2>
+  </div>
+  <div id="kommunityCarousel" class="carousel phone-card-slides slide" style="margin-bottom: 75px;" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators" style="z-index: 2; margin-bottom: 0px;">
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#kommunityCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner" role="listbox">
+      <div class="carousel-item active">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <video class="video-card" playsinline loop autoplay muted>
+            <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+          </video> 
+        </div>
+      </div>
+    </div>
+    <!-- <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#kommunityCarousel" data-bs-slide="prev" style="color: black;">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#kommunityCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button> -->
+  </div>
+  <div class="row card-video-row non-phone-card-slides">
+    <div class="card-container col-md-4 col-sm-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-1.mp4" | relative_url }}>
+      </video> 
+    </div>
+    <div class="card-container col-md-4 col-sm-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-2.mp4" | relative_url }}>
+      </video> 
+    </div>
+    <div class="card-container col-md-4 col-sm-12">
+      <video class="video-card" playsinline loop autoplay muted>
+        <source src={{ "/assets/ugc-3.mp4" | relative_url }}>
+      </video> 
+    </div>
+  </div>
+  <div class="row card-video-row" style="text-align: left;">
+    <h2 class="main-text" style="color: white;">
+     Join us.       
+      <a href="https://discord.com/invite/DTTuP6zYsf?fbclid=IwAR3BAt1PYlQlyAOhOu6og32cLGjc7ZXEAuxMSYcvDmRacECUfcP5UVuWxlA_aem_AQERWoChcZxExqN2N1zwEbagQzRdy95joVfYi_-tvH-PBzGnd1IzP7u8dUYsbuiljjA&mibextid=Zxz2cZ" 
+      target="_blank" style="display: inline-block; height: 44px;" >
+        <img src="{{ "" | relative_url }}/img/icons/discord.png" style="height: 44px;">
+      </a>    
+      <a href="https://www.facebook.com/groups/kommu.official/" 
+      target="_blank" style="display: inline-block; height: 100%">
+        <img src="{{ "" | relative_url }}/img/icons/fb.png" style="height: 44px;">
+      </a>
+    </h2>
+  </div>
+</section>

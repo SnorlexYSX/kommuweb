@@ -1,698 +1,188 @@
 ---
-layout: default
-title: Kommu
+layout: landing
+title: Kommu - Revolutionalizing Self-Driving
+stylesheet: asdf
 ---
-<style>
-  :root {
-    --spring-offset: 0; /* set e.g. 80 for fixed headers in px */
-  }
-  body {
-    background-color: #000;
-  }
-  html {
-    background-color: #000;
-  }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-  /* Full-bleed row that doesn’t expand page width */
-  .full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
-  /* Align rows to 1100px container center, keep 1rem right spacing */
-  .row-align { 
-    padding-left: max(calc((100vw - 1100px) / 2), 1.5rem); 
-    padding-right: max(calc((100vw - 1100px) / 2), 1.5rem); 
-    gap: 3.5rem;
-  }
+<section id="home">
+<section class="intro-header">
+  <div class = "module-content">
+    <div class="unit-image-wrapper">
+      <img class="full-width-img" src="{{ "" | relative_url }}/img/main/index-1.png" vertical-align="middle"
+      display="inline-block">
+    </div>
+    <div class="container" style="width:325px; height:410px;display: grid;">
+      <!-- <div class="row">
+        <p>New</p>
+      </div>
+      <div class="row">
+        <p>KommuAssist1S</p>
+      </div>
+      <div class="row">
+        <p>RM3,799</p>
+      </div>
+      <div class="row">
+        <p>Early Bird: RM3,399</p>
+      </div> -->
+      <div class="row" id="margin-top-intro-btns"style="padding: 0px;">
+        <div class="col-6">
+          <a role="button" class="btn btn-intro" href="{{ "/products" | relative_url }}" target="_blank">Order Now ></a>
+        </div>
+        <div class="col-6">
+          <a role="button" class="btn btn-intro"
+            href="{{ "/ka1s" | relative_url }}" target="_blank">Learn More ></a>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- <div id="intro-button-row" class="container">
 
-  html, body { overflow-x: hidden; }
+    </div> -->
+  </div> 
+</section>
+<section class="intro-video">
+  <div class = "module-content" id="module-content-video">
+    <div id="bgvideo">
+      <video id=videoplayer playsinline loop autoplay muted>
+        <source src={{ "/assets/ytvid.mp4" | relative_url }}>
+      </video> 
+    </div>
+    <div id="bgvideo-overlay">
+      <img id="bgvideo-logo" src="{{ "" | relative_url }}/img/kommu-logo.png" class="img-fluid bgvideo-logo" vertical-align="middle" >
+      <h2 class="bgvideo-text" id="bgvideo-text" style="color: white; font-family: GlacialIndifference-Regular; font-weight:300">
+        Everyone can own a self-driving vehicle
+      </h2>
+      <a role="button" class="btn btn-secondary btn-order" style="margin-top: 20px;" href="https://calendly.com/kommuassist/test-drive" target="_blank">Test Drive Now</a>
+    </div>
 
-  
-
-  
-
-  .brand-logo {
-    width: 7.5rem;   
-    height: auto;
-  }
-
-  /*Whatsapp Chat Bot button*/
-  .whatsapp-float {
-    position: fixed;
-    /* base offset from the design baseline */
-    bottom: calc(32px + env(safe-area-inset-bottom, 0px));
-    right: 32px;
-    /* counter the dynamic 100vh change so the button doesn't jump */
-    transform: translateY(calc(100vh - (var(--vh, 1vh) * 100)));
-    will-change: transform;
-    z-index: 1000;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: rgb(255 255 255 / 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-  }
-  .whatsapp-float img {
-    width: 32px;
-    height: 32px;
-  }
-  .whatsapp-float:hover {
-    background-color: rgb(255 255 255 / 0.3);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
-  }
-
-  .whatsapp-float i {
-    color: rgb(255 255 255 / 0.6); 
-  }
-
-  .whatsapp-float:hover i {
-    color: rgb(255 255 255 / 0.8);
-  }
-
-
-  /* --- Scroll Snap (full-screen sections) --- */
-  /* Ensure each hero/feature section fills the viewport and snaps cleanly */
-  .snap-off {
-    scroll-snap-type: none !important;
-  }
-  /* Horizontal carousel controls (Apple-style) */
-  .carousel-wrap { position: relative; }
-  .h-scroll {
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;         /* enable horizontal paging-style snapping */
-    overscroll-behavior-x: contain;        /* contain fling on mobile */
-    -webkit-overflow-scrolling: touch;     /* iOS momentum */
-    /* Align snap positions to the same left/right inset as .row-align paddings */
-    scroll-padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
-    scroll-padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
-  }
-  .scroll-btn {
-    position: absolute;
-    bottom: -30px; /* sit just under the cards row */
-    width: 42px; height: 42px; border-radius: 9999px;
-    display: grid; place-items: center;
-    background: rgb(255 255 255 / 0.6);
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
-    border: 0;
-    z-index: 10;
-    cursor: pointer;
-    transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
-  }
-  .scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
-  .scroll-btn:active { transform: scale(0.98); }
-  .scroll-btn[disabled] { opacity: .4; pointer-events: none; }
-  .scroll-btn.next { right: 1.25rem; transform: none; }
-  .scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; } /* 36px button + 8px gap */
-  .scroll-btn svg { width: 18px; height: 18px; }
-
-  /*Lock content height while browser UI hide/show*/
-:root { --vh: 1vh; }
-.hp1-content-height{
-  min-height: calc(var(--vh, 1vh) * 100);
-}
-.hp2-content-height{
-  min-height: calc(var(--vh, 1vh) * 80);
-}
-.hp3-content-height{
-  min-height: calc(var(--vh, 1vh) * 80);
-}
-.hp4-content-height{
-  min-height: calc(var(--vh, 1vh) * 100);
-}
-
-  /* --- Consolidated Breakpoints --- */
-
-  :root { 
-    --card-w: 350px; 
-    --card-h: 600px;          /* total card height */
-    --card-img-h: 437.5px;      /* image height inside the card */
-  }
-
-  @media (max-width: 1280px) {
-    .row-align { 
-      gap: 2.5rem;
-    }
-    :root { 
-      --card-w: 300px;
-      --card-h: 525px;
-      --card-img-h: 375px; }
-    .brand-logo {
-      width: 6rem; /* 100px */
-    }
-  }
-  @media (max-width: 380px) {
-    :root { 
-      --card-w: 280px; 
-      --card-h: 500px; 
-      --card-img-h: 350px; 
-    }
-  }
-
-  @media (max-width: 768px) {
-    .row-align { 
-      gap: 1.5rem;
-    }
-    .brand-logos-grid {
-      display: grid !important;
-      grid-template-columns: repeat(2, 1fr);
-      justify-items: center;
-      gap: 0.5rem;
-    }
-    .hero-overlay {
-      padding-bottom: 3rem; /* pb-12 */
-    }
-    .whatsapp-float {
-      bottom: calc(30px + env(safe-area-inset-bottom, 0px));
-      right: 16px;
-      transform: translateY(calc(100vh - (var(--vh, 1vh) * 100)));
-    }
-    .btn-check-models {
-      margin-top: 2rem; /* my-8 */
-      margin-bottom: 2rem; /* my-8 */
-    }
-    .page-snap {
-      scroll-snap-type: y proximity;
-      scroll-behavior: smooth; /* gentle anchor jumps */
-      scroll-padding-top: 10vh;
-      scroll-padding-bottom: 12vh;
-    }
-    section.dvh-100,
-    section.dvh-110,
-    section.dvh-120 {
-      scroll-snap-align: start;
-    }
-    section.dvh-110 {
-      min-height: 900px;
-    }
-    .scroll-btn { bottom: -8px; width: 36px; height: 36px; }
-    .scroll-btn svg { width: 16px; height: 16px; }
-    .scroll-btn.next { right: 0.5rem; }
-    .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); } /* 32px button + 8px gap */
-    .software-section {
-      min-height: 900px;
-    }
-    .hardware-section {
-      min-height: 900px;
-    }
-    .hp4-content-height{
-      min-height: calc(var(--vh, 1vh) * 80);
-    }
-  }
-
-  .fixed-card {
-    width: var(--card-w);
-    min-width: var(--card-w);
-    max-width: var(--card-w);
-    height: var(--card-h);
-    overflow: hidden;           /* keep consistent height */
-    display: flex;
-    flex-direction: column;
-            /* force stopping at each card */
-  }
-  /* Double-width variation */
-  .fixed-card.wide {
-    width: calc(var(--card-w) * 2);
-    min-width: calc(var(--card-w) * 2);
-    max-width: calc(var(--card-w) * 2);
-
-  }
-
-  /* --- Horizontal snap scrolling for .fixed-card --- */
-  /* Ensure each card is a fixed-width snap point and never stretches */
-  .h-scroll .fixed-card {
-    flex: 0 0 var(--card-w);        /* do not grow; fixed basis equals card width */
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-  .h-scroll .fixed-card.wide {
-    flex-basis: calc(var(--card-w) * 2);
-  }
-
-  /* Ensure images don’t grow the card vertically. Keep same height for normal and wide cards */
-  .fixed-card img {
-    height: var(--card-img-h);
-    width: 100%;
-    object-fit: cover;
-    flex: 0 0 auto;
-    background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
-  }
-
-  @media (max-width: 768px) {
-      .fixed-card.wide {
-      width: calc(var(--card-w) * 1);
-      min-width: calc(var(--card-w) * 1);
-      max-width: calc(var(--card-w) * 1);
-    }
-    /* match flex-basis to keep snap sizing consistent on mobile */
-    .h-scroll .fixed-card.wide { flex-basis: var(--card-w); }
-  }
-
-
-
-/* IPAD HORIZONTAL */
-@media (max-height: 1100px) and (min-width: 1100px) {
-  .hero-overlay {
-    padding-bottom: 2rem; /* pb-8 */
-  }
-  .software-section {
-    min-height: 900px;
-  }
-  .hardware-section {
-    min-height: 900px;
-  }
-}
-@media (max-height: 1280px) and (min-width: 768px) {
-  .brand-logos-grid {
-    width: 100% !important;
-    max-width: none !important; /* override Tailwind's max-w-[720px] */
-  }
-}
-
-
-
-
-
-  /* Vignette overlay for home hero video (match ka2 s1) */
-  .home-vignette {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 5; /* below .hero-overlay (z-10), above video */
-    background-image:
-      radial-gradient(120% 120% at 50% 40%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%),
-      linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%);
-    background-size: 100% 100%, 100% 100%;
-    background-position: center center, center bottom;
-    background-repeat: no-repeat, no-repeat;
-  }
-</style>
-
-<script>
-  // Hard-lock --vh once; only refresh on orientation change
-  (function lockOnce() {
-    const apply = () => {
-      const vh = window.innerHeight * 0.01; // 1% of current layout viewport
-      document.documentElement.style.setProperty('--vh', vh + 'px');
-    };
-    apply();
-    // Update only on major changes like device rotation
-    window.addEventListener('orientationchange', apply);
-  })();
-</script>
-
-<!-- HOME VIDEO -->
-<main class="page-snap">
-<section id="home" class="relative overflow-hidden">
-  <div class="hp1-content-height">
-  <video
-    class="absolute inset-0 w-full h-full object-cover"
-    autoplay muted loop playsinline
-    preload="auto"
-  >
-    <source src="{{ '/assets/ytvid-small.mp4' | relative_url }}" type="video/mp4" media="(max-width: 768px)">
-    <source src="{{ '/assets/ytvid.mp4' | relative_url }}" type="video/mp4">
-  </video>
-  <div class="home-vignette" aria-hidden="true"></div>
-  <div class="absolute inset-0 z-10 flex flex-col items-center justify-end pb-32 text-center px-4 hero-overlay">
-    <h2 class="h2 text-white">
-      Elevate your driving experience with L2+ ADAS
+  </div>
+</section>
+<section style="background-color: #ffffff;">
+<div class="container" style="
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #ffffff;
+">
+  <br>
+    <div>
+      <h1 style="text-align: center;">What is KommuAssist?</h1>
+    </div>
+    <div class="row">
+      <div class="main-description col-lg-4 col-md-12">
+        <img src="{{ "" | relative_url }}/img/main/LKA.png" width="25%" vertical-align="middle" display="inline-block">
+        <h1>Lane Keep Control</h1>
+        <p>Actively controls steering to keep vehicle centered in lane for enhanced safety and driving convenience.</p>
+      </div>
+      <div class="main-description col-lg-4 col-md-12">
+        <img src="{{ "" | relative_url }}/img/main/ACC.png" width="25%" vertical-align="middle" display="inline-block">
+        <h1>Adaptive Cruise Control</h1>
+        <p>Maintains a following distance from lead car or cruise at set speed to help relieve fatigue during long hour
+          drives.</p>
+      </div>
+      <div class="main-description col-lg-4 col-md-12">
+        <img src="{{ "" | relative_url }}/img/main/SNG.png" width="25%" vertical-align="middle" display="inline-block">
+        <h1>Stop and Go</h1>
+        <p>Holds brakes at standstill traffic and auto-departs when lead car moves; relaxes your legs and ease
+          frustrations.</p>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container" style="
+    margin-top: 25px;
+    margin-bottom: 25px;
+">
+    <h1 style="text-align: center;">Driven by bukapilot</h1>
+    <br />
+    <p class="about-paragraph"> <a href = "https://github.com/kommuai/bukapilot">bukapilot</a> is built upon an open source driving agent named <a href = "https://github.com/commaai/openpilot">openpilot</a>, which will be
+      supported by Malaysian ourselves. The software enables level 2 autonomous driving functionalities including
+      longitudinal and lateral driver assistance. bukapilot will be trained upon Malaysia road data; providing a
+      smoother and safer driving experience for everyone in Malaysia.</p>
+    <br />
+  </div>
+    <br>
+  <!--div id="featured-container">
+    <div class="container" >
+      <div>
+        <h1 style="text-align: center; padding-top: 40px;">Featured In</h1>
+      </div>
+      <div class="row">
+        <div class="main-featured col-lg-4 col-md-12">
+          <img src="{{ "" | relative_url }}/img/main/Mg3hub.png" width="30%" vertical-align="middle"
+            display="inline-block">
+        </div>
+        <div class="main-featured col-lg-4 col-md-12">
+          <img src="{{ "" | relative_url }}/img/main/NTIS.png" width="30%" vertical-align="middle"
+            display="inline-block">
+        </div>
+        <div class="main-featured col-lg-4 col-md-12">
+          <img src="{{ "" | relative_url }}/img/main/Paultan.png" width="30%" vertical-align="middle"
+            display="inline-block">
+        </div>
+      </div>
+    </div>
+  </div>-->
+  <div class = "module-content" style="margin-bottom: 75px; background-color:white;">
+    <div class="unit-image-wrapper">
+      <img class="full-width-img" src="{{ "" | relative_url }}/img/main/compare.png" vertical-align="middle"
+      display="inline-block">
+    </div>
+  </div>
+  <div class="row card-video-row" style="margin-bottom: 0px; background-color:white;">
+    <h1 class="main-text">
+      Featured in.
+    </h1>
+    <h2  class="sub-text" style="color: #86868B;">
+      Learn more.
     </h2>
-    <h3 class="h3 text-gray-light">
-      Drive smarter and safer with KommuAssist
-    </h3>
-    <div class="mt-6 space-x-6">
-      <a
-        href="{{ '/store' | relative_url }}"
-        class="h4 text-blue-500 hover:underline"
-      >Buy Now ›</a>
-      <a
-        href="{{ '/ka2' | relative_url }}"
-        class="h4 text-blue-500 hover:underline"
-      >Learn More ›</a>
+  </div>
+  <div id="landingCarousel" class="carousel phone-card-slides slide carousel-dark" style="margin-bottom: 75px;"  data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-indicators" style="z-index: 2; margin-bottom: 0px;">
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
-  </div>
-  </div>
-</section>
-
-<!-- HARDWARE -->
-<section class="flex hardware-section">
-  <div class="max-w-6xl mx-auto pt-35 px-4 hp2-content-height">
-    <h4 class="h3 text-gray-light">Hardware</h4>
-    <h1 class="h1 font-bold text-white mt-1 mb-2">KommuAssist 2.0</h1>
-    <p class="h4 font-bold text-gray mb-8">
-      Whole new level of edge computing with 6 TOPS NPU and 3× automotive‑grade cameras. Designed for reliability, built for fast neural processing.
-    </p>
-    
-   <div class="carousel-wrap">
-     <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible scrollbar-hide full-bleed-row row-align pb-14" id="hw-cards">
-      <div class="fixed-card">
-        <img src="{{ '/img/main/hw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">RK3588 at the core.</h4>
-        <p class="h5 text-gray mt-2">
-          On-device neural processing. 6 TOPS NPU acceleration for real‑time vision inference.
-        </p>
-      </div>
-
-
-      <div class="fixed-card">
-        <img src="{{ '/img/main/hw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">3× automotive cameras.</h4>
-        <p class="h5 text-gray mt-2">
-          Synchronized wide‑angle and long range perception built for automotive‑grade vision.
-        </p>
-      </div>
-
-      <div class=" fixed-card wide">
-        <picture class="w-full block rounded-3xl">
-          <source media="(max-width: 768px)" srcset="{{ '/img/main/hw3-portrait.png' | relative_url }}">
-          <img src="{{ '/img/main/hw3.png' | relative_url }}" alt="Cool by design" class="w-full mb-4 rounded-3xl">
-        </picture>
-        <h4 class="h3 font-bold text-white">Cool by design.</h4>
-        <p class="h5 text-gray mt-2">
-          CNC-machined aluminum unibody doubles as a passive heatsink for sustained performance.
-        </p>
-      </div>
-
-      <div class=" fixed-card">
-        <img src="{{ '/img/main/hw4.png' | relative_url }}" alt="Sleek curves" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">Sleek curves.</h4>
-        <p class="h5 text-gray mt-2">
-          Fanless, screenless module that tucks behind the mirror—no clutter, just capability.
-        </p>
-      </div>
-
-      <div class=" fixed-card">
-        <img src="{{ '/img/main/hw5.png' | relative_url }}" alt="Seamless connectivity" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">Seamless connectivity.</h4>
-        <p class="h5 text-gray mt-2">
-          Equipped with LTE, GPS, Wi-Fi, Bluetooth and local storage. Also works with the new KommuAI app.
-        </p>
-      </div>
-    </div>
-    <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="hw-cards">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="hw-cards">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-  </div>
-  </div>
-</section>
-
-<!-- SOFTWARE -->
-<section class="flex software-section">
-  <div class="max-w-6xl mx-auto pt-10 px-4 hp3-content-height">
-    <h4 class="h3 text-gray-light">Software</h4>
-    <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot</h1>
-    <p class="h4 font-bold text-gray mb-8">
-      bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
-    </p>
-    
-    <div class="carousel-wrap">
-      <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
-      <div class=" fixed-card">
-        <img src="{{ '/img/main/sw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
-        <p class="h5 text-gray mt-2">
-          End‑to‑end neural network. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
-        </p>
-        </p>
-      </div>
-
-      <div class=" fixed-card">
-        <img src="{{ '/img/main/sw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">Understands the road.</h4>
-        <p class="h5 text-gray mt-2">
-          Smart enough to spot traffic lights, speed bumps, and safely change lanes.
-        </p>
-      </div>
-
-      <div class=" fixed-card wide">
-        <picture class="w-full block rounded-3xl">
-          <source media="(max-width: 768px)" srcset="{{ '/img/main/sw3-portrait.png' | relative_url }}">
-          <img src="{{ '/img/main/sw3.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
-        </picture>
-        <h4 class="h3 font-bold text-white">Driven by Kommunity.</h4>
-        <p class="h5 text-gray mt-2">
-          Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
-        </p>
-      </div>
-
-      <div class=" fixed-card">
-        <img src="{{ '/img/main/sw4.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
-        <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
-        <p class="h5 text-gray mt-2">
-          Observed ISO26262 Functional Safety Standard & MISRA C code compliant.
-        </p>
-      </div>
-    </div>
-    <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="sw-cards">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="sw-cards">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-  </div>
-  </div>
-</section>
-
-<!-- COMPATIBILITY -->
-<section class="flex items-center car-compatible-section">
-  <div class="max-w-6xl mx-auto pt-20 px-4 hp4-content-height">
-    <div class="bg-card rounded-2xl py-8 px-12 md:py-12 md:px-16 text-center text-white">
-      <h3 class="h1 font-bold text-white max-w-[720px] mx-auto">KommuAssist is compatible with these car models.</h3>
-      <a
-        href="{{ '/support' | relative_url }}"
-        class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full my-12 btn-check-models"
-      >Check Car Models</a>
-      <div class="flex flex-wrap justify-center gap-x-12 gap-y-8 mx-auto max-w-[720px] brand-logos-grid">
-        <!-- logos -->
-        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="brand-logo object-contain" />
-        <img src="{{ '/img/main/proton.png'  | relative_url }}" alt="Proton"  class="brand-logo object-contain" />
-        <img src="{{ '/img/main/honda.png'   | relative_url }}" alt="Honda"   class="brand-logo object-contain" />
-        <img src="{{ '/img/main/toyota.png'  | relative_url }}" alt="Toyota"  class="brand-logo object-contain" />
-        <img src="{{ '/img/main/byd.png'     | relative_url }}" alt="BYD"     class="brand-logo object-contain" />
-        <img src="{{ '/img/main/lexus.png'   | relative_url }}" alt="Lexus"   class="brand-logo object-contain" />
-      </div>
-      <div class="mt-8 hidden sm:grid grid-cols-2 md:grid-cols-4 gap-10 text-left text-sm">
-        <div>
-          <p class="h4 font-bold my-2">Perodua</p>
-          <p class="h5 text-gray font-normal my-1">Myvi (2022–2025 AV)</p>
-          <p class="h5 text-gray font-normal my-1">Ativa (2019–2025 AV)</p>
-          <p class="h5 text-gray font-normal my-1">Alza (2022–2025 AV)</p>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-card-container">
+          <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png">
+          </a>    
         </div>
-        <div>
-          <p class="h4 font-bold my-2">Proton</p>
-          <p class="h5 text-gray font-normal my-1">S70 (2024–2025 Flagship, FSX)</p>
-          <p class="h5 text-gray font-normal my-1">X50 (2019–2025 Flagship)</p>
-          <p class="h5 text-gray font-normal my-1">X70 (2024–2025 Premium, Premium X)</p>
-          <p class="h5 text-gray font-normal my-1">X90 (2023–2025 Premium, Flagship)</p>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png">
+          </a>
         </div>
-        <div>
-          <p class="h4 font-bold my-2">Honda</p>
-          <p class="h5 text-gray font-normal my-1">City (2019–2025 V-Sensing, RS)</p>
-          <p class="h5 text-gray font-normal my-1">City FL (2024–2025 RS ybrid)</p>
-          <p class="h5 text-gray font-normal my-1">Civic FE (2022–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">Accord (2023–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">HRV (2023–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">CRV (2023–2025 All)</p>
-        </div>
-        <div>
-          <p class="h4 font-bold my-2">Toyota</p>
-          <p class="h5 text-gray font-normal my-1">Vios (2023–2025 G)</p>
-          <p class="h5 text-gray font-normal my-1">Veloz (2022–2025 AT)</p>
-          <p class="h5 text-gray font-normal my-1">Cross (2022–2025 V, Hybrid)</p>
-          <p class="h5 text-gray font-normal my-1">Altis TSS2.0 (2019–2025 G, Hybrid)</p>
-          <p class="h5 text-gray font-normal my-1">Camry (2018–2023 V, Hybrid)</p>
-          <p class="h5 text-gray font-normal my-1">Harrier TSS2.0 (2022–2023)</p>
-          <p class="h5 text-gray font-normal my-1">Alphard TSS2.0 (2019–2023)</p>
-          <p class="h5 text-gray font-normal my-1">Innova Zenix (2024)</p>
-        </div>
-        <div>
-          <p class="h4 font-bold my-2">BYD</p>
-          <p class="h5 text-gray font-normal my-1">Dolphin (2023–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">Atto 3 (2023–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">M6 (2023–2025 Extended)</p>
-          <p class="h5 text-gray font-normal my-1">Seal (2024–2025 All)</p>
-          <p class="h5 text-gray font-normal my-1">Sealion 7 (2024–2025 All)</p>
-        </div>
-        <div>
-          <p class="h4 font-bold my-2">Lexus</p>
-          <p class="h5 text-gray font-normal my-1">ES (2019–2024 All)</p>
-          <p class="h5 text-gray font-normal my-1">NX (2020–2024 All)</p>
-          <p class="h5 text-gray font-normal my-1">UX (2020–2024 All)</p>
-          <p class="h5 text-gray font-normal my-1">RX (2020–2024 All)</p>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-card-container">
+          <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank">
+            <img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png">
+          </a>
         </div>
       </div>
     </div>
+    <!-- <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="prev" style="color: black;">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#landingCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button> -->
   </div>
+  <div class="row card-video-row non-phone-card-slides" style="margin-bottom: 0px; background-color:white;">
+    <div class="card-container col-md-4 col-sm-12">
+      <a href="https://vulcanpost.com/809442/kommu-malaysia-self-driving-car-solution-advanced-driver-assistance-system/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-1.png"></a>    
+    </div>
+    <div class="card-container col-md-4 col-sm-12">
+      <a href="https://www.youtube.com/watch?v=qoEMSzRX8kY" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-2.png"></a>
+    </div>
+    <div class="card-container col-md-4 col-sm-12">
+      <a href="https://paultan.org/2022/04/01/kommuassist-retrofit-level-2-semi-autonomous-driving-for-older-myvi-axia-bezza-alphard-models/" target="_blank"><img class="video-card" src="{{ "" | relative_url }}/img/main/featured-3.png"></a>
+    </div>
+  </section>
 </section>
-<a href="https://wa.me/15558229640" target="_blank" class="whatsapp-float">
-  <i class="fab fa-whatsapp fa-xl"></i>
-</a>
-</main>
 
-
-<script>
-(function () {
-  // Apply only on touch devices to mimic iOS-native feel
-  const isTouch = matchMedia('(hover: none)').matches || 'ontouchstart' in window;
-
-  // Damped spring scroll (iOS-like): configurable mass-spring-damper
-  // Based on underdamped harmonic motion solution.
-  function springInterpolation(t, opts) {
-    const { stiffness = 170, damping = 26, mass = 1 } = opts || {};
-    // Convert to angular frequencies
-    const w0 = Math.sqrt(stiffness / mass);          // undamped natural frequency
-    const zeta = damping / (2 * Math.sqrt(stiffness * mass)); // damping ratio
-    if (zeta >= 1) {
-      // Critically/over-damped fallback to smooth easeOut
-      return 1 - Math.exp(-t * w0);
-    }
-    const wd = w0 * Math.sqrt(1 - zeta * zeta);      // damped natural frequency
-    // Normalized time in seconds (t in [0,1] assumed)
-    const A = 1;
-    const B = (zeta / Math.sqrt(1 - zeta * zeta));
-    // y(t) from 0 -> 1 with slight overshoot depending on zeta
-    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + B * Math.sin(wd * t));
-  }
-
-  // Main animator using requestAnimationFrame
-  function springScrollTo(targetY, options) {
-    const {
-      duration = 1200,                 // ms baseline for typical distances
-      stiffness = 180,                 // higher = snappier
-      damping = 24,                    // higher = less overshoot
-      mass = 1,
-      offset = 0                       // e.g., use to account for fixed headers
-    } = options || {};
-
-    const start = window.scrollY || window.pageYOffset;
-    const end = Math.max(0, Math.min(
-      targetY - offset,
-      document.documentElement.scrollHeight - window.innerHeight
-    ));
-    const distance = end - start;
-    if (Math.abs(distance) < 1) return; // nothing to do
-
-    // Optionally scale duration with distance for consistent feel
-    const px = Math.abs(distance);
-    const dur = Math.min(1800, Math.max(600, duration * (px / 1200) ** 0.5));
-
-    let startTime = null;
-    function frame(ts) {
-      if (!startTime) startTime = ts;
-      const t = (ts - startTime) / dur;
-      if (t >= 1) {
-        window.scrollTo(0, end);
-        if (options && typeof options.onDone === 'function') {
-          options.onDone();
-        }
-        return;
-      }
-      // Convert t (0..1) to "seconds" domain for spring math
-      const seconds = t * 1.2; // stretch factor to tune feel
-      const p = springInterpolation(seconds, { stiffness, damping, mass });
-      window.scrollTo(0, start + distance * p);
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
-
-  // Convenience: scroll to an element
-  function springScrollToElement(el, opts) {
-    const rect = el.getBoundingClientRect();
-    const targetY = rect.top + window.scrollY;
-    springScrollTo(targetY, opts);
-  }
-
-  // Auto-bind anchor links like <a href="#section-id">...</a> on touch devices
-  if (isTouch) {
-    document.addEventListener('click', function (e) {
-      const a = e.target.closest('a[href^="#"]');
-      if (!a) return;
-      const href = a.getAttribute('href');
-      const id = href.slice(1);
-      if (!id) return;
-      const target = document.getElementById(id);
-      if (!target) return;
-      e.preventDefault();
-      // Optional: account for any top padding you set via scroll-padding-top
-      const offset = Math.round((parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spring-offset')) || 0));
-      const snapContainer = document.querySelector('.page-snap');
-      if (snapContainer) snapContainer.classList.add('snap-off');
-      springScrollToElement(target, {
-        duration: 1200,
-        stiffness: 220,
-        damping: 30,
-        mass: 1,
-        offset,
-        onDone: () => {
-          if (snapContainer) snapContainer.classList.remove('snap-off');
-        }
-      });
-    }, { passive: false });
-  }
-
-  // Expose programmatic API if you want to call it elsewhere:
-  window.springScrollTo = springScrollTo;
-  window.springScrollToElement = springScrollToElement;
-
-  // ---- Horizontal scroll buttons ----
-  function bindScrollButtons(wrapper) {
-    const scroller = wrapper.querySelector('.h-scroll');
-    if (!scroller) return;
-    const prevBtn = wrapper.querySelector('.scroll-btn.prev');
-    const nextBtn = wrapper.querySelector('.scroll-btn.next');
-    if (!prevBtn || !nextBtn) return;
-
-    // Collect all card elements and compute their left offsets for precise snapping
-    const cards = Array.from(scroller.querySelectorAll('.fixed-card'));
-
-    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-    const getStops = () => {
-      // account for left padding on the scroller (.row-align adds it)
-      const cs = getComputedStyle(scroller);
-      const padL = parseFloat(cs.paddingLeft) || 0;
-      return cards.map(el => Math.round(el.offsetLeft - padL));
-    };
-    const getMax = () => scroller.scrollWidth - scroller.clientWidth;
-
-    const updateDisabled = () => {
-      const max = getMax();
-      const x = scroller.scrollLeft;
-      prevBtn.disabled = x <= 4;
-      nextBtn.disabled = x >= max - 4;
-    };
-
-    const scrollByStep = (dir) => {
-      const stops = getStops();
-      const max = getMax();
-      const from = Math.round(scroller.scrollLeft);
-
-      // Find the next or previous stop relative to current position
-      let target;
-      if (dir > 0) {
-        target = stops.find(s => s > from + 4); // forward
-        if (target === undefined) target = max; // end
-      } else {
-        const prevs = stops.filter(s => s < from - 4);
-        target = prevs.length ? prevs[prevs.length - 1] : 0; // start
-      }
-      scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
-    };
-
-    prevBtn.addEventListener('click', () => scrollByStep(-1));
-    nextBtn.addEventListener('click', () => scrollByStep(1));
-
-    scroller.addEventListener('scroll', updateDisabled, { passive: true });
-    window.addEventListener('resize', updateDisabled);
-    // init
-    updateDisabled();
-  }
-
-  document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
-})();
-</script>

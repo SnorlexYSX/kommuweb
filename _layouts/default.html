@@ -1,68 +1,94 @@
 <!DOCTYPE html>
 <html>
- <style>
-        /* Glacial Indifference – proper weights/styles and formats */
-        @font-face {
-          font-family: 'Glacial Indifference';
-          src: url({{ "/css/fonts/glacialindifference-regular-webfont.woff2" | relative_url }}) format('woff2'),
-               url({{ "/css/fonts/glacialindifference-regular-webfont.woff"  | relative_url }}) format('woff');
-          font-weight: 400;
-          font-style: normal;
-          font-display: swap;
+    <style>
+        @font-face { 
+        font-family: Glacial Indifference-Regular; 
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Regular.otf" | relative_url }}) format("opentype");
+        font-weight: normal; 
         }
-
-        @font-face {
-          font-family: 'Glacial Indifference';
-          src: url({{ "/css/fonts/glacialindifference-bold-webfont.woff2" | relative_url }}) format('woff2'),
-               url({{ "/css/fonts/glacialindifference-bold-webfont.woff"  | relative_url }}) format('woff');
-          font-weight: 700;
-          font-style: normal;
-          font-display: swap;
+        
+        @font-face { 
+        font-family: Glacial Indifference-Bold; 
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Bold.otf" | relative_url }}) format("opentype");
+        font-weight: bold; 
         }
-
-        @font-face {
-          font-family: 'Glacial Indifference';
-          src: url({{ "/css/fonts/glacialindifference-italic-webfont.woff2" | relative_url }}) format('woff2'),
-               url({{ "/css/fonts/glacialindifference-italic-webfont.woff"  | relative_url }}) format('woff');
-          font-weight: 400;
-          font-style: italic;
-          font-display: swap;
+        @font-face { 
+        font-family: GlacialIndifference-Regular; 
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Regular.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Regular.otf" | relative_url }}) format("opentype");
+        font-weight: normal; 
         }
-
-        /* Typography usage */
-        h1, h2 { font-family: 'Glacial Indifference', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; font-weight: 700; }
-        body, h3, h4, h5, h6, .h7, p, span, div, button, a { font-family: 'Glacial Indifference', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; font-weight: 400; }
-
-        a:hover { text-decoration: none; }
-
-        /* Hide scrollbars globally */
-        ::-webkit-scrollbar {
-          display: none;
+        
+        @font-face { 
+        font-family: GlacialIndifference-Bold; 
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.ttf" | relative_url }});
+        src: url({{ "/css/fonts/GlacialIndifference-Bold.woff" | relative_url }}) format("woff"),
+        url({{ "/css/fonts/GlacialIndifference-Bold.otf" | relative_url }}) format("opentype");
+        font-weight: bold; 
         }
+        
+        
+    @font-face {
+        font-family: 'glacial_indifferenceitalic';
+        src: url({{ "/css/fonts/glacialindifference-italic-webfont.woff2" | relative_url }}) format('woff2'),
+        url({{ "/css/fonts/glacialindifference-italic-webfont.woff"| relative_url }}) format('woff');
+        font-weight: normal;
+        font-style: normal;
 
-        html, body {
-          scrollbar-width: none;     /* Firefox */
-          background-color: #000;
-        }
+    }
 
+
+
+
+    @font-face {
+        font-family: 'glacial_indifferencebold';
+        src: url({{ "/css/fonts/glacialindifference-regular-webfont.woff" | relative_url }}) format('woff2'),
+            url({{ "/css/fonts/glacialindifference-bold-webfont.woff" | relative_url }}) format('woff');
+        font-weight: normal;
+        font-style: normal;
+
+    }
+
+
+
+
+    @font-face {
+        font-family: 'glacial_indifferenceregular';
+        src: url({{ "/css/fonts/glacialindifference-regular-webfont.woff2" | relative_url }}) format('woff2'),
+            url({{ "/css/fonts/glacialindifference-regular-webfont.woff" | relative_url }}) format('woff');
+        font-weight: normal;
+        font-style: normal;
+
+    }
+        /* h1,h2,h3,h4,h5,p,span,body {font-family: 'Glacial Indifference-Regular'!important;} */
     </style>
+	{% include head.html %}
 
-	  {% include head.html %}
-
-	<body class="d-flex flex-column">
+	<body class="d-flex flex-column h-100">
 		{% include js.html %}
 		{% include navigation.html %}
-    <div id="main-content">
-    {{ content }}
-    </div>
-    {% include cart.html %}
+        <div id="main-content">
+            {{ content }}
+        </div>
 		{% include footer.html %}
 	</body>
-  <style>
-  #main-content {
-      margin-left: 0px;
-      margin-right: 0px;
-      background: black;
-  }
-  </style>
+<style>
+    
+#main-content {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+/* 
+@media (max-width: 991px) {
+    #main-content {
+        width: 90vw;
+    }
+} */
+
+</style>
 </html>

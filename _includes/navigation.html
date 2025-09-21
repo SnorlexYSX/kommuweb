@@ -1,193 +1,35 @@
 <!-- Navigation -->
-<div class="md:hidden">
-<nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
-  <div class="container mx-auto flex items-center justify-between px-4 relative z-50">
-
-    <!-- Left: Logo -->
-    <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
-      <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-6 w-auto"/>
-      <span class="sr-only">Kommu</span>
-    </a>
-
-    <!-- Right: Cart + Burger -->
-    <div class="flex items-center gap-4">
-      <!-- Cart Icon -->
-      <button onclick="toggleCart()" class="relative text-white text-lg" aria-label="Open cart">
-        🛒
-        <span id="cartCount" class="absolute -top-2 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
-         style="background-color: #2d2d2d;">
-         0</span>
-      </button>
-
-      <!-- Burger -->
-      <button id="navToggle" class="inline-flex items-center justify-center rounded-md p-2 text-white focus:outline-none" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
-        <svg id="iconOpen" class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <svg id="iconClose" class="h-6 w-6 hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- Mobile/Overlay Panel: Tabs + Currency Selector -->
-  <div id="mobileNav" class="hidden border-t border-[rgba(255,255,255,.08)] bg-black relative z-50" role="region" aria-label="Navigation Menu">
-    <div class="container mx-auto px-4 py-4">
-      <nav class="flex flex-col gap-3 text-gray-300 text-md font-normal">
-        <a href="{{ '/' | relative_url }}" class="py-2">Home</a>
-        <a href="{{ '/ka2' | relative_url }}" class="py-2">KommuAssist</a>
-        <a href="{{ '/store' | relative_url }}" class="py-2">Store</a>
-        <a href="{{ '/support' | relative_url }}" class="py-2">Supported Cars</a>
-
-        <div class="mt-3 h-px border-t border-[rgba(255,255,255,.08)]"></div>
-
-        <!-- Currency / Locale Selector -->
-        <label for="localeSelectorMobile" class="h6 text-gray">Currency</label>
-        <select id="localeSelectorMobile" class="bg-black text-white px-2 py-2 h5 rounded w-full">
-          <option value="en-MY" selected>🇲🇾 MYR</option>
-          <option value="en-US">🇺🇸 USD</option>
-        </select>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Backdrop overlay for mobile nav -->
-  <div id="mobileOverlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30" onclick="closeMobileNav()"></div>
-</nav>
-
-<script>
-  // -- Burger toggle logic --
-  (function () {
-    const toggle = document.getElementById('navToggle');
-    const panel  = document.getElementById('mobileNav');
-    const openI  = document.getElementById('iconOpen');
-    const closeI = document.getElementById('iconClose');
-    const overlay = document.getElementById('mobileOverlay');
-    let open = false;
-
-    function setOpen(v) {
-      open = v;
-      panel.classList.toggle('hidden', !open);
-      openI.classList.toggle('hidden', open);
-      closeI.classList.toggle('hidden', !open);
-      toggle?.setAttribute('aria-expanded', String(open));
-      document.documentElement.classList.toggle('overflow-hidden', open); // lock scroll when open
-      overlay?.classList.toggle('hidden', !open);
-    }
-
-    toggle?.addEventListener('click', () => setOpen(!open));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) setOpen(false); });
-
-    window.closeMobileNav = () => setOpen(false);
-  })();
-</script>
-
-<script>
-  // Keep existing locale/currency helpers; moved selector into the menu
-  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
-
-  async function detectCountryCode() {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      if (!res.ok) throw new Error("geo lookup failed");
-      const { country_code } = await res.json();
-      return country_code;               // e.g. "MY", "US", "GB"
-    } catch {
-      return null;
-    }
-  }
-
-  async function getGeoLocale() {
-    const saved = localStorage.getItem("preferredLocale");
-    if (saved) return saved;
-
-    const browserLang = navigator.language.split("-")[0] || "en";
-    const geoCC = await detectCountryCode();
-    const locale = geoCC 
-      ? `${browserLang}-${geoCC}`
-      : navigator.language || "en-US";
-
-    localStorage.setItem("preferredLocale", locale);
-    return locale;
-  }
-
-  (async () => {
-    if (!localeSelectorMobile) return;
-    const locale = await getGeoLocale();
-    localeSelectorMobile.value = locale;
-
-    localeSelectorMobile.addEventListener("change", e => {
-      localStorage.setItem("preferredLocale", e.target.value);
-      location.reload();
-    });
-  })();
-
-  function getCurrencyCode(locale) {
-    const country = locale.split("-")[1] || "US";
-    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
-    return currencyMap[country] || "USD";
-  }
-
-  function getFormatter(locale) {
-    const currency = getCurrencyCode(locale);
-    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
-  }
-
-  function formatPrice(prices) {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-    const currency = getCurrencyCode(locale);
-    const formatter = getFormatter(locale);
-    const price = prices[currency] || prices["USD"] || 0;
-    return formatter.format(price);
-  }
-</script>
-</div>
-
-<!-- Desktop / Tablet Navigation -->
-<div class="hidden md:block">
-  <nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
-    <div class="container mx-auto flex items-center justify-center px-6">
-      <!-- Center: Tabs/links -->
-      <nav class="flex items-center gap-12 text-md font-normal text-white">
-        <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
-          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-4 w-auto"/>
-          <span class="sr-only">Kommu</span>
-        </a>
-        <a href="{{ '/' | relative_url }}" class="hover:text-gray-300">Home</a>
-        <a href="{{ '/ka2' | relative_url }}" class="hover:text-gray-300">KommuAssist</a>
-        <a href="{{ '/store' | relative_url }}" class="hover:text-gray-300">Store</a>
-        <a href="{{ '/support' | relative_url }}" class="hover:text-gray-300">Supported Cars</a>
-        <select id="localeSelectorDesktop" class="bg-black text-white px-2 py-2 text-sm rounded">
-          <option value="en-MY">🇲🇾 MYR</option>
-          <option value="en-US">🇺🇸 USD</option>
-        </select>
-        <button onclick="toggleCart()" class="relative text-white text-xl" aria-label="Open cart">
-          🛒
-          <span id="cartCountDesktop" class="absolute -top-1.5 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
-                style="background-color: #2d2d2d;">0</span>
+<nav class="navbar navbar-expand-sm py-1 navbar-dark sticky-top" role="navigation" style="background-color: #000000;font-size: 14px; font-weight: 400;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-      </nav>
+
+        <div class="collapse navbar-collapse justify-content-center" id="navbar">
+            <ul class="navbar-nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/" | relative_url }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/ka1s" | relative_url }}">KommuAssist 1s</a>
+                </li>
+                <!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Store</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{ "/products" | relative_url }}">Product</a>
+                        <a class="dropdown-item" href="{{ "/accessories" | relative_url }}">Accessories</a>
+                    </div>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/products" | relative_url }}">Product</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/support" | relative_url }}">Supported Cars</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ "/kommunity" | relative_url }}">Kommunity</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </nav>
-</div>
-
-<script>
-  (async () => {
-    const saved = localStorage.getItem("preferredLocale") || (navigator.language || "en-US");
-    const mobileSel = document.getElementById("localeSelectorMobile");
-    const deskSel   = document.getElementById("localeSelectorDesktop");
-
-    if (mobileSel) mobileSel.value = saved;
-    if (deskSel)   deskSel.value   = saved;
-
-    function onChange(val){
-      localStorage.setItem("preferredLocale", val);
-      window.dispatchEvent(new CustomEvent('locale:changed'));
-      location.reload();
-    }
-
-    mobileSel?.addEventListener("change", e => onChange(e.target.value));
-    deskSel?.addEventListener("change",   e => onChange(e.target.value));
-  })();
-</script>
+</nav>
