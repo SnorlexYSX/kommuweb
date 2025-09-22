@@ -1613,29 +1613,42 @@ stylesheet: products
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
         </video>
         <script>
-          (function () {
-            var v = document.getElementById('s1Video');
-            if (!v) return;
+  (function () {
+    var v = document.getElementById('s1Video');
+    if (!v) return;
 
-            // Always use MP4 file
-            var mp4  = "{{ '/assets/ka_ani_s1_dark.mp4'  | relative_url }}";
+    // Always use MP4 file
+    var mp4  = "{{ '/assets/ka_ani_s1_dark.mp4'  | relative_url }}";
 
-            while (v.firstChild) v.removeChild(v.firstChild);
-            var el = document.createElement('source');
-            el.src = mp4; el.type = 'video/mp4'; v.appendChild(el);
+    while (v.firstChild) v.removeChild(v.firstChild);
+    var el = document.createElement('source');
+    el.src = mp4; el.type = 'video/mp4'; v.appendChild(el);
 
-            v.preload = 'auto';
-            v.muted = true;
-            v.playsInline = true;
-            v.disableRemotePlayback = true;
+    v.preload = 'auto';
+    v.muted = true;
+    v.playsInline = true;
+    v.disableRemotePlayback = true;
 
-            try { v.load(); } catch(e) {}
+    try { v.load(); } catch(e) {}
 
-            const onCPT = () => { v.dataset.ready = 'true'; v.removeEventListener('canplaythrough', onCPT); };
-            v.addEventListener('canplaythrough', onCPT, { once: true });
-            if (v.readyState >= 3) v.dataset.ready = 'true';
-          })();
-        </script>
+    const startPlayback = () => {
+      if (v.dataset.started === 'true') return;
+      v.dataset.ready = 'true';
+      v.dataset.started = 'true';
+      v.play().catch(()=>{});
+      // Reveal after first frame painted
+      const reveal = () => { v.style.opacity = '1'; };
+      if ('requestVideoFrameCallback' in v) {
+        v.requestVideoFrameCallback(() => reveal());
+      } else {
+        requestAnimationFrame(reveal);
+      }
+    };
+
+    v.addEventListener('canplaythrough', startPlayback, { once: true });
+    if (v.readyState >= 3) startPlayback();
+  })();
+</script>
         <script>
     (function(){
       const s1 = document.getElementById('s1Video');
