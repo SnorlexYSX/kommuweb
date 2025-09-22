@@ -1749,11 +1749,8 @@ stylesheet: products
 
   <!-- Prefetch Safety looped animations (used by tabs) -->
   <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" as="video" type="video/mp4">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" as="video" type="video/mp4">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" as="video" type="video/mp4">
+<link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
+<link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
 
   <link rel="prefetch" as="image" href="{{ '/img/ka1s/s5.png' | relative_url }}">
 
@@ -2692,24 +2689,16 @@ stylesheet: products
       if (!video || tabs.length === 0) return;
 
       // Safari detection and helper to inject sources in preferred order
-      const ua = navigator.userAgent;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
       function setVideoSources(v, base) {
         // base is a string like 'dm', 'failsafe', or 'steerlimit'
-        const paths = {
-          webm: `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`,
-          mp4:  `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.mp4`
-        };
+        const webmPath = `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`;
         // Clear existing sources
         while (v.firstChild) v.removeChild(v.firstChild);
-        // Append in preferred order
-        const order = isSafari ? ['mp4', 'webm'] : ['webm', 'mp4'];
-        order.forEach(fmt => {
-          const s = document.createElement('source');
-          s.src = paths[fmt];
-          s.type = fmt === 'mp4' ? 'video/mp4' : 'video/webm';
-          v.appendChild(s);
-        });
+        // Always and only use WebM
+        const s = document.createElement('source');
+        s.src = webmPath;
+        s.type = 'video/webm';
+        v.appendChild(s);
         try { v.load(); } catch(e) {}
       }
 
