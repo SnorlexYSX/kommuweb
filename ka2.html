@@ -1429,7 +1429,7 @@ stylesheet: products
     width: 100%; /* each card fills its column */
   }
   .summary-section .grid > div {
-    height: 200px; /* fixed card height on mobile */
+    height: 250px; /* fixed card height on mobile */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1445,6 +1445,14 @@ stylesheet: products
     flex-direction: column;
     justify-content: center;
   }
+}
+.summary-section .grid > div.card-bottom {
+  justify-content: flex-end !important;
+  padding-top: 0 !important;   /* removes that extra top spacing */
+}
+
+.summary-section .grid > div.card-bottom h3 {
+  margin-top: 0; /* stop default heading margin pushing it down */
 }
   </style>
 
@@ -1599,7 +1607,7 @@ stylesheet: products
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
         <h1 class="h4 text-white">Built for Smarter Journey.</h1>
-        <video id="s1Video" class="s1-video scroll-video" playsinline autoplay muted preload="metadata" poster="{{ '/img/ka1s/ka_ani_s1.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
+        <video id="s1Video" class="s1-video scroll-video" playsinline muted preload="metadata" poster="{{ '/img/ka1s/ka_ani_s1.webp' | relative_url }}" data-autoplay="false" data-play-once="true"
           aria-label="KommuAssist unit rotating on purple glow background">
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
         </video>
@@ -1643,19 +1651,30 @@ stylesheet: products
       function isReady(v) {
         return v.readyState >= 3 || v.dataset.ready === 'true';
       }
-
       function whenReady(v, cb) {
         if (isReady(v)) cb();
         else v.addEventListener('canplay', cb, { once: true });
       }
 
       whenReady(s1, () => {
+        // prevent any double-starts from race with other code
+        if (s1.dataset.started === 'true') return;
+        s1.dataset.started = 'true';
+
         s1.muted = true;
         s1.playsInline = true;
-        s1.play().finally(() => {
-          s1.style.opacity = '1';
-          if (s1.dataset.playOnce === 'true') s1.dataset.played = 'true';
-        });
+        s1.style.opacity = '1';
+
+        // start playback once
+        s1.play().catch(() => { /* ignore */ });
+
+        // mark as played only when it actually finishes
+        s1.addEventListener('ended', () => {
+          if (s1.dataset.playOnce === 'true') {
+            s1.dataset.played = 'true';
+            s1.pause();
+          }
+        }, { once: true });
       });
     })();
   </script>
@@ -2040,38 +2059,36 @@ stylesheet: products
     <div class="grid md:grid-cols-3 gap-3 text-center">
       <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
         <h3 class="h3 font-bold">Aluminum unibody</h3>
-        <img src="{{ '/img/main/perodua.png' | relative_url }}" alt="Perodua" class="w-20">
+        <img src="{{ '/img/ka1s/sum-1.png' | relative_url }}" alt="Alu" class="w-[12rem]">
         
         
       </div>
 
       <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
-        <img src="{{ '/img/main/proton.png' | relative_url }}" alt="Proton" class="w-20">
+        <img src="{{ '/img/ka1s/rk.png' | relative_url }}" alt="RK" class="w-[10rem]">
         <h3 class="h3 font-bold">Rockchip RK3588</h3>
         <p class="h5 text-gray mt-2">6 TOPS below 10 watts</p>
       </div>
 
       <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
-        <img src="{{ '/img/main/honda.png' | relative_url }}" alt="Honda" class="w-20">
-        <h3 class="h3 font-bold">3x Autmotive Cameras</h3>
+        <img src="{{ '/img/ka1s/cameras.png' | relative_url }}" alt="Cameras" class="w-[10rem]">
+        <h3 class="h3 font-bold">3x Automotive Cameras</h3>
         
       </div>
 
       <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
         <h3 class="h3 font-bold">bukapilot v10</h3>
-        <img src="{{ '/img/main/toyota.png' | relative_url }}" alt="Toyota" class="w-20">
+        <img src="{{ '/img/ka1s/bp10.png' | relative_url }}" alt="bp10" class="w-[10rem]">
         <p class="h5 text-gray mt-2">end-to-end driving model</p>
       </div>
 
-      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
-        <h3 class="h3 font-bold">New KommuAI app</h3>
-        <img src="{{ '/img/main/byd.png' | relative_url }}" alt="BYD" class="w-20">
-        
-        
+      <div class="bg-black rounded-2xl px-6 pt-0 pb-0 flex flex-col items-center justify-end card-bottom">
+        <h3 class="h3 font-bold mb-2">New KommuAI app</h3>
+        <img src="{{ '/img/ka1s/app.png' | relative_url }}" alt="app" class="w-[12rem]">
       </div>
 
       <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
-        <img src="{{ '/img/main/lexus.png' | relative_url }}" alt="Lexus" class="w-20">
+        <img src="{{ '/img/ka1s/dashcam.png' | relative_url }}" alt="dashcam" class="w-[4rem] mb-2">
         <h3 class="h3 font-bold">Dashcam feature</h3>
         <p class="h5 text-gray mt-2">Retrieve driving footage locally</p>
       </div>
