@@ -49,6 +49,25 @@
       addons: ["Sim Card"]
     ui: { show: [payment], hide: [] }
 
+
+- id: product-nonmyr-any-device-tradein
+  when:
+    source: product
+    currency_in: ["!MYR"]
+    dropdowns: { payment: "One-off Purchase", tradeIn: "Trade-in KA1/KA1s"}
+  then:
+    provider: stripe
+    locks_product: 
+      dropdowns: { payment: "One-off Purchase", tradeIn: "Trade-in", sim: "without SIM card", "install":"Self-installation"}
+      lock_message: "For Malaysians Only"
+    locks_checkout:
+      icRequired: false
+    auto_apply:
+      promotion:
+        label: "Trade-in"
+        type: one_off
+    ui: { show: [payment], hide: [] }
+
 - id: product-nonmyr-any-device-no-tradein
   when:
     source: product
@@ -60,23 +79,6 @@
       lock_message: "For Malaysians Only"
     locks_checkout:
       icRequired: false
-    ui: { show: [payment], hide: [] }
-
-- id: product-nonmyr-any-device-no-tradein
-  when:
-    source: product
-    currency_in: ["!MYR"]
-  then:
-    provider: stripe
-    locks_product: 
-      dropdowns: { payment: "One-off Purchase", tradeIn: "Trade-in", "install":"Self-installation"}
-      lock_message: "For Malaysians Only"
-    locks_checkout:
-      icRequired: false
-    auto_apply:
-      promotion:
-        label: "Trade-in"
-        type: one_off
     ui: { show: [payment], hide: [] }
 
 

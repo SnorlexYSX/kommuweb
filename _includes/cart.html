@@ -65,7 +65,7 @@
   }
 
   function formatPrice(prices) {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const locale = localStorage.getItem("preferredLocale") || nguage || "en-US";
     const currency = getCurrencyCode(locale);
     const formatter = getFormatter(locale);
     const price = prices[currency] || prices["USD"] || 0;
@@ -160,7 +160,7 @@
       if (!checkoutBtn.classList.contains('hover:bg-blue-700')) checkoutBtn.classList.add('hover:bg-blue-700');
     }
 
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const locale = localStorage.getItem("preferredLocale") || "en-US";
     const currency = getCurrencyCode(locale);
     const btnBase = 'inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition';
 

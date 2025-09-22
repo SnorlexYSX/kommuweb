@@ -103,8 +103,8 @@
     const saved = localStorage.getItem("preferredLocale");
     if (saved) return saved;
 
-    const browserLang = (navigator.language && navigator.language.split("-")[0]) || "en";
-    let locale = navigator.language || "en-US";
+    const browserLang =  "en";
+    let locale = "en-US";
 
     function timeout(ms){
       return new Promise(resolve => setTimeout(() => resolve("__TIMEOUT__"), ms));
@@ -162,7 +162,7 @@
   }
 
   function formatPrice(prices) {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const locale = localStorage.getItem("preferredLocale") || "en-US";
     const currency = getCurrencyCode(locale);
     const formatter = getFormatter(locale);
     const price = prices[currency] || prices["USD"] || 0;
