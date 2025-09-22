@@ -9,20 +9,19 @@ stylesheet: products
   <!-- <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet"> -->
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
  
   <!-- Preload Perception stills (used by tabs) -->
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
   <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
 
-  <!-- Preload Safety looped animations (used by tabs) -->
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" type="video/mp4">
+  <!-- Prefetch Safety looped animations (used by tabs) -->
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" as="video" type="video/mp4">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" as="video" type="video/mp4">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" as="video" type="video/mp4">
 
   <style>
     /* Mobile floating top panel (Apple-style) */
@@ -1547,31 +1546,33 @@ stylesheet: products
 
   <script>
     // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
-    document.addEventListener('DOMContentLoaded', function () {
-      try {
-        // Perception stills
-        var s4 = [
-          '{{ "/img/ka1s/s4_night.png" | relative_url }}',
-          '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
-          '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
-        ];
-        s4.forEach(function (src) { var img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = src; });
+    window.addEventListener('load', function () {
+      const idle = window.requestIdleCallback || (cb => setTimeout(cb, 1200));
+      idle(function () {
+        try {
+          // Perception stills
+          var s4 = [
+            '{{ "/img/ka1s/s4_night.png" | relative_url }}',
+            '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
+            '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
+          ];
+          s4.forEach(function (src) { var img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = src; });
 
-        // Safety animations
-        var s3 = [
-          '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
-          '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
-          '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
-        ];
-        s3.forEach(function (src) {
-          var v = document.createElement('video');
-          v.preload = 'auto';
-          v.muted = true; // allow buffering on some browsers conservatively
-          v.src = src;
-          // Kick off a fetch without attaching to DOM
-          try { v.load(); } catch (e) { }
-        });
-      } catch (e) { /* no-op */ }
+          // Safety animations
+          var s3 = [
+            '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
+            '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
+            '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
+          ];
+          s3.forEach(function (src) {
+            var v = document.createElement('video');
+            v.preload = 'auto';
+            v.muted = true;
+            v.src = src;
+            try { v.load(); } catch (e) { }
+          });
+        } catch (e) { /* no-op */ }
+      });
     }, { once: true });
 
     function goToBuyPage() {
@@ -1645,27 +1646,46 @@ stylesheet: products
       }
       function whenReady(v, cb) {
         if (isReady(v)) cb();
-        else v.addEventListener('canplay', cb, { once: true });
+        else v.addEventListener('canplaythrough', cb, { once: true });
       }
 
       whenReady(s1, () => {
-        // prevent any double-starts from race with other code
         if (s1.dataset.started === 'true') return;
         s1.dataset.started = 'true';
 
         s1.muted = true;
         s1.playsInline = true;
-        s1.style.opacity = '1';
 
-        // start playback once
-        s1.play().catch(() => { /* ignore */ });
+        // iOS nudge to ensure first frame paints
+        try { if (s1.currentTime === 0) s1.currentTime = 0.001; } catch(_) {}
 
-        // mark as played only when it actually finishes
-        s1.addEventListener('ended', () => {
-          if (s1.dataset.playOnce === 'true') {
-            s1.dataset.played = 'true';
+        // Start playback once
+        s1.play().catch(() => {});
+
+        // Reveal only after first frame actually painted
+        const reveal = () => { s1.style.opacity = '1'; };
+        if ('requestVideoFrameCallback' in s1) {
+          s1.requestVideoFrameCallback(() => reveal());
+        } else {
+          requestAnimationFrame(reveal);
+        }
+
+        // Avoid end-of-playback glitch: pause just before the end and mark played
+        const epsilon = 0.08; // seconds before natural end to stop
+        const onTU = () => {
+          if (!isFinite(s1.duration) || s1.duration <= 0) return;
+          if (s1.currentTime >= (s1.duration - epsilon)) {
             s1.pause();
+            s1.removeEventListener('timeupdate', onTU);
+            s1.dataset.played = 'true';
           }
+        };
+        s1.addEventListener('timeupdate', onTU);
+
+        // Safety: if ended still fires (some browsers), ensure flags set
+        s1.addEventListener('ended', () => {
+          s1.dataset.played = 'true';
+          s1.pause();
         }, { once: true });
       });
     })();
