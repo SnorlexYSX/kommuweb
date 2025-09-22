@@ -1615,32 +1615,24 @@ stylesheet: products
           (function () {
             var v = document.getElementById('s1Video');
             if (!v) return;
-            // Real Safari detection (excludes Chrome on iOS/macOS)
-            var ua = navigator.userAgent;
-            var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-            var sources = isSafari
-              ? [
-                { src: "{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}", type: "video/mp4" },
-                { src: "{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}", type: "video/webm" }
-              ]
-              : [
-                { src: "{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}", type: "video/webm" },
-                { src: "{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}", type: "video/mp4" }
-              ];
+
+            // Always use MP4 file
+            var mp4  = "{{ '/assets/ka_ani_s1_dark.mp4'  | relative_url }}";
 
             while (v.firstChild) v.removeChild(v.firstChild);
-            sources.forEach(function (s) {
-              var el = document.createElement('source');
-              el.src = s.src; el.type = s.type; v.appendChild(el);
-            });
+            var el = document.createElement('source');
+            el.src = mp4; el.type = 'video/mp4'; v.appendChild(el);
 
-            // Load after sources are appended
-            try { v.load(); } catch (e) { }
+            v.preload = 'auto';
+            v.muted = true;
+            v.playsInline = true;
+            v.disableRemotePlayback = true;
 
-            // Updated: do not fade in here; just mark ready
-            const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
-            v.addEventListener('canplay', onReady, { once: true });
-            if (v.readyState >= 3) { v.dataset.ready = 'true'; }
+            try { v.load(); } catch(e) {}
+
+            const onCPT = () => { v.dataset.ready = 'true'; v.removeEventListener('canplaythrough', onCPT); };
+            v.addEventListener('canplaythrough', onCPT, { once: true });
+            if (v.readyState >= 3) v.dataset.ready = 'true';
           })();
         </script>
         <script>
