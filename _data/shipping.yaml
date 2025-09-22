@@ -9,17 +9,17 @@
 - code: TH
   name: Thailand
   rates:
-    MYR: 209.99
-    USD: 10.00
+    MYR: 30
+    USD: 9.00
 
 - code: SG
   name: Singapore
   rates:
-    MYR: 245.63
-    USD: 20.00
+    MYR: 30
+    USD: 9.00
 
 - code: AU
   name: Australia
   rates:
-    MYR: 422.73
-    USD: 30.00
+    MYR: 250
+    USD: 59.00

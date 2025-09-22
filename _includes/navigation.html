@@ -36,7 +36,7 @@
     <div class="container mx-auto px-4 py-4">
       <nav class="flex flex-col gap-3 text-gray-300 text-md font-normal">
         <a href="{{ '/' | relative_url }}" class="py-2">Home</a>
-        <a href="{{ '/ka2' | relative_url }}" class="py-2">KommuAssist</a>
+        <a href="{{ '/ka2' | relative_url }}" class="py-2">KommuAssist 2</a>
         <a href="{{ '/store' | relative_url }}" class="py-2">Store</a>
         <a href="{{ '/support' | relative_url }}" class="py-2">Supported Cars</a>
 
@@ -56,6 +56,119 @@
   <div id="mobileOverlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30" onclick="closeMobileNav()"></div>
 </nav>
 
+</div>
+
+<!-- Desktop / Tablet Navigation -->
+<div class="hidden md:block">
+  <nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
+    <div class="container mx-auto flex items-center justify-center px-6">
+      <!-- Center: Tabs/links -->
+      <nav class="flex items-center gap-12 text-md font-normal text-white">
+        <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
+          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-4 w-auto"/>
+          <span class="sr-only">Kommu</span>
+        </a>
+        <a href="{{ '/' | relative_url }}" class="hover:text-gray-300">Home</a>
+        <a href="{{ '/ka2' | relative_url }}" class="hover:text-gray-300">KommuAssist 2</a>
+        <a href="{{ '/store' | relative_url }}" class="hover:text-gray-300">Store</a>
+        <a href="{{ '/support' | relative_url }}" class="hover:text-gray-300">Supported Cars</a>
+        <select id="localeSelectorDesktop" class="bg-black text-white px-2 py-2 text-sm rounded">
+          <option value="en-MY">🇲🇾 MYR</option>
+          <option value="en-US">🇺🇸 USD</option>
+        </select>
+        <button onclick="toggleCart()" class="relative text-white text-xl" aria-label="Open cart">
+          🛒
+          <span id="cartCountDesktop" class="absolute -top-1.5 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+                style="background-color: #2d2d2d;">0</span>
+        </button>
+      </nav>
+    </div>
+  </nav>
+</div>
+
+
+<script>
+
+  // Keep existing locale/currency helpers; moved selector into the menu
+  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
+  const localeSelectorDesktop = document.getElementById("localeSelectorDesktop");
+
+  // (function(){
+  //   if (!localStorage.getItem("preferredLocale")) {
+  //     // Hide page until we resolve locale (max 500ms)
+      
+  //   }
+  // })();
+  async function getGeoLocale() {
+    const saved = localStorage.getItem("preferredLocale");
+    if (saved) return saved;
+
+    const browserLang = (navigator.language && navigator.language.split("-")[0]) || "en";
+    let locale = navigator.language || "en-US";
+
+    function timeout(ms){
+      return new Promise(resolve => setTimeout(() => resolve("__TIMEOUT__"), ms));
+    }
+
+    try {
+      const winner = await Promise.race([
+        fetch("https://ipapi.co/json/"),
+        timeout(500)
+      ]);
+
+      if (winner !== "__TIMEOUT__" && winner && winner.ok) {
+        const { country_code } = await winner.json();
+        if (country_code) {
+          locale = `${browserLang}-${country_code}`;
+        }
+      }
+    } catch(_) { /* ignore network errors */ }
+
+    localStorage.setItem("preferredLocale", locale);
+    location.reload();
+    return locale;
+  }
+
+  (async () => {
+    document.documentElement.style.visibility = 'hidden';
+
+    const locale = await getGeoLocale();
+
+    if (localeSelectorMobile)  localeSelectorMobile.value    = locale;
+    if (localeSelectorDesktop) localeSelectorDesktop.value   = locale;
+
+    // Reveal page now that locale is ready (or timed out)
+    document.documentElement.style.visibility = '';
+
+    function onChange(val){
+      localStorage.setItem("preferredLocale", val);
+     // window.dispatchEvent(new CustomEvent('locale:changed'));
+      location.reload();
+    }
+
+    localeSelectorMobile?.addEventListener("change", e => onChange(e.target.value));
+    localeSelectorDesktop?.addEventListener("change",   e => onChange(e.target.value));
+  })();
+
+  function getCurrencyCode(locale) {
+    const country = locale.split("-")[1] || "US";
+    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
+    return currencyMap[country] || "USD";
+  }
+
+  function getFormatter(locale) {
+    const currency = getCurrencyCode(locale);
+    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
+  }
+
+  function formatPrice(prices) {
+    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+    const currency = getCurrencyCode(locale);
+    const formatter = getFormatter(locale);
+    const price = prices[currency] || prices["USD"] || 0;
+    return formatter.format(price);
+  }
+</script>
 <script>
   // -- Burger toggle logic --
   (function () {
@@ -80,114 +193,5 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) setOpen(false); });
 
     window.closeMobileNav = () => setOpen(false);
-  })();
-</script>
-
-<script>
-  // Keep existing locale/currency helpers; moved selector into the menu
-  const localeSelectorMobile = document.getElementById("localeSelectorMobile");
-
-  async function detectCountryCode() {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      if (!res.ok) throw new Error("geo lookup failed");
-      const { country_code } = await res.json();
-      return country_code;               // e.g. "MY", "US", "GB"
-    } catch {
-      return null;
-    }
-  }
-
-  async function getGeoLocale() {
-    const saved = localStorage.getItem("preferredLocale");
-    if (saved) return saved;
-
-    const browserLang = navigator.language.split("-")[0] || "en";
-    const geoCC = await detectCountryCode();
-    const locale = geoCC 
-      ? `${browserLang}-${geoCC}`
-      : navigator.language || "en-US";
-
-    localStorage.setItem("preferredLocale", locale);
-    return locale;
-  }
-
-  (async () => {
-    if (!localeSelectorMobile) return;
-    const locale = await getGeoLocale();
-    localeSelectorMobile.value = locale;
-
-    localeSelectorMobile.addEventListener("change", e => {
-      localStorage.setItem("preferredLocale", e.target.value);
-      location.reload();
-    });
-  })();
-
-  function getCurrencyCode(locale) {
-    const country = locale.split("-")[1] || "US";
-    const currencyMap = { MY: "MYR", US: "USD", SG: "SGD", JP: "JPY", GB: "GBP" };
-    return currencyMap[country] || "USD";
-  }
-
-  function getFormatter(locale) {
-    const currency = getCurrencyCode(locale);
-    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2 });
-  }
-
-  function formatPrice(prices) {
-    const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
-    const currency = getCurrencyCode(locale);
-    const formatter = getFormatter(locale);
-    const price = prices[currency] || prices["USD"] || 0;
-    return formatter.format(price);
-  }
-</script>
-</div>
-
-<!-- Desktop / Tablet Navigation -->
-<div class="hidden md:block">
-  <nav class="fixed inset-x-0 top-0 z-50 bg-black py-2">
-    <div class="container mx-auto flex items-center justify-center px-6">
-      <!-- Center: Tabs/links -->
-      <nav class="flex items-center gap-12 text-md font-normal text-white">
-        <a href="{{ '/' | relative_url }}" class="flex items-center gap-2 text-white">
-          <img src="{{ '/img/kommu-logo.png' | relative_url }}" alt="Kommu" class="h-4 w-auto"/>
-          <span class="sr-only">Kommu</span>
-        </a>
-        <a href="{{ '/' | relative_url }}" class="hover:text-gray-300">Home</a>
-        <a href="{{ '/ka2' | relative_url }}" class="hover:text-gray-300">KommuAssist</a>
-        <a href="{{ '/store' | relative_url }}" class="hover:text-gray-300">Store</a>
-        <a href="{{ '/support' | relative_url }}" class="hover:text-gray-300">Supported Cars</a>
-        <select id="localeSelectorDesktop" class="bg-black text-white px-2 py-2 text-sm rounded">
-          <option value="en-MY">🇲🇾 MYR</option>
-          <option value="en-US">🇺🇸 USD</option>
-        </select>
-        <button onclick="toggleCart()" class="relative text-white text-xl" aria-label="Open cart">
-          🛒
-          <span id="cartCountDesktop" class="absolute -top-1.5 -right-2 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
-                style="background-color: #2d2d2d;">0</span>
-        </button>
-      </nav>
-    </div>
-  </nav>
-</div>
-
-<script>
-  (async () => {
-    const saved = localStorage.getItem("preferredLocale") || (navigator.language || "en-US");
-    const mobileSel = document.getElementById("localeSelectorMobile");
-    const deskSel   = document.getElementById("localeSelectorDesktop");
-
-    if (mobileSel) mobileSel.value = saved;
-    if (deskSel)   deskSel.value   = saved;
-
-    function onChange(val){
-      localStorage.setItem("preferredLocale", val);
-      window.dispatchEvent(new CustomEvent('locale:changed'));
-      location.reload();
-    }
-
-    mobileSel?.addEventListener("change", e => onChange(e.target.value));
-    deskSel?.addEventListener("change",   e => onChange(e.target.value));
   })();
 </script>

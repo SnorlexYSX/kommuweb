@@ -3,26 +3,13 @@ layout: default
 title: KommuAssist | kommu.ai
 stylesheet: products
 ---
+{% include pricing_helpers.html %}
 
 <head>
-  <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet">
+  <!-- <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet"> -->
   <!-- Preload Hero videos (highest priority) -->
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}" type="video/webm">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.webm' | relative_url }}" type="video/webm" fetchpriority="high">
  
-  <!-- Preload Perception stills (used by tabs) -->
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
-
-  <!-- Preload Safety looped animations (used by tabs) -->
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" type="video/webm">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" type="video/mp4">
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" type="video/mp4">
-
   <style>
     /* Mobile floating top panel (Apple-style) */
     .mobile-topbar { 
@@ -965,7 +952,7 @@ stylesheet: products
     .ports-section {
       position: relative;
       max-width: 1100px;
-      margin: 10rem auto 8rem;
+      margin: 10rem auto 0rem;
       color: #eaeaea;
       min-height: 120vh;
       /* enough scroll room to reveal all labels */
@@ -1295,6 +1282,164 @@ stylesheet: products
       opacity: 0; /* start hidden */
       animation: fadeInOpacity 0.6s ease-out forwards;
     }
+
+    /* --- Horizontal carousel copied from index.html --- */
+.full-bleed-row { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; box-sizing: border-box; }
+.row-align { 
+  padding-left: max(calc((100vw - 1100px) / 2), 1.5rem); 
+  padding-right: max(calc((100vw - 1100px) / 2), 1.5rem); 
+  gap: 3.5rem;
+}
+
+.carousel-wrap { position: relative; }
+.h-scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-left: max(calc((100vw - 1100px) / 2), 1.5rem);
+  scroll-padding-right: max(calc((100vw - 1100px) / 2), 1.5rem);
+}
+.scroll-btn {
+  position: absolute;
+  bottom: -30px;
+  width: 42px; height: 42px; border-radius: 9999px;
+  display: grid; place-items: center;
+  background: rgb(255 255 255 / 0.6);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  border: 0;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+}
+.scroll-btn:hover { transform: scale(1.06); background: rgb(255 255 255 / 0.9); }
+.scroll-btn:active { transform: scale(0.98); }
+.scroll-btn[disabled] { opacity: .4; pointer-events: none; }
+.scroll-btn.next { right: 1.25rem; transform: none; }
+.scroll-btn.prev { right: calc(1.25rem + 42px + 24px); transform: none; }
+.scroll-btn svg { width: 18px; height: 18px; }
+
+:root { 
+  --card-w: 350px; 
+  --card-h: 600px;
+  --card-img-h: 437.5px;
+}
+@media (max-width: 1280px) {
+  .row-align { gap: 2.5rem; }
+  :root { 
+    --card-w: 300px;
+    --card-h: 525px;
+    --card-img-h: 375px;
+  }
+}
+@media (max-width: 380px) {
+  :root { 
+    --card-w: 280px; 
+    --card-h: 500px; 
+    --card-img-h: 350px; 
+  }
+}
+
+.fixed-card {
+  width: var(--card-w);
+  min-width: var(--card-w);
+  max-width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.fixed-card.wide {
+  width: calc(var(--card-w) * 2);
+  min-width: calc(var(--card-w) * 2);
+  max-width: calc(var(--card-w) * 2);
+}
+.h-scroll .fixed-card {
+  flex: 0 0 var(--card-w);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.h-scroll .fixed-card.wide { flex-basis: calc(var(--card-w) * 2); }
+
+.fixed-card img {
+  height: var(--card-img-h);
+  width: 100%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
+}
+
+@media (max-width: 768px) {
+  .fixed-card.wide {
+    width: var(--card-w);
+    min-width: var(--card-w);
+    max-width: var(--card-w);
+  }
+  .h-scroll .fixed-card.wide { flex-basis: var(--card-w); }
+  .scroll-btn { bottom: -8px; width: 36px; height: 36px; }
+  .scroll-btn svg { width: 16px; height: 16px; }
+  .scroll-btn.next { right: 0.5rem; }
+  .scroll-btn.prev { right: calc(0.5rem + 36px + 18px); }
+}
+
+/* --- Compatibility section (from index.html) --- */
+.brand-logo {
+  width: 7.5rem;
+  height: auto;
+}
+@media (max-width: 768px) {
+  .brand-logos-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    gap: 0.5rem;
+  }
+  .summary-section { min-height: 900px; }
+}
+/* Height helper used by the section */
+.hp4-content-height{ min-height: calc(var(--vh, 1vh) * 100); }
+@media (max-height: 1100px) and (min-width: 1100px) {
+  .summary-section { min-height: 900px; }
+}
+.rounded-lg-store{
+    border-radius: 1.5625rem;
+  }
+
+  @media (max-width: 768px) {
+  .summary-section .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 0.5rem !important; /* adjust spacing between cards */
+  }
+  .summary-section .grid > div {
+    width: 100%; /* each card fills its column */
+  }
+  .summary-section .grid > div {
+    height: 250px; /* fixed card height on mobile */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rounded-lg-store{
+    border-radius: 0rem;
+  }
+}
+@media (min-width: 769px) {
+  .summary-section .grid > div {
+    height: 280px; /* fixed card height on desktop/tablet */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+.summary-section .grid > div.card-bottom {
+  justify-content: flex-end !important;
+  padding-top: 0 !important;   /* removes that extra top spacing */
+}
+
+.summary-section .grid > div.card-bottom h3 {
+  margin-top: 0; /* stop default heading margin pushing it down */
+}
   </style>
 
 <script>
@@ -1349,11 +1494,13 @@ stylesheet: products
     document.querySelectorAll('.h1, .h2, .h3, .h4, button, .h5').forEach(el => {
       // Skip headings inside excluded sections
       if (
+        el.closest('.ka1s-section') ||
         el.closest('.frame-section') ||
         el.closest('.perception-tabs-section') ||
         el.closest('.safety-tab') ||
         el.closest('.fixed') ||
-        el.closest('.footer')
+        el.closest('.footer') ||
+        el.closest('.summary-section')
       ) {
         // Ensure excluded headings are visible (remove any leftover class)
         el.classList.remove('fade-up-target', 'fade-up');
@@ -1386,31 +1533,33 @@ stylesheet: products
 
   <script>
     // Warm cache for Perception (s4_*) images and Safety (s3_*) videos
-    document.addEventListener('DOMContentLoaded', function () {
-      try {
-        // Perception stills
-        var s4 = [
-          '{{ "/img/ka1s/s4_night.png" | relative_url }}',
-          '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
-          '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
-        ];
-        s4.forEach(function (src) { var img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = src; });
+    window.addEventListener('load', function () {
+      const idle = window.requestIdleCallback || (cb => setTimeout(cb, 1200));
+      idle(function () {
+        try {
+          // Perception stills
+          var s4 = [
+            '{{ "/img/ka1s/s4_night.png" | relative_url }}',
+            '{{ "/img/ka1s/s4_rain.png"  | relative_url }}',
+            '{{ "/img/ka1s/s4_glare.png" | relative_url }}'
+          ];
+          s4.forEach(function (src) { var img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = src; });
 
-        // Safety animations
-        var s3 = [
-          '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
-          '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
-          '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
-        ];
-        s3.forEach(function (src) {
-          var v = document.createElement('video');
-          v.preload = 'auto';
-          v.muted = true; // allow buffering on some browsers conservatively
-          v.src = src;
-          // Kick off a fetch without attaching to DOM
-          try { v.load(); } catch (e) { }
-        });
-      } catch (e) { /* no-op */ }
+          // Safety animations
+          var s3 = [
+            '{{ "/assets/ka_ani_s3_dm.webm" | relative_url }}',
+            '{{ "/assets/ka_ani_s3_failsafe.webm" | relative_url }}',
+            '{{ "/assets/ka_ani_s3_steerlimit.webm" | relative_url }}'
+          ];
+          s3.forEach(function (src) {
+            var v = document.createElement('video');
+            v.preload = 'auto';
+            v.muted = true;
+            v.src = src;
+            try { v.load(); } catch (e) { }
+          });
+        } catch (e) { /* no-op */ }
+      });
     }, { once: true });
 
     function goToBuyPage() {
@@ -1446,42 +1595,47 @@ stylesheet: products
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
         <h1 class="h4 text-white">Built for Smarter Journey.</h1>
-        <video id="s1Video" class="s1-video scroll-video" playsinline autoplay muted preload="metadata" poster="{{ '/img/ka1s/ka_ani_s1.webp' | relative_url }}" data-autoplay="true" data-play-once="true"
+        <video id="s1Video" class="s1-video scroll-video" playsinline muted preload="auto" poster="{{ '/img/ka1s/ka_ani_s1.webp' | relative_url }}" data-autoplay="false" data-play-once="true"
           aria-label="KommuAssist unit rotating on purple glow background">
           <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
         </video>
         <script>
-          (function () {
-            var v = document.getElementById('s1Video');
-            if (!v) return;
-            // Real Safari detection (excludes Chrome on iOS/macOS)
-            var ua = navigator.userAgent;
-            var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-            var sources = isSafari
-              ? [
-                { src: "{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}", type: "video/mp4" },
-                { src: "{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}", type: "video/webm" }
-              ]
-              : [
-                { src: "{{ '/assets/ka_ani_s1_dark.webm' | relative_url }}", type: "video/webm" },
-                { src: "{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}", type: "video/mp4" }
-              ];
+  (function () {
+    var v = document.getElementById('s1Video');
+    if (!v) return;
 
-            while (v.firstChild) v.removeChild(v.firstChild);
-            sources.forEach(function (s) {
-              var el = document.createElement('source');
-              el.src = s.src; el.type = s.type; v.appendChild(el);
-            });
+    // Always use MP4 file
+    var webm  = "{{ '/assets/ka_ani_s1.webm'  | relative_url }}";
 
-            // Load after sources are appended
-            try { v.load(); } catch (e) { }
+    while (v.firstChild) v.removeChild(v.firstChild);
+    var el = document.createElement('source');
+    el.src = webm; el.type = 'video/webm'; v.appendChild(el);
 
-            // Updated: do not fade in here; just mark ready
-            const onReady = () => { v.dataset.ready = 'true'; v.removeEventListener('canplay', onReady); };
-            v.addEventListener('canplay', onReady, { once: true });
-            if (v.readyState >= 3) { v.dataset.ready = 'true'; }
-          })();
-        </script>
+    v.preload = 'auto';
+    v.muted = true;
+    v.playsInline = true;
+    v.disableRemotePlayback = true;
+
+    try { v.load(); } catch(e) {}
+
+    const startPlayback = () => {
+      if (v.dataset.started === 'true') return;
+      v.dataset.ready = 'true';
+      v.dataset.started = 'true';
+      v.play().catch(()=>{});
+      // Reveal after first frame painted
+      const reveal = () => { v.style.opacity = '1'; };
+      if ('requestVideoFrameCallback' in v) {
+        v.requestVideoFrameCallback(() => reveal());
+      } else {
+        requestAnimationFrame(reveal);
+      }
+    };
+
+    v.addEventListener('loadeddata', startPlayback, { once: true });
+    if (v.readyState >= 2) startPlayback();
+  })();
+</script>
         <script>
     (function(){
       const s1 = document.getElementById('s1Video');
@@ -1490,26 +1644,96 @@ stylesheet: products
       function isReady(v) {
         return v.readyState >= 3 || v.dataset.ready === 'true';
       }
-
       function whenReady(v, cb) {
         if (isReady(v)) cb();
-        else v.addEventListener('canplay', cb, { once: true });
+        else v.addEventListener('canplaythrough', cb, { once: true });
       }
 
       whenReady(s1, () => {
+        if (s1.dataset.started === 'true') return;
+        s1.dataset.started = 'true';
+
         s1.muted = true;
         s1.playsInline = true;
-        s1.play().finally(() => {
-          s1.style.opacity = '1';
-          if (s1.dataset.playOnce === 'true') s1.dataset.played = 'true';
-        });
+
+        // iOS nudge to ensure first frame paints
+        try { if (s1.currentTime === 0) s1.currentTime = 0.001; } catch(_) {}
+
+        // Start playback once
+        s1.play().catch(() => {});
+
+        // Reveal only after first frame actually painted
+        const reveal = () => { s1.style.opacity = '1'; };
+        if ('requestVideoFrameCallback' in s1) {
+          s1.requestVideoFrameCallback(() => reveal());
+        } else {
+          requestAnimationFrame(reveal);
+        }
+
+        // Avoid end-of-playback glitch: pause just before the end and mark played
+        const epsilon = 0.08; // seconds before natural end to stop
+        const onTU = () => {
+          if (!isFinite(s1.duration) || s1.duration <= 0) return;
+          if (s1.currentTime >= (s1.duration - epsilon)) {
+            s1.pause();
+            s1.removeEventListener('timeupdate', onTU);
+            s1.dataset.played = 'true';
+          }
+        };
+        s1.addEventListener('timeupdate', onTU);
+
+        // Safety: if ended still fires (some browsers), ensure flags set
+        s1.addEventListener('ended', () => {
+          s1.dataset.played = 'true';
+          s1.pause();
+        }, { once: true });
       });
     })();
   </script>
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
-            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Buy</button>
-          <p class="h5 text-gray-light pt-4">RM3,699 or RM125/mo. for 36 months (RTO only available after 22nd Nov)</p>
+            class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Pre-order</button>
+          <p id="heroPriceLineKA2" class="h5 text-gray-light pt-4">RM3,699 or RM125/mo. for 36 months (RTO only available after 22nd Nov)</p>
+        <script>
+          (function(){
+            function renderKA2HeroPrice(){
+              if (!window.KommuPricing) return; // silently no-op if helper hasn't loaded yet
+              try {
+                const locale   = KommuPricing.getPreferredLocale();
+                const currency = KommuPricing.getCurrencyCode(locale);
+                const fmt      = KommuPricing.getFormatter(locale);
+
+                // Optional promo awareness (kept, but we only display the three numbers)
+                const ruleCtx   = { source: 'ka2-hero', currency };
+                const thenBlock = KommuPricing.matchRule(ruleCtx) || {};
+                const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
+
+                const device  = KommuPricing.getDevicePriceByCurrency(currency, promoLabels);
+                const monthly = KommuPricing.getDeviceMonthlyByCurrency(currency, promoLabels) || 0;
+
+                // Default to 36 months unless product data specifies otherwise
+                let months = 36;
+                try {
+                  const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+                  months = parseInt(dev?.subscription?.month || months, 10) || months;
+                } catch(_) {}
+
+                const p = document.getElementById('heroPriceLineKA2');
+                if (!p) return;
+
+                if (monthly > 0) {
+                  p.textContent = `${fmt.format(device)} or ${fmt.format(monthly)}/mo. for ${months} months (RTO only available after 22nd Nov)`;
+                } else {
+                  // Fallback: show one-off price only
+                  p.textContent = `${fmt.format(device)}`;
+                }
+              } catch(_) { /* no-op */ }
+            }
+
+            // Initial render and re-render on locale/currency change
+            renderKA2HeroPrice();
+          })();
+        </script>
           <p class="h4 font-bold text-gray text-center pt-10">KommuAssist is precision-engineered from a solid aluminum
             unibody that quietly <span class="h4 font-bold text-white">pulls heat away efficiently</span> - even under
             intense sunlight. Its <span class="h4 font-bold text-white">compact, windshield-parallel design
@@ -1518,6 +1742,18 @@ stylesheet: products
       </div>
     </div>
   </section>
+  <!-- Preload Perception stills (used by tabs) -->
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
+
+  <!-- Prefetch Safety looped animations (used by tabs) -->
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
+<link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
+<link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
+
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s5.png' | relative_url }}">
+
   <section class="performance-section" id="performance">
     <div class="module-content s2-content-height">
       <div class="unit-image-wrapper">
@@ -1777,6 +2013,123 @@ stylesheet: products
         </div>
       </div>
   </section>
+
+  <section class="flex software-section">
+    <div class="max-w-6xl mx-auto pt-10 px-4 hp3-content-height">
+      <h4 class="h3 text-gray-light">Software</h4>
+      <h1 class="h1 font-bold text-white mt-1 mb-2">bukapilot</h1>
+      <p class="h4 font-bold text-gray mb-8">
+        bukapilot is a community‑driven, open‑source fork of openpilot, featuring an advanced driving AI model with over 100 million miles driven by a growing user base of 10,000+ all across the globe.
+      </p>
+      
+      <div class="carousel-wrap">
+        <div class="h-scroll flex flex-nowrap overflow-x-auto overflow-y-visible gap-11 scrollbar-hide full-bleed-row row-align pb-14" id="sw-cards">
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw1.png' | relative_url }}" alt="RK3588" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">ADAS driving agent.</h4>
+          <p class="h5 text-gray mt-2">
+            End‑to‑end neural network. Integrated ADAS stack—lateral + longitudinal, driver monitoring and more.
+          </p>
+          </p>
+        </div>
+  
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw2.png' | relative_url }}" alt="3x cameras" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">Understands the road.</h4>
+          <p class="h5 text-gray mt-2">
+            Smart enough to slow for curves, spot traffic lights, and speed bumps.
+          </p>
+        </div>
+  
+        <div class=" fixed-card wide">
+          <picture class="w-full block rounded-3xl">
+            <source media="(max-width: 768px)" srcset="{{ '/img/main/sw3-portrait.png' | relative_url }}">
+            <img src="{{ '/img/main/sw3.png' | relative_url }}" alt="Kommunity" class="w-full mb-4 rounded-3xl">
+          </picture>
+          <h4 class="h3 font-bold text-white">Driven by Kommunity.</h4>
+          <p class="h5 text-gray mt-2">
+            Always evolving. Backed by a growing community building features, fixes, and fresh ideas.
+          </p>
+        </div>
+  
+        <div class=" fixed-card">
+          <img src="{{ '/img/main/sw4.png' | relative_url }}" alt="Mounts like magic" class="w-full mb-4 rounded-3xl">
+          <h4 class="h3 font-bold text-white">Safety‑focused.</h4>
+          <p class="h5 text-gray mt-2">
+            Observed ISO26262 Functional Safety Standard & MISRA C code compliant.
+          </p>
+        </div>
+      </div>
+      <button class="scroll-btn prev" type="button" aria-label="Scroll left" data-for="sw-cards">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 15L7.5 10L12.5 5" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="scroll-btn next" type="button" aria-label="Scroll right" data-for="sw-cards">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="#000" stroke-opacity=".8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    </div>
+  </section>
+
+  <!-- COMPATIBILITY (copied from index.html) -->
+<!-- COMPATIBILITY (Apple-style redesign) -->
+<section class="flex items-center summary-section bg-black text-white mt-[10rem] md:mt-[20rem]">
+  <div class="max-w-6xl mx-auto pt-20 md:pt-[7.5rem] pb-8 md:pb-12 px-4 md:px-[7rem] text-center bg-card rounded-lg-store">
+    <h2 class="h1 font-bold mb-4 text-white place-self-start text-left px-2">Upgrade from KA1 or KA1s.</h2>
+    <p class="h4 font-bold text-gray mb-4 place-self-start text-left px-2">
+      Just a lot more capable.
+    </p>
+
+    <!-- Feature Grid -->
+    <div class="grid md:grid-cols-3 gap-3 text-center">
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <h3 class="h3 font-bold">Aluminum unibody</h3>
+        <img src="{{ '/img/ka1s/sum-1.png' | relative_url }}" alt="Alu" class="w-[12rem]">
+        
+        
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/ka1s/rk.png' | relative_url }}" alt="RK" class="w-[10rem]">
+        <h3 class="h3 font-bold">Rockchip RK3588</h3>
+        <p class="h5 text-gray mt-2">6 TOPS below 10 watts</p>
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/ka1s/cameras.png' | relative_url }}" alt="Cameras" class="w-[10rem]">
+        <h3 class="h3 font-bold">3x Automotive Cameras</h3>
+        
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <h3 class="h3 font-bold">bukapilot v10</h3>
+        <img src="{{ '/img/ka1s/bp10.png' | relative_url }}" alt="bp10" class="w-[10rem]">
+        <p class="h5 text-gray mt-2">end-to-end driving model</p>
+      </div>
+
+      <div class="bg-black rounded-2xl px-6 pt-0 pb-0 flex flex-col items-center justify-end card-bottom">
+        <h3 class="h3 font-bold mb-2">New KommuAI app</h3>
+        <img src="{{ '/img/ka1s/app.png' | relative_url }}" alt="app" class="w-[12rem]">
+      </div>
+
+      <div class="bg-black rounded-2xl p-6 flex flex-col items-center">
+        <img src="{{ '/img/ka1s/dashcam.png' | relative_url }}" alt="dashcam" class="w-[4rem] mb-2">
+        <h3 class="h3 font-bold">Dashcam feature</h3>
+        <p class="h5 text-gray mt-2">Retrieve driving footage locally</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-12">
+      <a href="{{ '/product' | relative_url }}" class="h5 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full">
+        Pre-order
+      </a>
+      <p class="h5 text-gray mt-6">
+        Pre-order now. Ship before Dec 2025.
+      </p>
+    </div>
+  </div>
+</section>
+
   <script>
     // Ports labels scroll-reveal with auto-normalization
     (function () {
@@ -2336,24 +2689,16 @@ stylesheet: products
       if (!video || tabs.length === 0) return;
 
       // Safari detection and helper to inject sources in preferred order
-      const ua = navigator.userAgent;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
       function setVideoSources(v, base) {
         // base is a string like 'dm', 'failsafe', or 'steerlimit'
-        const paths = {
-          webm: `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`,
-          mp4:  `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.mp4`
-        };
+        const webmPath = `{{ '/assets/ka_ani_s3' | relative_url }}`.replace(/\/$/, '') + `_${base}.webm`;
         // Clear existing sources
         while (v.firstChild) v.removeChild(v.firstChild);
-        // Append in preferred order
-        const order = isSafari ? ['mp4', 'webm'] : ['webm', 'mp4'];
-        order.forEach(fmt => {
-          const s = document.createElement('source');
-          s.src = paths[fmt];
-          s.type = fmt === 'mp4' ? 'video/mp4' : 'video/webm';
-          v.appendChild(s);
-        });
+        // Always and only use WebM
+        const s = document.createElement('source');
+        s.src = webmPath;
+        s.type = 'video/webm';
+        v.appendChild(s);
         try { v.load(); } catch(e) {}
       }
 
@@ -2783,3 +3128,58 @@ stylesheet: products
     window.springScrollToElement = springScrollToElement;
   })();
 </script>
+
+<script>
+  (function () {
+    function bindScrollButtons(wrapper) {
+      const scroller = wrapper.querySelector('.h-scroll');
+      if (!scroller) return;
+      const prevBtn = wrapper.querySelector('.scroll-btn.prev');
+      const nextBtn = wrapper.querySelector('.scroll-btn.next');
+      if (!prevBtn || !nextBtn) return;
+  
+      const cards = Array.from(scroller.querySelectorAll('.fixed-card'));
+  
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  
+      const getStops = () => {
+        const cs = getComputedStyle(scroller);
+        const padL = parseFloat(cs.paddingLeft) || 0;
+        return cards.map(el => Math.round(el.offsetLeft - padL));
+      };
+      const getMax = () => scroller.scrollWidth - scroller.clientWidth;
+  
+      const updateDisabled = () => {
+        const max = getMax();
+        const x = scroller.scrollLeft;
+        prevBtn.disabled = x <= 4;
+        nextBtn.disabled = x >= max - 4;
+      };
+  
+      const scrollByStep = (dir) => {
+        const stops = getStops();
+        const max = getMax();
+        const from = Math.round(scroller.scrollLeft);
+  
+        let target;
+        if (dir > 0) {
+          target = stops.find(s => s > from + 4);
+          if (target === undefined) target = max;
+        } else {
+          const prevs = stops.filter(s => s < from - 4);
+          target = prevs.length ? prevs[prevs.length - 1] : 0;
+        }
+        scroller.scrollTo({ left: clamp(target, 0, max), behavior: 'smooth' });
+      };
+  
+      prevBtn.addEventListener('click', () => scrollByStep(-1));
+      nextBtn.addEventListener('click', () => scrollByStep(1));
+  
+      scroller.addEventListener('scroll', updateDisabled, { passive: true });
+      window.addEventListener('resize', updateDisabled);
+      updateDisabled();
+    }
+  
+    document.querySelectorAll('.carousel-wrap').forEach(bindScrollButtons);
+  })();
+  </script>
