@@ -206,7 +206,7 @@ function goToBuyPage() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const locale = localStorage.getItem("preferredLocale") || navigator.language || "en-US";
+  const locale = localStorage.getItem("preferredLocale") || "en-US";
   const currency = getCurrencyCode(locale);
   const formatter = getFormatter(locale);
 
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateHeroPriceLine(){
     try {
-      const locale = localStorage.getItem('preferredLocale') || navigator.language || 'en-US';
+      const locale = localStorage.getItem('preferredLocale') || 'en-US';
       const currency = getCurrencyCode(locale);
       const formatter = getFormatter(locale);
 
