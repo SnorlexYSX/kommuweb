@@ -1702,7 +1702,7 @@ stylesheet: products
                 // Default to 36 months unless product data specifies otherwise
                 let months = 36;
                 try {
-                  const dev = (window.products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
+                  const dev = (products||[]).find(p => (p.name||'').toLowerCase() === 'kommuassist2');
                   months = parseInt(dev?.subscription?.month || months, 10) || months;
                 } catch(_) {}
 
