@@ -10,19 +10,6 @@ stylesheet: products
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4" fetchpriority="high">
  
-  <!-- Preload Perception stills (used by tabs) -->
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
-
-  <!-- Prefetch Safety looped animations (used by tabs) -->
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" as="video" type="video/mp4">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" as="video" type="video/mp4">
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" as="video" type="video/mp4">
-
   <style>
     /* Mobile floating top panel (Apple-style) */
     .mobile-topbar { 
@@ -1755,6 +1742,19 @@ stylesheet: products
       </div>
     </div>
   </section>
+  <!-- Preload Perception stills (used by tabs) -->
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
+
+  <!-- Prefetch Safety looped animations (used by tabs) -->
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.mp4' | relative_url }}" as="video" type="video/mp4">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.mp4' | relative_url }}" as="video" type="video/mp4">
+  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.mp4' | relative_url }}" as="video" type="video/mp4">
+
   <section class="performance-section" id="performance">
     <div class="module-content s2-content-height">
       <div class="unit-image-wrapper">
