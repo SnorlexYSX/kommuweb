@@ -8,7 +8,7 @@ stylesheet: products
 <head>
   <!-- <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet"> -->
   <!-- Preload Hero videos (highest priority) -->
-  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1_dark.mp4' | relative_url }}" type="video/mp4" fetchpriority="high">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.webm' | relative_url }}" type="video/webm" fetchpriority="high">
  
   <style>
     /* Mobile floating top panel (Apple-style) */
@@ -1605,11 +1605,11 @@ stylesheet: products
     if (!v) return;
 
     // Always use MP4 file
-    var mp4  = "{{ '/assets/ka_ani_s1_dark.mp4'  | relative_url }}";
+    var webm  = "{{ '/assets/ka_ani_s1.webm'  | relative_url }}";
 
     while (v.firstChild) v.removeChild(v.firstChild);
     var el = document.createElement('source');
-    el.src = mp4; el.type = 'video/mp4'; v.appendChild(el);
+    el.src = webm; el.type = 'video/webm'; v.appendChild(el);
 
     v.preload = 'auto';
     v.muted = true;
