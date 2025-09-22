@@ -2,42 +2,34 @@
 layout: default
 title: Payment Successful!
 ---
-<section id="trx-successful" class="container content-section text-center">
-  <div class="row d-flex justify-content-center">
-      <div class="col-lg-8 col-lg-offset-2">
-        <br>
-          <p class="trx-header">Your payment transaction is successful</p>
-          <br>
-          <p class="trx-footer">Check your email for payment receipt. We will notify you and provide tracking number once we ship your KommuAssist kit!</p>
-          <br>
+
+<style>
+  /* global (e.g., in base.css or layout) */
+html, body { background:#000; }
+</style>
+<section id="trx-successful" class="flex items-center justify-center min-h-screen px-6 text-center bg-black">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="trx-header text-white text-4xl font-bold mb-6">Your payment transaction is successful.</h1>
+    <p class="trx-footer text-gray-light text-lg mb-20">Check your email for payment receipt. We will notify you and provide tracking number once we ship your KommuAssist kit!</p>
+    <h2 class="text-white text-3xl font-bold mb-6">Welcome to the Kommunity!</h2>
+    <p class="trx-footer text-gray-light text-lg mb-20">Join our facebook support group at <a class="underline text-white" href="https://www.facebook.com/groups/kommu.official">https://www.facebook.com/groups/kommu.official</a></p>
+    <div class="card-itb-2 bg-[#111] rounded-2xl p-8">
+      <h3 class="text-gray-400 text-xl mb-4">Curious, where did you get to know Kommu from?</h3>
+      <select aria-label="Where did you hear us from?" class="form-select w-full rounded-md border-gray-700 bg-black text-white mb-6" id="origin-select">
+        <option value="Facebook">Facebook</option>
+        <option value="Instagram">Instagram</option>
+        <option value="Youtube">Youtube</option>
+        <option value="Tiktok">Tiktok</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Github">Github</option>
+        <option value="X">X</option>
+        <option value="Word of Mouth">Word of Mouth</option>
+      </select>
+      <button class="btn btn-secondary px-6 py-2" id="origin-btn" onclick="originSubmit()">Submit</button>
+      <div id="surveyReceivedText" class="hidden mt-4 text-green-400">
+        <p>Thank you for your submission!</p>
       </div>
-      <div class="col-lg-8 col-lg-offset-2">
-          <p class="trx-header">Welcome to the Kommunity!</p>
-          <br>
-          <p class="trx-footer">Join our facebook support group at <a style="overflow-wrap:break-word" href="https://www.facebook.com/groups/kommu.official">https://www.facebook.com/groups/kommu.official</a> </p>
-          <br>
-      </div>
-      <div class="col-lg-8 col-lg-offset-2">
-        <div class="card-itb-2">
-          <h2 style="color: #86868B">Curious, where did you get to know Kommu from?</h2>
-              <div class="col-lg-12" style="max-width:1000px;">
-                  <select aria-label="Where did you hear us from?" class="form-select mb-4 mt-2" id="origin-select">
-                    <option value="Facebook">Facebook</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Youtube">Youtube</option>
-                    <option value="Tiktok">Tiktok</option>
-                    <option value="LinkedIn">LinkedIn</option>
-                    <option value="Github">Github</option>
-                    <option value="X">X</option>
-                    <option value="Word of Mouth">Word of Mouth</option>
-                  </select>
-                  <button class="btn btn-secondary" style="margin-top: 20px;" id="origin-btn" onclick=originSubmit() >Submit</button>
-                  <div id="surveyReceivedText" style="display: none;">
-                    <p>Thank you for your submission!</p>
-                  </div>
-              </div>
-        </div>
-      </div>
+    </div>
   </div>
 </section>
 
