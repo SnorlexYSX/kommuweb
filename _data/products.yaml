@@ -8,6 +8,9 @@
     USD: 899.00
   sst: 
     MYR: 409.00
+  big_discount:
+    MYR: 800
+    USD: 200
   subscription:
     id: plan_QyljeG4K1bOoHG
     name: Rent-to-Own

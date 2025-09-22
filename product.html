@@ -196,8 +196,7 @@ title: Buy KommuAssist 2
         >
           <div class="text-left w-[60%]">
             <p class="h5 text-white">One-off</p>
-            <p class="h6 text-gray">Save RM800 during pre-order launch until 22nd Oct</p>
-          
+            <p id="payOneOffSaveAmt" class="h6 text-gray"></p>          
           </div>
           <span id="payOneOffPrice" class="w-[40%] h6 text-white text-right"></span>
         </button>
@@ -665,6 +664,7 @@ title: Buy KommuAssist 2
       const promoLabels = (thenBlock.auto_apply?.promotion?.label) ? [thenBlock.auto_apply.promotion.label] : [];
       const device      = KommuPricing.getDevicePriceByCurrency(currency, promoLabels);
       const slashed      = KommuPricing.getSlashedDevicePriceByCurrency(currency);
+      
 
       const bundled     = KommuPricing.getAddonSurchargeFromSelections(sel, currency, thenBlock);
       const total       = device + (bundled.total||0);
@@ -682,7 +682,7 @@ title: Buy KommuAssist 2
       let sst = KommuPricing.getSSTDevicePriceByCurrency(currency)
 
       try {
-        const dev = (window.products||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
+        const dev = (products||[]).find(p => (p.name||'').toLowerCase()==='kommuassist2');
         months = parseInt(dev?.subscription?.month || months, 10) || months;
       } catch(_) {}
       const years = (months % 12 === 0) ? (months/12) : null;
@@ -719,6 +719,26 @@ title: Buy KommuAssist 2
       const payOneOffEl = document.getElementById('payOneOffPrice');
       if (payOneOffEl) payOneOffEl.textContent = fmt.format(device);
 
+      // --- One-off SAVE amount (big_discount) ---
+      const saveEl = document.getElementById('payOneOffSaveAmt');
+      if (saveEl) {
+        let discount = 0;
+        try {
+          const dev = (products || []).find(p => (p.name || '').toLowerCase() === 'kommuassist2');
+          const map = dev?.big_discount || {};
+          discount = map[currency] || 0;
+          console.log(dev)
+        } catch (_) {
+          discount = 0;
+        }
+        if (discount != 0 ) {
+          saveEl.textContent = `Save ${fmt.format(discount)} during pre-order launch until 22nd Oct`;
+
+        } else {
+          saveEl.textContent = '';
+
+        }
+      }
       const payRtoEl = document.getElementById('payRtoPrice');
       if (payRtoEl) {
         if (monthly > 0) {
