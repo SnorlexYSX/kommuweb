@@ -9,7 +9,20 @@ stylesheet: products
   <!-- <link href="{{ '/css/ka1s.css' | relative_url }}" rel="stylesheet"> -->
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.webm' | relative_url }}" type="video/webm" fetchpriority="high">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s2_1.mp4' | relative_url }}" type="video/mp4">
+  <link rel="preload" as="video" href="{{ '/assets/ka_ani_s2_1.webm' | relative_url }}" type="video/webm">
 
+  <!-- Prefetch Safety looped animations (used by tabs) -->
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_dm_1.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_failsafe_1.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_steerlimit_1.webm' | relative_url }}" as="video" type="video/webm">
+
+  <!-- Preload Perception stills (used by tabs) -->
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
+  
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s5-1.png' | relative_url }}">
 
   <style>
     /* Mobile floating top panel (Apple-style) */
@@ -1780,17 +1793,7 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
     </div>
   </section>
-  <!-- Preload Perception stills (used by tabs) -->
-  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
-  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
-  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
 
-  <!-- Prefetch Safety looped animations (used by tabs) -->
-  <link rel="preload" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="preload" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
-  <link rel="preload" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
-
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s5.png' | relative_url }}">
 
   <section class="performance-section" id="performance">
     <div class="module-content s2-content-height">
@@ -2032,7 +2035,7 @@ document.addEventListener('DOMContentLoaded', function(){
             </p>
           </div>
             <div class="ports-stage">
-              <img class="ports-image" src="{{ '/img/ka1s/s5.png' | relative_url }}"
+              <img class="ports-image" src="{{ '/img/ka1s/s5-1.png' | relative_url }}"
                 alt="KommuAssist ports and labels: GPS, Wi-Fi & Bluetooth, Speaker, Nano SIM, MicroSD, Diagnostic USB-C, 12V USB-C"
                 loading="lazy" />
               <div class="ports-overlay" aria-hidden="true">
