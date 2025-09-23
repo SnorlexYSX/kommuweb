@@ -10,6 +10,11 @@ stylesheet: products
   <!-- Preload Hero videos (highest priority) -->
   <link rel="preload" as="video" href="{{ '/assets/ka_ani_s1.webm' | relative_url }}" type="video/webm" fetchpriority="high">
  
+  <meta name="description" content="KommuAssist 2: Smarter end-to-end driving with bukapilot v10.">
+  <meta property="og:title" content="KommuAssist 2 | kommu.ai">
+  <meta property="og:description" content="KommuAssist 2: Smarter end-to-end driving with bukapilot v10.">
+
+
   <style>
     /* Mobile floating top panel (Apple-style) */
     .mobile-topbar { 
@@ -1496,10 +1501,8 @@ document.addEventListener('DOMContentLoaded', function(){
         showAnchorY = y;
       }
     } else {
-      // --- Hide logic with hysteresis ---
-      // Only hide after the user scrolls back up significantly from the point it was shown
-      const scrolledUp = (showAnchorY !== null) ? (showAnchorY - y) : 0;
-      if (dy < -DELTA_THRESH && scrolledUp > HIDE_HYST) {
+      // --- Hide logic (immediate on scroll up) ---
+      if (dy < -DELTA_THRESH) {
         bar.classList.remove('show');
         showAnchorY = null;
       }
