@@ -1443,42 +1443,81 @@ stylesheet: products
   </style>
 
 <script>
-  // Show mobileTopBar when scrolling down, hide when scrolling up (mobile only)
-  document.addEventListener('DOMContentLoaded', function(){
-    const bar = document.getElementById('mobileTopBar');
-    if (!bar) return;
+// Show mobileTopBar when scrolling down, hide when scrolling up (mobile only)
+document.addEventListener('DOMContentLoaded', function(){
+  const bar = document.getElementById('mobileTopBar');
+  if (!bar) return;
 
-    let lastY = window.pageYOffset || 0;
-    const thresh = 6; // pixel threshold to reduce jitter
+  const MOBILE_MAX = 768;          // only show on mobile widths
+  const SHOW_AFTER = 120;           // px scrolled before we allow showing
+  const HIDE_HYST  = 160;           // must scroll up this much (from show point) to hide
+  const DELTA_THRESH = 6;           // ignore tiny scroll jitter
 
-    function onScroll(){
-      if (window.innerWidth > 768) {
-        bar.classList.remove('show');
-        return;
-      }
-      const y = window.pageYOffset || 0;
+  let lastY = window.scrollY || window.pageYOffset || 0;
+  let showAnchorY = null;           // y-position when the bar was shown
+  let ignoreUntil = 0;              // timestamp until which we ignore scroll (URL bar resize)
+  let lastVVH = (window.visualViewport && window.visualViewport.height) || 0;
 
-      // Always hide when close to the top
-      if (y < 80) {
-        bar.classList.remove('show');
-        lastY = y;
-        return;
-      }
+  function armIgnoreFromViewportResize(){
+    if (!window.visualViewport) return;
+    const cur = window.visualViewport.height;
+    if (Math.abs(cur - lastVVH) > 24) { // Chrome URL bar show/hide usually > 24px
+      lastVVH = cur;
+      ignoreUntil = performance.now() + 250; // brief guard window
+    }
+  }
 
-      if (y > lastY + thresh) {
-        // scrolling down → show
+  function update(){
+    // Desktop/tablet wide: never show
+    if (window.innerWidth > MOBILE_MAX) {
+      bar.classList.remove('show');
+      return;
+    }
+
+    // During viewport height jitter (Chrome URL bar), ignore scroll decisions
+    if (performance.now() < ignoreUntil) return;
+
+    const y  = Math.max(0, window.scrollY || window.pageYOffset || 0);
+    const dy = y - lastY;
+
+    // Near the very top: keep hidden and reset state
+    if (y < 80) {
+      bar.classList.remove('show');
+      showAnchorY = null;
+      lastY = y;
+      return;
+    }
+
+    // --- Show logic ---
+    if (!bar.classList.contains('show')) {
+      // show once user scrolls down past SHOW_AFTER with a real downward move
+      if (y >= SHOW_AFTER && dy > DELTA_THRESH) {
         bar.classList.add('show');
-        lastY = y;
-      } else if (y < lastY - thresh) {
-        // scrolling up → hide
+        showAnchorY = y;
+      }
+    } else {
+      // --- Hide logic with hysteresis ---
+      // Only hide after the user scrolls back up significantly from the point it was shown
+      const scrolledUp = (showAnchorY !== null) ? (showAnchorY - y) : 0;
+      if (dy < -DELTA_THRESH && scrolledUp > HIDE_HYST) {
         bar.classList.remove('show');
-        lastY = y;
+        showAnchorY = null;
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => { lastY = window.pageYOffset || 0; onScroll(); }, { passive: true });
-  });
+    lastY = y;
+  }
+
+  // Scroll + resize listeners
+  window.addEventListener('scroll', () => { requestAnimationFrame(update); }, { passive: true });
+  window.addEventListener('resize', () => { armIgnoreFromViewportResize(); requestAnimationFrame(update); }, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => { armIgnoreFromViewportResize(); }, { passive: true });
+  }
+
+  // Initial paint
+  requestAnimationFrame(update);
+});
 </script>
 
 <script>
@@ -1743,16 +1782,16 @@ stylesheet: products
     </div>
   </section>
   <!-- Preload Perception stills (used by tabs) -->
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_night.png' | relative_url }}">
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_rain.png' | relative_url }}">
+  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s4_glare.png' | relative_url }}">
 
   <!-- Prefetch Safety looped animations (used by tabs) -->
-  <link rel="prefetch" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
-<link rel="prefetch" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
-<link rel="prefetch" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_dm.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_failsafe.webm' | relative_url }}" as="video" type="video/webm">
+  <link rel="preload" href="{{ '/assets/ka_ani_s3_steerlimit.webm' | relative_url }}" as="video" type="video/webm">
 
-  <link rel="prefetch" as="image" href="{{ '/img/ka1s/s5.png' | relative_url }}">
+  <link rel="preload" as="image" href="{{ '/img/ka1s/s5.png' | relative_url }}">
 
   <section class="performance-section" id="performance">
     <div class="module-content s2-content-height">
