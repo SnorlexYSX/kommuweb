@@ -309,7 +309,7 @@ stylesheet: products
       display: block;
       background: transparent;      /* transparent so underlying purple bg shows through */
       object-fit: cover;            /* fill frame consistently */
-      opacity: 0;                   /* fade in once playable */
+      opacity: 1;                   /* fade in once playable */
       transition: opacity .25s ease;
       border-radius: 12px;          /* optional: match other media rounding */
       max-height: 58vh;             /* cap relative to viewport height */
@@ -1646,101 +1646,15 @@ document.addEventListener('DOMContentLoaded', function(){
         <h1 class="h4" style="color: #f06102;">New</h1>
         <h2 class="h1 text-white glow">KommuAssist 2</h2>
         <h1 class="h4 text-white">Built for Smarter Journey.</h1>
-        <video id="s1Video" class="s1-video scroll-video" playsinline muted preload="auto" poster="{{ '/img/ka1s/ka_ani_s1.webp' | relative_url }}" data-autoplay="false" data-play-once="true"
-          aria-label="KommuAssist unit rotating on purple glow background">
-          <!-- sources injected dynamically for Safari (mp4 first) vs Chrome/Firefox (webm first) -->
+        <video id="s1Video"
+               class="s1-video scroll-video"
+               autoplay muted playsinline
+               data-play-once="true"
+               aria-label="KommuAssist unit rotating on purple glow background">
+          <source src="{{ '/assets/ka_ani_s1.webm' | relative_url }}" type="video/webm">
+          <source src="{{ '/assets/ka_ani_s1.mp4'  | relative_url }}" type="video/mp4">
         </video>
-        <script>
-  (function () {
-    var v = document.getElementById('s1Video');
-    if (!v) return;
-
-    // Always use MP4 file
-    var webm  = "{{ '/assets/ka_ani_s1.webm'  | relative_url }}";
-
-    while (v.firstChild) v.removeChild(v.firstChild);
-    var el = document.createElement('source');
-    el.src = webm; el.type = 'video/webm'; v.appendChild(el);
-
-    v.preload = 'auto';
-    v.muted = true;
-    v.playsInline = true;
-    v.disableRemotePlayback = true;
-
-    try { v.load(); } catch(e) {}
-
-    const startPlayback = () => {
-      if (v.dataset.started === 'true') return;
-      v.dataset.ready = 'true';
-      v.dataset.started = 'true';
-      v.play().catch(()=>{});
-      // Reveal after first frame painted
-      const reveal = () => { v.style.opacity = '1'; };
-      if ('requestVideoFrameCallback' in v) {
-        v.requestVideoFrameCallback(() => reveal());
-      } else {
-        requestAnimationFrame(reveal);
-      }
-    };
-
-    v.addEventListener('loadeddata', startPlayback, { once: true });
-    if (v.readyState >= 2) startPlayback();
-  })();
-</script>
-        <script>
-    (function(){
-      const s1 = document.getElementById('s1Video');
-      if (!s1) return;
-
-      function isReady(v) {
-        return v.readyState >= 3 || v.dataset.ready === 'true';
-      }
-      function whenReady(v, cb) {
-        if (isReady(v)) cb();
-        else v.addEventListener('canplaythrough', cb, { once: true });
-      }
-
-      whenReady(s1, () => {
-        if (s1.dataset.started === 'true') return;
-        s1.dataset.started = 'true';
-
-        s1.muted = true;
-        s1.playsInline = true;
-
-        // iOS nudge to ensure first frame paints
-        try { if (s1.currentTime === 0) s1.currentTime = 0.001; } catch(_) {}
-
-        // Start playback once
-        s1.play().catch(() => {});
-
-        // Reveal only after first frame actually painted
-        const reveal = () => { s1.style.opacity = '1'; };
-        if ('requestVideoFrameCallback' in s1) {
-          s1.requestVideoFrameCallback(() => reveal());
-        } else {
-          requestAnimationFrame(reveal);
-        }
-
-        // Avoid end-of-playback glitch: pause just before the end and mark played
-        const epsilon = 0.08; // seconds before natural end to stop
-        const onTU = () => {
-          if (!isFinite(s1.duration) || s1.duration <= 0) return;
-          if (s1.currentTime >= (s1.duration - epsilon)) {
-            s1.pause();
-            s1.removeEventListener('timeupdate', onTU);
-            s1.dataset.played = 'true';
-          }
-        };
-        s1.addEventListener('timeupdate', onTU);
-
-        // Safety: if ended still fires (some browsers), ensure flags set
-        s1.addEventListener('ended', () => {
-          s1.dataset.played = 'true';
-          s1.pause();
-        }, { once: true });
-      });
-    })();
-  </script>
+      
         <div class="s1-section-copy section-copy--center">
           <button onclick="goToBuyPage()"
             class="h5 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-white">Pre-order</button>
