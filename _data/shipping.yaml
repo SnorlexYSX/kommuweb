@@ -12,6 +12,12 @@
     MYR: 149.00
     USD: 39.00
 
+- code: AT
+  name: Austria
+  rates:
+    MYR: 299.00
+    USD: 74.00
+
 - code: BR
   name: Brazil
   rates:
