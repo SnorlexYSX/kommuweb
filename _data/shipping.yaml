@@ -42,6 +42,12 @@
     MYR: 0.00
     USD: 0.00
 
+- code: GB
+  name: London (UK)
+  rates:
+    MYR: 159.00
+    USD: 39.00
+
 - code: MA
   name: Morocco
   rates:
