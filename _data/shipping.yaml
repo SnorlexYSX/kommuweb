@@ -36,6 +36,12 @@
     MYR: 88.00
     USD: 22.00
 
+- code: IQ
+  name: Iraq
+  rates:
+    MYR: 0.00
+    USD: 0.00
+
 - code: MA
   name: Morocco
   rates:
