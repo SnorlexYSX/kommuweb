@@ -23,3 +23,9 @@
   rates:
     MYR: 250
     USD: 59.00
+
+- code: IQ
+  name: Iraq
+  rates:
+    MYR: 0.00
+    USD: 0.00
