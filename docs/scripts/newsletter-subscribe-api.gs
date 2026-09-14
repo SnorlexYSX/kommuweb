@@ -154,16 +154,20 @@ function clickRedirectPage(dest) {
   var safe = escapeHtml(dest);
   return (
     '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
-    '<meta http-equiv="refresh" content="0;url=' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>Redirecting — Kommu</title><style>' +
+    'html,body{margin:0;min-height:100%;background:#fff;' +
+    'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}' +
+    'p.note{margin:0;padding:2rem 1rem;text-align:center;color:#888;font-size:.875rem}' +
+    'a.fallback{color:#888;font-size:.8125rem}' +
+    '</style></head><body>' +
+    '<form id="go" method="GET" action="' +
     safe +
-    '">' +
-    '<title>Redirecting — Kommu</title></head><body>' +
-    '<p>Redirecting… <a href="' +
+    '" target="_top"></form>' +
+    '<p class="note">Redirecting… <a class="fallback" href="' +
     safe +
-    '">Continue</a></p>' +
-    '<script>location.replace(' +
-    JSON.stringify(dest) +
-    ');</script></body></html>'
+    '" target="_top" rel="noopener noreferrer">Continue</a></p>' +
+    '<script>document.getElementById("go").submit();</script></body></html>'
   );
 }
 

@@ -2,7 +2,7 @@
 # delay_days: for steps 2+, calendar days after the previous send, delivered at 08:00 MYT.
 
 - step: 1
-  id: branding
+  id: kommunity
   delay_days: 0
   subject: "Welcome to Kommu — smarter drives start here"
   preview: "Who we are and why we built KommuAssist."
@@ -20,7 +20,7 @@
   preview: "Highway trips, traffic jams, and long-distance comfort."
 
 - step: 4
-  id: product_background
+  id: kommu_app
   delay_days: 2
   subject: "Built in Malaysia, for Malaysian roads"
   preview: "Our story from open-source roots to KommuAssist 2."
@@ -32,7 +32,7 @@
   preview: "Cameras, compute, harness, and what ships in the box."
 
 - step: 6
-  id: technical_info
+  id: compatibility
   delay_days: 2
   subject: "Is Your Car Supported by KommuAssist?"
   preview: "CAN integration, supported models, and safety standards."

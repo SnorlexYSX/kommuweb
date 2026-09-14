@@ -45,12 +45,12 @@ def render(step_id: str, name: str = "there") -> str:
 
 def main() -> None:
     default_steps = [
-        "branding",
+        "kommunity",
         "product_features",
         "use_cases",
-        "product_background",
+        "kommu_app",
         "hardware_specs",
-        "technical_info",
+        "compatibility",
     ]
     steps = sys.argv[1:] or default_steps
     PREVIEW_DIR.mkdir(exist_ok=True)

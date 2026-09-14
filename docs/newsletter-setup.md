@@ -110,7 +110,7 @@ Clicks append to KA Inventory → **Click log** (created automatically):
 |--------|-------------|
 | `clicked_at` | Malaysia time `dd/MM/yyyy HH:mm:ss` |
 | `email` | Subscriber |
-| `email_id` | Sequence step id (`branding`, `product_features`, …) |
+| `email_id` | Sequence step id (`kommunity`, `product_features`, …) |
 | `button` | `data-track` id (`join_kommunity`, `explore_ka2`, …) |
 | `destination` | Original URL |
 

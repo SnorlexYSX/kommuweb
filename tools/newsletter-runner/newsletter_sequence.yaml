@@ -3,7 +3,7 @@
 # then emails 2–6 at 08:00 Malaysia time every other day.
 
 - step: 1
-  id: branding
+  id: kommunity
   delay_days: 0
   subject: "Welcome to Kommunity"
   preview: "The drives you know — and the community building something better for them."
@@ -21,7 +21,7 @@
   preview: "Highway trips, traffic jams, and long-distance comfort."
 
 - step: 4
-  id: product_background
+  id: kommu_app
   delay_days: 2
   subject: "Meet KommuAI — your drive companion app"
   preview: "Maps, footage, Live view, and settings for KommuAssist."
@@ -33,7 +33,7 @@
   preview: "Cameras, compute, harness, and what ships in the box."
 
 - step: 6
-  id: technical_info
+  id: compatibility
   delay_days: 2
   subject: "Is Your Car Supported by KommuAssist?"
   preview: "CAN integration, supported models, and safety standards."

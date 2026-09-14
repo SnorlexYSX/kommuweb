@@ -4,8 +4,14 @@ title: Buy KommuAssist 2
 ---
 {% include pricing_helpers.html %}
 <head>
-  <link rel="preload" as="image" href="{{ '/img/products/device/product_1.webp' | relative_url }}">
-  <link rel="preload" as="image" href="{{ '/img/products/device/checkout_img.webp' | relative_url }}">
+  <link rel="preload" as="image"
+        href="{{ '/img/products/device/product_1-2048.webp' | relative_url }}"
+        imagesrcset="{{ '/img/products/device/product_1-2048.webp' | relative_url }} 2048w, {{ '/img/products/device/product_1.webp' | relative_url }} 3840w"
+        imagesizes="(max-width: 768px) 92vw, (min-width: 1800px) 975px, min(1040px, 70vw)">
+  <link rel="preload" as="image"
+        href="{{ '/img/products/device/checkout_img-2048.webp' | relative_url }}"
+        imagesrcset="{{ '/img/products/device/checkout_img-2048.webp' | relative_url }} 2048w, {{ '/img/products/device/checkout_img.webp' | relative_url }} 3840w"
+        imagesizes="(max-width: 768px) 92vw, (min-width: 1800px) 975px, min(1040px, 70vw)">
 </head>
 <style>
   body {
@@ -50,6 +56,37 @@ title: Buy KommuAssist 2
       font-size: calc(1.1rem + .6vw)
     }
 
+    .product-hero-shell.product-image-shell {
+      padding: 2rem 0 !important;
+      overflow: hidden;
+      aspect-ratio: 1.15 / 1;
+    }
+    .product-hero-shell.product-image-shell > img,
+    .product-hero-shell #mainProductImg {
+      width: 106%;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+    }
+    .product-hero-shell.product-image-shell.is-secondary > img,
+    .product-hero-shell.is-secondary #mainProductImg {
+      width: 90%;
+    }
+    .product-hero-shell .carousel-arrow {
+      width: 22px;
+      height: 22px;
+    }
+    .product-hero-shell .carousel-arrow svg {
+      width: 10px;
+      height: 10px;
+    }
+    .product-hero-shell .carousel-arrow-left { left: 0.4rem; }
+    .product-hero-shell .carousel-arrow-right { right: 0.4rem; }
+    .product-hero-shell #productDots {
+      bottom: 0.7rem;
+    }
+
   }
   /* Fade-in behaviour for product/box images (match supported vehicle) */
   .product-image-shell img,
@@ -57,7 +94,6 @@ title: Buy KommuAssist 2
   #mainProductImg {
     opacity: 0;
     transition: opacity .35s ease;
-    will-change: opacity;
   }
   .img-loaded {
     opacity: 1 !important;
@@ -100,8 +136,12 @@ title: Buy KommuAssist 2
   <!-- Main content: Image and Options Side-by-Side -->
   <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr),337px] gap-20 main-grid-top">
     <!-- Product Image -->
-    <div class="img-container p-6 product-image-shell place-self-center">
-      <img id="mainProductImg" src="{{ '/img/products/device/product_1.webp' | relative_url }}" class="rounded" alt="Main product image">
+    <div class="img-container p-6 product-hero-shell product-image-shell place-self-center">
+      <img id="mainProductImg"
+           src="{{ '/img/products/device/product_1-2048.webp' | relative_url }}"
+           srcset="{{ '/img/products/device/product_1-2048.webp' | relative_url }} 2048w, {{ '/img/products/device/product_1.webp' | relative_url }} 3840w"
+           sizes="(max-width: 768px) 92vw, (min-width: 1800px) 975px, min(1040px, 70vw)"
+           class="rounded" alt="Main product image">
 
       <!-- Prev / Next arrows -->
       <button id="prodPrev" type="button" class="carousel-arrow carousel-arrow-left" aria-label="Previous image">
@@ -876,12 +916,20 @@ title: Buy KommuAssist 2
 </script>
 <script>
   (function(){
+    const heroSizes = "(max-width: 768px) 92vw, (min-width: 1800px) 975px, min(1040px, 70vw)";
     const imgs = [
-      "{{ '/img/products/device/product_1.webp' | relative_url }}",
-      "{{ '/img/products/device/checkout_img.webp' | relative_url }}"
+      {
+        src: "{{ '/img/products/device/product_1-2048.webp' | relative_url }}",
+        srcset: "{{ '/img/products/device/product_1-2048.webp' | relative_url }} 2048w, {{ '/img/products/device/product_1.webp' | relative_url }} 3840w"
+      },
+      {
+        src: "{{ '/img/products/device/checkout_img-2048.webp' | relative_url }}",
+        srcset: "{{ '/img/products/device/checkout_img-2048.webp' | relative_url }} 2048w, {{ '/img/products/device/checkout_img.webp' | relative_url }} 3840w"
+      }
     ];
     const imgEl = document.getElementById('mainProductImg');
     const dotsEl = document.getElementById('productDots');
+    const heroShell = imgEl && imgEl.closest('.product-hero-shell');
     if (!imgEl || !dotsEl) return;
 
     // Initial fade-in for first load
@@ -914,17 +962,26 @@ title: Buy KommuAssist 2
         dotsEl.appendChild(b);
       });
     }
+    function applyHeroSlideClass(){
+      if (!heroShell) return;
+      heroShell.classList.toggle('is-secondary', idx === 1);
+    }
+
     function setIndex(i){
       const last = imgs.length - 1;
       // clamp instead of wrap
       if (i < 0) i = 0;
       if (i > last) i = last;
-      if (i === idx) { updateArrows(); return; }
+      if (i === idx) { updateArrows(); applyHeroSlideClass(); return; }
       idx = i;
       // fade swap
       imgEl.classList.remove('img-loaded');
       setTimeout(() => {
-        imgEl.src = imgs[idx];
+        const slide = imgs[idx];
+        imgEl.sizes = heroSizes;
+        imgEl.srcset = slide.srcset;
+        imgEl.src = slide.src;
+        applyHeroSlideClass();
         imgEl.onload = () => { imgEl.classList.add('img-loaded'); };
         renderDots();
         updateArrows();
@@ -980,6 +1037,7 @@ title: Buy KommuAssist 2
     });
 
     // init
+    applyHeroSlideClass();
     renderDots();
     updateArrows();
   })();

@@ -322,8 +322,6 @@ stylesheet: products
       transition: opacity .25s ease;
       max-height: 62vh;
       margin: 0;
-      position: relative;
-      z-index: 0;
     }
 
     .s1-content-height .unit-image-wrapper > h1,
@@ -354,6 +352,37 @@ stylesheet: products
       aspect-ratio: 16/9;
       display: block;
       min-height: 180px;
+    }
+
+    /* Phone: enlarge the Performance clip without changing desktop or nearby copy.
+       Keep the section grid at content-box width so the header/copy still follow
+       padding; only the video bleeds. overflow-x: clip then trims page scroll,
+       not the text. */
+    @media (max-width: 768px) {
+      .performance-section {
+        overflow-x: clip;
+      }
+
+      .performance-section .s2-content-height,
+      .performance-section .unit-image-wrapper {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .performance-section .unit-image-wrapper {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: stretch;
+      }
+
+      .s2-video {
+        width: 112vw;
+        max-width: none;
+        min-width: 0;
+        min-height: 0;
+        justify-self: center;
+        margin-left: 0;
+      }
     }
 
 
@@ -1086,6 +1115,51 @@ stylesheet: products
       .ports-header h2 { margin-bottom: 0.75rem; }
       .ports-header p { margin-bottom: 0.5rem; }
       .ports-image { max-height: min(52dvh, 420px); }
+    }
+
+    /* Phone: Ports image matches S2 (112vw). Header/copy stay on section padding.
+       Size the media box itself (no transform) so the overlay and connector
+       lines stay on the same pixels as the ports. Full-bleed the stage so
+       overflow:hidden on sticky only trims letterbox, not the device. */
+    @media (max-width: 768px) {
+      .ports-sticky {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .ports-stage {
+        width: 100vw;
+        max-width: 100vw;
+        min-width: 0;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        grid-template-columns: minmax(0, 1fr);
+        overflow: visible;
+      }
+
+      .ports-media {
+        width: 112vw;
+        max-width: none;
+        max-height: none;
+        aspect-ratio: 16 / 9;
+        justify-self: start;
+        /* Stage is 100vw; shift so overflow:hidden trims 6vw letterbox each side. */
+        margin-left: -6vw;
+        transform: none;
+      }
+
+      .ports-image {
+        width: 100%;
+        max-width: none;
+        max-height: none;
+        height: auto;
+      }
     }
 
     .port-label {
@@ -2030,7 +2104,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <h1 class="h4 text-white">Built for Smarter Journey.</h1>
         <video id="s1Video"
                class="s1-video scroll-video"
-               autoplay muted playsinline
+               autoplay muted playsinline webkit-playsinline
                preload="auto"
                fetchpriority="high"
                data-autoplay="true"
@@ -2041,13 +2115,66 @@ document.addEventListener('DOMContentLoaded', function(){
           (function () {
             var v = document.getElementById('s1Video');
             if (!v || !window.KA2Media) return;
+            v.muted = true;
+            v.playsInline = true;
+            v.setAttribute('playsinline', '');
+            v.setAttribute('webkit-playsinline', '');
+
             KA2Media.fillVideo(v, KA2Media.ordered(
               "{{ '/assets/ka_ani_s1.webm' | relative_url }}?v=frames",
               "{{ '/assets/ka_ani_s1.mp4'  | relative_url }}?v=frames"
             ), { preload: 'auto' });
-            v.muted = true;
-            v.playsInline = true;
-            v.play().catch(function () {});
+
+            function lastTime() {
+              var end = v.duration;
+              if (!end || !isFinite(end) || end <= 0) return 0;
+              // Exact duration snaps some browsers (Safari) back to frame 1.
+              return Math.max(0, end - 0.001);
+            }
+
+            function freezeLastFrame() {
+              v.dataset.played = 'true';
+              v.pause();
+              var t = lastTime();
+              if (!t) return;
+              if (v.ended || v.currentTime < t - 0.02 || v.currentTime >= v.duration) {
+                try { v.currentTime = t; } catch (err) {}
+              }
+            }
+
+            function kick() {
+              if (v.dataset.played === 'true') {
+                freezeLastFrame();
+                return;
+              }
+              v.muted = true;
+              v.playsInline = true;
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+            }
+
+            v.addEventListener('timeupdate', function () {
+              if (v.dataset.played === 'true') {
+                v.pause();
+                return;
+              }
+              if (!v.duration || !isFinite(v.duration)) return;
+              // Pause before native ended so Safari does not reset to frame 1.
+              if (v.currentTime >= v.duration - 0.04) freezeLastFrame();
+            });
+            v.addEventListener('ended', freezeLastFrame);
+            v.addEventListener('loadeddata', kick);
+            v.addEventListener('canplay', kick);
+            if (v.readyState >= 2) kick();
+
+            function onReturn() {
+              if (v.dataset.played === 'true') freezeLastFrame();
+              else kick();
+            }
+            window.addEventListener('pageshow', onReturn);
+            document.addEventListener('visibilitychange', function () {
+              if (!document.hidden) onReturn();
+            });
           })();
         </script>
       
@@ -2610,7 +2737,7 @@ document.addEventListener('DOMContentLoaded', function(){
           v.muted = true;
           v.playsInline = true;
           v.play().catch(() => { });
-        } else {
+        } else if (v.id !== "s1Video") {
           // Pause when out of view unless it's the hero (keeps page quiet when scrolled away)
           if (!v.dataset.playOnce || v.dataset.played !== "true") {
             v.pause();
@@ -2630,9 +2757,31 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
 
-    // If tab is hidden, pause all to avoid background playback
+    // Pause in the background; resume autoplay clips that are still on screen
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) vids.forEach(v => { if (!v.paused) v.pause(); });
+      if (document.hidden) {
+        vids.forEach(v => { if (!v.paused) v.pause(); });
+        return;
+      }
+      vids.forEach(v => {
+        if (v.dataset.autoplay !== "true") return;
+        if (v.dataset.playOnce === "true" && v.dataset.played === "true") {
+          const end = v.duration;
+          if (end && isFinite(end) && end > 0) {
+            try { v.currentTime = Math.max(0, end - 0.05); } catch (err) {}
+          }
+          v.pause();
+          return;
+        }
+        if (v.dataset.waitLoaded === "true" && v.dataset.loaded !== "true") return;
+        const r = v.getBoundingClientRect();
+        const vh = window.innerHeight || 0;
+        if (r.bottom > 0 && r.top < vh) {
+          v.muted = true;
+          v.playsInline = true;
+          v.play().catch(() => {});
+        }
+      });
     }, { passive: true });
   })();
 

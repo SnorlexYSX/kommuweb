@@ -138,8 +138,8 @@ select.store-select::-ms-expand { display: none; }
 /* Fix large-screen image size (container stays flexible) */
 @media (min-width: 1800px) {
   .product-image-shell > img {
-    width: 975px;   /* fixed image width */
-    height: 548.44px;  /* fixed image height */
+    width: 975px;
+    height: auto;
     max-width: none; max-height: none;
   }
 }
