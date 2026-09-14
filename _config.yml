@@ -32,7 +32,7 @@ installers_api_url: "https://script.google.com/macros/s/AKfycbwLpJuHrljoy_1SmSxc
 carto_basemap_api_key: "cb1_34e7_1_1abd1ca25c59fb6e9942992e"
 
 # Newsletter subscribe API — Google Apps Script on KA Inventory (works on all networks).
-newsletter_api_url: "https://script.google.com/macros/s/AKfycbwf8UdZa6f6ez-BsOSB5yoAYya0inyxpcA9XXuxMUYDLii2GhGV6tbbsDx6rRE-fBlE/exec"
+newsletter_api_url: "https://script.google.com/macros/s/AKfycbyTBcYweg-SMp6uMCWr7c6lCZj0o0mAF7voZ7oSnB5byuWbAxB5SnJaN3ftOdXKPpo5Mg/exec"
 
 social:
   - title: instagram

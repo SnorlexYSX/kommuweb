@@ -39,8 +39,8 @@
 - code: IQ
   name: Iraq
   rates:
-    MYR: 0.00
-    USD: 0.00
+    MYR: 850.00
+    USD: 209.00
 
 - code: GB
   name: London (UK)

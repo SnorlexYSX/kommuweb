@@ -1,8 +1,9 @@
 [Unit]
-Description=Hourly Kommu newsletter drip emails
+Description=Kommu newsletter drip (welcome as soon as queued; follow-ups at 08:00 MYT)
 
 [Timer]
-OnCalendar=hourly
+OnCalendar=*:*:00
+AccuracySec=1s
 Persistent=true
 Unit=kommu-newsletter-drip.service
 

@@ -8,8 +8,7 @@ const UPSTREAM_URL =
 
 /**
  * POST /newsletter/subscribe
- * Proxies to Athena Funnel so browsers only talk to aws.kommu.ai (some networks block *.ts.net).
- * Production: deploy this handler on CurlecGateway Lambda or add API Gateway HTTP proxy route.
+ * Optional proxy (unused in production: homepage uses Apps Script, Athena sends mail).
  */
 router.post('/subscribe', async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();

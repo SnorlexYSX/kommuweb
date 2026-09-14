@@ -18,6 +18,24 @@ from urllib.parse import urlparse
 
 from sheet_store import load_dotenv, upsert_subscriber, validate_subscribe_payload
 
+
+def _shared_secret() -> str:
+    return (os.environ.get("UNSUBSCRIBE_SECRET") or "").strip()
+
+
+def _authorized(handler: BaseHTTPRequestHandler) -> bool:
+    secret = _shared_secret()
+    if not secret:
+        return False
+    got = (handler.headers.get("X-Kommu-Secret") or "").strip()
+    return got == secret
+
+
+def _send_first_email(email: str, name: str = "") -> dict:
+    from run import try_send_first_email
+
+    return try_send_first_email(email, name)
+
 load_dotenv()
 
 PORT = int(os.environ.get("SUBSCRIBE_API_PORT", "8787"))
@@ -84,10 +102,6 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         path = urlparse(self.path).path
         origin = self.headers.get("Origin")
-        if path not in ("/newsletter/subscribe", "/subscribe"):
-            self._send(404, {"error": "Not found"}, origin)
-            return
-
         length = int(self.headers.get("Content-Length") or 0)
         if length <= 0 or length > 65536:
             self._send(400, {"error": "Invalid request body"}, origin)
@@ -99,9 +113,37 @@ class Handler(BaseHTTPRequestHandler):
             self._send(400, {"error": "Invalid JSON"}, origin)
             return
 
+        if path in ("/newsletter/send-first", "/send-first"):
+            if not _authorized(self):
+                self._send(401, {"error": "Unauthorized"}, origin)
+                return
+            email = str(body.get("email") or "").strip().lower()
+            name = str(body.get("name") or "").strip()
+            if not email:
+                self._send(400, {"error": "Invalid email address"}, origin)
+                return
+            try:
+                result = _send_first_email(email, name)
+                self._send(200, result, origin)
+            except Exception as exc:
+                print(f"send-first error: {exc}")
+                self._send(500, {"error": "Internal server error"}, origin)
+            return
+
+        if path not in ("/newsletter/subscribe", "/subscribe"):
+            self._send(404, {"error": "Not found"}, origin)
+            return
+
         try:
             email, name, source = validate_subscribe_payload(body)
             result = upsert_subscriber(email, name, source)
+            if result.get("created"):
+                try:
+                    sent = _send_first_email(email, name)
+                    result["welcome"] = sent
+                except Exception as exc:
+                    print(f"welcome send error: {exc}")
+                    result["welcome"] = {"ok": False, "reason": "send_failed"}
             self._send(200, result, origin)
         except ValueError as exc:
             self._send(400, {"error": str(exc)}, origin)

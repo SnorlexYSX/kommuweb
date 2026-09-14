@@ -88,7 +88,7 @@ do_install() {
   echo
   echo "Installed (user systemd in $SYSTEMD_DIR):"
   echo "  kommu-newsletter-api.service  → http://127.0.0.1:${PORT}"
-  echo "  kommu-newsletter-drip.timer   → hourly drip emails"
+  echo "  kommu-newsletter-drip.timer   → every 1m (welcome); follow-ups 08:00 MYT"
   echo "  kommu-newsletter-sync.timer   → orders → Newsletter every 30m"
   echo
   echo "If timers stop after logout, enable linger: sudo loginctl enable-linger \$USER"
@@ -172,7 +172,7 @@ do_test_mode_off() {
   fi
   systemctl --user daemon-reload
   systemctl --user restart kommu-newsletter-drip.timer
-  echo "Test mode OFF: hourly drip timer, production delay_days restored."
+  echo "Test mode OFF: 1-minute drip timer, follow-ups at 08:00 MYT."
 }
 
 do_uninstall() {

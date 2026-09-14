@@ -1,5 +1,5 @@
 # Newsletter drip sequence — used by tools/newsletter-runner and documented in docs/newsletter-setup.md
-# delay_days: days after subscribed_at (step 1) or after previous send (steps 2+)
+# delay_days: for steps 2+, calendar days after the previous send, delivered at 08:00 MYT.
 
 - step: 1
   id: branding

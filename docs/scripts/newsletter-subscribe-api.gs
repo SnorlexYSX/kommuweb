@@ -1,18 +1,25 @@
 /**
- * Newsletter subscribe + unsubscribe API — paste into Apps Script on KA Inventory spreadsheet.
+ * Newsletter subscribe + unsubscribe + click API — paste into Apps Script on KA Inventory spreadsheet.
  * Deploy: Deploy → New deployment → Web app → Execute as Me → Who has access: Anyone
+ * After editing: Deploy → Manage deployments → pencil → New version (required for click tracking).
  *
  * POST (JSON body) → subscribe
  * GET ?action=unsubscribe&email=...&token=... → set status inactive
+ * GET ?action=click&email=...&token=...&step=...&btn=...&to=... → log click, redirect
  *
  * Script property (Project settings → Script properties):
  *   UNSUBSCRIBE_SECRET = same value as Athena .env UNSUBSCRIBE_SECRET
  *
  * Use the /exec URL in kommuweb _config.yml → newsletter_api_url
- * Use the same /exec URL in Athena .env → NEWSLETTER_APPS_SCRIPT_URL (for drip unsubscribe links)
+ * Use the same /exec URL in Athena .env → NEWSLETTER_APPS_SCRIPT_URL
+ * (drip unsubscribe + CTA click redirects)
  */
 var SPREADSHEET_ID = '11eE_xlzMILBkW9W1te96Q3x3TLa0Wihpk1Ypy0gU1jk';
 var NEWSLETTER_TAB = 'Newsletter';
+var CLICK_LOG_TAB = 'Click log';
+var CLICK_LOG_HEADERS = ['clicked_at', 'email', 'email_id', 'button', 'destination'];
+var TRACK_ID_RE = /^[a-z0-9_]{1,40}$/;
+var HTTP_RE = /^https?:\/\//i;
 var HEADERS = [
   'email',
   'name',
@@ -44,6 +51,9 @@ function doGet(e) {
   if (params.action === 'unsubscribe') {
     return handleUnsubscribe(params);
   }
+  if (params.action === 'click') {
+    return handleClick(params);
+  }
   return jsonResponse({ ok: true, service: 'kommu-newsletter' });
 }
 
@@ -70,6 +80,106 @@ function handleUnsubscribe(params) {
 
   return htmlResponse(
     unsubscribePage(email + ' will no longer receive Kommu newsletter emails.', true)
+  );
+}
+
+function handleClick(params) {
+  var email = String(params.email || '').trim().toLowerCase();
+  var token = String(params.token || '').trim();
+  var step = String(params.step || '').trim();
+  var btn = String(params.btn || '').trim();
+  var dest = String(params.to || '').trim();
+
+  if (
+    !EMAIL_RE.test(email) ||
+    !TRACK_ID_RE.test(step) ||
+    !TRACK_ID_RE.test(btn) ||
+    !HTTP_RE.test(dest)
+  ) {
+    return htmlResponse(clickErrorPage());
+  }
+
+  if (!verifyClickToken(email, step, btn, dest, token)) {
+    return htmlResponse(clickErrorPage());
+  }
+
+  appendClickLog(email, step, btn, dest);
+  return htmlResponse(clickRedirectPage(dest));
+}
+
+function clickToken(email, step, btn, dest) {
+  var secret = PropertiesService.getScriptProperties().getProperty('UNSUBSCRIBE_SECRET');
+  if (!secret) return '';
+  var payload = 'click|' + email + '|' + step + '|' + btn + '|' + dest;
+  var sig = Utilities.computeHmacSha256Signature(payload, secret);
+  return bytesToHex(sig);
+}
+
+function verifyClickToken(email, step, btn, dest, token) {
+  var secret = PropertiesService.getScriptProperties().getProperty('UNSUBSCRIBE_SECRET');
+  if (!secret || !token) return false;
+  return clickToken(email, step, btn, dest) === token;
+}
+
+function getClickLogSheet() {
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(CLICK_LOG_TAB);
+  if (!sheet) {
+    sheet = ss.insertSheet(CLICK_LOG_TAB);
+    sheet.getRange(1, 1, 1, CLICK_LOG_HEADERS.length).setValues([CLICK_LOG_HEADERS]);
+    sheet.setFrozenRows(1);
+    return sheet;
+  }
+  var first = String(sheet.getRange(1, 1).getValue() || '').trim();
+  if (!first) {
+    sheet.getRange(1, 1, 1, CLICK_LOG_HEADERS.length).setValues([CLICK_LOG_HEADERS]);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function appendClickLog(email, step, btn, dest) {
+  getClickLogSheet().appendRow([mytNow(), email, step, btn, dest]);
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function clickRedirectPage(dest) {
+  var safe = escapeHtml(dest);
+  return (
+    '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta http-equiv="refresh" content="0;url=' +
+    safe +
+    '">' +
+    '<title>Redirecting — Kommu</title></head><body>' +
+    '<p>Redirecting… <a href="' +
+    safe +
+    '">Continue</a></p>' +
+    '<script>location.replace(' +
+    JSON.stringify(dest) +
+    ');</script></body></html>'
+  );
+}
+
+function clickErrorPage() {
+  return (
+    '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>Link expired — Kommu</title><style>' +
+    'body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;' +
+    'color:rgb(241,241,241);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}' +
+    'main{max-width:28rem;padding:2rem;text-align:center;line-height:1.6}' +
+    'h1{font-size:1.25rem;font-weight:600;margin:0 0 .75rem}' +
+    'p{margin:0;color:#888}a{color:rgb(241,241,241)}</style></head><body><main>' +
+    '<h1>This link is invalid</h1>' +
+    '<p>The button link could not be verified. Open <a href="https://kommu.ai">kommu.ai</a> instead.</p>' +
+    '</main></body></html>'
   );
 }
 

@@ -5,8 +5,8 @@ Kommu newsletter drip runner — self-hosted on your own machine.
 Reads subscribers from Google Sheet tab "Newsletter", sends the next email in
 the sequence via SMTP, and updates sequence_step / last_sent_at.
 
-Run manually or via cron, e.g. every hour:
-  0 * * * * cd /path/to/kommuweb/tools/newsletter-runner && ./run.sh
+Run via systemd on Athena every minute:
+  kommu-newsletter-drip.timer → ./run.sh
 """
 
 from __future__ import annotations
@@ -121,16 +121,19 @@ def parse_dt(value: str | None) -> datetime | None:
     return None
 
 
-def wrap_email_html(body: str, email: str = "") -> str:
+def wrap_email_html(body: str, email: str = "", step_id: str = "") -> str:
     shell_path = TEMPLATES / "_email_shell.html"
     if not shell_path.exists():
         return body
-    from sheet_store import load_dotenv, unsubscribe_url
+    from sheet_store import load_dotenv, unsubscribe_url, wrap_tracked_links
 
     load_dotenv()
     shell = shell_path.read_text().replace("{{content}}", body)
     url = unsubscribe_url(email) if email else "#"
-    return shell.replace("{{unsubscribe_url}}", url)
+    html = shell.replace("{{unsubscribe_url}}", url)
+    if email and step_id:
+        html = wrap_tracked_links(html, email, step_id)
+    return html
 
 
 def render_template(step_id: str, name: str, email: str = "") -> tuple[str, str]:
@@ -139,7 +142,7 @@ def render_template(step_id: str, name: str, email: str = "") -> tuple[str, str]
     greeting = name.strip() or "there"
     if html_path.exists():
         body = html_path.read_text().replace("{{name}}", greeting)
-        html = wrap_email_html(body, email)
+        html = wrap_email_html(body, email, step_id)
     else:
         html = f"<p>Hi {greeting},</p><p>(Add template: templates/{step_id}.html)</p>"
     if txt_path.exists():
@@ -201,6 +204,24 @@ def send_email(env: dict, to: str, subject: str, html: str, text: str) -> None:
         smtp.sendmail(env["MAIL_FROM"], [to], body)
 
 
+# Follow-up drips go out at 08:00 Malaysia time, not at midnight / the signup hour.
+FOLLOW_UP_HOUR_MYT = 8
+
+
+def format_myt(dt: datetime) -> str:
+    return dt.astimezone(MYT).strftime(MYT_DATETIME_FMT)
+
+
+def follow_up_due_at(last_sent: datetime, delay_days: int) -> datetime:
+    """Next drip at 08:00 MYT, `delay_days` calendar days after the last send's date.
+
+    A welcome sent at 01:00 Monday → next email Wednesday 08:00, not 01:00.
+    """
+    base = last_sent.astimezone(MYT)
+    morning = base.replace(hour=FOLLOW_UP_HOUR_MYT, minute=0, second=0, microsecond=0)
+    return morning + timedelta(days=delay_days)
+
+
 def due_at_for_step(
     env: dict,
     step: dict,
@@ -220,9 +241,66 @@ def due_at_for_step(
         return subscribed_at
 
     delay_days = int(step.get("delay_days", 2))
-    base = last_sent or subscribed_at
-    due_at = base.replace(hour=0, minute=0, second=0, microsecond=0)
-    return due_at + timedelta(days=delay_days)
+    return follow_up_due_at(last_sent or subscribed_at, delay_days)
+
+
+def in_follow_up_send_window(now: datetime | None = None) -> bool:
+    """Steps 2+ only send during the 08:00 MYT hour, even if the drip timer ran at midnight."""
+    current = (now or datetime.now(MYT)).astimezone(MYT)
+    return current.hour == FOLLOW_UP_HOUR_MYT
+
+
+def try_send_first_email(email: str, name: str = "") -> dict:
+    """Send welcome (step 1) immediately if Migadu daily quota remains."""
+    email = email.strip().lower()
+    if not email:
+        return {"ok": False, "reason": "invalid_email"}
+
+    env = load_env()
+    sequence = load_sequence()
+    if not sequence:
+        return {"ok": False, "reason": "no_sequence"}
+
+    daily_cap = max_sends_per_day(env)
+    if daily_cap and daily_send_count() >= daily_cap:
+        return {"ok": False, "reason": "quota"}
+
+    sheet = get_sheet(env)
+    rows = sheet.get_all_values()
+    col = {h: i + 1 for i, h in enumerate(HEADERS)}
+    idx = None
+    rec = None
+    for i, row in enumerate(rows[1:], start=2):
+        candidate = row_to_dict(HEADERS, row)
+        if candidate["email"].strip().lower() == email:
+            idx, rec = i, candidate
+            break
+    if rec is None or idx is None:
+        return {"ok": False, "reason": "not_found"}
+    if rec["status"].strip().lower() in ("unsubscribed", "completed", "inactive"):
+        return {"ok": False, "reason": "inactive"}
+
+    step_num = int(rec["sequence_step"] or "0")
+    if step_num != 0:
+        return {"ok": False, "reason": "already_started", "step": step_num}
+
+    step = sequence[0]
+    display_name = name.strip() or rec["name"]
+    html, text = render_template(step["id"], display_name, email)
+    print(f"Sending step 1 ({step['id']}) immediately to {email}")
+    send_email(env, email, step["subject"], html, text)
+    today_total = record_daily_send()
+    iso_now = datetime.now(MYT).strftime(MYT_DATETIME_FMT)
+    new_status = "completed" if 1 >= len(sequence) else "active"
+    next_at = ""
+    if 1 < len(sequence):
+        delay_days = int(sequence[1].get("delay_days", 2))
+        next_at = format_myt(follow_up_due_at(datetime.now(MYT), delay_days))
+    sheet.update_cell(idx, col["sequence_step"], "1")
+    sheet.update_cell(idx, col["last_sent_at"], iso_now)
+    sheet.update_cell(idx, col["status"], new_status)
+    sheet.update_cell(idx, col["next_send_at"], next_at)
+    return {"ok": True, "sent": True, "step": 1, "today_total": today_total}
 
 
 def row_to_dict(headers: list[str], row: list[str]) -> dict:
@@ -244,6 +322,8 @@ def main() -> None:
         print(f"Warning: expected headers {HEADERS}, got {headers}")
 
     now = datetime.now(timezone.utc)
+    now_myt = datetime.now(MYT)
+    test_mode = bool((env.get("NEWSLETTER_TEST_INTERVAL_MINUTES") or "").strip())
     sent_count = 0
     daily_cap = max_sends_per_day(env)
     already_today = daily_send_count()
@@ -272,6 +352,10 @@ def main() -> None:
         if now < due_at.astimezone(timezone.utc):
             continue
 
+        # Welcome (step 1) can send as soon as quota allows. Later emails wait for 08:00 MYT.
+        if next_step > 1 and not test_mode and not in_follow_up_send_window(now_myt):
+            continue
+
         due.append((step_num, due_at, idx, rec, step, next_step))
 
     # Prefer earlier drip steps when the daily cap will cut the queue short.
@@ -293,11 +377,15 @@ def main() -> None:
 
         iso_now = datetime.now(MYT).strftime(MYT_DATETIME_FMT)
         new_status = "completed" if next_step >= len(sequence) else "active"
+        next_at = ""
+        if next_step < len(sequence):
+            delay_days = int(sequence[next_step].get("delay_days", 2))
+            next_at = format_myt(follow_up_due_at(datetime.now(MYT), delay_days))
         col = {h: i + 1 for i, h in enumerate(HEADERS)}
         sheet.update_cell(idx, col["sequence_step"], str(next_step))
         sheet.update_cell(idx, col["last_sent_at"], iso_now)
         sheet.update_cell(idx, col["status"], new_status)
-        sheet.update_cell(idx, col["next_send_at"], "")
+        sheet.update_cell(idx, col["next_send_at"], next_at)
         sent_count += 1
 
         dry_run_limit = int(env.get("MAX_SENDS_PER_RUN", "50"))

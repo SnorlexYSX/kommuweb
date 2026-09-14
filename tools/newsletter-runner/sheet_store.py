@@ -154,6 +154,70 @@ def unsubscribe_url(email: str) -> str:
     )
 
 
+BTN_RE = re.compile(r"^[a-z0-9_]{1,40}$")
+STEP_RE = re.compile(r"^[a-z0-9_]{1,40}$")
+HTTP_RE = re.compile(r"^https?://", re.I)
+ANCHOR_RE = re.compile(r"<a\b([^>]*?)>", re.I)
+
+
+def click_token(email: str, step_id: str, button: str, dest: str) -> str:
+    secret = os.environ.get("UNSUBSCRIBE_SECRET", "").strip()
+    if not secret:
+        return ""
+    payload = f"click|{normalize_email(email)}|{step_id}|{button}|{dest}"
+    return hmac.new(secret.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def click_url(email: str, step_id: str, button: str, dest: str) -> str:
+    load_dotenv()
+    normalized = normalize_email(email)
+    base = os.environ.get("NEWSLETTER_APPS_SCRIPT_URL", "").strip().rstrip("/")
+    if not base:
+        raise RuntimeError("NEWSLETTER_APPS_SCRIPT_URL is not set")
+    token = click_token(normalized, step_id, button, dest)
+    if not token:
+        raise RuntimeError("UNSUBSCRIBE_SECRET is not set")
+    return (
+        f"{base}?action=click"
+        f"&email={quote(normalized)}"
+        f"&token={quote(token)}"
+        f"&step={quote(step_id)}"
+        f"&btn={quote(button)}"
+        f"&to={quote(dest, safe='')}"
+    )
+
+
+def wrap_tracked_links(html: str, email: str, step_id: str) -> str:
+    """Rewrite <a href="..." data-track="btn"> to the Apps Script click redirect."""
+    if not email or not step_id or not STEP_RE.match(step_id):
+        return html
+
+    def repl(match: re.Match) -> str:
+        attrs = match.group(1)
+        track = re.search(r"\bdata-track=(['\"])([^'\"]+)\1", attrs, re.I)
+        href = re.search(r"\bhref=(['\"])([^'\"]+)\1", attrs, re.I)
+        if not track or not href:
+            return match.group(0)
+        button = track.group(2).strip()
+        dest = href.group(2).strip()
+        if not BTN_RE.match(button) or not HTTP_RE.match(dest):
+            return match.group(0)
+        try:
+            tracked = click_url(email, step_id, button, dest)
+        except RuntimeError:
+            return match.group(0)
+        new_attrs = re.sub(
+            r"\bhref=(['\"])([^'\"]+)\1",
+            f'href="{tracked}"',
+            attrs,
+            count=1,
+            flags=re.I,
+        )
+        return f"<a{new_attrs}>"
+
+    return ANCHOR_RE.sub(repl, html)
+
+
 def unsubscribe_subscriber(email: str) -> dict:
     email = normalize_email(email)
     sheet = get_newsletter_sheet()

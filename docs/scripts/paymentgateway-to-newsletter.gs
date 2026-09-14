@@ -1,5 +1,9 @@
 /**
- * Sync emails from PaymentGateway → Newsletter (skip if already subscribed).
+ * Forward-only: new PaymentGateway rows → Newsletter (skip if already subscribed).
+ *
+ * Does NOT backfill historical PaymentGateway rows. On first run it records the
+ * current last row and only processes rows appended after that.
+ * Does NOT update existing Newsletter rows (no name fill-back).
  *
  * Add as a NEW file in your existing KA Inventory Apps Script project
  * (the one that already has newsletter subscribe + onEdit). Do not paste
@@ -17,10 +21,10 @@
  * Auto: time-driven trigger every 10 minutes
  *
  * New Newsletter rows: source=checkout, sequence_step=0, status=active
- * Existing emails: left alone (optional name fill if Newsletter name is blank)
  */
 var PAYMENT_GATEWAY_TAB = 'PaymentGateway';
 var PAYMENT_GATEWAY_SOURCE = 'checkout';
+var PG_LAST_ROW_PROP = 'paymentGatewayNewsletterLastRow';
 var EMAIL_HEADER_ALIASES = {
   email: true,
   'customer email': true,
@@ -41,8 +45,10 @@ var NAME_HEADER_ALIASES = {
 /**
  * Install (or refresh) a 10-minute sync trigger.
  * Deletes prior triggers for syncPaymentGatewayToNewsletter first.
+ * Seeds the row cursor so existing PaymentGateway rows are not backfilled.
  */
 function installPaymentGatewayNewsletterTrigger() {
+  seedPaymentGatewayRowCursor_();
   var handlers = ScriptApp.getProjectTriggers();
   for (var i = 0; i < handlers.length; i++) {
     if (handlers[i].getHandlerFunction() === 'syncPaymentGatewayToNewsletter') {
@@ -53,11 +59,26 @@ function installPaymentGatewayNewsletterTrigger() {
     .timeBased()
     .everyMinutes(10)
     .create();
-  Logger.log('Installed: syncPaymentGatewayToNewsletter every 10 minutes');
+  Logger.log('Installed: syncPaymentGatewayToNewsletter every 10 minutes (new rows only)');
 }
 
 /**
- * Main sync — safe to run manually or from the time trigger.
+ * Mark current PaymentGateway last row as already seen (no historical sync).
+ * Safe to re-run if you want to skip everything currently in the tab.
+ */
+function seedPaymentGatewayRowCursor_() {
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var paymentSheet = ss.getSheetByName(PAYMENT_GATEWAY_TAB);
+  if (!paymentSheet) {
+    throw new Error('Sheet not found: ' + PAYMENT_GATEWAY_TAB);
+  }
+  var lastRow = Math.max(1, paymentSheet.getLastRow());
+  PropertiesService.getScriptProperties().setProperty(PG_LAST_ROW_PROP, String(lastRow));
+  Logger.log('Seeded PaymentGateway cursor at row ' + lastRow + ' (existing rows ignored)');
+}
+
+/**
+ * Main sync — only rows after the saved cursor. Safe to run manually or from trigger.
  */
 function syncPaymentGatewayToNewsletter() {
   var lock = LockService.getScriptLock();
@@ -74,13 +95,29 @@ function syncPaymentGatewayToNewsletter() {
     }
     var newsletterSheet = getOrCreateNewsletterSheetPg_(ss);
 
-    var paymentValues = paymentSheet.getDataRange().getValues();
-    if (paymentValues.length < 2) {
+    var lastRow = paymentSheet.getLastRow();
+    if (lastRow < 2) {
       Logger.log('PaymentGateway has no data rows');
       return { ok: true, added: 0, skipped: 0, invalid: 0 };
     }
 
-    var headers = paymentValues[0].map(function (h) {
+    var props = PropertiesService.getScriptProperties();
+    var cursor = parseInt(props.getProperty(PG_LAST_ROW_PROP) || '0', 10);
+    if (!cursor || cursor < 1) {
+      // First run without install seed: start from end (new rows only)
+      props.setProperty(PG_LAST_ROW_PROP, String(lastRow));
+      Logger.log('No cursor yet — seeded at row ' + lastRow + ' (skipped backfill)');
+      return { ok: true, added: 0, skipped: 0, invalid: 0, seeded: lastRow };
+    }
+
+    if (lastRow <= cursor) {
+      Logger.log('No new PaymentGateway rows (cursor=' + cursor + ', lastRow=' + lastRow + ')');
+      return { ok: true, added: 0, skipped: 0, invalid: 0 };
+    }
+
+    // Header row + new data rows only
+    var headerValues = paymentSheet.getRange(1, 1, 1, paymentSheet.getLastColumn()).getValues()[0];
+    var headers = headerValues.map(function (h) {
       return String(h || '')
         .trim()
         .toLowerCase();
@@ -89,9 +126,15 @@ function syncPaymentGatewayToNewsletter() {
     var nameCol = findColumnIndexPg_(headers, NAME_HEADER_ALIASES);
     if (emailCol < 0) {
       throw new Error(
-        'No email column in PaymentGateway. Headers: ' + paymentValues[0].join(', ')
+        'No email column in PaymentGateway. Headers: ' + headerValues.join(', ')
       );
     }
+
+    var startRow = cursor + 1;
+    var numRows = lastRow - cursor;
+    var paymentValues = paymentSheet
+      .getRange(startRow, 1, numRows, paymentSheet.getLastColumn())
+      .getValues();
 
     var existing = loadNewsletterEmailIndexPg_(newsletterSheet);
     var added = 0;
@@ -99,8 +142,8 @@ function syncPaymentGatewayToNewsletter() {
     var invalid = 0;
     var seenInBatch = {};
 
-    for (var r = 1; r < paymentValues.length; r++) {
-      var row = paymentValues[r];
+    for (var i = 0; i < paymentValues.length; i++) {
+      var row = paymentValues[i];
       if (emailCol >= row.length) continue;
 
       var email = String(row[emailCol] || '')
@@ -111,7 +154,7 @@ function syncPaymentGatewayToNewsletter() {
         invalid++;
         continue;
       }
-      if (seenInBatch[email]) {
+      if (seenInBatch[email] || existing[email]) {
         skipped++;
         continue;
       }
@@ -119,16 +162,6 @@ function syncPaymentGatewayToNewsletter() {
 
       var name =
         nameCol >= 0 && nameCol < row.length ? String(row[nameCol] || '').trim() : '';
-
-      if (existing[email]) {
-        // Already in Newsletter — optionally fill blank name
-        if (name && !existing[email].name) {
-          newsletterSheet.getRange(existing[email].row, 2).setValue(name);
-          existing[email].name = name;
-        }
-        skipped++;
-        continue;
-      }
 
       newsletterSheet.appendRow([
         email,
@@ -140,23 +173,31 @@ function syncPaymentGatewayToNewsletter() {
         'active',
         ''
       ]);
-      existing[email] = { row: newsletterSheet.getLastRow(), name: name };
+      existing[email] = true;
       added++;
     }
+
+    props.setProperty(PG_LAST_ROW_PROP, String(lastRow));
 
     var summary = {
       ok: true,
       added: added,
       skipped: skipped,
-      invalid: invalid
+      invalid: invalid,
+      fromRow: startRow,
+      toRow: lastRow
     };
     Logger.log(
-      'PaymentGateway → Newsletter: added=' +
+      'PaymentGateway → Newsletter (new only): added=' +
         added +
         ' skipped=' +
         skipped +
         ' invalid=' +
-        invalid
+        invalid +
+        ' rows=' +
+        startRow +
+        '-' +
+        lastRow
     );
     return summary;
   } finally {
@@ -186,10 +227,7 @@ function loadNewsletterEmailIndexPg_(sheet) {
       .trim()
       .toLowerCase();
     if (!email) continue;
-    index[email] = {
-      row: r + 1,
-      name: String(values[r][1] || '').trim()
-    };
+    index[email] = true;
   }
   return index;
 }
