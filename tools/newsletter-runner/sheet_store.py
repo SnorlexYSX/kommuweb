@@ -87,6 +87,17 @@ def normalize_email(email: str) -> str:
 
 
 def validate_subscribe_payload(body: dict) -> tuple[str, str, str]:
+    # Honeypot: bots that fill these fields are rejected (silent ignore upstream)
+    honeypot = str(
+        body.get("website")
+        or body.get("company")
+        or body.get("url")
+        or body.get("hp_website")
+        or ""
+    ).strip()
+    if honeypot:
+        raise ValueError("Ignored")
+
     email = normalize_email(str(body.get("email") or ""))
     if not EMAIL_RE.match(email):
         raise ValueError("Invalid email address")

@@ -5,7 +5,7 @@
       <p class="h5 text-gray font-normal mb-8 max-w-xl mx-auto">
         Get updates on technical info, real use cases, and product features.
       </p>
-      <form id="newsletterSignupForm" class="text-left max-w-md mx-auto text-white space-y-6" novalidate>
+      <form id="newsletterSignupForm" class="relative text-left max-w-md mx-auto text-white space-y-6" novalidate>
         <div>
           <label for="newsletterName" class="block h5 font-bold text-gray mb-1">Name</label>
           <input
@@ -26,6 +26,17 @@
             aria-describedby="newsletterEmailError"
           />
           <p id="newsletterEmailError" class="text-red-400 text-sm mt-1" hidden>Please enter a valid email address.</p>
+        </div>
+        <!-- Honeypot: leave empty. Bots that fill it are rejected server-side. -->
+        <div class="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label for="newsletterWebsite">Website</label>
+          <input
+            id="newsletterWebsite"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+          />
         </div>
         <label class="flex items-start gap-2 cursor-pointer">
           <input id="newsletterConsent" type="checkbox" required class="mt-1" />
@@ -58,6 +69,7 @@
 
   const emailEl = document.getElementById('newsletterEmail');
   const nameEl = document.getElementById('newsletterName');
+  const websiteEl = document.getElementById('newsletterWebsite');
   const consentEl = document.getElementById('newsletterConsent');
   const submitBtn = document.getElementById('newsletterSubmitBtn');
   const emailError = document.getElementById('newsletterEmailError');
@@ -73,6 +85,15 @@
 
     const email = emailEl.value.trim().toLowerCase();
     const name = nameEl.value.trim();
+    const website = websiteEl ? websiteEl.value.trim() : '';
+
+    // Honeypot filled → fake success, do not call API
+    if (website) {
+      form.reset();
+      successEl.textContent = 'You’re subscribed — check your inbox soon.';
+      successEl.hidden = false;
+      return;
+    }
 
     if (!emailRegex.test(email)) {
       emailError.hidden = false;
@@ -98,7 +119,8 @@
         body: JSON.stringify({
           email: email,
           name: name || '',
-          source: 'homepage'
+          source: 'homepage',
+          website: ''
         })
       });
       const data = await res.json().catch(function () { return {}; });

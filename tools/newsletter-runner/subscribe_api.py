@@ -146,7 +146,11 @@ class Handler(BaseHTTPRequestHandler):
                     result["welcome"] = {"ok": False, "reason": "send_failed"}
             self._send(200, result, origin)
         except ValueError as exc:
-            self._send(400, {"error": str(exc)}, origin)
+            # Honeypot hits: look like success so bots don't retry smarter
+            if str(exc) == "Ignored":
+                self._send(200, {"ok": True, "created": False, "status": "ignored"}, origin)
+            else:
+                self._send(400, {"error": str(exc)}, origin)
         except Exception as exc:
             print(f"subscribe error: {exc}")
             self._send(500, {"error": "Internal server error"}, origin)

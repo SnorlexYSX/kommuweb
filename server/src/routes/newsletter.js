@@ -14,6 +14,13 @@ router.post('/subscribe', async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();
   const name = String(req.body?.name || '').trim();
   const source = String(req.body?.source || 'homepage').trim() || 'homepage';
+  // Honeypot: bots that fill website/company/url are rejected silently
+  const honeypot = String(
+    req.body?.website || req.body?.company || req.body?.url || req.body?.hp_website || ''
+  ).trim();
+  if (honeypot) {
+    return res.status(200).json({ ok: true, created: false, status: 'ignored' });
+  }
 
   if (!EMAIL_RE.test(email)) {
     return res.status(400).json({ error: 'Invalid email address' });
@@ -28,7 +35,7 @@ router.post('/subscribe', async (req, res) => {
     const upstream = await fetch(UPSTREAM_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name, source }),
+      body: JSON.stringify({ email, name, source, website: '' }),
     });
     const data = await upstream.json().catch(() => ({}));
     return res.status(upstream.status).json(data.ok === false ? data : data);

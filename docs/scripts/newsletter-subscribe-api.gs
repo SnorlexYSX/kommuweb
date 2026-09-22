@@ -228,6 +228,13 @@ function upsertSubscriber(body) {
   var email = String(body.email || '').trim().toLowerCase();
   var name = String(body.name || '').trim();
   var source = String(body.source || 'homepage').trim() || 'homepage';
+  // Honeypot: bots that fill website/company/url are rejected silently
+  var honeypot = String(
+    body.website || body.company || body.url || body.hp_website || ''
+  ).trim();
+  if (honeypot) {
+    return { ok: true, email: email || '', created: false, status: 'ignored' };
+  }
 
   if (!EMAIL_RE.test(email)) {
     throw new Error('Invalid email address');

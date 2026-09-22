@@ -45,6 +45,7 @@ Defined in [`_data/newsletter_sequence.yaml`](../_data/newsletter_sequence.yaml)
 
 - [`_includes/newsletter_signup.html`](../_includes/newsletter_signup.html) on `index.html`
 - API URL from [`_config.yml`](../_config.yml) → `newsletter_api_url` (Apps Script `/exec`)
+- **Honeypot:** hidden `website` field on the form. Bots that fill it get a fake success; Apps Script / Athena / proxy reject without writing a row. After changing [`newsletter-subscribe-api.gs`](scripts/newsletter-subscribe-api.gs), deploy a **new Apps Script version**.
 
 Paste [`docs/scripts/newsletter-subscribe-api.gs`](scripts/newsletter-subscribe-api.gs) into **KA Inventory** → Extensions → Apps Script → Deploy → Web app (Anyone).
 
