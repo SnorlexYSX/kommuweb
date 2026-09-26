@@ -101,9 +101,11 @@ Drip emails use `GET ?action=unsubscribe` on the same Apps Script `/exec` URL. M
 
 CTA buttons in drip templates have `data-track="button_id"`. Athena rewrites those `href`s to:
 
-`/exec?action=click&email=...&token=...&step=...&btn=...&to=...`
+`https://kommu.ai/go/?action=click&email=...&token=...&step=...&btn=...&to=...`
 
-Token is HMAC-SHA256 of `click|{email}|{step}|{btn}|{dest}` with `UNSUBSCRIBE_SECRET` (same secret as unsubscribe). Invalid tokens do not redirect.
+[`go.html`](../go.html) logs the click by calling the Apps Script `/exec?action=click&format=json`, then redirects at top level. Apps Script can't redirect by itself: its web-app page runs in a sandboxed Google iframe, and Facebook / App Store / Google Play refuse to load inside it. `/go/` only redirects to hosts in its `ALLOWED_HOSTS` list, so add a host there before using a new CTA domain.
+
+Token is HMAC-SHA256 of `click|{email}|{step}|{btn}|{dest}` with `UNSUBSCRIBE_SECRET` (same secret as unsubscribe). Invalid tokens are not logged. Emails sent before `/go/` still link straight to `/exec`; those show a **Continue** button the reader has to tap.
 
 Clicks append to KA Inventory → **Click log** (created automatically):
 
@@ -127,6 +129,7 @@ Footer social links are not tracked.
 | Follow-up at midnight | Old runner used signup hour + 2 days | Current runner only sends 2–6 at 08:00 MYT |
 | Row missing in sheet | Apps Script / service account permissions | Share KA Inventory with the service account; confirm Apps Script deploy |
 | Clicks not logged / buttons go straight to the site | Old Apps Script web-app version | Paste `newsletter-subscribe-api.gs` and deploy a **new version** |
+| CTA goes to kommu.ai home instead of the link | Destination host not in `go.html` `ALLOWED_HOSTS` | Add the host and redeploy the site |
 
 ## 10. Privacy
 

@@ -5,7 +5,8 @@
  *
  * POST (JSON body) → subscribe
  * GET ?action=unsubscribe&email=...&token=... → set status inactive
- * GET ?action=click&email=...&token=...&step=...&btn=...&to=... → log click, redirect
+ * GET ?action=click&email=...&token=...&step=...&btn=...&to=... → log click, show Continue (legacy emails)
+ * GET ?action=click&...&format=json → log click only (called by kommu.ai/go/, which redirects)
  *
  * Script property (Project settings → Script properties):
  *   UNSUBSCRIBE_SECRET = same value as Athena .env UNSUBSCRIBE_SECRET
@@ -89,6 +90,8 @@ function handleClick(params) {
   var step = String(params.step || '').trim();
   var btn = String(params.btn || '').trim();
   var dest = String(params.to || '').trim();
+  // format=json: log only; kommu.ai/go/ does the top-level redirect
+  var logOnly = params.format === 'json';
 
   if (
     !EMAIL_RE.test(email) ||
@@ -96,14 +99,17 @@ function handleClick(params) {
     !TRACK_ID_RE.test(btn) ||
     !HTTP_RE.test(dest)
   ) {
-    return htmlResponse(clickErrorPage());
+    return logOnly ? jsonResponse({ ok: false }) : htmlResponse(clickErrorPage());
   }
 
   if (!verifyClickToken(email, step, btn, dest, token)) {
-    return htmlResponse(clickErrorPage());
+    return logOnly ? jsonResponse({ ok: false }) : htmlResponse(clickErrorPage());
   }
 
   appendClickLog(email, step, btn, dest);
+  if (logOnly) {
+    return jsonResponse({ ok: true });
+  }
   return htmlResponse(clickRedirectPage(dest));
 }
 
@@ -150,24 +156,29 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+/**
+ * Legacy path for emails sent before kommu.ai/go/. Apps Script's sandboxed iframe
+ * blocks automatic top-level navigation, so a tap on the button is required.
+ */
 function clickRedirectPage(dest) {
   var safe = escapeHtml(dest);
   return (
     '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<title>Redirecting — Kommu</title><style>' +
-    'html,body{margin:0;min-height:100%;background:#fff;' +
+    '<title>Continue — Kommu</title><style>' +
+    'html,body{margin:0;min-height:100vh;background:#000;' +
     'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}' +
-    'p.note{margin:0;padding:2rem 1rem;text-align:center;color:#888;font-size:.875rem}' +
-    'a.fallback{color:#888;font-size:.8125rem}' +
-    '</style></head><body>' +
-    '<form id="go" method="GET" action="' +
+    'main{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem}' +
+    'a.btn{display:inline-block;padding:14px 32px;border-radius:999px;background:#7B1DFF;' +
+    'color:#fff;font-size:1rem;font-weight:600;text-decoration:none}' +
+    '</style></head><body><main><div>' +
+    '<a class="btn" href="' +
     safe +
-    '" target="_top"></form>' +
-    '<p class="note">Redirecting… <a class="fallback" href="' +
-    safe +
-    '" target="_top" rel="noopener noreferrer">Continue</a></p>' +
-    '<script>document.getElementById("go").submit();</script></body></html>'
+    '" target="_top" rel="noopener noreferrer">Continue</a>' +
+    '</div></main>' +
+    '<script>try{window.top.location.href=' +
+    JSON.stringify(dest).replace(/</g, '\\u003c') +
+    ';}catch(e){}</script></body></html>'
   );
 }
 

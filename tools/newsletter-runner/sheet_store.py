@@ -180,11 +180,14 @@ def click_token(email: str, step_id: str, button: str, dest: str) -> str:
 
 
 def click_url(email: str, step_id: str, button: str, dest: str) -> str:
+    """Tracked link via kommu.ai/go/ — it logs to Apps Script, then redirects at top level.
+
+    Apps Script web apps can't redirect out of their sandboxed iframe, and sites like
+    Facebook / App Store refuse to load inside it.
+    """
     load_dotenv()
     normalized = normalize_email(email)
-    base = os.environ.get("NEWSLETTER_APPS_SCRIPT_URL", "").strip().rstrip("/")
-    if not base:
-        raise RuntimeError("NEWSLETTER_APPS_SCRIPT_URL is not set")
+    base = os.environ.get("NEWSLETTER_CLICK_REDIRECT_URL", "https://kommu.ai/go/").strip()
     token = click_token(normalized, step_id, button, dest)
     if not token:
         raise RuntimeError("UNSUBSCRIBE_SECRET is not set")

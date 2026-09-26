@@ -3,7 +3,7 @@
 Homepage signup writes the **KA Inventory → Newsletter** tab (Google Apps Script). **Athena** reads that sheet and sends mail over Migadu SMTP. No Tailscale Funnel, no AWS.
 
 - **Drip sender** — every 1 minute: send welcome (step 1) as soon as the row appears and quota remains; emails 2–6 only at **08:00 MYT**, every other day
-- **Click tracking** — CTA `data-track` links rewrite to Apps Script `/exec?action=click`, which logs KA Inventory → **Click log** then redirects
+- **Click tracking** — CTA `data-track` links rewrite to `kommu.ai/go/`, which logs to Apps Script (KA Inventory → **Click log**) then redirects
 - **Order sync** — every 30m copies purchaser emails from **Orders** tab
 
 See [docs/newsletter-setup.md](../../docs/newsletter-setup.md).

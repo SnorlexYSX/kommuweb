@@ -1,0 +1,57 @@
+---
+layout: null
+permalink: /go/
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Kommu</title>
+  <style>html,body{margin:0;min-height:100%;background:#000}</style>
+</head>
+<body>
+  <script>
+  (function () {
+    var LOG_URL = {{ site.newsletter_api_url | jsonify }};
+    // Newsletter click redirects may only leave to these hosts (no open redirect).
+    var ALLOWED_HOSTS = [
+      'kommu.ai', 'www.kommu.ai',
+      'www.facebook.com', 'facebook.com', 'm.facebook.com',
+      'apps.apple.com',
+      'play.google.com',
+      'calendly.com'
+    ];
+    var FALLBACK = 'https://kommu.ai/';
+
+    var params = new URLSearchParams(location.search);
+    var dest = params.get('to') || '';
+    var target = FALLBACK;
+    try {
+      var u = new URL(dest);
+      if (u.protocol === 'https:' && ALLOWED_HOSTS.indexOf(u.hostname) !== -1) {
+        target = u.href;
+      }
+    } catch (e) {}
+
+    if (LOG_URL && target !== FALLBACK) {
+      var q = new URLSearchParams();
+      q.set('action', 'click');
+      q.set('format', 'json');
+      ['email', 'token', 'step', 'btn', 'to'].forEach(function (k) {
+        q.set(k, params.get(k) || '');
+      });
+      // keepalive lets the log request finish after we navigate away
+      try {
+        fetch(LOG_URL + '?' + q.toString(), { mode: 'no-cors', keepalive: true, cache: 'no-store' });
+      } catch (e) {}
+    }
+    location.replace(target);
+  })();
+  </script>
+  <noscript><meta http-equiv="refresh" content="0;url=https://kommu.ai/"></noscript>
+</body>
+</html>
