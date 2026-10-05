@@ -20,6 +20,7 @@
   const API_URL = {{ site.installers_api_url | jsonify }};
   const DEV_SAMPLE = {{ site.data.installers_sample | jsonify }};
   const CARTO_KEY = {{ site.carto_basemap_api_key | default: "" | jsonify }};
+  const KOMMU_LOGO_URL = {{ '/img/kommu-logo.png' | relative_url | jsonify }};
 
   function installerPinSvg(w, h, uid) {
     const safeUid = String(uid).replace(/[^a-zA-Z0-9_-]/g, '-');
@@ -42,7 +43,50 @@
     );
   }
 
+  const hqMarkerIds = {};
+
+  function kommuHqPinSvg(w, h, uid) {
+    const safeUid = String(uid).replace(/[^a-zA-Z0-9_-]/g, '-');
+    const gradId = 'installer-pin-grad-' + safeUid;
+    const shadowId = 'installer-pin-shadow-' + safeUid;
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="' + w + '" height="' + h + '" fill="none" aria-hidden="true">' +
+        '<defs>' +
+          '<linearGradient id="' + gradId + '" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox" gradientTransform="rotate(45 0.5 0.5)">' +
+            '<stop offset="0%" stop-color="#5D26C1"/>' +
+            '<stop offset="100%" stop-color="#240046"/>' +
+          '</linearGradient>' +
+          '<filter id="' + shadowId + '" x="-50%" y="-30%" width="200%" height="200%">' +
+            '<feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#000000" flood-opacity="0.45"/>' +
+            '<feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#000000" flood-opacity="0.3"/>' +
+          '</filter>' +
+        '</defs>' +
+        '<path filter="url(#' + shadowId + ')" fill="url(#' + gradId + ')" stroke="#1a0038" stroke-width="1" stroke-linejoin="round" d="M16 0C8.268 0 2 6.268 2 14c0 10.5 14 28 14 28s14-17.5 14-28C30 6.268 23.732 0 16 0z"/>' +
+        '<circle cx="16" cy="14" r="11" fill="#000"/>' +
+      '</svg>'
+    );
+  }
+
+  function kommuHqPinIcon() {
+    const mobile = isMobileMap();
+    const w = mobile ? 21 : 26;
+    const h = mobile ? 28 : 32;
+    const html =
+      '<div class="installer-hq-pin">' +
+        kommuHqPinSvg(w, h, 'hq') +
+        '<img class="installer-hq-pin-logo" src="' + KOMMU_LOGO_URL + '" alt="" />' +
+      '</div>';
+    return L.divIcon({
+      className: 'installer-leaflet-pin installer-leaflet-pin-hq',
+      html: html,
+      iconSize: [w, h],
+      iconAnchor: [w / 2, h],
+      popupAnchor: [0, -(h - 3)]
+    });
+  }
+
   function installerPinIcon(uid) {
+    if (hqMarkerIds[uid]) return kommuHqPinIcon();
     const mobile = isMobileMap();
     const w = mobile ? 21 : 26;
     const h = mobile ? 28 : 32;
@@ -245,6 +289,37 @@
     });
   }
 
+  const KOMMU_HQ = {
+    id: 'kommu-hq',
+    name: 'Kommu HQ',
+    installer_name: 'Kommu HQ',
+    shop_name: 'Kommu HQ',
+    state: 'Selangor',
+    city: 'Petaling Jaya',
+    contact: '+601133469734',
+    email: 'support@kommu.ai',
+    address: 'Emhub B-03-31 (Block B), Kota Damansara, 47810 Petaling Jaya, Selangor',
+    lat: 3.1598261,
+    lng: 101.5725678
+  };
+
+  function isKommuHq(row) {
+    const name = String((row && (row.shop_name || row.name)) || '').trim().toLowerCase();
+    return name === 'kommu hq' || (row && row.id === 'kommu-hq');
+  }
+
+  function withKommuHq(list) {
+    const rows = Array.isArray(list) ? list.slice() : [];
+    const hq = [];
+    const rest = [];
+    rows.forEach(function (row) {
+      if (isKommuHq(row)) hq.push(row);
+      else rest.push(row);
+    });
+    if (!hq.length) hq.push(KOMMU_HQ);
+    return hq.concat(sortInstallers(rest));
+  }
+
   function useDevSample() {
     const params = new URLSearchParams(window.location.search);
     return params.get('dev') === '1' || !API_URL;
@@ -252,7 +327,7 @@
 
   async function fetchInstallers() {
     if (useDevSample()) {
-      return sortInstallers(DEV_SAMPLE || []);
+      return withKommuHq(DEV_SAMPLE || []);
     }
 
     const url = API_URL + (API_URL.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
@@ -260,7 +335,7 @@
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const list = Array.isArray(data) ? data : (data.installers || []);
-    return sortInstallers(list);
+    return withKommuHq(list);
   }
 
   function renderTable(installers) {
@@ -352,6 +427,7 @@
       latLngs.push(ll);
       allMarkerLatLngs.push(ll);
 
+      if (isKommuHq(installer)) hqMarkerIds[installer.id] = true;
       const marker = L.marker(ll, { icon: installerPinIcon(installer.id) }).addTo(map);
       marker.bindPopup(popupHtml(installer), { autoPan: false });
       marker.on('click', function (e) {

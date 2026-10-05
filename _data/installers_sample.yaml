@@ -1,4 +1,15 @@
 # Sample installers for local dev when installers_api_url is empty or ?dev=1
+- id: kommu-hq
+  name: "Kommu HQ"
+  installer_name: "Kommu HQ"
+  shop_name: "Kommu HQ"
+  state: "Selangor"
+  city: "Petaling Jaya"
+  contact: "+601133469734"
+  email: "support@kommu.ai"
+  address: "Emhub B-03-31 (Block B), Kota Damansara, 47810 Petaling Jaya, Selangor"
+  lat: 3.1598261
+  lng: 101.5725678
 - id: sample-kl
   name: "Demo Auto Workshop"
   installer_name: "Ahmad Demo"
