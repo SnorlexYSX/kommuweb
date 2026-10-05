@@ -69,8 +69,8 @@
 
   function kommuHqPinIcon() {
     const mobile = isMobileMap();
-    const w = mobile ? 21 : 26;
-    const h = mobile ? 28 : 32;
+    const w = Math.round((mobile ? 21 : 26) * 1.2);
+    const h = Math.round((mobile ? 28 : 32) * 1.2);
     const html =
       '<div class="installer-hq-pin">' +
         kommuHqPinSvg(w, h, 'hq') +
