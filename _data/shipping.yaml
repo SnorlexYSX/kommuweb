@@ -12,6 +12,12 @@
     MYR: 149.00
     USD: 39.00
 
+- code: AR
+  name: Argentina
+  rates:
+    MYR: 390.00
+    USD: 95.00
+
 - code: AT
   name: Austria
   rates:
